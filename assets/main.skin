@@ -1,0 +1,55 @@
+{
+  Color: {
+    blackSemitransparent: {hex: "#00000099"},
+    black: {hex: "#000000ff" },
+    darkblue: {hex: "#1d2b53ff" },
+    darkpurple: {hex: "#7e2553ff" },
+    darkgreen: {hex: "#008751ff" },
+    brown: {hex: "#ab5236ff" },
+    grey: {hex: "#5f574fff" },
+    lightgrey: {hex: "#c2c3c7ff" },
+    white: {hex: "#fff1e8ff" },
+    red: {hex: "#ff004dff" },
+    orange: {hex: "#ffa300ff" },
+    yellow: {hex: "#ffec27ff" },
+    green: {hex: "#00e436ff" },
+    blue: {hex: "#29adffff" },
+    lavender: {hex: "#83769cff" },
+    pink: {hex: "#ff77a8ff" },
+    lightpeach: {hex: "#ffccaaff" }
+  },
+  com.badlogic.gdx.graphics.g2d.BitmapFont: {
+    defaultsmaller: {
+      file: fnt/MaxonPuff.fnt,
+      scaledSize: 8
+    }
+    default: {
+      file: fnt/MaxonPuff.fnt,
+      scaledSize: 18
+    },
+    header: {
+      file: fnt/MaxonBob.fnt,
+      scaledSize: 32
+    }
+  },
+
+  com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+    default: {
+      font: default,
+      fontColor: white
+    },
+    press: {
+      font: header,
+      fontColor: white
+    },
+    credits: {
+      font: default,
+      fontColor: blackSemitransparent
+    }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
+    default: {
+      titleFont: default
+    }
+  }
+}
