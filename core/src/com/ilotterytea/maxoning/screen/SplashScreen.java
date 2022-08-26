@@ -33,14 +33,14 @@ public class SplashScreen implements InputProcessor, Screen {
 
 
         this.stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-        this.skin = game.assetManager.get("main.skin", Skin.class);
+        this.skin = new Skin(Gdx.files.internal("main.skin"));
 
         this.infoLabel = new Label(
                 String.format("%s %s", MaxonConstants.GAME_NAME, MaxonConstants.GAME_VERSION),
                 skin, "credits"
         );
 
-        this.dev = new Image(game.assetManager.get("dev.png", Texture.class));
+        this.dev = new Image(game.assetManager.get("sprites/ilotterytea.png", Texture.class));
         this.whiteSquare = new Image(game.assetManager.get("sprites/white.png", Texture.class));
 
         infoLabel.setPosition(
