@@ -115,6 +115,7 @@ public class SplashScreen implements InputProcessor, Screen {
             Gdx.app.exit();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
+            introMusic.stop();
             game.setScreen(new MenuScreen(game));
             dispose();
         }
