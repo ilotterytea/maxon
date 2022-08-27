@@ -34,7 +34,7 @@ public class MenuScreen implements Screen, InputProcessor {
 
     private ArrayList<ArrayList<Sprite>> wallTiles = new ArrayList<>();
 
-    private boolean anyKeyPressed = false;
+    private boolean anyKeyPressed = false, brandActionsSet = false;
 
     public MenuScreen(MaxonGame game) {
         this.game = game;
@@ -61,10 +61,10 @@ public class MenuScreen implements Screen, InputProcessor {
         this.maxonLogo = new Image(maxonTxr);
         this.brandLogo = new Image(brandTxr);
 
-        this.startLabel = new Label("PRESS ANY KEY TO START", skin, "press");
+        this.startLabel = new Label("PRESS START", skin, "press");
         this.infoLabel = new Label(String.format("%s %s", MaxonConstants.GAME_NAME, MaxonConstants.GAME_VERSION), skin, "credits");
 
-        brandLogo.setScale(0f);
+        brandLogo.setScale(100f);
 
         brandLogo.setPosition(
                 (Gdx.graphics.getWidth() / 2.0f) - (brandLogo.getWidth() / 2.0f),
@@ -78,8 +78,11 @@ public class MenuScreen implements Screen, InputProcessor {
 
         brandLogo.addAction(
                 Actions.sequence(
-                        Actions.scaleTo(50f, 50f, 0f),
-                        Actions.scaleTo(1f, 1f, 5f, Interpolation.circleIn),
+                        Actions.alpha(0),
+                        Actions.parallel(
+                                Actions.fadeIn(1f),
+                                Actions.scaleTo(1f, 1f, 1f, Interpolation.pow2InInverse)
+                        ),
                         Actions.repeat(
                                 RepeatAction.FOREVER,
                                 Actions.sequence(
@@ -153,13 +156,37 @@ public class MenuScreen implements Screen, InputProcessor {
             }
         }*/
 
-        if (anyKeyPressed) {
+        if (anyKeyPressed && !brandActionsSet) {
             startLabel.clearActions();
-            startLabel.addAction(
+            startLabel.addAction(Actions.fadeOut(0.5f));
+
+            brandLogo.clearActions();
+            brandLogo.addAction(
                     Actions.sequence(
-                            Actions.moveTo(startLabel.getX(), -192, 1f, Interpolation.smoother)
-                    )
+                            Actions.parallel(
+                                Actions.rotateTo(0f, 2f),
+                                Actions.scaleTo(1f, 1f, 2f),
+                                Actions.moveTo(
+                                        (Gdx.graphics.getWidth() / 2f) - (brandTxr.getWidth() / 2f),
+                                        (Gdx.graphics.getHeight() - brandTxr.getHeight()) - 81,
+                                        2f,
+                                        Interpolation.sine
+                                )
+                            ),
+                            Actions.repeat(RepeatAction.FOREVER,
+                                    Actions.sequence(
+                                            Actions.parallel(
+                                                    Actions.rotateTo(-5f, 5f, Interpolation.smoother),
+                                                    Actions.scaleTo(0.9f, 0.9f, 5f, Interpolation.smoother)
+                                            ),
+                                            Actions.parallel(
+                                                    Actions.rotateTo(5f, 5f, Interpolation.smoother),
+                                                    Actions.scaleTo(1.1f, 1.1f, 5f, Interpolation.smoother)
+                                            )
+                                    )))
             );
+
+            brandActionsSet = true;
         }
 
         stage.draw();
