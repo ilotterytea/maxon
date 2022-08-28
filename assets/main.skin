@@ -33,13 +33,21 @@
     }
   },
 
+  com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+    default: {
+      font: default,
+      fontColor: lightgrey,
+      overFontColor: white,
+      downFontColor: grey
+    }
+  },
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
     default: {
       font: default,
       fontColor: white
     },
     press: {
-      font: header,
+      font: default,
       fontColor: white
     },
     credits: {
