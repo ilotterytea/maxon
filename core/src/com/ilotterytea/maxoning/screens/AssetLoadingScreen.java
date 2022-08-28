@@ -4,8 +4,6 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,8 +14,6 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.ui.AnimatedImage;
 import com.ilotterytea.maxoning.anim.SpriteUtils;
-
-import java.util.Arrays;
 
 public class AssetLoadingScreen implements Screen {
     final MaxonGame game;
@@ -99,6 +95,13 @@ public class AssetLoadingScreen implements Screen {
         game.assetManager.load("sprites/ilotterytea.png", Texture.class);
         game.assetManager.load("sprites/SplashWall.png", Texture.class);
 
+        // // Ninepatches:
+        game.assetManager.load("sprites/ui/save_slot.9.png", Texture.class);
+        game.assetManager.load("sprites/ui/save_slot_disabled.9.png", Texture.class);
+        game.assetManager.load("sprites/ui/button_static.9.png", Texture.class);
+        game.assetManager.load("sprites/ui/button_pressed.9.png", Texture.class);
+        game.assetManager.load("sprites/ui/button_highlighted.9.png", Texture.class);
+        
         // Music:
         game.assetManager.load("mus/menu/mus_menu_intro.ogg", Music.class);
         game.assetManager.load("mus/menu/mus_menu_loop.ogg", Music.class);
