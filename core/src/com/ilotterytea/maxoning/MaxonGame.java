@@ -1,11 +1,9 @@
 package com.ilotterytea.maxoning;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.ilotterytea.maxoning.screen.AssetLoadingScreen;
-import com.ilotterytea.maxoning.screen.SplashScreen;
+import com.ilotterytea.maxoning.screens.AssetLoadingScreen;
 
 public class MaxonGame extends Game {
 	public SpriteBatch batch;
