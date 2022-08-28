@@ -1,4 +1,4 @@
-package com.ilotterytea.maxoning.screen;
+package com.ilotterytea.maxoning.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;

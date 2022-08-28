@@ -1,4 +1,4 @@
-package com.ilotterytea.maxoning.anim;
+package com.ilotterytea.maxoning.ui;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

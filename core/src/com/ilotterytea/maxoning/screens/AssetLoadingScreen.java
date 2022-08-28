@@ -1,4 +1,4 @@
-package com.ilotterytea.maxoning.screen;
+package com.ilotterytea.maxoning.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.ilotterytea.maxoning.MaxonGame;
-import com.ilotterytea.maxoning.anim.AnimatedImage;
+import com.ilotterytea.maxoning.ui.AnimatedImage;
 import com.ilotterytea.maxoning.anim.SpriteUtils;
 
 import java.util.Arrays;
