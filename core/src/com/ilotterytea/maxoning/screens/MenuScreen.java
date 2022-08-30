@@ -170,6 +170,7 @@ public class MenuScreen implements Screen, InputProcessor {
 
         // Play menu music:
         menuMusic.setLooping(true);
+        menuMusic.setVolume(game.prefs.getFloat("music", 1.0f));
         menuMusic.play();
     }
 
