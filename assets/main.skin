@@ -19,20 +19,11 @@
     lightpeach: {hex: "#ffccaaff" }
   },
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
-    defaultsmaller: {
-      file: fnt/MaxonPuff.fnt,
-      scaledSize: 8
-    }
     default: {
       file: fnt/MaxonPuff.fnt,
-      scaledSize: 18
-    },
-    header: {
-      file: fnt/MaxonBob.fnt,
-      scaledSize: 32
+      scaledSize: 24
     }
   },
-
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
     default: {
       font: default,
@@ -40,7 +31,7 @@
       overFontColor: white,
       downFontColor: grey
     }
-  },
+  }
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
     default: {
       font: default,
