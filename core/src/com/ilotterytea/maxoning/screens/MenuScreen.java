@@ -2,9 +2,9 @@ package com.ilotterytea.maxoning.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,11 +12,13 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.MaxonGame;
+import com.ilotterytea.maxoning.ui.DebugLabel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MenuScreen implements Screen, InputProcessor {
@@ -29,7 +31,7 @@ public class MenuScreen implements Screen, InputProcessor {
     final Image brandLogo, maxonLogo;
     final Label startLabel, infoLabel;
 
-    final TextButton playGameButton, optionsButton, creditsButton, quitButton;
+    final TextButton playGameButton, optionsButton, quitButton;
 
     final NinePatch saveSlotPatch;
 
@@ -37,10 +39,32 @@ public class MenuScreen implements Screen, InputProcessor {
 
     final Table menuTable;
 
+    final Texture bgTile1, bgTile2;
+
+    private ArrayList<ArrayList<Sprite>> bgMenuTiles;
+
     private boolean anyKeyPressed = false, brandActionsSet = false;
 
-    public MenuScreen(MaxonGame game) {
+    public MenuScreen(final MaxonGame game) {
         this.game = game;
+
+        bgTile1 = game.assetManager.get("sprites/menu/tile_cat.png", Texture.class);
+        bgTile2 = game.assetManager.get("sprites/menu/tile_paw.png", Texture.class);
+
+        bgMenuTiles = new ArrayList<>();
+
+        for (int i = 0; i < Gdx.graphics.getHeight() / bgTile1.getHeight() + 1; i++) {
+            bgMenuTiles.add(i, new ArrayList<Sprite>());
+            for (int j = -1; j < Gdx.graphics.getWidth() / bgTile1.getWidth(); j++) {
+                Sprite spr = new Sprite((j + i % 2 == 0) ? bgTile1 : bgTile2);
+
+                spr.setPosition(bgTile1.getWidth() * j, bgTile1.getHeight() * i);
+                System.out.println(bgTile1.getWidth() * j);
+                bgMenuTiles.get(i).add(spr);
+            }
+        }
+
+        System.out.println(bgMenuTiles);
 
         this.stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         this.skin = new Skin(Gdx.files.internal("main.skin"));
@@ -52,30 +76,39 @@ public class MenuScreen implements Screen, InputProcessor {
         this.saveSlotPatch = new NinePatch(game.assetManager.get("sprites/ui/save_slot.9.png", Texture.class), 33, 33, 33, 33);
 
         this.startLabel = new Label("PRESS START", skin, "press");
-        this.infoLabel = new Label(String.format("%s %s", MaxonConstants.GAME_NAME, MaxonConstants.GAME_VERSION), skin, "credits");
+        this.infoLabel = new DebugLabel(skin);
 
         this.playGameButton = new TextButton("PLAY GAME", skin);
         this.optionsButton = new TextButton("OPTIONS", skin);
-        this.creditsButton = new TextButton("CREDITS", skin);
         this.quitButton = new TextButton("QUIT TO DESKTOP", skin);
+
+        final Window win = new Window("lol", skin);
+
+        win.add(infoLabel);
+
+        win.addListener(new DragListener() {
+            @Override
+            public void touchDragged(InputEvent event, float x, float y, int pointer) {
+                win.moveBy(x - win.getWidth() / 2, y - win.getHeight() / 2);
+            }
+        });
 
         playGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("new game!");
+                try {
+                    game.setScreen(new GameScreen(game));
+                } catch (IOException | ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+                menuMusic.stop();
+                dispose();
             }
         });
         optionsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("options!");
-            }
-        });
-
-        creditsButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("credits!");
             }
         });
 
@@ -99,14 +132,14 @@ public class MenuScreen implements Screen, InputProcessor {
         menuTable.row();
         menuTable.add(optionsButton).padBottom(16f);
         menuTable.row();
-        menuTable.add(creditsButton).padBottom(16f);
-        menuTable.row();
         menuTable.add(quitButton);
 
         stage.addActor(infoLabel);
         stage.addActor(brandLogo);
         stage.addActor(startLabel);
         stage.addActor(menuTable);
+
+        stage.addActor(win);
 
         menuTable.addAction(Actions.sequence(Actions.alpha(0f), Actions.moveTo(0f, -Gdx.graphics.getHeight() - Gdx.graphics.getHeight(), 0f)));
 
@@ -165,6 +198,8 @@ public class MenuScreen implements Screen, InputProcessor {
                 )
         );
 
+        infoLabel.setPosition(8, (Gdx.graphics.getHeight() - infoLabel.getHeight() - 8));
+
         // Start to render:
         render(Gdx.graphics.getDeltaTime());
 
@@ -178,7 +213,7 @@ public class MenuScreen implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (anyKeyPressed && !brandActionsSet) {
@@ -222,21 +257,65 @@ public class MenuScreen implements Screen, InputProcessor {
             brandActionsSet = true;
         }
 
+        game.batch.begin();
+
+        for (ArrayList<Sprite> array : bgMenuTiles) {
+            for (Sprite spr : array) {
+                spr.setPosition(spr.getX() + 1, spr.getY());
+                spr.draw(game.batch);
+            }
+        }
+
+        game.batch.end();
+
+        for (ArrayList<Sprite> array : bgMenuTiles) {
+            for (int i = 0; i < array.size(); i++) {
+                Sprite spr = array.get(i);
+                Sprite f_spr = array.get(0);
+
+                if (spr.getX() > Gdx.graphics.getWidth()) {
+                    Sprite n_spr = spr;
+                    n_spr.setPosition(f_spr.getX() - spr.getWidth(), f_spr.getY());
+                    array.remove(spr);
+                    array.add(0, n_spr);
+                }
+            }
+        }
+
         stage.draw();
         stage.act(delta);
     }
 
     @Override
     public void resize(int width, int height) {
+        bgMenuTiles.clear();
+
+        for (int i = 0; i < height / bgTile1.getHeight() + 1; i++) {
+            bgMenuTiles.add(i, new ArrayList<Sprite>());
+            for (int j = -1; j < width / bgTile1.getWidth(); j++) {
+                Sprite spr = new Sprite();
+
+                if ((j + i) % 2 == 0) {
+                    spr.setTexture(bgTile1);
+                } else {
+                    spr.setTexture(bgTile2);
+                }
+
+                spr.setSize(bgTile1.getWidth(), bgTile1.getHeight());
+                spr.setPosition(bgTile1.getWidth() * j, bgTile1.getHeight() * i);
+                System.out.println(bgTile1.getWidth() * j);
+                bgMenuTiles.get(i).add(spr);
+            }
+        }
+
         stage.getViewport().update(width, height, true);
     }
 
     @Override public void pause() {}
     @Override public void resume() {}
     @Override public void hide() { dispose(); }
-    @Override
-    public void dispose() {
-        stage.dispose();
+    @Override public void dispose() {
+        stage.clear();
         skin.dispose();
     }
 
@@ -260,6 +339,9 @@ public class MenuScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (!anyKeyPressed) {
+            anyKeyPressed = true;
+        }
         return false;
     }
 
