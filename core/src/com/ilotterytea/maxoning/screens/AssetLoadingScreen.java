@@ -1,7 +1,6 @@
 package com.ilotterytea.maxoning.screens;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,10 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.ui.AnimatedImage;
 import com.ilotterytea.maxoning.anim.SpriteUtils;
+import com.ilotterytea.maxoning.utils.AssetLoading;
 
 public class AssetLoadingScreen implements Screen {
     final MaxonGame game;
@@ -31,27 +31,27 @@ public class AssetLoadingScreen implements Screen {
         this.M4x0nnes = new Texture("sprites/sheet/loadingCircle.png");
 
         this.skin = new Skin(Gdx.files.internal("main.skin"));
-        this.stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        this.stage = new Stage(new ScreenViewport());
 
         this.loadingLabel = new Label("Loading...", skin);
 
         TextureRegion[] txrr = SpriteUtils.splitToTextureRegions(M4x0nnes, 112, 112, 10, 5);
         this.animatedMaxon = new AnimatedImage(txrr);
 
-        animatedMaxon.setPosition(8, 8);
+        animatedMaxon.setPosition(Gdx.graphics.getWidth() - animatedMaxon.getWidth() * 0.25f - 8, 8);
         animatedMaxon.setScale(0.25f);
 
         loadingLabel.setPosition(animatedMaxon.getWidth() * 0.25f + loadingLabel.getX() + 16, 8);
 
         stage.addActor(animatedMaxon);
-        stage.addActor(loadingLabel);
+        //stage.addActor(loadingLabel);
 
-        queueAssets();
+        AssetLoading.queue(game.assetManager);
     }
 
     @Override public void show() { render(Gdx.graphics.getDeltaTime()); }
 
-    private void update(float delta) {
+    private void update() {
         if (game.assetManager.update()) {
             Timer.schedule(new Timer.Task() {
                 @Override
@@ -73,7 +73,7 @@ public class AssetLoadingScreen implements Screen {
         stage.draw();
         stage.act(delta);
 
-        update(delta);
+        update();
     }
 
     @Override
@@ -84,27 +84,4 @@ public class AssetLoadingScreen implements Screen {
     @Override public void resume() {}
     @Override public void hide() { dispose(); }
     @Override public void dispose() {}
-    private void queueAssets() {
-        // Textures:
-        game.assetManager.load("icon.png", Texture.class);
-        game.assetManager.load("dev.png", Texture.class);
-        game.assetManager.load("sprites/sheet/loadingCircle.png", Texture.class);
-        game.assetManager.load("sprites/black.png", Texture.class);
-        game.assetManager.load("sprites/white.png", Texture.class);
-        game.assetManager.load("sprites/brand.png", Texture.class);
-        game.assetManager.load("sprites/ilotterytea.png", Texture.class);
-        game.assetManager.load("sprites/SplashWall.png", Texture.class);
-
-        // // Ninepatches:
-        game.assetManager.load("sprites/ui/save_slot.9.png", Texture.class);
-        game.assetManager.load("sprites/ui/save_slot_disabled.9.png", Texture.class);
-        game.assetManager.load("sprites/ui/button_static.9.png", Texture.class);
-        game.assetManager.load("sprites/ui/button_pressed.9.png", Texture.class);
-        game.assetManager.load("sprites/ui/button_highlighted.9.png", Texture.class);
-        
-        // Music:
-        game.assetManager.load("mus/menu/mus_menu_intro.ogg", Music.class);
-        game.assetManager.load("mus/menu/mus_menu_loop.ogg", Music.class);
-        // Sounds:
-    }
 }
