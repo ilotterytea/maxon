@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class MaxonPlayer implements Serializable {
     public float points;
     public float multiplier;
-    public ArrayList<MaxonItem> purchasedItems;
+    public ArrayList<Integer> purchasedItems;
 
     public MaxonPlayer() {
         this.points = 0;
