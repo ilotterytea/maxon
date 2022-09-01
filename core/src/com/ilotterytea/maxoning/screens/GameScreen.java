@@ -238,7 +238,7 @@ public class GameScreen implements Screen, InputProcessor {
 
                     player.points += 1 * itemMultiplier;
 
-                    TypingLabel label = new TypingLabel("{SHAKE}{RAINBOW}+" + 1 * itemMultiplier + "{ENDRAINBOW}{ENDSHAKE}", skin, "default");
+                    TypingLabel label = new TypingLabel("{SHAKE}{RAINBOW}+" + Math.round(1 * itemMultiplier)  + "{ENDRAINBOW}{ENDSHAKE}", skin, "default");
 
                     label.setPosition(
                             maxon.getX() + (maxon.getWidth() / 2f) - 8,
@@ -288,7 +288,7 @@ public class GameScreen implements Screen, InputProcessor {
             }
         }
 
-        pointsLabel.setText(Math.round(player.points) + " S");
+        pointsLabel.setText(Math.round(player.points) + " S (x" + player.multiplier + ")");
 
         stage.draw();
         stage.act(delta);
