@@ -21,6 +21,7 @@ public class AssetLoading {
         am.load("sprites/sheet/sandwich_cat.png", Texture.class);
         am.load("sprites/sheet/thirsty_cat.png", Texture.class);
 
+        am.load("sprites/white.png", Texture.class);
         am.load("sprites/black.png", Texture.class);
         am.load("sprites/brand.png", Texture.class);
         am.load("sprites/ilotterytea.png", Texture.class);
