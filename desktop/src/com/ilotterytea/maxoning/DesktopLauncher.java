@@ -13,10 +13,9 @@ public class DesktopLauncher {
 	public static void main (String[] arg) throws FileNotFoundException {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
-		config.setTitle(String.format("Maxon Petting Simulator - %s", getRandomLine()));
+		config.setTitle("Maxon Petting Simulator");
 		config.setWindowIcon("icon.png");
 		config.setMaximized(true);
-
 		new Lwjgl3Application(new MaxonGame(), config);
 	}
 
