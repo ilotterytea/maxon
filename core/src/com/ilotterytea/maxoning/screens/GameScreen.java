@@ -45,7 +45,7 @@ public class GameScreen implements Screen, InputProcessor {
 
     ArrayList<MaxonItem> items;
 
-    boolean isShopping = false;
+    boolean isShopping = true;
 
     ArrayList<ArrayList<Sprite>> bgTiles;
 
@@ -118,7 +118,7 @@ public class GameScreen implements Screen, InputProcessor {
                 maxon.setDrawable(maxonCat.getDrawable());
                 player.points += 1 * player.multiplier;
 
-                TypingLabel label = new TypingLabel("{SHAKE}{RAINBOW}+" + 1 * player.multiplier + "{ENDRAINBOW}{ENDSHAKE}", skin, "default");
+                final TypingLabel label = new TypingLabel("{SHAKE}{RAINBOW}+" + Math.round(1 * player.multiplier) + "{ENDRAINBOW}{ENDSHAKE}", skin, "default");
 
                 label.setPosition(
                         maxon.getX() + (maxon.getWidth() / 2f) - 8,
@@ -130,6 +130,13 @@ public class GameScreen implements Screen, InputProcessor {
                         Actions.moveTo(
                                 label.getX(), label.getY() + (float) Math.floor(Math.random() * 156), 5f, Interpolation.exp5Out)
                 ));
+
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        label.remove();
+                    }
+                }, 10f);
 
                 stage.addActor(label);
             }
