@@ -53,13 +53,9 @@ public class AssetLoadingScreen implements Screen {
 
     private void update() {
         if (game.assetManager.update()) {
-            Timer.schedule(new Timer.Task() {
-                @Override
-                public void run() {
-                    game.setScreen(new SplashScreen(game));
-                    dispose();
-                }
-            }, 1f);
+            AssetLoading.registerItems(game.assetManager);
+            game.setScreen(new SplashScreen(game));
+            dispose();
         }
     }
 
