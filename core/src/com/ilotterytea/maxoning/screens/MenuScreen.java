@@ -83,7 +83,7 @@ public class MenuScreen implements Screen, InputProcessor {
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
-                menuMusic.setVolume(0.25f);
+                menuMusic.setVolume(game.prefs.getFloat("music", 1.0f) / 2.0f);
                 dispose();
             }
         });
