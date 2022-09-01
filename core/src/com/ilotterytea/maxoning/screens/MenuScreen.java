@@ -48,8 +48,8 @@ public class MenuScreen implements Screen, InputProcessor {
     public MenuScreen(final MaxonGame game) {
         this.game = game;
 
-        bgTile1 = game.assetManager.get("sprites/menu/tile_cat.png", Texture.class);
-        bgTile2 = game.assetManager.get("sprites/menu/tile_paw.png", Texture.class);
+        bgTile1 = game.assetManager.get("sprites/menu/tile_1.png", Texture.class);
+        bgTile2 = game.assetManager.get("sprites/menu/tile_2.png", Texture.class);
 
         bgMenuTiles = new ArrayList<>();
 
@@ -59,12 +59,9 @@ public class MenuScreen implements Screen, InputProcessor {
                 Sprite spr = new Sprite((j + i % 2 == 0) ? bgTile1 : bgTile2);
 
                 spr.setPosition(bgTile1.getWidth() * j, bgTile1.getHeight() * i);
-                System.out.println(bgTile1.getWidth() * j);
                 bgMenuTiles.get(i).add(spr);
             }
         }
-
-        System.out.println(bgMenuTiles);
 
         this.stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         this.skin = new Skin(Gdx.files.internal("main.skin"));
@@ -82,16 +79,7 @@ public class MenuScreen implements Screen, InputProcessor {
         this.optionsButton = new TextButton("OPTIONS", skin);
         this.quitButton = new TextButton("QUIT TO DESKTOP", skin);
 
-        final Window win = new Window("lol", skin);
-
-        win.add(infoLabel);
-
-        win.addListener(new DragListener() {
-            @Override
-            public void touchDragged(InputEvent event, float x, float y, int pointer) {
-                win.moveBy(x - win.getWidth() / 2, y - win.getHeight() / 2);
-            }
-        });
+        optionsButton.setDisabled(true);
 
         playGameButton.addListener(new ClickListener() {
             @Override
@@ -101,7 +89,7 @@ public class MenuScreen implements Screen, InputProcessor {
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
-                menuMusic.stop();
+                menuMusic.setVolume(0.25f);
                 dispose();
             }
         });
@@ -130,16 +118,14 @@ public class MenuScreen implements Screen, InputProcessor {
 
         menuTable.add(playGameButton).padBottom(16f).padTop(32f);
         menuTable.row();
-        menuTable.add(optionsButton).padBottom(16f);
-        menuTable.row();
+        //menuTable.add(optionsButton).padBottom(16f);
+        //menuTable.row();
         menuTable.add(quitButton);
 
         stage.addActor(infoLabel);
         stage.addActor(brandLogo);
         stage.addActor(startLabel);
         stage.addActor(menuTable);
-
-        stage.addActor(win);
 
         menuTable.addAction(Actions.sequence(Actions.alpha(0f), Actions.moveTo(0f, -Gdx.graphics.getHeight() - Gdx.graphics.getHeight(), 0f)));
 
@@ -205,7 +191,7 @@ public class MenuScreen implements Screen, InputProcessor {
 
         // Play menu music:
         menuMusic.setLooping(true);
-        menuMusic.setVolume(game.prefs.getFloat("music", 1.0f));
+        menuMusic.setVolume(game.prefs.getFloat("music", 0.5f));
         menuMusic.play();
     }
 
@@ -303,7 +289,6 @@ public class MenuScreen implements Screen, InputProcessor {
 
                 spr.setSize(bgTile1.getWidth(), bgTile1.getHeight());
                 spr.setPosition(bgTile1.getWidth() * j, bgTile1.getHeight() * i);
-                System.out.println(bgTile1.getWidth() * j);
                 bgMenuTiles.get(i).add(spr);
             }
         }
