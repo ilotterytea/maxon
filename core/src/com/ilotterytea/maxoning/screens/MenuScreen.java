@@ -3,7 +3,6 @@ package com.ilotterytea.maxoning.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.ilotterytea.maxoning.MaxonGame;
@@ -28,12 +26,10 @@ public class MenuScreen implements Screen, InputProcessor {
     final Stage stage;
     final Skin skin;
 
-    final Image brandLogo, maxonLogo;
+    final Image brandLogo;
     final Label startLabel, infoLabel;
 
     final TextButton playGameButton, optionsButton, quitButton;
-
-    final NinePatch saveSlotPatch;
 
     final Music menuMusic;
 
@@ -68,9 +64,7 @@ public class MenuScreen implements Screen, InputProcessor {
 
         this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
 
-        this.maxonLogo = new Image(game.assetManager.get("icon.png", Texture.class));
         this.brandLogo = new Image(game.assetManager.get("sprites/brand.png", Texture.class));
-        this.saveSlotPatch = new NinePatch(game.assetManager.get("sprites/ui/save_slot.9.png", Texture.class), 33, 33, 33, 33);
 
         this.startLabel = new Label("PRESS START", skin, "press");
         this.infoLabel = new DebugLabel(skin);
@@ -118,8 +112,6 @@ public class MenuScreen implements Screen, InputProcessor {
 
         menuTable.add(playGameButton).padBottom(16f).padTop(32f);
         menuTable.row();
-        //menuTable.add(optionsButton).padBottom(16f);
-        //menuTable.row();
         menuTable.add(quitButton);
 
         stage.addActor(infoLabel);
