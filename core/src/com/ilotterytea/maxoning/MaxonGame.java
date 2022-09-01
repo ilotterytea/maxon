@@ -57,8 +57,4 @@ public class MaxonGame extends Game {
 		assetManager.dispose();
 		instance.dispose();
 	}
-
-	public void registerItems() {
-
-	}
 }
