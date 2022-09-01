@@ -22,6 +22,10 @@
     default: {
       file: fnt/MaxonPuff.fnt,
       scaledSize: 24
+    },
+    default_lidl: {
+      file: fnt/MaxonPuff.fnt,
+      scaledSize: 14
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
@@ -44,6 +48,21 @@
     credits: {
       font: default,
       fontColor: blackSemitransparent
+    },
+    purchaseitem_title: {
+      font: default
+    },
+    purchaseitem_desc: {
+      font: default_lidl,
+      fontColor: lightgrey
+    },
+    purchaseitem_price: {
+      font: default_lidl,
+      fontColor: yellow
+    },
+    disclaimer: {
+      font: default,
+      fontColor: lightgrey
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
