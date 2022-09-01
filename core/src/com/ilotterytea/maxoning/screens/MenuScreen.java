@@ -202,6 +202,7 @@ public class MenuScreen implements Screen, InputProcessor {
             brandLogo.addAction(
                     Actions.sequence(
                             Actions.parallel(
+                                    Actions.alpha(1f),
                                 Actions.rotateTo(0f, 2f),
                                 Actions.scaleTo(1f, 1f, 2f),
                                 Actions.moveTo(
