@@ -26,9 +26,6 @@ public class SpriteUtils {
             }
         }
 
-        System.out.println(Arrays.deepToString(tmp));
-        System.out.println(frames.length);
-
         return frames;
     }
 }
