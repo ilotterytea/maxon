@@ -2,11 +2,10 @@ package com.ilotterytea.maxoning.player;
 
 import com.ilotterytea.maxoning.ui.AnimatedImage;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 public class MaxonItemRegister {
-    private static Map<Integer, MaxonItem> items = new HashMap<>();
+    private static ArrayList<MaxonItem> items = new ArrayList<>();
 
     public static void register(
             int id,
@@ -14,9 +13,10 @@ public class MaxonItemRegister {
             String desc,
             AnimatedImage icon,
             MaxonItemEnum type,
-            float price
+            float price,
+            float multiplier
     ) {
-        items.put(id, new MaxonItem(name, desc, icon, type, price));
+        items.add(new MaxonItem(id, name, desc, icon, type, price, multiplier));
     }
 
     public static void unRegister(
@@ -25,7 +25,13 @@ public class MaxonItemRegister {
         items.remove(id);
     }
 
-    public static Map<Integer, MaxonItem> getItems() { return items; }
-    public static MaxonItem get(int id) { return items.get(id); }
-    public static boolean contains(int id) { return items.containsKey(id); }
+    public static ArrayList<MaxonItem> getItems() { return items; }
+    public static MaxonItem get(int id) {
+        for (MaxonItem item : items) {
+            if (item.id == id) {
+                return item;
+            }
+        }
+        return null;
+    }
 }
