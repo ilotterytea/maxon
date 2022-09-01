@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.ilotterytea.maxoning.MaxonGame;
@@ -160,10 +161,9 @@ public class GameScreen implements Screen, InputProcessor {
                 Gdx.graphics.getHeight() - (pointsBar.getHeight() / 2f)
         );
 
-        pointsLabel.setPosition(
-                (Gdx.graphics.getWidth() / 2.0f) - (pointsLabel.getWidth() / 2.0f),
-                Gdx.graphics.getHeight() - pointsLabel.getHeight() - 8
-        );
+        pointsLabel.setPosition(0, Gdx.graphics.getHeight() - pointsLabel.getHeight() - 8);
+        pointsLabel.setWidth(Gdx.graphics.getWidth());
+        pointsLabel.setAlignment(Align.center);
 
         blackBg.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         blackBg.addAction(Actions.parallel(Actions.alpha(0.25f)));
@@ -215,7 +215,7 @@ public class GameScreen implements Screen, InputProcessor {
         stage.addActor(scroll);
         stage.addActor(shopButton);
         stage.addActor(maxon);
-        stage.addActor(pointsBar);
+        //stage.addActor(pointsBar);
         stage.addActor(pointsLabel);
         stage.addActor(infoLabel);
         Gdx.input.setInputProcessor(new InputMultiplexer(this, stage));
