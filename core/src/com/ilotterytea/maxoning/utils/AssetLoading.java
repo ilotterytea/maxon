@@ -45,7 +45,7 @@ public class AssetLoading {
                 0, "The Suspicious and Sleepy Bro", "A falling asleep Bror will help you to pet Maxon almost to besvimers.",
                 new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/bror.png", Texture.class), 112, 112, 11, 7)),
                 MaxonItemEnum.SLAVE,
-                300,
+                600,
                 0.1f
         );
 
@@ -61,24 +61,24 @@ public class AssetLoading {
                 2, "Manlooshka", "rrrrr",
                 new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/manlooshka.png", Texture.class), 112, 112, 10, 4)),
                 MaxonItemEnum.SLAVE,
-                6200,
-                1f
+                8000,
+                5f
         );
 
         MaxonItemRegister.register(
                 3, "The Thirsty Cat", "Every time the kitty drinks water, drops of spilled water fall on the screen and pet Maxon's dry cheeks.",
                 new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/thirsty_cat.png", Texture.class), 112, 112, 6, 3)),
                 MaxonItemEnum.SLAVE,
-                10000,
-                1.5f
+                20000,
+                15f
         );
 
         MaxonItemRegister.register(
                 4, "The Furios Cat", "Petting FURIOSLY !!!",
                 new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/furios_cat.png", Texture.class), 112, 112, 7, 4)),
                 MaxonItemEnum.SLAVE,
-                20000,
-                5f
+                75000,
+                80f
         );
     }
 }
