@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.ui.AnimatedImage;
@@ -38,7 +37,7 @@ public class AssetLoadingScreen implements Screen {
         TextureRegion[] txrr = SpriteUtils.splitToTextureRegions(M4x0nnes, 112, 112, 10, 5);
         this.animatedMaxon = new AnimatedImage(txrr);
 
-        animatedMaxon.setPosition(Gdx.graphics.getWidth() - animatedMaxon.getWidth() * 0.25f - 8, 8);
+        animatedMaxon.setPosition(8, 8);
         animatedMaxon.setScale(0.25f);
 
         loadingLabel.setPosition(animatedMaxon.getWidth() * 0.25f + loadingLabel.getX() + 16, 8);
