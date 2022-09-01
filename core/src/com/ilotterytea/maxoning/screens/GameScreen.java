@@ -193,7 +193,7 @@ public class GameScreen implements Screen, InputProcessor {
         scroll = new ScrollPane(shoptable);
 
         scroll.setPosition(512f, -922f);
-        scroll.setSize(Gdx.graphics.getWidth() - 512f, 256f);
+        scroll.setSize(Gdx.graphics.getWidth() - 512f, 384f);
 
         shopButton.setSize(256f, 90f);
 
@@ -210,6 +210,8 @@ public class GameScreen implements Screen, InputProcessor {
                 isShopping = !isShopping;
             }
         });
+
+        scroll.setScrollingDisabled(false, true);
 
         stage.addActor(blackBg);
         stage.addActor(scroll);
