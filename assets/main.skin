@@ -25,7 +25,7 @@
     },
     default_lidl: {
       file: fnt/MaxonPuff.fnt,
-      scaledSize: 14
+      scaledSize: 18
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
@@ -62,7 +62,7 @@
     },
     disclaimer: {
       font: default,
-      fontColor: lightgrey
+      fontColor: grey
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
