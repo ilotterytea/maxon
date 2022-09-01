@@ -330,6 +330,33 @@ public class GameScreen implements Screen, InputProcessor {
             game.setScreen(new MenuScreen(game));
             dispose();
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            maxonCat.nextFrame();
+            maxon.setDrawable(maxonCat.getDrawable());
+            player.points += 1 * player.multiplier;
+
+            final TypingLabel label = new TypingLabel("{SHAKE}{RAINBOW}+" + Math.round(1 * player.multiplier)  + "{ENDRAINBOW}{ENDSHAKE}", skin, "default");
+
+            label.setPosition(
+                    maxon.getX() + (maxon.getWidth() / 2f) - 8,
+                    maxon.getY() + maxon.getHeight()
+            );
+
+            label.addAction(Actions.parallel(
+                    Actions.fadeOut(5f),
+                    Actions.moveTo(
+                            label.getX(), label.getY() + (float) Math.floor(Math.random() * 156), 5f, Interpolation.exp5Out)
+            ));
+
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    label.remove();
+                }
+            }, 10f);
+
+            stage.addActor(label);
+        }
         return false;
     }
 
