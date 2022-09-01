@@ -76,7 +76,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         blackBg = new Image(game.assetManager.get("sprites/black.png", Texture.class));
 
-        shopButton = new SupaIconButton(button, game.assetManager.get("sprites/icons/package.png", Texture.class), "Pet Shop", skin);
+        shopButton = new SupaIconButton(button, "Pet Shop", skin);
 
         bgTile = game.assetManager.get("sprites/menu/tile_1.png", Texture.class);
         bgTileAlt = game.assetManager.get("sprites/menu/tile_2.png", Texture.class);
