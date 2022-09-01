@@ -262,6 +262,11 @@ public class MenuScreen implements Screen, InputProcessor {
                 if (spr.getX() > Gdx.graphics.getWidth()) {
                     Sprite n_spr = spr;
                     n_spr.setPosition(f_spr.getX() - spr.getWidth(), f_spr.getY());
+
+                    if (spr.getTexture() == f_spr.getTexture()) {
+                        n_spr.setTexture(array.get(1).getTexture());
+                    }
+
                     array.remove(spr);
                     array.add(0, n_spr);
                 }
