@@ -62,7 +62,7 @@ public class GameScreen implements Screen, InputProcessor {
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         skin = new Skin(Gdx.files.internal("main.skin"));
 
-        shopWindow = new Window("Pet Shop", skin);
+        shopWindow = new Window(game.locale.TranslatableText("game.petShop"), skin);
 
         items = new ArrayList<>();
 
@@ -77,7 +77,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         blackBg = new Image(game.assetManager.get("sprites/black.png", Texture.class));
 
-        shopButton = new SupaIconButton(button, "Pet Shop", skin);
+        shopButton = new SupaIconButton(button, game.locale.TranslatableText("game.petShop"), skin);
 
         bgTile = game.assetManager.get("sprites/menu/tile_1.png", Texture.class);
         bgTileAlt = game.assetManager.get("sprites/menu/tile_2.png", Texture.class);
@@ -116,31 +116,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         maxon.addListener(new ClickListener() {
             @Override public void clicked(InputEvent event, float x, float y) {
-                maxonCat.nextFrame();
-                maxon.setDrawable(maxonCat.getDrawable());
-                player.points += 1 * player.multiplier;
-
-                final TypingLabel label = new TypingLabel("{SHAKE}{RAINBOW}+" + Math.round(1 * player.multiplier) + "{ENDRAINBOW}{ENDSHAKE}", skin, "default");
-
-                label.setPosition(
-                        maxon.getX() + (maxon.getWidth() / 2f) - 8,
-                        maxon.getY() + maxon.getHeight()
-                );
-
-                label.addAction(Actions.parallel(
-                        Actions.fadeOut(5f),
-                        Actions.moveTo(
-                                label.getX(), label.getY() + (float) Math.floor(Math.random() * 156), 5f, Interpolation.exp5Out)
-                ));
-
-                Timer.schedule(new Timer.Task() {
-                    @Override
-                    public void run() {
-                        label.remove();
-                    }
-                }, 10f);
-
-                stage.addActor(label);
+                displayPointIncrease();
             }
         });
 
@@ -241,7 +217,7 @@ public class GameScreen implements Screen, InputProcessor {
 
                     player.points += 1 * itemMultiplier;
 
-                    TypingLabel label = new TypingLabel("{SHAKE}{RAINBOW}+" + Math.round(1 * itemMultiplier)  + "{ENDRAINBOW}{ENDSHAKE}", skin, "default");
+                    TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", String.valueOf(Math.round(1 * itemMultiplier))), skin, "default");
 
                     label.setPosition(
                             maxon.getX() + (maxon.getWidth() / 2f) - 8,
@@ -296,7 +272,7 @@ public class GameScreen implements Screen, InputProcessor {
             }
         }
 
-        pointsLabel.setText(Math.round(player.points) + " S (x" + player.multiplier + ")");
+        pointsLabel.setText(game.locale.FormattedText("game.points", String.valueOf(Math.round(player.points)), String.valueOf(player.multiplier)));
 
         stage.draw();
         stage.act(delta);
@@ -332,33 +308,37 @@ public class GameScreen implements Screen, InputProcessor {
             dispose();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            maxonCat.nextFrame();
-            maxon.setDrawable(maxonCat.getDrawable());
-            player.points += 1 * player.multiplier;
-
-            final TypingLabel label = new TypingLabel("{SHAKE}{RAINBOW}+" + Math.round(1 * player.multiplier)  + "{ENDRAINBOW}{ENDSHAKE}", skin, "default");
-
-            label.setPosition(
-                    maxon.getX() + (maxon.getWidth() / 2f) - 8,
-                    maxon.getY() + maxon.getHeight()
-            );
-
-            label.addAction(Actions.parallel(
-                    Actions.fadeOut(5f),
-                    Actions.moveTo(
-                            label.getX(), label.getY() + (float) Math.floor(Math.random() * 156), 5f, Interpolation.exp5Out)
-            ));
-
-            Timer.schedule(new Timer.Task() {
-                @Override
-                public void run() {
-                    label.remove();
-                }
-            }, 10f);
-
-            stage.addActor(label);
+            displayPointIncrease();
         }
         return false;
+    }
+
+    private void displayPointIncrease() {
+        maxonCat.nextFrame();
+        maxon.setDrawable(maxonCat.getDrawable());
+        player.points += 1 * player.multiplier;
+
+        final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", String.valueOf(Math.round(1 * player.multiplier))), skin, "default");
+
+        label.setPosition(
+                maxon.getX() + (maxon.getWidth() / 2f) - 8,
+                maxon.getY() + maxon.getHeight()
+        );
+
+        label.addAction(Actions.parallel(
+                Actions.fadeOut(5f),
+                Actions.moveTo(
+                        label.getX(), label.getY() + (float) Math.floor(Math.random() * 156), 5f, Interpolation.exp5Out)
+        ));
+
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                label.remove();
+            }
+        }, 10f);
+
+        stage.addActor(label);
     }
 
     @Override
