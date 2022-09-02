@@ -280,6 +280,27 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public void resize(int width, int height) {
+        bgTiles.clear();
+
+        for (int i = 0; i < Gdx.graphics.getHeight() / bgTile.getHeight() + 1; i++) {
+            bgTiles.add(i, new ArrayList<Sprite>());
+
+            for (int j = -1; j < Gdx.graphics.getWidth() / bgTile.getWidth(); j++) {
+                Sprite spr = new Sprite();
+
+                if ((j + i) % 2 == 0) {
+                    spr.setTexture(bgTile);
+                } else {
+                    spr.setTexture(bgTileAlt);
+                }
+
+                spr.setSize(bgTile.getWidth(), bgTile.getHeight());
+
+                spr.setPosition(bgTile.getWidth() * j, bgTile.getHeight() * i);
+                bgTiles.get(i).add(spr);
+            }
+        }
+
         stage.getViewport().update(width, height, true);
     }
 
