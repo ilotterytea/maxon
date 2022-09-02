@@ -40,9 +40,9 @@ public class AssetLoading {
         // Sounds:
     }
 
-    public static void registerItems(AssetManager am) {
+    public static void registerItems(AssetManager am, I18N i18n) {
         MaxonItemRegister.register(
-                0, "The Suspicious and Sleepy Bro", "A falling asleep Bror will help you to pet Maxon almost to besvimers.",
+                0, i18n.TranslatableText("pet.bror.name"), i18n.TranslatableText("pet.bror.desc"),
                 new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/bror.png", Texture.class), 112, 112, 11, 7)),
                 MaxonItemEnum.SLAVE,
                 600,
@@ -50,7 +50,7 @@ public class AssetLoading {
         );
 
         MaxonItemRegister.register(
-                1, "The Sandwich Cat", "Even though his head is shielded from the light by bread, he can still to pet Maxon by his cheeks",
+                1, i18n.TranslatableText("pet.sandwich.name"), i18n.TranslatableText("pet.sandwich.desc"),
                 new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/sandwich_cat.png", Texture.class), 112, 112, 4, 7)),
                 MaxonItemEnum.SLAVE,
                 2000,
@@ -58,7 +58,7 @@ public class AssetLoading {
         );
 
         MaxonItemRegister.register(
-                2, "Manlooshka", "rrrrr",
+                2, i18n.TranslatableText("pet.manlooshka.name"), i18n.TranslatableText("pet.manlooshka.desc"),
                 new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/manlooshka.png", Texture.class), 112, 112, 10, 4)),
                 MaxonItemEnum.SLAVE,
                 8000,
@@ -66,7 +66,7 @@ public class AssetLoading {
         );
 
         MaxonItemRegister.register(
-                3, "The Thirsty Cat", "Every time the kitty drinks water, drops of spilled water fall on the screen and pet Maxon's dry cheeks.",
+                3, i18n.TranslatableText("pet.thirsty.name"), i18n.TranslatableText("pet.thirsty.desc"),
                 new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/thirsty_cat.png", Texture.class), 112, 112, 6, 3)),
                 MaxonItemEnum.SLAVE,
                 20000,
@@ -74,7 +74,7 @@ public class AssetLoading {
         );
 
         MaxonItemRegister.register(
-                4, "The Furios Cat", "Petting FURIOSLY !!!",
+                4, i18n.TranslatableText("pet.furios.name"), i18n.TranslatableText("pet.furios.desc"),
                 new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/furios_cat.png", Texture.class), 112, 112, 7, 4)),
                 MaxonItemEnum.SLAVE,
                 75000,

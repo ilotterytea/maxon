@@ -20,11 +20,11 @@
   },
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
     default: {
-      file: fnt/MaxonPuff.fnt,
+      file: fnt/MaxonRegularSemi.fnt,
       scaledSize: 24
     },
     default_lidl: {
-      file: fnt/MaxonPuff.fnt,
+      file: fnt/MaxonRegular.fnt,
       scaledSize: 18
     }
   },
