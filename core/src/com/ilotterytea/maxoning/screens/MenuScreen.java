@@ -67,12 +67,12 @@ public class MenuScreen implements Screen, InputProcessor {
 
         this.brandLogo = new Image(game.assetManager.get("sprites/brand.png", Texture.class));
 
-        this.startLabel = new Label("PRESS START", skin, "press");
+        this.startLabel = new Label(game.locale.TranslatableText("menu.pressStart"), skin, "press");
         this.infoLabel = new DebugLabel(skin);
 
-        this.playGameButton = new TextButton("PLAY GAME", skin);
-        this.optionsButton = new TextButton("OPTIONS", skin);
-        this.quitButton = new TextButton("QUIT TO DESKTOP", skin);
+        this.playGameButton = new TextButton(game.locale.TranslatableText("menu.playGame"), skin);
+        this.optionsButton = new TextButton(game.locale.TranslatableText("menu.options"), skin);
+        this.quitButton = new TextButton(game.locale.TranslatableText("menu.quit"), skin);
 
         optionsButton.setDisabled(true);
 
