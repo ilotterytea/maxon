@@ -52,7 +52,7 @@ public class AssetLoadingScreen implements Screen {
 
     private void update() {
         if (game.assetManager.update()) {
-            AssetLoading.registerItems(game.assetManager);
+            AssetLoading.registerItems(game.assetManager, game.locale);
             game.setScreen(new SplashScreen(game));
             dispose();
         }
