@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.ilotterytea.maxoning.MaxonGame;
+import com.ilotterytea.maxoning.inputprocessors.CrossProcessor;
 import com.ilotterytea.maxoning.ui.DebugLabel;
 
 import java.io.IOException;
@@ -121,7 +122,7 @@ public class MenuScreen implements Screen, InputProcessor {
 
         menuTable.addAction(Actions.sequence(Actions.alpha(0f), Actions.moveTo(0f, -Gdx.graphics.getHeight() - Gdx.graphics.getHeight(), 0f)));
 
-        Gdx.input.setInputProcessor(new InputMultiplexer(this, stage));
+        Gdx.input.setInputProcessor(new InputMultiplexer(this, new CrossProcessor(), stage));
     }
 
     @Override public void show() {
@@ -186,8 +187,6 @@ public class MenuScreen implements Screen, InputProcessor {
         menuMusic.setVolume(game.prefs.getFloat("music", 0.5f));
         menuMusic.play();
     }
-
-    private final float wallVelocity = 1f;
 
     @Override
     public void render(float delta) {
