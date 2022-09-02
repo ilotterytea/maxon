@@ -10,10 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.MaxonGame;
+import com.ilotterytea.maxoning.inputprocessors.CrossProcessor;
 import com.ilotterytea.maxoning.ui.DebugLabel;
-import com.ilotterytea.maxoning.utils.AssetLoading;
 
 public class SplashScreen implements InputProcessor, Screen {
 
@@ -109,7 +108,7 @@ public class SplashScreen implements InputProcessor, Screen {
         stage.addActor(org);
         stage.addActor(disclaimer);
 
-        Gdx.input.setInputProcessor(new InputMultiplexer(this, stage));
+        Gdx.input.setInputProcessor(new InputMultiplexer(this, new CrossProcessor(), stage));
     }
 
     @Override public void show() {
@@ -117,8 +116,6 @@ public class SplashScreen implements InputProcessor, Screen {
         introMusic.play();
         render(Gdx.graphics.getDeltaTime());
     }
-
-    private final float wallVelocity = 1f;
 
     @Override
     public void render(float delta) {

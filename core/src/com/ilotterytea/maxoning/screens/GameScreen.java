@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.anim.SpriteUtils;
+import com.ilotterytea.maxoning.inputprocessors.CrossProcessor;
 import com.ilotterytea.maxoning.player.MaxonItem;
 import com.ilotterytea.maxoning.player.MaxonItemRegister;
 import com.ilotterytea.maxoning.player.MaxonPlayer;
@@ -220,7 +221,7 @@ public class GameScreen implements Screen, InputProcessor {
         //stage.addActor(pointsBar);
         stage.addActor(pointsLabel);
         stage.addActor(infoLabel);
-        Gdx.input.setInputProcessor(new InputMultiplexer(this, stage));
+        Gdx.input.setInputProcessor(new InputMultiplexer(this, new CrossProcessor(), stage));
     }
 
     @Override
