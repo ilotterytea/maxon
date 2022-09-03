@@ -112,7 +112,7 @@ public class SplashScreen implements InputProcessor, Screen {
     }
 
     @Override public void show() {
-        introMusic.setVolume(game.prefs.getFloat("music", 0.5f));
+        introMusic.setVolume((game.prefs.getBoolean("music", true)) ? 1f : 0f);
         introMusic.play();
         render(Gdx.graphics.getDeltaTime());
     }
