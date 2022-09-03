@@ -6,6 +6,14 @@
   "menu.options": "НАСТРОЙКИ...",
   "menu.quit": "ВЫЙТИ НА РАБОЧИЙ СТОЛ",
 
+  "options.title": "Настройки",
+  "options.music": "Музыка: %s",
+  "options.sound": "Звук: %s",
+  "options.vsync": "V-Sync: %s",
+  "options.fullscreen": "Полноэкранный режим: %s",
+  "options.language": "Язык: %s (%s)",
+  "options.close": "Вернуться на главный экран",
+
   "game.petShop": "Магазин Щекастых",
   "game.points": "%s S (x%s)",
   "game.newPoint": "{SHAKE}{RAINBOW} +%s {ENDRAINBOW}{ENDSHAKE}",
