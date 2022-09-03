@@ -6,6 +6,14 @@
   "menu.options": "OPTIONS",
   "menu.quit": "QUIT TO DESKTOP",
 
+  "options.title": "Options",
+  "options.music": "Music: %s",
+  "options.sound": "Sound: %s",
+  "options.vsync": "V-Sync: %s",
+  "options.fullscreen": "Fullscreen: %s",
+  "options.language": "Language: %s (%s)",
+  "options.close": "Back to main title",
+
   "game.petShop": "Pet Shop",
   "game.points": "%s S (x%s)",
   "game.newPoint": "{SHAKE}{RAINBOW} +%s {ENDRAINBOW}{ENDSHAKE}",
