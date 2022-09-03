@@ -30,9 +30,10 @@ public class AssetLoading {
         am.load("sprites/menu/tile_2.png", Texture.class);
 
         // // Ninepatches:
-        am.load("sprites/ui/button.9.png", Texture.class);
-        am.load("sprites/ui/button_clicked.9.png", Texture.class);
-        am.load("sprites/ui/button_over.9.png", Texture.class);
+        am.load("sprites/ui/sqrbutton.png", Texture.class);
+        am.load("sprites/ui/sqrbutton_down.png", Texture.class);
+        am.load("sprites/ui/sqrbutton_over.png", Texture.class);
+        am.load("sprites/ui/sqrbutton_disabled.png", Texture.class);
 
         // Music:
         am.load("mus/menu/mus_menu_intro.ogg", Music.class);
