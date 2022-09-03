@@ -9,16 +9,20 @@ import java.util.*;
 
 public class I18N {
     private Map<String, String> language = new HashMap<>();
+    private FileHandle fileHandle;
 
-    public I18N(String languageId) {
-        FileHandle fh = new FileHandle(String.format("i18n/%s.json", languageId));
+    public I18N(FileHandle fh) {
+        fileHandle = fh;
 
-        JsonValue json = new JsonReader().parse(fh);
+        JsonValue json = new JsonReader().parse(fileHandle);
 
         for (JsonValue val : json.iterator()) {
-            language.put(val.name, json.getString(val.name));
+            this.language.put(val.name, json.getString(val.name));
         }
     }
+
+    public FileHandle getFileHandle() { return fileHandle; }
+    public Map<String, String> getLanguage() { return language; }
 
     public String TranslatableText(String id) {
         if (language.containsKey(id)) {
