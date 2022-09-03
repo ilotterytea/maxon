@@ -57,8 +57,6 @@ public class GameScreen implements Screen, InputProcessor {
         player = new MaxonPlayer();
         player.load(GameDataSystem.LoadData());
 
-        button = new NinePatch(game.assetManager.get("sprites/ui/button.9.png", Texture.class), 36, 36, 36, 36);
-
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         skin = new Skin(Gdx.files.internal("main.skin"));
 
