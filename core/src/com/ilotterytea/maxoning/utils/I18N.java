@@ -45,7 +45,7 @@ public class I18N {
                 if (index + 1 < params.length) { index++; }
             }
 
-            result.append(next);
+            result.append(next).append(' ');
         }
 
         return result.toString();
