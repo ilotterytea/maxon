@@ -98,21 +98,21 @@ public class OptionsTable extends Table {
 
         lidlOptionsTable.add(vsyncButton).size(512f, 81f).pad(10f).left();
 
-        final NinepatchButton fullscreenButton = new NinepatchButton(buttonUp, buttonDown, buttonOver, game.locale.FormattedText("options.fullscreen", (game.prefs.getBoolean("fullscreen", true)) ? "ON" : "OFF"), skin, "default");
+        final NinepatchButton fullscreenButton = new NinepatchButton(buttonUp, buttonDown, buttonOver, game.locale.FormattedText("options.fullscreen", (game.prefs.getBoolean("fullscreen", false)) ? "ON" : "OFF"), skin, "default");
 
         fullscreenButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.prefs.putBoolean("fullscreen", !game.prefs.getBoolean("fullscreen", true));
+                game.prefs.putBoolean("fullscreen", !game.prefs.getBoolean("fullscreen", false));
                 game.prefs.flush();
 
-                if (game.prefs.getBoolean("fullscreen", true)) {
+                if (game.prefs.getBoolean("fullscreen", false)) {
                     Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
                 } else {
                     Gdx.graphics.setWindowedMode(game.prefs.getInteger("width", Gdx.graphics.getWidth()), game.prefs.getInteger("height", Gdx.graphics.getHeight()));
                 }
 
-                fullscreenButton.setText(game.locale.FormattedText("options.fullscreen", (game.prefs.getBoolean("fullscreen", true)) ? "ON" : "OFF"));
+                fullscreenButton.setText(game.locale.FormattedText("options.fullscreen", (game.prefs.getBoolean("fullscreen", false)) ? "ON" : "OFF"));
             }
         });
 
