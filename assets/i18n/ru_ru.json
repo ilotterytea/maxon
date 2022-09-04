@@ -18,6 +18,8 @@
   "game.points": "%s Баллы жмякания (x%s/клик)",
   "game.newPoint": "{SHAKE}{RAINBOW}+%s{ENDRAINBOW}{ENDSHAKE}",
 
+  "game.inventory.title": "Инвентарь",
+
   "pet.bror.name": "Подозрительный и сонный Брор",
   "pet.bror.desc": "Засыпающий Брор поможет тебе гладить Максона практически до потери сознания.",
 
