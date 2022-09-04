@@ -26,15 +26,12 @@ import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GameScreen implements Screen, InputProcessor {
     final MaxonGame game;
-
-    DecimalFormat decimalFormat;
 
     MaxonPlayer player;
 
@@ -62,8 +59,6 @@ public class GameScreen implements Screen, InputProcessor {
 
     public GameScreen(MaxonGame game) throws IOException, ClassNotFoundException {
         this.game = game;
-
-        decimalFormat = new DecimalFormat("0.00");
 
         player = new MaxonPlayer();
         player.load(GameDataSystem.LoadData());
@@ -215,8 +210,8 @@ public class GameScreen implements Screen, InputProcessor {
 
         // Points label:
         pointsLabel = new Label(game.locale.FormattedText("game.points",
-                decimalFormat.format(player.points),
-                decimalFormat.format(player.multiplier)
+                String.valueOf(player.points),
+                String.valueOf(player.multiplier)
         ), skin);
 
         pointsLabel.setPosition(pointsBg.getX(), pointsBg.getY());
@@ -299,7 +294,7 @@ public class GameScreen implements Screen, InputProcessor {
 
                 player.points += multiplier;
 
-                final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", String.valueOf(Float.parseFloat(decimalFormat.format(1 * player.multiplier)))), skin, "default");
+                final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", String.valueOf(1 * player.multiplier)), skin, "default");
 
                 label.setPosition(
                         mainTable.getX() + actor.getActorX(),
@@ -367,8 +362,8 @@ public class GameScreen implements Screen, InputProcessor {
 
         // Update the points label:
         pointsLabel.setText(game.locale.FormattedText("game.points",
-                decimalFormat.format(player.points),
-                decimalFormat.format(player.multiplier)
+                String.valueOf(player.points),
+                String.valueOf(player.multiplier)
         ));
 
         stage.draw();
@@ -439,7 +434,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         player.points += 1 * player.multiplier;
 
-        final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", String.valueOf(Float.parseFloat(decimalFormat.format(1 * player.multiplier)))), skin, "default");
+        final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", String.valueOf(1 * player.multiplier)), skin, "default");
 
         label.setPosition(
                 mainTable.getX() + actor.getActorX(),
