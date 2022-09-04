@@ -44,6 +44,13 @@ public class MaxonGame extends Game {
 			}
 		}
 
+		prefs.putInteger("width", Gdx.graphics.getWidth());
+		prefs.putInteger("height", Gdx.graphics.getHeight());
+		prefs.flush();
+
+		Gdx.graphics.setVSync(prefs.getBoolean("vsync", true));
+		if (prefs.getBoolean("fullscreen", false)) { Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode()); }
+
 		assetManager = new AssetManager();
 
 		this.setScreen(new AssetLoadingScreen(this));
