@@ -15,26 +15,24 @@ public class PurchaseItem extends Stack {
     ) {
         super(new Image(ninepatch));
 
-        Label title = new Label(name, skin, "purchaseitem_title");
+        Table summary = new Table();
+        summary.setHeight(super.getHeight());
+
+        Label title = new Label(String.format("%s\n(%s)", name, price), skin, "purchaseitem_title");
+
+        summary.add(title).fillX().row();
+
         Label description = new Label(desc, skin, "purchaseitem_desc");
-        Label cost = new Label(price + "S", skin, "purchaseitem_price");
-
-        title.setAlignment(Align.center);
-        description.setAlignment(Align.center);
-        cost.setAlignment(Align.center);
-
         description.setWrap(true);
 
-        Table table = new Table();
+        summary.add(description).fillX().row();
 
-        table.setPosition(0 , super.getHeight());
-        table.setWidth(super.getWidth());
+        Table main = new Table();
+        main.add(icon).size(81, 81).left().pad(5f);
+        main.add(summary).fillY().fillX().right().pad(5f);
 
-        table.add(icon).pad(8).center().row();
-        table.add(title).expand().padBottom(8).center().row();
-        table.add(description).expand().fillX().center().row();
-        table.add(cost).expand().fillX().center().row();
+        main.align(Align.left);
 
-        super.addActor(table);
+        super.addActor(main);
     }
 }
