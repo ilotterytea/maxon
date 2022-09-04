@@ -18,6 +18,8 @@
   "game.points": "%s Squish Points (x%s/click)",
   "game.newPoint": "{SHAKE}{RAINBOW}+%s{ENDRAINBOW}{ENDSHAKE}",
 
+  "game.inventory.title": "Inventory",
+
   "pet.bror.name": "The Suspicious and Sleepy Bro",
   "pet.bror.desc": "A falling asleep Bror will help you to pet Maxon almost to besvimers",
 
