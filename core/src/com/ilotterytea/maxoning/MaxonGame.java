@@ -34,7 +34,7 @@ public class MaxonGame extends Game {
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		prefs = Gdx.app.getPreferences("Maxoning");
-		locale = new I18N(prefs.getString("lang", "en_us"));
+		locale = new I18N(Gdx.files.internal("i18n/" + prefs.getString("lang", "en_us") + ".json"));
 
 		if (!GameDataSystem.exists()) {
 			try {
