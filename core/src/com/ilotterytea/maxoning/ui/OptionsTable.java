@@ -13,12 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.screens.SplashScreen;
 import com.ilotterytea.maxoning.utils.I18N;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Locale;
 
 public class OptionsTable extends Table {
@@ -129,8 +129,9 @@ public class OptionsTable extends Table {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 int index = 0;
-                FileHandle folder = Gdx.files.internal("i18n");
-                ArrayList<FileHandle> fhArray = new ArrayList<>(Arrays.asList(folder.list()));
+                ArrayList<FileHandle> fhArray = new ArrayList<>();
+                fhArray.add(MaxonConstants.FILE_RU_RU);
+                fhArray.add(MaxonConstants.FILE_EN_US);
 
                 if (fhArray.indexOf(game.locale.getFileHandle()) + 1 < fhArray.size()) {
                     index = fhArray.indexOf(game.locale.getFileHandle()) + 1;
