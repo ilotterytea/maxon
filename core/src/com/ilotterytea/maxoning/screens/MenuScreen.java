@@ -3,6 +3,7 @@ package com.ilotterytea.maxoning.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,7 +16,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.inputprocessors.CrossProcessor;
-import com.ilotterytea.maxoning.ui.DebugLabel;
+import com.ilotterytea.maxoning.ui.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,16 +28,17 @@ public class MenuScreen implements Screen, InputProcessor {
     final Stage stage;
     final Skin skin;
 
-    final Image brandLogo;
-    final Label startLabel, infoLabel;
+    Image brandLogo, blackBg;
+    Label startLabel, infoLabel;
 
-    final TextButton playGameButton, optionsButton, quitButton;
-
+    NinepatchButton singlePlayerButton, optionsButton, quitButton;
     final Music menuMusic;
 
-    final Table menuTable;
+    Table menuTable, optionsTable;
 
     final Texture bgTile1, bgTile2;
+
+    NinePatch buttonUp, buttonDown, buttonOver, buttonDisabled;
 
     private ArrayList<ArrayList<Sprite>> bgMenuTiles;
 
@@ -44,6 +46,11 @@ public class MenuScreen implements Screen, InputProcessor {
 
     public MenuScreen(final MaxonGame game) {
         this.game = game;
+
+        buttonUp = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton.png", Texture.class), 8, 8, 8, 8);
+        buttonDown = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton_down.png", Texture.class), 8, 8, 8, 8);
+        buttonOver = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton_over.png", Texture.class), 8, 8, 8, 8);
+        buttonDisabled = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton_disabled.png", Texture.class), 8, 8, 8, 8);
 
         bgTile1 = game.assetManager.get("sprites/menu/tile_1.png", Texture.class);
         bgTile2 = game.assetManager.get("sprites/menu/tile_2.png", Texture.class);
@@ -65,18 +72,20 @@ public class MenuScreen implements Screen, InputProcessor {
 
         this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
 
-        this.brandLogo = new Image(game.assetManager.get("sprites/brand.png", Texture.class));
+        brandLogo = new Image(game.assetManager.get("sprites/brand.png", Texture.class));
+        blackBg = new Image(game.assetManager.get("sprites/black.png", Texture.class));
 
         this.startLabel = new Label(game.locale.TranslatableText("menu.pressStart"), skin, "press");
         this.infoLabel = new DebugLabel(skin);
 
-        this.playGameButton = new TextButton(game.locale.TranslatableText("menu.playGame"), skin);
-        this.optionsButton = new TextButton(game.locale.TranslatableText("menu.options"), skin);
-        this.quitButton = new TextButton(game.locale.TranslatableText("menu.quit"), skin);
+        // Menu Buttons:
+        menuTable = new Table();
 
-        optionsButton.setDisabled(true);
+        singlePlayerButton = new NinepatchButton(buttonUp, buttonDown, buttonOver, game.locale.TranslatableText("menu.playGame"), skin, "default");
+        optionsButton = new NinepatchButton(buttonUp, buttonDown, buttonOver, game.locale.TranslatableText("menu.options"), skin, "default");
+        quitButton = new NinepatchButton(buttonUp, buttonDown, buttonOver, game.locale.TranslatableText("menu.quit"), skin, "default");
 
-        playGameButton.addListener(new ClickListener() {
+        singlePlayerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 try {
@@ -84,17 +93,30 @@ public class MenuScreen implements Screen, InputProcessor {
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
-                menuMusic.setVolume(game.prefs.getFloat("music", 1.0f) / 2.0f);
                 dispose();
             }
         });
+
+        // Options:
         optionsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("options!");
+                menuTable.clearActions();
+                menuTable.addAction(Actions.moveTo(-Gdx.graphics.getWidth(), menuTable.getY(), 0.75f, Interpolation.sine));
+
+                optionsTable.clearActions();
+                optionsTable.addAction(Actions.moveTo(0, optionsTable.getY(), 0.75f, Interpolation.sine));
+
+                blackBg.clearActions();
+                blackBg.addAction(Actions.alpha(0.5f));
+
+                brandLogo.addAction(
+                        Actions.moveTo(brandLogo.getX(), brandLogo.getY() + 512f, 0.5f, Interpolation.sine)
+                );
             }
         });
 
+        // Exit the game when "quit button" is pressed:
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -102,27 +124,39 @@ public class MenuScreen implements Screen, InputProcessor {
             }
         });
 
-        this.menuTable = new Table();
-
-        menuTable.setPosition(0, 0);
-        menuTable.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
+        // Set the width and position for menu table:
+        menuTable.setPosition(0, Gdx.graphics.getHeight());
+        menuTable.setWidth(Gdx.graphics.getWidth());
         menuTable.align(Align.center);
 
-        menuTable.pad(12f);
+        menuTable.add(singlePlayerButton).width(512f).height(81f).padBottom(10f).row();
+        menuTable.add(optionsButton).width(512f).height(81f).padBottom(91f).row();
+        menuTable.add(quitButton).width(512f).height(81f).row();
 
-        menuTable.add(playGameButton).padBottom(16f).padTop(32f);
-        menuTable.row();
-        menuTable.add(quitButton);
+        blackBg.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        blackBg.addAction(Actions.alpha(0.25f));
 
+        // Options table:
+        optionsTable = new OptionsTable(game, skin, buttonUp, buttonDown, buttonOver, menuMusic, menuTable, blackBg, brandLogo);
+
+        stage.addActor(blackBg);
         stage.addActor(infoLabel);
         stage.addActor(brandLogo);
         stage.addActor(startLabel);
         stage.addActor(menuTable);
+        stage.addActor(optionsTable);
 
         menuTable.addAction(Actions.sequence(Actions.alpha(0f), Actions.moveTo(0f, -Gdx.graphics.getHeight() - Gdx.graphics.getHeight(), 0f)));
+        optionsTable.addAction(Actions.moveTo(Gdx.graphics.getWidth(), 0, 0f));
 
         Gdx.input.setInputProcessor(new InputMultiplexer(this, new CrossProcessor(), stage));
+
+        // Setting the music:
+        if (game.prefs.getBoolean("music", true)) {
+            menuMusic.setLooping(true);
+            menuMusic.setVolume((game.prefs.getBoolean("music", true)) ? 1f : 0f);
+            menuMusic.play();
+        }
     }
 
     @Override public void show() {
@@ -182,10 +216,7 @@ public class MenuScreen implements Screen, InputProcessor {
         // Start to render:
         render(Gdx.graphics.getDeltaTime());
 
-        // Play menu music:
-        menuMusic.setLooping(true);
-        menuMusic.setVolume(game.prefs.getFloat("music", 0.5f));
-        menuMusic.play();
+
     }
 
     @Override
@@ -228,7 +259,7 @@ public class MenuScreen implements Screen, InputProcessor {
             menuTable.addAction(
                     Actions.parallel(
                             Actions.fadeIn(1.5f),
-                            Actions.moveTo(0, 0, 1.5f, Interpolation.smoother)
+                            Actions.moveTo(0, (Gdx.graphics.getHeight() / 2f) - (menuTable.getHeight() / 2f) - 64f, 2.5f, Interpolation.smoother)
                     )
             );
 
