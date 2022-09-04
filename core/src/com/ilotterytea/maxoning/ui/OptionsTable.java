@@ -148,6 +148,7 @@ public class OptionsTable extends Table {
 
                 switchLangButton.setText(game.locale.FormattedText("options.language", locale.getDisplayLanguage(), locale.getDisplayCountry()));
                 game.setScreen(new SplashScreen(game));
+                music.stop();
             }
         });
 
