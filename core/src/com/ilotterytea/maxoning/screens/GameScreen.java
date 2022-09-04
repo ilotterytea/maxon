@@ -215,8 +215,8 @@ public class GameScreen implements Screen, InputProcessor {
 
         // Points label:
         pointsLabel = new Label(game.locale.FormattedText("game.points",
-                String.valueOf(Float.parseFloat(decimalFormat.format(player.points))),
-                String.valueOf(Float.parseFloat(decimalFormat.format(player.multiplier)))
+                decimalFormat.format(player.points),
+                decimalFormat.format(player.multiplier)
         ), skin);
 
         pointsLabel.setPosition(pointsBg.getX(), pointsBg.getY());
@@ -367,8 +367,8 @@ public class GameScreen implements Screen, InputProcessor {
 
         // Update the points label:
         pointsLabel.setText(game.locale.FormattedText("game.points",
-                String.valueOf(Float.parseFloat(decimalFormat.format(player.points))),
-                String.valueOf(Float.parseFloat(decimalFormat.format(player.multiplier)))
+                decimalFormat.format(player.points),
+                decimalFormat.format(player.multiplier)
         ));
 
         stage.draw();
