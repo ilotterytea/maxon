@@ -24,8 +24,12 @@
       scaledSize: 24
     },
     default_lidl: {
-      file: fnt/MaxonRegular.fnt,
+      file: fnt/MaxonRegularSemi.fnt,
       scaledSize: 18
+    },
+    default_slidl: {
+      file: fnt/MaxonRegularSemi.fnt,
+      scaledSize: 14
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
@@ -50,11 +54,12 @@
       fontColor: blackSemitransparent
     },
     purchaseitem_title: {
-      font: default
+      font: default_lidl,
+      fontColor: yellow
     },
     purchaseitem_desc: {
-      font: default_lidl,
-      fontColor: lightgrey
+      font: default_slidl,
+      fontColor: white
     },
     purchaseitem_price: {
       font: default_lidl,
