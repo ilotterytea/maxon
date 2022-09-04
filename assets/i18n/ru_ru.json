@@ -15,8 +15,8 @@
   "options.close": "Вернуться на главный экран",
 
   "game.petShop": "Магазин Щекастых",
-  "game.points": "%s S (x%s)",
-  "game.newPoint": "{SHAKE}{RAINBOW} +%s {ENDRAINBOW}{ENDSHAKE}",
+  "game.points": "%s Баллы жмякания (x%s/клик)",
+  "game.newPoint": "{SHAKE}{RAINBOW}+%s{ENDRAINBOW}{ENDSHAKE}",
 
   "pet.bror.name": "Подозрительный и сонный Брор",
   "pet.bror.desc": "Засыпающий Брор поможет тебе гладить Максона практически до потери сознания.",
