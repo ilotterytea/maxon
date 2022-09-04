@@ -15,8 +15,8 @@
   "options.close": "Back to main title",
 
   "game.petShop": "Pet Shop",
-  "game.points": "%s S (x%s)",
-  "game.newPoint": "{SHAKE}{RAINBOW} +%s {ENDRAINBOW}{ENDSHAKE}",
+  "game.points": "%s Squish Points (x%s/click)",
+  "game.newPoint": "{SHAKE}{RAINBOW}+%s{ENDRAINBOW}{ENDSHAKE}",
 
   "pet.bror.name": "The Suspicious and Sleepy Bro",
   "pet.bror.desc": "A falling asleep Bror will help you to pet Maxon almost to besvimers",
