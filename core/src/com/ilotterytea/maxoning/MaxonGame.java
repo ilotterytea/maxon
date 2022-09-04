@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ilotterytea.maxoning.player.MaxonPlayer;
 import com.ilotterytea.maxoning.screens.AssetLoadingScreen;
 import com.ilotterytea.maxoning.utils.I18N;
@@ -14,6 +15,7 @@ import java.io.IOException;
 
 public class MaxonGame extends Game {
 	public SpriteBatch batch;
+	public ShapeRenderer shapeRenderer;
 	public AssetManager assetManager;
 	public Preferences prefs;
 	public I18N locale;
@@ -30,6 +32,7 @@ public class MaxonGame extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+		shapeRenderer = new ShapeRenderer();
 		prefs = Gdx.app.getPreferences("Maxoning");
 		locale = new I18N(prefs.getString("lang", "en_us"));
 
