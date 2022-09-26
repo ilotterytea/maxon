@@ -20,16 +20,16 @@
   },
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
     default: {
-      file: fnt/MaxonRegularSemi.fnt,
-      scaledSize: 24
+      file: fnt/peepo.fnt,
+      scaledSize: 22
     },
     default_lidl: {
-      file: fnt/MaxonRegularSemi.fnt,
-      scaledSize: 18
+      file: fnt/peepo.fnt,
+      scaledSize: 16
     },
     default_slidl: {
-      file: fnt/MaxonRegularSemi.fnt,
-      scaledSize: 14
+      file: fnt/peepo.fnt,
+      scaledSize: 12
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
