@@ -7,7 +7,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ilotterytea.maxoning.player.MaxonPlayer;
-import com.ilotterytea.maxoning.screens.AssetLoadingScreen;
+import com.ilotterytea.maxoning.screens.SplashScreen;
 import com.ilotterytea.maxoning.utils.I18N;
 import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 
@@ -53,7 +53,7 @@ public class MaxonGame extends Game {
 
 		assetManager = new AssetManager();
 
-		this.setScreen(new AssetLoadingScreen(this));
+		this.setScreen(new SplashScreen(this));
 	}
 
 	@Override
