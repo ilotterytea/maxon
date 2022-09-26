@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -72,7 +73,8 @@ public class GameScreen implements Screen, InputProcessor {
         }
 
         // Make the background a little dimmed:
-        blackBg = new Image(game.assetManager.get("sprites/black.png", Texture.class));
+        blackBg = new Image();
+        blackBg.setColor(0f, 0f, 0f, 1f);
         blackBg.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         blackBg.addAction(Actions.parallel(Actions.alpha(0.25f)));
         stage.addActor(blackBg);
@@ -205,30 +207,10 @@ public class GameScreen implements Screen, InputProcessor {
 
         stage.addActor(pointsLabel);
 
-        bgTile = game.assetManager.get("sprites/menu/tile_1.png", Texture.class);
-        bgTileAlt = game.assetManager.get("sprites/menu/tile_2.png", Texture.class);
-
         // Generate the background:
         bgTiles = new ArrayList<>();
 
-        for (int i = 0; i < Gdx.graphics.getHeight() / bgTile.getHeight() + 1; i++) {
-            bgTiles.add(i, new ArrayList<Sprite>());
-
-            for (int j = -1; j < Gdx.graphics.getWidth() / bgTile.getWidth(); j++) {
-                Sprite spr = new Sprite();
-
-                if ((j + i) % 2 == 0) {
-                    spr.setTexture(bgTile);
-                } else {
-                    spr.setTexture(bgTileAlt);
-                }
-
-                spr.setSize(bgTile.getWidth(), bgTile.getHeight());
-
-                spr.setPosition(bgTile.getWidth() * j, bgTile.getHeight() * i);
-                bgTiles.get(i).add(spr);
-            }
-        }
+        genNewBgTiles((int) stage.getWidth(), (int) stage.getHeight());
 
         // Table for Maxon cat:
         mainTable = new Table();
@@ -359,26 +341,29 @@ public class GameScreen implements Screen, InputProcessor {
     public void resize(int width, int height) {
         bgTiles.clear();
 
-        for (int i = 0; i < Gdx.graphics.getHeight() / bgTile.getHeight() + 1; i++) {
-            bgTiles.add(i, new ArrayList<Sprite>());
+        genNewBgTiles(width, height);
 
-            for (int j = -1; j < Gdx.graphics.getWidth() / bgTile.getWidth(); j++) {
-                Sprite spr = new Sprite();
+        stage.getViewport().update(width, height, true);
+    }
+
+    private void genNewBgTiles(int width, int height) {
+        for (int i = 0; i < height / environmentAtlas.findRegion("tile").getRegionHeight() + 1; i++) {
+            bgTiles.add(i, new ArrayList<Sprite>());
+            for (int j = -1; j < width / environmentAtlas.findRegion("tile").getRegionWidth(); j++) {
+                Sprite spr = new Sprite(environmentAtlas.findRegion("tile"));
 
                 if ((j + i) % 2 == 0) {
-                    spr.setTexture(bgTile);
+                    spr.setColor(0.98f, 0.71f, 0.22f, 1f);
                 } else {
-                    spr.setTexture(bgTileAlt);
+                    spr.setColor(0.84f, 0.61f, 0.20f, 1f);
                 }
 
-                spr.setSize(bgTile.getWidth(), bgTile.getHeight());
+                spr.setSize(64, 64);
 
-                spr.setPosition(bgTile.getWidth() * j, bgTile.getHeight() * i);
+                spr.setPosition(spr.getWidth() * j, spr.getHeight() * i);
                 bgTiles.get(i).add(spr);
             }
         }
-
-        stage.getViewport().update(width, height, true);
     }
 
     @Override public void pause() {}

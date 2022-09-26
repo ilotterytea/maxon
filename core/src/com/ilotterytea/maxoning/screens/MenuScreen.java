@@ -3,8 +3,8 @@ package com.ilotterytea.maxoning.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -36,9 +36,8 @@ public class MenuScreen implements Screen, InputProcessor {
 
     Table menuTable, optionsTable;
 
-    final Texture bgTile1, bgTile2;
-
-    NinePatch buttonUp, buttonDown, buttonOver, buttonDisabled;
+    // Atlases:
+    TextureAtlas environmentAtlas, brandAtlas;
 
     private ArrayList<ArrayList<Sprite>> bgMenuTiles;
 
@@ -47,13 +46,8 @@ public class MenuScreen implements Screen, InputProcessor {
     public MenuScreen(final MaxonGame game) {
         this.game = game;
 
-        buttonUp = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton.png", Texture.class), 8, 8, 8, 8);
-        buttonDown = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton_down.png", Texture.class), 8, 8, 8, 8);
-        buttonOver = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton_over.png", Texture.class), 8, 8, 8, 8);
-        buttonDisabled = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton_disabled.png", Texture.class), 8, 8, 8, 8);
-
-        bgTile1 = game.assetManager.get("sprites/menu/tile_1.png", Texture.class);
-        bgTile2 = game.assetManager.get("sprites/menu/tile_2.png", Texture.class);
+        // Environment atlas for leafs, snowflakes and background tiles:
+        environmentAtlas = game.assetManager.get("sprites/env/environment.atlas", TextureAtlas.class);
 
         bgMenuTiles = new ArrayList<>();
 
@@ -158,6 +152,11 @@ public class MenuScreen implements Screen, InputProcessor {
             menuMusic.setVolume((game.prefs.getBoolean("music", true)) ? 1f : 0f);
             menuMusic.play();
         }
+
+        // Generate background tiles:
+        bgMenuTiles = new ArrayList<>();
+
+        genNewBgTiles((int) stage.getWidth(), (int) stage.getHeight());
     }
 
     @Override public void show() {
@@ -305,24 +304,31 @@ public class MenuScreen implements Screen, InputProcessor {
     public void resize(int width, int height) {
         bgMenuTiles.clear();
 
-        for (int i = 0; i < height / bgTile1.getHeight() + 1; i++) {
+        genNewBgTiles(width, height);
+
+        stage.getViewport().update(width, height, true);
+    }
+
+    private void genNewBgTiles(int width, int height) {
+        bgMenuTiles.clear();
+
+        for (int i = 0; i < height / environmentAtlas.findRegion("tile").getRegionHeight() + 1; i++) {
             bgMenuTiles.add(i, new ArrayList<Sprite>());
-            for (int j = -1; j < width / bgTile1.getWidth(); j++) {
-                Sprite spr = new Sprite();
+            for (int j = -1; j < width / environmentAtlas.findRegion("tile").getRegionWidth(); j++) {
+                Sprite spr = new Sprite(environmentAtlas.findRegion("tile"));
 
                 if ((j + i) % 2 == 0) {
-                    spr.setTexture(bgTile1);
+                    spr.setColor(0.98f, 0.71f, 0.22f, 1f);
                 } else {
-                    spr.setTexture(bgTile2);
+                    spr.setColor(0.84f, 0.61f, 0.20f, 1f);
                 }
 
-                spr.setSize(bgTile1.getWidth(), bgTile1.getHeight());
-                spr.setPosition(bgTile1.getWidth() * j, bgTile1.getHeight() * i);
+                spr.setSize(64, 64);
+
+                spr.setPosition(spr.getWidth() * j, spr.getHeight() * i);
                 bgMenuTiles.get(i).add(spr);
             }
         }
-
-        stage.getViewport().update(width, height, true);
     }
 
     @Override public void pause() {}
