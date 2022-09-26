@@ -1,0 +1,42 @@
+
+widgets.png
+size: 256, 256
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+button
+  rotate: false
+  xy: 0, 128
+  size: 128, 128
+  split: 8, 8, 8, 8
+  pad: 8, 8, 8, 8
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+button_disabled
+  rotate: false
+  xy: 128, 128
+  size: 128, 128
+  split: 8, 8, 8, 8
+  pad: 8, 8, 8, 8
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+button_down
+  rotate: false
+  xy: 0, 0
+  size: 128, 128
+  split: 8, 8, 8, 8
+  pad: 8, 8, 8, 8
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+button_over
+  rotate: false
+  xy: 128, 0
+  size: 128, 128
+  split: 8, 8, 8, 8
+  pad: 8, 8, 8, 8
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
