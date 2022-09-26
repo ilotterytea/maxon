@@ -3,6 +3,7 @@ package com.ilotterytea.maxoning.utils;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.ilotterytea.maxoning.anim.SpriteUtils;
 import com.ilotterytea.maxoning.player.MaxonItemEnum;
 import com.ilotterytea.maxoning.player.MaxonItemRegister;
@@ -10,30 +11,20 @@ import com.ilotterytea.maxoning.ui.AnimatedImage;
 
 public class AssetLoading {
     public static void queue(AssetManager am) {
+        // Texture atlases:
+        am.load("sprites/env/environment.atlas", TextureAtlas.class);
+        am.load("sprites/gui/brand.atlas", TextureAtlas.class);
+        am.load("sprites/gui/icons.atlas", TextureAtlas.class);
+        am.load("sprites/gui/ilotterytea.atlas", TextureAtlas.class);
+        am.load("sprites/gui/widgets.atlas", TextureAtlas.class);
 
-        // Textures:
-        am.load("sprites/supadank.png", Texture.class);
-
+        // Cat item textures:
         am.load("sprites/sheet/loadingCircle.png", Texture.class);
         am.load("sprites/sheet/bror.png", Texture.class);
         am.load("sprites/sheet/manlooshka.png", Texture.class);
         am.load("sprites/sheet/furios_cat.png", Texture.class);
         am.load("sprites/sheet/sandwich_cat.png", Texture.class);
         am.load("sprites/sheet/thirsty_cat.png", Texture.class);
-
-        am.load("sprites/white.png", Texture.class);
-        am.load("sprites/black.png", Texture.class);
-        am.load("sprites/brand.png", Texture.class);
-        am.load("sprites/ilotterytea.png", Texture.class);
-
-        am.load("sprites/menu/tile_1.png", Texture.class);
-        am.load("sprites/menu/tile_2.png", Texture.class);
-
-        // // Ninepatches:
-        am.load("sprites/ui/sqrbutton.png", Texture.class);
-        am.load("sprites/ui/sqrbutton_down.png", Texture.class);
-        am.load("sprites/ui/sqrbutton_over.png", Texture.class);
-        am.load("sprites/ui/sqrbutton_disabled.png", Texture.class);
 
         // Music:
         am.load("mus/menu/mus_menu_intro.ogg", Music.class);
