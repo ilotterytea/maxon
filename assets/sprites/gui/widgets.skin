@@ -1,0 +1,17 @@
+{
+  com.badlogic.gdx.graphics.g2d.BitmapFont: {
+    default: {
+      file: ../../fnt/MaxonRegularSemi.fnt,
+      scaledSize: 24
+    }
+  }
+  com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+    default: {
+      font: default,
+      up: button,
+      down: button_down,
+      over: button_over,
+      disabled: button_disabled
+    }
+  }
+}
