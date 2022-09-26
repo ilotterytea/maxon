@@ -20,6 +20,16 @@ public class AssetLoading {
         am.load("sprites/sheet/furios_cat.png", Texture.class);
         am.load("sprites/sheet/sandwich_cat.png", Texture.class);
         am.load("sprites/sheet/thirsty_cat.png", Texture.class);
+        am.load("sprites/sheet/tvcat.png", Texture.class); 
+        am.load("sprites/sheet/progcat.png", Texture.class); 
+        am.load("sprites/sheet/screamcat.png", Texture.class); 
+        am.load("sprites/sheet/hellcat.png", Texture.class); 
+        am.load("sprites/sheet/lurker.png", Texture.class); 
+        am.load("sprites/sheet/piano_cat.png", Texture.class); 
+        am.load("sprites/sheet/bee_cat.png", Texture.class); 
+        am.load("sprites/sheet/busy.png", Texture.class); 
+        am.load("sprites/sheet/aeae.png", Texture.class); 
+        am.load("sprites/sheet/succat.png", Texture.class); 
 
         am.load("sprites/white.png", Texture.class);
         am.load("sprites/black.png", Texture.class);
@@ -80,6 +90,86 @@ public class AssetLoading {
                 MaxonItemEnum.SLAVE,
                 75000,
                 80f
+        );
+
+        MaxonItemRegister.register(
+                5, i18n.TranslatableText("pet.tvcat.name"), i18n.TranslatableText("pet.tvcat.desc"),
+                new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/tvcat.png", Texture.class), 112, 112, 5, 5)),
+                MaxonItemEnum.SLAVE,
+                150000,
+                150f
+        );
+
+        MaxonItemRegister.register(
+                6, i18n.TranslatableText("pet.progcat.name"), i18n.TranslatableText("pet.progcat.desc"),
+                new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/progcat.png", Texture.class), 112, 112, 7, 6)),
+                MaxonItemEnum.SLAVE,
+                300000,
+                220f
+        );
+
+        MaxonItemRegister.register(
+                7, i18n.TranslatableText("pet.screamcat.name"), i18n.TranslatableText("pet.screamcat.desc"),
+                new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/screamcat.png", Texture.class), 112, 112, 10, 10)),
+                MaxonItemEnum.SLAVE,
+                700000,
+                370f
+        );
+
+        MaxonItemRegister.register(
+                8, i18n.TranslatableText("pet.hellcat.name"), i18n.TranslatableText("pet.hellcat.desc"),
+                new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/hellcat.png", Texture.class), 128, 128, 10, 8)),
+                MaxonItemEnum.SLAVE,
+                1300000,
+                500f
+        );
+
+        MaxonItemRegister.register(
+                9, i18n.TranslatableText("pet.lurker.name"), i18n.TranslatableText("pet.lurker.desc"),
+                new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/lurker.png", Texture.class), 112, 112, 10, 7)),
+                MaxonItemEnum.SLAVE,
+                2000000,
+                750f
+        );
+
+        MaxonItemRegister.register(
+                10, i18n.TranslatableText("pet.piano.name"), i18n.TranslatableText("pet.piano.desc"),
+                new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/piano_cat.png", Texture.class), 128, 128, 5, 3)),
+                MaxonItemEnum.SLAVE,
+                4000000,
+                1000f
+        );
+
+        MaxonItemRegister.register(
+                11, i18n.TranslatableText("pet.bee.name"), i18n.TranslatableText("pet.bee.desc"),
+                new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/bee_cat.png", Texture.class), 112, 112, 10, 10)),
+                MaxonItemEnum.SLAVE,
+                7000000,
+                1500f
+        );
+
+        MaxonItemRegister.register(
+                12, i18n.TranslatableText("pet.busy.name"), i18n.TranslatableText("pet.busy.desc"),
+                new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/busy.png", Texture.class), 112, 112, 5, 5)),
+                MaxonItemEnum.SLAVE,
+                15000000,
+                2000f
+        );
+
+        MaxonItemRegister.register(
+                13, i18n.TranslatableText("pet.aeae.name"), i18n.TranslatableText("pet.aeae.desc"),
+                new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/aeae.png", Texture.class), 112, 112, 11, 10)),
+                MaxonItemEnum.SLAVE,
+                25000000,
+                2700f
+        );
+
+        MaxonItemRegister.register(
+                14, i18n.TranslatableText("pet.succat.name"), i18n.TranslatableText("pet.succat.desc"),
+                new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/succat.png", Texture.class), 128, 128, 13, 10)),
+                MaxonItemEnum.SLAVE,
+                50000000,
+                3500f
         );
     }
 }
