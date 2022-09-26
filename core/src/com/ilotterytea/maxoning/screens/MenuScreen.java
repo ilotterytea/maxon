@@ -26,12 +26,12 @@ public class MenuScreen implements Screen, InputProcessor {
     final MaxonGame game;
 
     final Stage stage;
-    final Skin skin;
+    final Skin skin, widgetSkin;
 
     Image brandLogo, blackBg;
     Label startLabel, infoLabel;
 
-    NinepatchButton singlePlayerButton, optionsButton, quitButton;
+    TextButton singlePlayerButton, optionsButton, quitButton;
     final Music menuMusic;
 
     Table menuTable, optionsTable;
@@ -69,6 +69,7 @@ public class MenuScreen implements Screen, InputProcessor {
 
         this.stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         this.skin = new Skin(Gdx.files.internal("main.skin"));
+        this.widgetSkin = new Skin(Gdx.files.internal("sprites/gui/widgets.skin"));
 
         this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
 
@@ -81,9 +82,9 @@ public class MenuScreen implements Screen, InputProcessor {
         // Menu Buttons:
         menuTable = new Table();
 
-        singlePlayerButton = new NinepatchButton(buttonUp, buttonDown, buttonOver, game.locale.TranslatableText("menu.playGame"), skin, "default");
-        optionsButton = new NinepatchButton(buttonUp, buttonDown, buttonOver, game.locale.TranslatableText("menu.options"), skin, "default");
-        quitButton = new NinepatchButton(buttonUp, buttonDown, buttonOver, game.locale.TranslatableText("menu.quit"), skin, "default");
+        singlePlayerButton = new TextButton(game.locale.TranslatableText("menu.playGame"), widgetSkin, "default");
+        optionsButton = new TextButton(game.locale.TranslatableText("menu.options"), widgetSkin, "default");
+        quitButton = new TextButton(game.locale.TranslatableText("menu.quit"), widgetSkin, "default");
 
         singlePlayerButton.addListener(new ClickListener() {
             @Override
@@ -137,7 +138,7 @@ public class MenuScreen implements Screen, InputProcessor {
         blackBg.addAction(Actions.alpha(0.25f));
 
         // Options table:
-        optionsTable = new OptionsTable(game, skin, buttonUp, buttonDown, buttonOver, menuMusic, menuTable, blackBg, brandLogo);
+        optionsTable = new OptionsTable(game, skin, widgetSkin, menuMusic, menuTable, blackBg, brandLogo);
 
         stage.addActor(blackBg);
         stage.addActor(infoLabel);

@@ -36,7 +36,9 @@ public class GameScreen implements Screen, InputProcessor {
     MaxonPlayer player;
 
     Stage stage;
-    Skin skin;
+    Skin skin, widgetSkin;
+
+    TextureAtlas widgetAtlas, environmentAtlas;
 
     Label pointsLabel;
     Image blackBg, inventoryBg, shopBg, pointsBg;
@@ -45,10 +47,6 @@ public class GameScreen implements Screen, InputProcessor {
 
     Table petTable, inventoryTable, mainTable;
     ScrollPane petScroll;
-
-    NinePatch btnUp, btnDown, btnOver, btnDisabled;
-
-    Texture bgTile, bgTileAlt;
 
     ArrayList<MaxonItem> items;
     Map<Integer, Integer> invItems;
@@ -66,13 +64,10 @@ public class GameScreen implements Screen, InputProcessor {
         // Initializing the stage and skin:
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         skin = new Skin(Gdx.files.internal("main.skin"));
+        widgetSkin = new Skin(Gdx.files.internal("sprites/gui/widgets.skin"));
 
-        // Ninepatch textures for buttons:
-        btnUp = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton.png", Texture.class), 8, 8, 8, 8);
-        btnDown = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton_down.png", Texture.class), 8, 8, 8, 8);
-        btnOver = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton_over.png", Texture.class), 8, 8, 8, 8);
-        btnDisabled = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton_disabled.png", Texture.class), 8, 8, 8, 8);
-
+        widgetAtlas = game.assetManager.get("sprites/gui/widgets.atlas", TextureAtlas.class);
+        environmentAtlas = game.assetManager.get("sprites/env/environment.atlas", TextureAtlas.class);
 
         items = new ArrayList<>();
 
@@ -87,7 +82,7 @@ public class GameScreen implements Screen, InputProcessor {
         stage.addActor(blackBg);
 
         // Setting the background for inventory:
-        inventoryBg = new Image(btnDisabled);
+        inventoryBg = new Image(widgetSkin, "button_disabled");
         inventoryBg.setSize((Gdx.graphics.getWidth() / 2.0f) - 512f, (Gdx.graphics.getHeight() / 2.0f) - 8f);
         inventoryBg.setPosition(8, 4);
         stage.addActor(inventoryBg);
@@ -103,12 +98,6 @@ public class GameScreen implements Screen, InputProcessor {
         inventoryTable = new Table();
         inventoryTable.setSize(inventoryBg.getWidth(), inventoryBg.getHeight() - inventoryLabel.getHeight());
         inventoryTable.setPosition(inventoryBg.getX(), inventoryBg.getY());
-
-        TextTooltip.TextTooltipStyle textTooltipStyle = new TextTooltip.TextTooltipStyle();
-        textTooltipStyle.label = new Label.LabelStyle();
-        textTooltipStyle.label.font = skin.getFont("default");
-        textTooltipStyle.label.fontColor = skin.getColor("white");
-        textTooltipStyle.background = new NinePatchDrawable(btnUp);
 
         invItems = new HashMap<>();
 
@@ -135,7 +124,7 @@ public class GameScreen implements Screen, InputProcessor {
         stage.addActor(inventoryTable);
 
         // Setting the background for pet shop:
-        shopBg = new Image(btnDisabled);
+        shopBg = new Image(widgetSkin, "button_disabled");
         shopBg.setSize((Gdx.graphics.getWidth() / 2.0f) - 512f, (Gdx.graphics.getHeight() / 2.0f) - 8f);
         shopBg.setPosition(8, inventoryBg.getY() + inventoryBg.getHeight() + 8f);
         stage.addActor(shopBg);
@@ -153,7 +142,7 @@ public class GameScreen implements Screen, InputProcessor {
         // Adding the pet items in pet table:
         for (final MaxonItem item : MaxonItemRegister.getItems()) {
             PurchaseItem purchaseItem = new PurchaseItem(
-                    skin, btnUp, item.icon, item.name, item.desc, item.price
+                    skin, widgetSkin, item.icon, item.name, item.desc, item.price
             );
 
             purchaseItem.addListener(new ClickListener() {
@@ -202,7 +191,7 @@ public class GameScreen implements Screen, InputProcessor {
         stage.addActor(petScroll);
 
         // Background for points label:
-        pointsBg = new Image(btnDisabled);
+        pointsBg = new Image(widgetSkin, "button_disabled");
         pointsBg.setSize((Gdx.graphics.getWidth() - (shopBg.getX() + shopBg.getWidth()) - 8f), 64f);
         pointsBg.setPosition(shopBg.getX() + shopBg.getWidth() + 4f, Gdx.graphics.getHeight() - pointsBg.getHeight() - 4f);
 
