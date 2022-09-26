@@ -1,19 +1,18 @@
 package com.ilotterytea.maxoning.ui;
 
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 
 public class PurchaseItem extends Stack {
     public PurchaseItem(
             Skin skin,
-            NinePatch ninepatch,
+            Skin widgetSkin,
             AnimatedImage icon,
             CharSequence name,
             CharSequence desc,
             float price
     ) {
-        super(new Image(ninepatch));
+        super(new Image(widgetSkin, "button"));
 
         Table summary = new Table();
         summary.setHeight(super.getHeight());
