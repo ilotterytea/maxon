@@ -49,26 +49,21 @@ public class MenuScreen implements Screen, InputProcessor {
         // Environment atlas for leafs, snowflakes and background tiles:
         environmentAtlas = game.assetManager.get("sprites/env/environment.atlas", TextureAtlas.class);
 
-        bgMenuTiles = new ArrayList<>();
+        // Brand atlas:
+        brandAtlas = game.assetManager.get("sprites/gui/brand.atlas", TextureAtlas.class);
 
-        for (int i = 0; i < Gdx.graphics.getHeight() / bgTile1.getHeight() + 1; i++) {
-            bgMenuTiles.add(i, new ArrayList<Sprite>());
-            for (int j = -1; j < Gdx.graphics.getWidth() / bgTile1.getWidth(); j++) {
-                Sprite spr = new Sprite((j + i % 2 == 0) ? bgTile1 : bgTile2);
-
-                spr.setPosition(bgTile1.getWidth() * j, bgTile1.getHeight() * i);
-                bgMenuTiles.get(i).add(spr);
-            }
-        }
-
+        // Stage and skin:
         this.stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         this.skin = new Skin(Gdx.files.internal("main.skin"));
         this.widgetSkin = new Skin(Gdx.files.internal("sprites/gui/widgets.skin"));
 
+        // Main Menu music:
         this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
 
-        brandLogo = new Image(game.assetManager.get("sprites/brand.png", Texture.class));
-        blackBg = new Image(game.assetManager.get("sprites/black.png", Texture.class));
+        brandLogo = new Image(brandAtlas.findRegion("brand"));
+        blackBg = new Image();
+
+        blackBg.setColor(0f, 0f, 0f, 1f);
 
         this.startLabel = new Label(game.locale.TranslatableText("menu.pressStart"), skin, "press");
         this.infoLabel = new DebugLabel(skin);
