@@ -108,14 +108,7 @@ public class GameScreen implements Screen, InputProcessor {
         }
 
         // Put the items in the inventory table:
-        for (Integer id : invItems.keySet()) {
-            MaxonItem item = MaxonItemRegister.get(id);
-
-            if (item != null) {
-                InventoryAnimatedItem invItem = new InventoryAnimatedItem(item, skin, invItems.get(id));
-                inventoryTable.add(invItem).size(64, 64).pad(5f);
-            }
-        }
+        reorderInvItems();
 
         inventoryTable.align(Align.left|Align.top);
 
@@ -164,14 +157,7 @@ public class GameScreen implements Screen, InputProcessor {
                         }
 
                         // Put the items in the inventory table:
-                        for (Integer id : invItems.keySet()) {
-                            MaxonItem item = MaxonItemRegister.get(id);
-
-                            if (item != null) {
-                                InventoryAnimatedItem invItem = new InventoryAnimatedItem(item, skin, invItems.get(id));
-                                inventoryTable.add(invItem).size(64, 64).pad(5f);
-                            }
-                        }
+                        reorderInvItems();
                     }
                 }
             });
@@ -344,6 +330,23 @@ public class GameScreen implements Screen, InputProcessor {
         genNewBgTiles(width, height);
 
         stage.getViewport().update(width, height, true);
+    }
+
+    private void reorderInvItems() {
+        inventoryTable.clear();
+
+        for (int i = 0; i < invItems.keySet().size(); i++) {
+            MaxonItem item = MaxonItemRegister.get(i);
+
+            if (item != null) {
+                InventoryAnimatedItem invItem = new InventoryAnimatedItem(item, skin, invItems.get(i));
+                Cell<InventoryAnimatedItem> cell = inventoryTable.add(invItem).size(64, 64).pad(5f);
+
+                if (i != 0 && i % 5 == 0) {
+                    cell.row();
+                }
+            }
+        }
     }
 
     private void genNewBgTiles(int width, int height) {
