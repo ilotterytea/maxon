@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.anim.SpriteUtils;
 import com.ilotterytea.maxoning.inputprocessors.CrossProcessor;
@@ -246,7 +247,7 @@ public class GameScreen implements Screen, InputProcessor {
 
                 player.points += multiplier;
 
-                final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", String.valueOf(1 * player.multiplier)), skin, "default");
+                final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(1 * player.multiplier)), skin, "default");
 
                 label.setPosition(
                         mainTable.getX() + actor.getActorX(),
@@ -314,8 +315,8 @@ public class GameScreen implements Screen, InputProcessor {
 
         // Update the points label:
         pointsLabel.setText(game.locale.FormattedText("game.points",
-                String.valueOf(player.points),
-                String.valueOf(player.multiplier)
+                MaxonConstants.DECIMAL_FORMAT.format(player.points),
+                MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)
         ));
 
         stage.draw();
@@ -406,7 +407,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         player.points += 1 * player.multiplier;
 
-        final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", String.valueOf(1 * player.multiplier)), skin, "default");
+        final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(1 * player.multiplier)), skin, "default");
 
         label.setPosition(
                 mainTable.getX() + actor.getActorX(),

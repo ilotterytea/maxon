@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.ilotterytea.maxoning.utils.OsUtils;
 
+import java.text.DecimalFormat;
+
 public class MaxonConstants {
     public static final String GAME_NAME = "Maxon Petting Simulator";
     public static final String GAME_VERSION = "Alpha 1.2";
@@ -16,4 +18,6 @@ public class MaxonConstants {
 
     public static final FileHandle FILE_EN_US = Gdx.files.internal("i18n/en_us.json");
     public static final FileHandle FILE_RU_RU = Gdx.files.internal("i18n/ru_ru.json");
+
+    public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("###,###.##");
 }
