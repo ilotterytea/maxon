@@ -72,11 +72,10 @@ public class GameScreen implements Screen, InputProcessor {
             items.add(MaxonItemRegister.get(id));
         }
 
-        // Make the background a little dimmed:
-        blackBg = new Image();
-        blackBg.setColor(0f, 0f, 0f, 1f);
+        // Make the background a little darker:
+        blackBg = new Image(environmentAtlas.findRegion("tile"));
+        blackBg.setColor(0f, 0f, 0f, 0.5f);
         blackBg.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        blackBg.addAction(Actions.parallel(Actions.alpha(0.25f)));
         stage.addActor(blackBg);
 
         // Setting the background for inventory:

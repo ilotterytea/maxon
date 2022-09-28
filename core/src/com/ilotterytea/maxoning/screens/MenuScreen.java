@@ -60,10 +60,14 @@ public class MenuScreen implements Screen, InputProcessor {
         // Main Menu music:
         this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
 
+        // Make the background a little darker:
         brandLogo = new Image(brandAtlas.findRegion("brand"));
-        blackBg = new Image();
+        blackBg = new Image(environmentAtlas.findRegion("tile"));
 
-        blackBg.setColor(0f, 0f, 0f, 1f);
+        blackBg.setColor(0f, 0f, 0f, 0.25f);
+        blackBg.setSize(stage.getWidth(), stage.getHeight());
+
+        stage.addActor(blackBg);
 
         this.startLabel = new Label(game.locale.TranslatableText("menu.pressStart"), skin, "press");
         this.infoLabel = new DebugLabel(skin);
