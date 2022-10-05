@@ -79,7 +79,7 @@ public class GameScreen implements Screen, InputProcessor {
         stage.addActor(blackBg);
 
         // Setting the background for inventory:
-        inventoryBg = new Image(widgetSkin, "button_disabled");
+        inventoryBg = new Image(widgetSkin, "down");
         inventoryBg.setSize((Gdx.graphics.getWidth() / 2.0f) - 512f, (Gdx.graphics.getHeight() / 2.0f) - 8f);
         inventoryBg.setPosition(8, 4);
         stage.addActor(inventoryBg);
@@ -114,7 +114,7 @@ public class GameScreen implements Screen, InputProcessor {
         stage.addActor(inventoryTable);
 
         // Setting the background for pet shop:
-        shopBg = new Image(widgetSkin, "button_disabled");
+        shopBg = new Image(widgetSkin, "down");
         shopBg.setSize((Gdx.graphics.getWidth() / 2.0f) - 512f, (Gdx.graphics.getHeight() / 2.0f) - 8f);
         shopBg.setPosition(8, inventoryBg.getY() + inventoryBg.getHeight() + 8f);
         stage.addActor(shopBg);
@@ -174,7 +174,7 @@ public class GameScreen implements Screen, InputProcessor {
         stage.addActor(petScroll);
 
         // Background for points label:
-        pointsBg = new Image(widgetSkin, "button_disabled");
+        pointsBg = new Image(widgetSkin, "down");
         pointsBg.setSize((Gdx.graphics.getWidth() - (shopBg.getX() + shopBg.getWidth()) - 8f), 64f);
         pointsBg.setPosition(shopBg.getX() + shopBg.getWidth() + 4f, Gdx.graphics.getHeight() - pointsBg.getHeight() - 4f);
 
