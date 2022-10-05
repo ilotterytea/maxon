@@ -2,6 +2,7 @@ package com.ilotterytea.maxoning.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -14,34 +15,42 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.MaxonGame;
-import com.ilotterytea.maxoning.inputprocessors.CrossProcessor;
+import com.ilotterytea.maxoning.player.MaxonPlayer;
 import com.ilotterytea.maxoning.ui.*;
+import com.ilotterytea.maxoning.utils.math.Math;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 
-public class MenuScreen implements Screen, InputProcessor {
+public class MenuScreen implements Screen {
 
     final MaxonGame game;
 
     final Stage stage;
     final Skin skin, widgetSkin;
 
-    Image brandLogo, blackBg;
-    Label startLabel, infoLabel;
+    Image brandLogo, blackBg, menuBg;
 
-    TextButton singlePlayerButton, optionsButton, quitButton;
     final Music menuMusic;
 
-    Table menuTable, optionsTable;
+    Table menuTable, savegameTable;
 
     // Atlases:
     TextureAtlas environmentAtlas, brandAtlas;
 
     private ArrayList<ArrayList<Sprite>> bgMenuTiles;
+    private ArrayList<LeafParticle> leafTiles, delLeafTiles;
 
-    private boolean anyKeyPressed = false, brandActionsSet = false;
+    private final boolean isAutumn =
+            // Autumn.
+            ((Calendar.getInstance().get(Calendar.MONTH) + 1 > 8) && (Calendar.getInstance().get(Calendar.MONTH) + 1 < 12)) ||
+            // Spring.
+            ((Calendar.getInstance().get(Calendar.MONTH) + 1 < 6) && (Calendar.getInstance().get(Calendar.MONTH) + 1 > 2));
+    private final boolean isSummer = (Calendar.getInstance().get(Calendar.MONTH) + 1 > 5 && Calendar.getInstance().get(Calendar.MONTH) + 1 < 9);
 
     public MenuScreen(final MaxonGame game) {
         this.game = game;
@@ -69,48 +78,27 @@ public class MenuScreen implements Screen, InputProcessor {
 
         stage.addActor(blackBg);
 
-        this.startLabel = new Label(game.locale.TranslatableText("menu.pressStart"), skin, "press");
-        this.infoLabel = new DebugLabel(skin);
+        // Save game table:
+        savegameTable = new Table();
+        loadSavegamesToTable(savegameTable);
 
-        // Menu Buttons:
-        menuTable = new Table();
+        // Quick buttons:
+        Table quickTable = new Table();
+        quickTable.align(Align.right);
 
-        singlePlayerButton = new TextButton(game.locale.TranslatableText("menu.playGame"), widgetSkin, "default");
-        optionsButton = new TextButton(game.locale.TranslatableText("menu.options"), widgetSkin, "default");
-        quitButton = new TextButton(game.locale.TranslatableText("menu.quit"), widgetSkin, "default");
-
-        singlePlayerButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                try {
-                    game.setScreen(new GameScreen(game));
-                } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-                dispose();
-            }
-        });
-
-        // Options:
+        // Options button:
+        TextButton optionsButton = new TextButton("Options", widgetSkin, "default");
         optionsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                menuTable.clearActions();
-                menuTable.addAction(Actions.moveTo(-Gdx.graphics.getWidth(), menuTable.getY(), 0.75f, Interpolation.sine));
-
-                optionsTable.clearActions();
-                optionsTable.addAction(Actions.moveTo(0, optionsTable.getY(), 0.75f, Interpolation.sine));
-
-                blackBg.clearActions();
-                blackBg.addAction(Actions.alpha(0.5f));
-
-                brandLogo.addAction(
-                        Actions.moveTo(brandLogo.getX(), brandLogo.getY() + 512f, 0.5f, Interpolation.sine)
-                );
+                super.clicked(event, x, y);
             }
         });
 
-        // Exit the game when "quit button" is pressed:
+        quickTable.add(optionsButton).height(48f).minWidth(90f).pad(4f);
+
+        // Quit button:
+        TextButton quitButton = new TextButton("Quit", widgetSkin, "default");
         quitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -118,104 +106,71 @@ public class MenuScreen implements Screen, InputProcessor {
             }
         });
 
-        // Set the width and position for menu table:
-        menuTable.setPosition(0, Gdx.graphics.getHeight());
-        menuTable.setWidth(Gdx.graphics.getWidth());
+        quickTable.add(quitButton).height(48f).minWidth(90f).pad(4f);
+
+        // Menu table:
+        menuTable = new Table();
+        menuTable.setPosition(0, 0);
+        menuTable.setSize(stage.getWidth(), stage.getHeight());
         menuTable.align(Align.center);
 
-        menuTable.add(singlePlayerButton).width(512f).height(81f).padBottom(10f).row();
-        menuTable.add(optionsButton).width(512f).height(81f).padBottom(91f).row();
-        menuTable.add(quitButton).width(512f).height(81f).row();
+        Label menuTitle = new Label("Please select a save slot", skin, "default");
+        menuTitle.setAlignment(Align.left);
 
-        blackBg.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        blackBg.addAction(Actions.alpha(0.25f));
+        menuTable.add(menuTitle).width(512f).row();
+        menuTable.add(savegameTable).width(512f).maxWidth(640f).row();
+        menuTable.add(quickTable).width(512f);
 
-        // Options table:
-        optionsTable = new OptionsTable(game, skin, widgetSkin, menuMusic, menuTable, blackBg, brandLogo);
-
-        stage.addActor(blackBg);
-        stage.addActor(infoLabel);
-        stage.addActor(brandLogo);
-        stage.addActor(startLabel);
         stage.addActor(menuTable);
-        stage.addActor(optionsTable);
 
-        menuTable.addAction(Actions.sequence(Actions.alpha(0f), Actions.moveTo(0f, -Gdx.graphics.getHeight() - Gdx.graphics.getHeight(), 0f)));
-        optionsTable.addAction(Actions.moveTo(Gdx.graphics.getWidth(), 0, 0f));
+        // // Logo:
+        brandLogo = new Image(brandAtlas.findRegion("brand"));
+        brandLogo.setPosition(
+                (stage.getWidth() / 2f) - (brandLogo.getWidth() / 2f),
+                stage.getHeight() - brandLogo.getHeight() * 1.5f
+        );
 
-        Gdx.input.setInputProcessor(new InputMultiplexer(this, new CrossProcessor(), stage));
+        brandLogo.setOrigin(
+                brandLogo.getWidth() / 2f,
+                brandLogo.getHeight() / 2f
+        );
 
-        // Setting the music:
-        if (game.prefs.getBoolean("music", true)) {
-            menuMusic.setLooping(true);
-            menuMusic.setVolume((game.prefs.getBoolean("music", true)) ? 1f : 0f);
-            menuMusic.play();
-        }
+        brandLogo.addAction(
+                Actions.repeat(
+                        RepeatAction.FOREVER,
+                        Actions.sequence(
+                                Actions.parallel(
+                                        Actions.rotateTo(-5f, 5f, Interpolation.smoother),
+                                        Actions.scaleTo(0.9f, 0.9f, 5f, Interpolation.smoother)
+                                ),
+                                Actions.parallel(
+                                        Actions.rotateTo(5f, 5f, Interpolation.smoother),
+                                        Actions.scaleTo(1.1f, 1.1f, 5f, Interpolation.smoother)
+                                )
+                        )
+                )
+        );
+
+        stage.addActor(brandLogo);
+
+        // Debug label:
+        DebugLabel debug = new DebugLabel(skin);
+        debug.setPosition(4, stage.getHeight() - debug.getHeight() - 4);
+        stage.addActor(debug);
+
+        Gdx.input.setInputProcessor(new InputMultiplexer(stage));
 
         // Generate background tiles:
         bgMenuTiles = new ArrayList<>();
 
         genNewBgTiles((int) stage.getWidth(), (int) stage.getHeight());
+        leafTiles = new ArrayList<>();
+        delLeafTiles = new ArrayList<>();
     }
 
     @Override public void show() {
-        brandLogo.setScale(100f);
-
-        brandLogo.setPosition(
-                (Gdx.graphics.getWidth() / 2.0f) - (brandLogo.getWidth() / 2.0f),
-                (Gdx.graphics.getHeight() / 2.0f) - (brandLogo.getHeight() / 2.0f)
-        );
-
-        brandLogo.setOrigin(
-                brandLogo.getWidth() / 2.0f,
-                brandLogo.getHeight() / 2.0f
-        );
-
-        brandLogo.addAction(
-                Actions.sequence(
-                        Actions.alpha(0),
-                        Actions.parallel(
-                                Actions.fadeIn(1f),
-                                Actions.scaleTo(1f, 1f, 1f, Interpolation.pow2InInverse)
-                        ),
-                        Actions.repeat(
-                                RepeatAction.FOREVER,
-                                Actions.sequence(
-                                        Actions.parallel(
-                                                Actions.rotateTo(-10, 10f, Interpolation.sine),
-                                                Actions.scaleTo(0.85f, 0.85f, 10f, Interpolation.sine)
-                                        ),
-                                        Actions.parallel(
-                                                Actions.rotateTo(10, 10f, Interpolation.sine),
-                                                Actions.scaleTo(1.25f, 1.25f, 10f, Interpolation.sine)
-                                        )
-                                )
-                        ))
-        );
-
-        startLabel.setPosition(
-                (Gdx.graphics.getWidth() / 2.0f) - (startLabel.getWidth() / 2.0f),
-                32
-        );
-
-        startLabel.addAction(
-                Actions.repeat(
-                        RepeatAction.FOREVER,
-                        Actions.sequence(
-                                Actions.alpha(0f),
-                                Actions.fadeIn(1f),
-                                Actions.delay(5f),
-                                Actions.fadeOut(1f)
-                        )
-                )
-        );
-
-        infoLabel.setPosition(8, (Gdx.graphics.getHeight() - infoLabel.getHeight() - 8));
-
         // Start to render:
         render(Gdx.graphics.getDeltaTime());
-
-
     }
 
     @Override
@@ -223,46 +178,32 @@ public class MenuScreen implements Screen, InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (anyKeyPressed && !brandActionsSet) {
-            startLabel.clearActions();
-            startLabel.addAction(Actions.fadeOut(0.5f));
+        // Generate a new leaf:
+        if (!isSummer) {
+            LeafParticle _leaf = new LeafParticle(
+                    (isAutumn) ? environmentAtlas.findRegion("leaf") : environmentAtlas.findRegion("snowflake"),
+                    (float) java.lang.Math.floor(java.lang.Math.random() * Gdx.graphics.getWidth()),
+                    Gdx.graphics.getHeight(),
+                    (float) Math.getRandomNumber(-257, 256) + 1,
+                    (float) Math.getRandomNumber(-257, 256) + 1,
+                    (float) Math.getRandomNumber(5, 15));
 
-            brandLogo.clearActions();
-            brandLogo.addAction(
-                    Actions.sequence(
-                            Actions.parallel(
-                                    Actions.alpha(1f),
-                                Actions.rotateTo(0f, 2f),
-                                Actions.scaleTo(1f, 1f, 2f),
-                                Actions.moveTo(
-                                        (Gdx.graphics.getWidth() / 2f) - (brandLogo.getWidth() / 2f),
-                                        (Gdx.graphics.getHeight() - brandLogo.getHeight()) - 81,
-                                        2f,
-                                        Interpolation.sine
-                                )
-                            ),
-                            Actions.repeat(RepeatAction.FOREVER,
-                                    Actions.sequence(
-                                            Actions.parallel(
-                                                    Actions.rotateTo(-5f, 5f, Interpolation.smoother),
-                                                    Actions.scaleTo(0.9f, 0.9f, 5f, Interpolation.smoother)
-                                            ),
-                                            Actions.parallel(
-                                                    Actions.rotateTo(5f, 5f, Interpolation.smoother),
-                                                    Actions.scaleTo(1.1f, 1.1f, 5f, Interpolation.smoother)
-                                            )
-                                    )))
-            );
+            _leaf.setScale(5f);
 
-            menuTable.clearActions();
-            menuTable.addAction(
-                    Actions.parallel(
-                            Actions.fadeIn(1.5f),
-                            Actions.moveTo(0, (Gdx.graphics.getHeight() / 2f) - (menuTable.getHeight() / 2f) - 64f, 2.5f, Interpolation.smoother)
-                    )
-            );
+            if (isAutumn) {
+                switch (Math.getRandomNumber(0, 3)) {
+                    case 0: _leaf.setColor(Color.CORAL); break;
+                    case 1: _leaf.setColor(Color.YELLOW); break;
+                    default: _leaf.setColor(Color.RED); break;
+                }
+            } else {
+                switch (Math.getRandomNumber(0, 1)) {
+                    case 0: _leaf.setColor(Color.WHITE); break;
+                    case 1: _leaf.setColor(Color.SKY);
+                }
+            }
 
-            brandActionsSet = true;
+            leafTiles.add(_leaf);
         }
 
         game.batch.begin();
@@ -272,6 +213,10 @@ public class MenuScreen implements Screen, InputProcessor {
                 spr.setPosition(spr.getX() + 1, spr.getY());
                 spr.draw(game.batch);
             }
+        }
+
+        for (LeafParticle spr : leafTiles) {
+            spr.draw(game.batch);
         }
 
         game.batch.end();
@@ -295,6 +240,17 @@ public class MenuScreen implements Screen, InputProcessor {
             }
         }
 
+        if (!isSummer) {
+            for (LeafParticle spr : leafTiles) {
+                if (spr.getX() > Gdx.graphics.getWidth() || spr.getY() > Gdx.graphics.getHeight()) {
+                    delLeafTiles.add(spr);
+                }
+            }
+
+            for (LeafParticle spr : delLeafTiles) { leafTiles.remove(spr); }
+            delLeafTiles.clear();
+        }
+
         stage.draw();
         stage.act(delta);
     }
@@ -306,6 +262,53 @@ public class MenuScreen implements Screen, InputProcessor {
         genNewBgTiles(width, height);
 
         stage.getViewport().update(width, height, true);
+    }
+
+    private void loadSavegamesToTable(Table table) {
+        FileHandle folder = Gdx.files.external(MaxonConstants.GAME_SAVEGAME_FOLDER);
+
+        try {
+            for (FileHandle fh : folder.list()) {
+                final MaxonPlayer sav = (MaxonPlayer) new ObjectInputStream(fh.read()).readObject();
+                SaveGameWidget widget = new SaveGameWidget(
+                        skin, widgetSkin, sav
+                );
+                widget.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        try {
+                            game.setScreen(new GameScreen(game, sav));
+                        } catch (IOException | ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                        dispose();
+                    }
+                });
+                table.add(widget).width(512f).padBottom(8f).row();
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < 3 - folder.list().length; i++) {
+            final MaxonPlayer sav = new MaxonPlayer();
+            SaveGameWidget widget = new SaveGameWidget(
+                    skin, widgetSkin, null
+            );
+            final int finalI = i;
+            widget.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    try {
+                        game.setScreen(new GameScreen(game, sav));
+                    } catch (IOException | ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                    dispose();
+                }
+            });
+            table.add(widget).width(512f).padBottom(8f).row();
+        }
     }
 
     private void genNewBgTiles(int width, int height) {
@@ -336,51 +339,5 @@ public class MenuScreen implements Screen, InputProcessor {
     @Override public void dispose() {
         stage.clear();
         skin.dispose();
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        if (Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)) {
-            anyKeyPressed = true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (!anyKeyPressed) {
-            anyKeyPressed = true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        return false;
     }
 }
