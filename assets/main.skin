@@ -78,6 +78,10 @@
     disclaimer: {
       font: default_slidl,
       fontColor: grey
+    },
+    debug: {
+      font: console_bold,
+      fontColor: white
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
