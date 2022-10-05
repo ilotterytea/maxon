@@ -9,7 +9,7 @@ buildscript {
         google()
     }
     dependencies {
-        //classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath 'com.android.tools.build:gradle:7.0.4'
 
     }
 }
@@ -49,11 +49,15 @@ project(":desktop") {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        
+        api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
+        api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core-gamejolt:1.1.0"
+        api "de.tomgrill.gdxdialogs:gdx-dialogs-desktop:1.3.0"
+
     }
 }
 
-/*project(":android") {
+project(":android") {
     apply plugin: "com.android.application"
 
     configurations { natives }
@@ -65,9 +69,19 @@ project(":desktop") {
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
-
+        api "com.badlogicgames.gdx-controllers:gdx-controllers-android:$gdxControllersVersion"
+        api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi-v7a"
+        natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-arm64-v8a"
+        natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
+        natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86_64"
+        api "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
+        api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
+        api "com.badlogicgames.ashley:ashley:$ashleyVersion"
+        api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-android-gpgs:1.1.0"
+        api "de.tomgrill.gdxdialogs:gdx-dialogs-android:1.3.0"
     }
-}*/
+}
 
 project(":core") {
     apply plugin: "java-library"
@@ -75,6 +89,13 @@ project(":core") {
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
+        api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
+        api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        api "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
+        api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
+        api "com.badlogicgames.ashley:ashley:$ashleyVersion"
+        api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core:1.1.0"
+        api "de.tomgrill.gdxdialogs:gdx-dialogs-core:1.3.0"
         api "com.rafaskoberg.gdx:typing-label:$typingLabelVersion"
         implementation 'com.google.code.gson:gson:2.9.1'
         implementation 'ch.qos.logback:logback-classic:1.2.10'
