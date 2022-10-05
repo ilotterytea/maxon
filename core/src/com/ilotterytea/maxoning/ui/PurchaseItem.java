@@ -12,7 +12,7 @@ public class PurchaseItem extends Stack {
             CharSequence desc,
             float price
     ) {
-        super(new Image(widgetSkin, "button"));
+        super(new Image(widgetSkin, "up"));
 
         Table summary = new Table();
         summary.setHeight(super.getHeight());
