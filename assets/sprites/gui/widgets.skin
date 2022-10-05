@@ -3,15 +3,54 @@
     default: {
       file: fnt/MaxonTrebuchet.fnt,
       scaledSize: 24
+    },
+    text: {
+      file: fnt/MaxonTrebuchet.fnt,
+      scaledSize: 18
     }
+  }
+  TintedDrawable: {
+    plain_up: {
+      color: { hex: "#30303055" }
+      name: tile
+    },
+    plain_over: {
+      color: { hex: "#99999999" }
+      name: tile
+    },
+    plain_down: {
+      color: { hex: "#30303022" }
+      name: tile
+    },
   }
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
     default: {
       font: default,
-      up: button,
-      down: button_down,
-      over: button_over,
-      disabled: button_disabled
+      up: up,
+      down: down,
+      over: over,
+      disabled: down
+    }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+    default: {
+      up: up,
+      down: down,
+      over: over,
+      disabled: down
+    },
+    slot: {
+      up: plain_up,
+      down: plain_down,
+      over: plain_over,
+      disabled: plain_down
+    }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+    default: {
+      label: { font: default },
+      background: up,
+      wrapWidth: 400
     }
   }
 }
