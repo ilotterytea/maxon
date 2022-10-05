@@ -14,7 +14,7 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 		config.setTitle("Maxon Petting Simulator");
-		config.setWindowIcon("icon.png");
+		config.setWindowIcon("icon_chest.png");
 		config.setMaximized(true);
 		new Lwjgl3Application(new MaxonGame(), config);
 	}
