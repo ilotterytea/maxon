@@ -1,7 +1,7 @@
 {
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
     default: {
-      file: ../../fnt/MaxonRegularSemi.fnt,
+      file: fnt/MaxonTrebuchet.fnt,
       scaledSize: 24
     }
   }

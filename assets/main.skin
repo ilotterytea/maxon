@@ -20,17 +20,27 @@
   },
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
     default: {
-      file: fnt/MaxonRegularSemi.fnt,
+      file: fnt/MaxonTrebuchet.fnt,
       scaledSize: 24
     },
     default_lidl: {
-      file: fnt/MaxonRegularSemi.fnt,
+      file: fnt/MaxonTrebuchet.fnt,
       scaledSize: 18
     },
     default_slidl: {
-      file: fnt/MaxonRegularSemi.fnt,
+      file: fnt/MaxonTrebuchet.fnt,
       scaledSize: 14
     }
+
+    // Console
+    console: {
+      file: fnt/MaxonTahoma.fnt,
+      scaledSize: 14
+    },
+    console_bold: {
+      file: fnt/MaxonTahomaBold.fnt,
+      scaledSize: 12
+    },
   },
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
     default: {
