@@ -17,7 +17,7 @@ buildscript {
 allprojects {
     apply plugin: "eclipse"
 
-    version = '1.1'
+    version = '1.2'
     ext {
         appName = "Maxon Petting Simulator"
         gdxVersion = '1.11.0'
