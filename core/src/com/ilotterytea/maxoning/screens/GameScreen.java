@@ -53,11 +53,10 @@ public class GameScreen implements Screen, InputProcessor {
 
     ArrayList<ArrayList<Sprite>> bgTiles;
 
-    public GameScreen(MaxonGame game) throws IOException, ClassNotFoundException {
+    public GameScreen(MaxonGame game, MaxonPlayer sav) throws IOException, ClassNotFoundException {
         this.game = game;
 
-        player = new MaxonPlayer();
-        player.load(GameDataSystem.LoadData());
+        player = sav;
 
         // Initializing the stage and skin:
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
