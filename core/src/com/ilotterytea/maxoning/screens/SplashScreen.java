@@ -102,7 +102,7 @@ public class SplashScreen implements Screen {
             AssetLoading.registerItems(game.assetManager, game.locale);
             if (OsUtils.isAndroid || OsUtils.isIos) {
                 try {
-                    game.setScreen(new GameScreen(game, GameDataSystem.load("latest.sav")));
+                    game.setScreen(new GameScreen(game, GameDataSystem.load("latest.sav"), -1));
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }

@@ -2,7 +2,6 @@ package com.ilotterytea.maxoning.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -15,11 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.MaxonGame;
-import com.ilotterytea.maxoning.player.MaxonPlayer;
+import com.ilotterytea.maxoning.player.MaxonSavegame;
 import com.ilotterytea.maxoning.ui.*;
 import com.ilotterytea.maxoning.utils.math.Math;
+import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -265,33 +264,31 @@ public class MenuScreen implements Screen {
     }
 
     private void loadSavegamesToTable(Table table) {
-        FileHandle folder = Gdx.files.external(MaxonConstants.GAME_SAVEGAME_FOLDER);
+        ArrayList<MaxonSavegame> saves = GameDataSystem.getSavegames();
 
-        try {
-            for (FileHandle fh : folder.list()) {
-                final MaxonPlayer sav = (MaxonPlayer) new ObjectInputStream(fh.read()).readObject();
-                SaveGameWidget widget = new SaveGameWidget(
-                        skin, widgetSkin, sav
-                );
-                widget.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        try {
-                            game.setScreen(new GameScreen(game, sav));
-                        } catch (IOException | ClassNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
-                        dispose();
+        // Load existing files:
+        for (int i = 0; i < saves.size(); i++) {
+            final MaxonSavegame sav = saves.get(i);
+            SaveGameWidget widget = new SaveGameWidget(
+                    skin, widgetSkin, sav
+            );
+            final int finalI = i;
+            widget.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    try {
+                        game.setScreen(new GameScreen(game, sav, finalI));
+                    } catch (IOException | ClassNotFoundException e) {
+                        throw new RuntimeException(e);
                     }
-                });
-                table.add(widget).width(512f).padBottom(8f).row();
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+                    dispose();
+                }
+            });
+            table.add(widget).width(512f).padBottom(8f).row();
         }
 
-        for (int i = 0; i < 3 - folder.list().length; i++) {
-            final MaxonPlayer sav = new MaxonPlayer();
+        for (int i = 0; i < 3 - saves.size(); i++) {
+            final MaxonSavegame sav = new MaxonSavegame();
             SaveGameWidget widget = new SaveGameWidget(
                     skin, widgetSkin, null
             );
@@ -300,7 +297,7 @@ public class MenuScreen implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     try {
-                        game.setScreen(new GameScreen(game, sav));
+                        game.setScreen(new GameScreen(game, sav, finalI));
                     } catch (IOException | ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }

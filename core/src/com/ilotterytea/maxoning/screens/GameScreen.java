@@ -20,7 +20,7 @@ import com.ilotterytea.maxoning.anim.SpriteUtils;
 import com.ilotterytea.maxoning.inputprocessors.CrossProcessor;
 import com.ilotterytea.maxoning.player.MaxonItem;
 import com.ilotterytea.maxoning.player.MaxonItemRegister;
-import com.ilotterytea.maxoning.player.MaxonPlayer;
+import com.ilotterytea.maxoning.player.MaxonSavegame;
 import com.ilotterytea.maxoning.ui.*;
 import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
@@ -32,8 +32,9 @@ import java.util.Map;
 
 public class GameScreen implements Screen, InputProcessor {
     final MaxonGame game;
+    final int slotId;
 
-    MaxonPlayer player;
+    MaxonSavegame player;
 
     Stage stage;
     Skin skin, widgetSkin;
@@ -53,8 +54,9 @@ public class GameScreen implements Screen, InputProcessor {
 
     ArrayList<ArrayList<Sprite>> bgTiles;
 
-    public GameScreen(MaxonGame game, MaxonPlayer sav) throws IOException, ClassNotFoundException {
+    public GameScreen(MaxonGame game, MaxonSavegame sav, int slotId) throws IOException, ClassNotFoundException {
         this.game = game;
+        this.slotId = slotId;
 
         player = sav;
 
@@ -68,7 +70,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         items = new ArrayList<>();
 
-        for (int id : player.purchasedItems) {
+        for (int id : player.inv) {
             items.add(MaxonItemRegister.get(id));
         }
 
@@ -98,7 +100,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         invItems = new HashMap<>();
 
-        for (Integer id : player.purchasedItems) {
+        for (Integer id : player.inv) {
             if (invItems.containsKey(id)) {
                 invItems.put(id, invItems.get(id) + 1);
             } else {
@@ -141,13 +143,13 @@ public class GameScreen implements Screen, InputProcessor {
                     if (player.points > item.price) {
                         player.points -= item.price;
                         player.multiplier += item.multiplier;
-                        player.purchasedItems.add(item.id);
+                        player.inv.add(item.id);
                         items.add(item);
 
                         invItems.clear();
                         inventoryTable.clear();
 
-                        for (Integer id : player.purchasedItems) {
+                        for (Integer id : player.inv) {
                             if (invItems.containsKey(id)) {
                                 invItems.put(id, invItems.get(id) + 1);
                             } else {
@@ -246,7 +248,7 @@ public class GameScreen implements Screen, InputProcessor {
 
                 player.points += multiplier;
 
-                final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(1 * player.multiplier)), skin, "default");
+                final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)), skin, "default");
 
                 label.setPosition(
                         mainTable.getX() + actor.getActorX(),
@@ -383,11 +385,7 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            try {
-                GameDataSystem.SaveData(player);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            GameDataSystem.save(player, String.format("%s.sav", (slotId >= 0) ? slotId : "latest"));
 
             game.setScreen(new MenuScreen(game));
             dispose();
@@ -404,9 +402,9 @@ public class GameScreen implements Screen, InputProcessor {
         cat.nextFrame();
         maxon.setDrawable(cat.getDrawable());
 
-        player.points += 1 * player.multiplier;
+        player.points += player.multiplier;
 
-        final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(1 * player.multiplier)), skin, "default");
+        final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)), skin, "default");
 
         label.setPosition(
                 mainTable.getX() + actor.getActorX(),
