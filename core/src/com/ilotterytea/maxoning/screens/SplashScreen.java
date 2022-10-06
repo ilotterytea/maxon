@@ -14,8 +14,11 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.utils.AssetLoading;
+import com.ilotterytea.maxoning.utils.OsUtils;
 import com.ilotterytea.maxoning.utils.math.Math;
+import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class SplashScreen implements Screen {
@@ -97,7 +100,15 @@ public class SplashScreen implements Screen {
     private void update() {
         if (game.assetManager.update()) {
             AssetLoading.registerItems(game.assetManager, game.locale);
-            game.setScreen(new MenuScreen(game));
+            if (OsUtils.isAndroid || OsUtils.isIos) {
+                try {
+                    game.setScreen(new GameScreen(game, GameDataSystem.load("latest.sav")));
+                } catch (IOException | ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                game.setScreen(new MenuScreen(game));
+            }
             dispose();
         }
     }
