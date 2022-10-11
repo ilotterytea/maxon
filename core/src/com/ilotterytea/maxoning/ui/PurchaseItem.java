@@ -10,14 +10,14 @@ public class PurchaseItem extends Stack {
             AnimatedImage icon,
             CharSequence name,
             CharSequence desc,
-            float price
+            String price
     ) {
         super(new Image(widgetSkin, "up"));
 
         Table summary = new Table();
         summary.setHeight(super.getHeight());
 
-        Label title = new Label(String.format("%s\n(%s)", name, price), skin, "purchaseitem_title");
+        Label title = new Label(String.format("%s\n(%s)", name, string), skin, "purchaseitem_title");
 
         summary.add(title).fillX().row();
 
