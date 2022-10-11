@@ -132,7 +132,7 @@ public class GameScreen implements Screen, InputProcessor {
         // Adding the pet items in pet table:
         for (final MaxonItem item : MaxonItemRegister.getItems()) {
             PurchaseItem purchaseItem = new PurchaseItem(
-                    skin, widgetSkin, item.icon, item.name, item.desc, item.price
+                    skin, widgetSkin, item.icon, item.name, item.desc, MaxonConstants.DECIMAL_FORMAT2.format(item.price)
             );
 
             purchaseItem.addListener(new ClickListener() {
