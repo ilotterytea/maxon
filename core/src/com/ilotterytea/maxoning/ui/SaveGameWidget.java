@@ -1,6 +1,7 @@
 package com.ilotterytea.maxoning.ui;
 
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Null;
@@ -67,6 +68,13 @@ public class SaveGameWidget extends Button {
         Table summaryTable = new Table();
         summaryTable.add(infoTable).pad(5f).row();
         summaryTable.add(descTable).pad(5f).row();
+
+        if (sav == null) {
+            topleftLabel.setColor(Color.DARK_GRAY);
+            toprightLabel.setColor(Color.DARK_GRAY);
+            bottomleftLabel.setColor(Color.DARK_GRAY);
+            pointsLabel.setColor(Color.DARK_GRAY);
+        }
 
         super.add(summaryTable);
     }
