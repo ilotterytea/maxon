@@ -14,14 +14,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.player.MaxonSavegame;
 import com.ilotterytea.maxoning.ui.*;
 import com.ilotterytea.maxoning.utils.math.Math;
 import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -264,47 +265,58 @@ public class MenuScreen implements Screen {
     }
 
     private void loadSavegamesToTable(Table table) {
-        ArrayList<MaxonSavegame> saves = GameDataSystem.getSavegames();
-
-        // Load existing files:
-        for (int i = 0; i < saves.size(); i++) {
-            final MaxonSavegame sav = saves.get(i);
-            SaveGameWidget widget = new SaveGameWidget(
-                    skin, widgetSkin, sav
-            );
-            final int finalI = i;
-            widget.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    try {
-                        game.setScreen(new GameScreen(game, sav, finalI));
-                    } catch (IOException | ClassNotFoundException e) {
-                        throw new RuntimeException(e);
+        for (int i = 0; i < 3; i++) {
+            if (new File(MaxonConstants.GAME_SAVEGAME_FOLDER + String.format("/0%s.maxon", i)).exists()) {
+                final MaxonSavegame sav = GameDataSystem.load("0" + i + ".maxon");
+                SaveGameWidget widget = new SaveGameWidget(
+                        skin, widgetSkin, sav
+                );
+                final int finalI = i;
+                widget.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        try {
+                            game.setScreen(new GameScreen(game, sav, finalI));
+                        } catch (IOException | ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                        dispose();
                     }
-                    dispose();
-                }
-            });
-            table.add(widget).width(512f).padBottom(8f).row();
-        }
+                });
+                table.add(widget).width(512f).padBottom(8f).row();
+            } else {
 
-        for (int i = 0; i < 3 - saves.size(); i++) {
-            final MaxonSavegame sav = new MaxonSavegame();
-            SaveGameWidget widget = new SaveGameWidget(
-                    skin, widgetSkin, null
-            );
-            final int finalI = i;
-            widget.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    try {
-                        game.setScreen(new GameScreen(game, sav, finalI));
-                    } catch (IOException | ClassNotFoundException e) {
-                        throw new RuntimeException(e);
+                final MaxonSavegame sav = new MaxonSavegame();
+                final SaveGameWidget widget = new SaveGameWidget(
+                        skin, widgetSkin, null
+                );
+                final int finalI = i;
+                widget.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        sav.petId = 0;
+                        sav.inv = new ArrayList<>();
+                        sav.multiplier = 5;
+                        sav.points = 0;
+                        sav.roomId = 0;
+                        sav.seed = System.currentTimeMillis();
+                        sav.name = "SAVE " + (finalI + 1);
+                        sav.elapsedTime = 0;
+                        sav.lastTimestamp = System.currentTimeMillis();
+                        sav.outInv = new ArrayList<>();
+
+                        GameDataSystem.save(sav, "0" + finalI + ".maxon");
+
+                        try {
+                            game.setScreen(new GameScreen(game, sav, finalI));
+                        } catch (IOException | ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                        dispose();
                     }
-                    dispose();
-                }
-            });
-            table.add(widget).width(512f).padBottom(8f).row();
+                });
+                table.add(widget).width(512f).padBottom(8f).row();
+            }
         }
     }
 
