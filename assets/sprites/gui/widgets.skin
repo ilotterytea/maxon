@@ -1,4 +1,12 @@
 {
+
+  Color: {
+    blackSemitransparent: {hex: "#00000099"},
+    grey: {hex: "#5f574fff" },
+    lightgrey: {hex: "#c2c3c7ff" },
+    white: {hex: "#fff1e8ff" },
+    yellow: {hex: "#ffec27ff" }
+  },
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
     default: {
       file: fnt/MaxonTrebuchet.fnt,
