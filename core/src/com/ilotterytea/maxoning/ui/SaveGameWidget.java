@@ -8,9 +8,6 @@ import com.badlogic.gdx.utils.Null;
 import com.ilotterytea.maxoning.player.MaxonSavegame;
 import com.ilotterytea.maxoning.utils.formatters.NumberFormatter;
 
-import java.util.Date;
-
-
 public class SaveGameWidget extends Button {
     public SaveGameWidget(
             Skin skin,
@@ -30,9 +27,21 @@ public class SaveGameWidget extends Button {
         infoTable.add(topleftLabel).width(256f);
 
         // Top right label (elapsed time):
-        Date date = new Date((sav != null) ? sav.elapsedTime : 0);
+        String time = "--:--";
+
+        if (sav != null) {
+            long h = sav.elapsedTime / 1000 / 60 / 60;
+            long m = sav.elapsedTime / 1000 / 60;
+
+            time = String.format(
+                    "%s:%s",
+                    ((h < 10) ? "0" : "") + h,
+                    ((m < 10) ? "0" : "") + m
+            );
+        }
+
         Label toprightLabel = new Label(
-                String.format("%s:%s", date.getHours(), date.getMinutes()),
+                time,
                 skin
         );
         toprightLabel.setAlignment(Align.right);
