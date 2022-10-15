@@ -9,8 +9,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ilotterytea.maxoning.screens.SplashScreen;
 import com.ilotterytea.maxoning.utils.I18N;
 
-import java.io.IOException;
-
 public class MaxonGame extends Game {
 	public SpriteBatch batch;
 	public ShapeRenderer shapeRenderer;
