@@ -1,0 +1,20 @@
+
+widgeticons.png
+size: 256, 128
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+exit
+  rotate: false
+  xy: 128, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+options
+  rotate: false
+  xy: 0, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
