@@ -33,6 +33,7 @@ import java.util.Map;
 public class GameScreen implements Screen, InputProcessor {
     final MaxonGame game;
     final int slotId;
+    final long playTimestamp;
 
     MaxonSavegame player;
 
@@ -57,6 +58,7 @@ public class GameScreen implements Screen, InputProcessor {
     public GameScreen(MaxonGame game, MaxonSavegame sav, int slotId) throws IOException, ClassNotFoundException {
         this.game = game;
         this.slotId = slotId;
+        this.playTimestamp = System.currentTimeMillis();
 
         player = sav;
 
@@ -385,7 +387,9 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            GameDataSystem.save(player, String.format("%s.sav", (slotId >= 0) ? slotId : "latest"));
+            player.lastTimestamp = System.currentTimeMillis();
+            player.elapsedTime = System.currentTimeMillis() - playTimestamp;
+            GameDataSystem.save(player, String.format("0%s.maxon", (slotId >= 0) ? slotId : "latest"));
 
             game.setScreen(new MenuScreen(game));
             dispose();
