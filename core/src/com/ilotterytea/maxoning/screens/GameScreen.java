@@ -388,7 +388,7 @@ public class GameScreen implements Screen, InputProcessor {
     public boolean keyDown(int keycode) {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             player.lastTimestamp = System.currentTimeMillis();
-            player.elapsedTime = System.currentTimeMillis() - playTimestamp;
+            player.elapsedTime = (System.currentTimeMillis() - playTimestamp) + player.elapsedTime;
             GameDataSystem.save(player, String.format("0%s.maxon", (slotId >= 0) ? slotId : "latest"));
 
             game.setScreen(new MenuScreen(game));
