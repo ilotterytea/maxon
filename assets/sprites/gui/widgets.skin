@@ -60,5 +60,19 @@
       background: up,
       wrapWidth: 400
     }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
+    default: {
+      font: default,
+      fontColor: lightgrey,
+      focusedFontColor: yellow,
+      background: plain_up,
+      focusedBackground: plain_over,
+    }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.Table: {
+    default: {
+      background: plain_up
+    }
   }
 }
