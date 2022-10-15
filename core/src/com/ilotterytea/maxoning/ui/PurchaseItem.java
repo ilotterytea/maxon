@@ -10,7 +10,7 @@ public class PurchaseItem extends Stack {
             AnimatedImage icon,
             CharSequence name,
             CharSequence desc,
-            float price
+            String price
     ) {
         super(new Image(widgetSkin, "up"));
 
