@@ -3,14 +3,10 @@ package com.ilotterytea.maxoning.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.ilotterytea.maxoning.MaxonConstants;
@@ -25,9 +21,7 @@ public class OptionsTable extends Table {
     public OptionsTable(
             final MaxonGame game,
             Skin skin,
-            NinePatch buttonUp,
-            NinePatch buttonDown,
-            NinePatch buttonOver,
+            Skin widgetSkin,
             final Music music,
             final Table menuTable,
             final Image bgImage,
@@ -42,7 +36,7 @@ public class OptionsTable extends Table {
         Table lidlOptionsTable = new Table();
 
         // Music button:
-        final NinepatchButton musicButton = new NinepatchButton(buttonUp, buttonDown, buttonOver, game.locale.FormattedText("options.music", (game.prefs.getBoolean("music", true)) ? "ON" : "OFF"), skin, "default");
+        final TextButton musicButton = new TextButton(game.locale.FormattedText("options.music", (game.prefs.getBoolean("music", true)) ? "ON" : "OFF"), widgetSkin, "default");
 
         musicButton.addListener(new ClickListener() {
             @Override
@@ -64,7 +58,7 @@ public class OptionsTable extends Table {
 
         lidlOptionsTable.add(musicButton).size(512f, 81f).pad(10f).left();
 
-        final NinepatchButton soundButton = new NinepatchButton(buttonUp, buttonDown, buttonOver, game.locale.FormattedText("options.sound", (game.prefs.getBoolean("sound", true)) ? "ON" : "OFF"), skin, "default");
+        final TextButton soundButton = new TextButton(game.locale.FormattedText("options.sound", (game.prefs.getBoolean("sound", true)) ? "ON" : "OFF"), widgetSkin, "default");
 
         soundButton.addListener(new ClickListener() {
             @Override
@@ -78,7 +72,7 @@ public class OptionsTable extends Table {
 
         lidlOptionsTable.add(soundButton).size(512f, 81f).pad(10f).right().row();
 
-        final NinepatchButton vsyncButton = new NinepatchButton(buttonUp, buttonDown, buttonOver, game.locale.FormattedText("options.vsync", (game.prefs.getBoolean("vsync", true)) ? "ON" : "OFF"), skin, "default");
+        final TextButton vsyncButton = new TextButton(game.locale.FormattedText("options.vsync", (game.prefs.getBoolean("vsync", true)) ? "ON" : "OFF"), widgetSkin, "default");
 
         vsyncButton.addListener(new ClickListener() {
             @Override
@@ -98,7 +92,7 @@ public class OptionsTable extends Table {
 
         lidlOptionsTable.add(vsyncButton).size(512f, 81f).pad(10f).left();
 
-        final NinepatchButton fullscreenButton = new NinepatchButton(buttonUp, buttonDown, buttonOver, game.locale.FormattedText("options.fullscreen", (game.prefs.getBoolean("fullscreen", false)) ? "ON" : "OFF"), skin, "default");
+        final TextButton fullscreenButton = new TextButton(game.locale.FormattedText("options.fullscreen", (game.prefs.getBoolean("fullscreen", false)) ? "ON" : "OFF"), widgetSkin, "default");
 
         fullscreenButton.addListener(new ClickListener() {
             @Override
@@ -123,7 +117,7 @@ public class OptionsTable extends Table {
         String[] fh4Locale = game.locale.getFileHandle().nameWithoutExtension().split("_");
         Locale locale = new Locale(fh4Locale[0], fh4Locale[1]);
 
-        final NinepatchButton switchLangButton = new NinepatchButton(buttonUp, buttonDown, buttonOver, game.locale.FormattedText("options.language", locale.getDisplayLanguage(), locale.getDisplayCountry()), skin, "default");
+        final TextButton switchLangButton = new TextButton(game.locale.FormattedText("options.language", locale.getDisplayLanguage(), locale.getDisplayCountry()), widgetSkin, "default");
 
         switchLangButton.addListener(new ClickListener() {
             @Override
@@ -154,7 +148,7 @@ public class OptionsTable extends Table {
 
         super.add(switchLangButton).size(1024f, 81f).padTop(91f).center().row();
 
-        final NinepatchButton optionsCloseButton = new NinepatchButton(buttonUp, buttonDown, buttonOver, game.locale.TranslatableText("options.close"), skin, "default");
+        final TextButton optionsCloseButton = new TextButton(game.locale.TranslatableText("options.close"), widgetSkin, "default");
 
         optionsCloseButton.addListener(new ClickListener() {
             @Override
