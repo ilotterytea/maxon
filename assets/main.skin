@@ -20,17 +20,27 @@
   },
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
     default: {
-      file: fnt/peepo.fnt,
-      scaledSize: 22
+      file: fnt/MaxonTrebuchet.fnt,
+      scaledSize: 24
     },
     default_lidl: {
-      file: fnt/peepo.fnt,
-      scaledSize: 16
+      file: fnt/MaxonTrebuchet.fnt,
+      scaledSize: 18
     },
     default_slidl: {
-      file: fnt/peepo.fnt,
-      scaledSize: 12
+      file: fnt/MaxonTrebuchet.fnt,
+      scaledSize: 14
     }
+
+    // Console
+    console: {
+      file: fnt/MaxonTahoma.fnt,
+      scaledSize: 14
+    },
+    console_bold: {
+      file: fnt/MaxonTahomaBold.fnt,
+      scaledSize: 12
+    },
   },
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
     default: {
@@ -66,8 +76,12 @@
       fontColor: yellow
     },
     disclaimer: {
-      font: default,
+      font: default_slidl,
       fontColor: grey
+    },
+    debug: {
+      font: console_bold,
+      fontColor: white
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {

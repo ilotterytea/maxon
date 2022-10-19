@@ -1,0 +1,78 @@
+{
+
+  Color: {
+    blackSemitransparent: {hex: "#00000099"},
+    grey: {hex: "#5f574fff" },
+    lightgrey: {hex: "#c2c3c7ff" },
+    white: {hex: "#fff1e8ff" },
+    yellow: {hex: "#ffec27ff" }
+  },
+  com.badlogic.gdx.graphics.g2d.BitmapFont: {
+    default: {
+      file: fnt/MaxonTrebuchet.fnt,
+      scaledSize: 24
+    },
+    text: {
+      file: fnt/MaxonTrebuchet.fnt,
+      scaledSize: 18
+    }
+  }
+  TintedDrawable: {
+    plain_up: {
+      color: { hex: "#30303055" }
+      name: tile
+    },
+    plain_over: {
+      color: { hex: "#99999999" }
+      name: tile
+    },
+    plain_down: {
+      color: { hex: "#30303022" }
+      name: tile
+    },
+  }
+  com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+    default: {
+      font: default,
+      up: up,
+      down: down,
+      over: over,
+      disabled: down
+    }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+    default: {
+      up: up,
+      down: down,
+      over: over,
+      disabled: down
+    },
+    slot: {
+      up: plain_up,
+      down: plain_down,
+      over: plain_over,
+      disabled: plain_down
+    }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+    default: {
+      label: { font: default },
+      background: up,
+      wrapWidth: 400
+    }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
+    default: {
+      font: default,
+      fontColor: lightgrey,
+      focusedFontColor: yellow,
+      background: plain_up,
+      focusedBackground: plain_over,
+    }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.Table: {
+    default: {
+      background: plain_up
+    }
+  }
+}

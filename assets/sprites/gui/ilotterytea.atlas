@@ -1,0 +1,27 @@
+
+ilotterytea.png
+size: 256, 256
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+org
+  rotate: false
+  xy: 126, 38
+  size: 24, 23
+  orig: 24, 23
+  offset: 0, 0
+  index: -1
+devOld
+  rotate: false
+  xy: 0, 24
+  size: 126, 37
+  orig: 126, 37
+  offset: 0, 0
+  index: -1
+dev
+  rotate: false
+  xy: 0, 0
+  size: 126, 24
+  orig: 126, 24
+  offset: 0, 0
+  index: -1

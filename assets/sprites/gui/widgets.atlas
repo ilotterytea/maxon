@@ -1,0 +1,49 @@
+
+widgets.png
+size: 128, 16
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+down
+  rotate: false
+  xy: 0, 0
+  size: 16, 16
+  split: 4, 4, 4, 4
+  pad: 4, 4, 4, 4
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+frame
+  rotate: false
+  xy: 16, 0
+  size: 16, 16
+  split: 3, 3, 3, 3
+  pad: 3, 3, 3, 3
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+over
+  rotate: false
+  xy: 32, 0
+  size: 16, 16
+  split: 4, 4, 4, 4
+  pad: 4, 4, 4, 4
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tile
+  rotate: false
+  xy: 64, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+up
+  rotate: false
+  xy: 48, 0
+  size: 16, 16
+  split: 4, 4, 4, 4
+  pad: 4, 4, 4, 4
+  orig: 16, 16
+  offset: 0, 0
+  index: -1

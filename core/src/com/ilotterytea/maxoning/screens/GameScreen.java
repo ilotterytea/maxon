@@ -3,24 +3,24 @@ package com.ilotterytea.maxoning.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.anim.SpriteUtils;
 import com.ilotterytea.maxoning.inputprocessors.CrossProcessor;
 import com.ilotterytea.maxoning.player.MaxonItem;
 import com.ilotterytea.maxoning.player.MaxonItemRegister;
-import com.ilotterytea.maxoning.player.MaxonPlayer;
+import com.ilotterytea.maxoning.player.MaxonSavegame;
 import com.ilotterytea.maxoning.ui.*;
 import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
@@ -32,11 +32,15 @@ import java.util.Map;
 
 public class GameScreen implements Screen, InputProcessor {
     final MaxonGame game;
+    final int slotId;
+    final long playTimestamp;
 
-    MaxonPlayer player;
+    MaxonSavegame player;
 
     Stage stage;
-    Skin skin;
+    Skin skin, widgetSkin;
+
+    TextureAtlas widgetAtlas, environmentAtlas;
 
     Label pointsLabel;
     Image blackBg, inventoryBg, shopBg, pointsBg;
@@ -46,48 +50,40 @@ public class GameScreen implements Screen, InputProcessor {
     Table petTable, inventoryTable, mainTable;
     ScrollPane petScroll;
 
-    NinePatch btnUp, btnDown, btnOver, btnDisabled;
-
-    Texture bgTile, bgTileAlt;
-
     ArrayList<MaxonItem> items;
     Map<Integer, Integer> invItems;
 
-    boolean isShopping = true;
-
     ArrayList<ArrayList<Sprite>> bgTiles;
 
-    public GameScreen(MaxonGame game) throws IOException, ClassNotFoundException {
+    public GameScreen(MaxonGame game, MaxonSavegame sav, int slotId) throws IOException, ClassNotFoundException {
         this.game = game;
+        this.slotId = slotId;
+        this.playTimestamp = System.currentTimeMillis();
 
-        player = new MaxonPlayer();
-        player.load(GameDataSystem.LoadData());
+        player = sav;
 
         // Initializing the stage and skin:
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         skin = new Skin(Gdx.files.internal("main.skin"));
+        widgetSkin = new Skin(Gdx.files.internal("sprites/gui/widgets.skin"));
 
-        // Ninepatch textures for buttons:
-        btnUp = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton.png", Texture.class), 8, 8, 8, 8);
-        btnDown = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton_down.png", Texture.class), 8, 8, 8, 8);
-        btnOver = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton_over.png", Texture.class), 8, 8, 8, 8);
-        btnDisabled = new NinePatch(game.assetManager.get("sprites/ui/sqrbutton_disabled.png", Texture.class), 8, 8, 8, 8);
-
+        widgetAtlas = game.assetManager.get("sprites/gui/widgets.atlas", TextureAtlas.class);
+        environmentAtlas = game.assetManager.get("sprites/env/environment.atlas", TextureAtlas.class);
 
         items = new ArrayList<>();
 
-        for (int id : player.purchasedItems) {
+        for (int id : player.inv) {
             items.add(MaxonItemRegister.get(id));
         }
 
-        // Make the background a little dimmed:
-        blackBg = new Image(game.assetManager.get("sprites/black.png", Texture.class));
+        // Make the background a little darker:
+        blackBg = new Image(environmentAtlas.findRegion("tile"));
+        blackBg.setColor(0f, 0f, 0f, 0.5f);
         blackBg.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        blackBg.addAction(Actions.parallel(Actions.alpha(0.25f)));
         stage.addActor(blackBg);
 
         // Setting the background for inventory:
-        inventoryBg = new Image(btnDisabled);
+        inventoryBg = new Image(widgetSkin, "down");
         inventoryBg.setSize((Gdx.graphics.getWidth() / 2.0f) - 512f, (Gdx.graphics.getHeight() / 2.0f) - 8f);
         inventoryBg.setPosition(8, 4);
         stage.addActor(inventoryBg);
@@ -104,15 +100,9 @@ public class GameScreen implements Screen, InputProcessor {
         inventoryTable.setSize(inventoryBg.getWidth(), inventoryBg.getHeight() - inventoryLabel.getHeight());
         inventoryTable.setPosition(inventoryBg.getX(), inventoryBg.getY());
 
-        TextTooltip.TextTooltipStyle textTooltipStyle = new TextTooltip.TextTooltipStyle();
-        textTooltipStyle.label = new Label.LabelStyle();
-        textTooltipStyle.label.font = skin.getFont("default");
-        textTooltipStyle.label.fontColor = skin.getColor("white");
-        textTooltipStyle.background = new NinePatchDrawable(btnUp);
-
         invItems = new HashMap<>();
 
-        for (Integer id : player.purchasedItems) {
+        for (Integer id : player.inv) {
             if (invItems.containsKey(id)) {
                 invItems.put(id, invItems.get(id) + 1);
             } else {
@@ -121,21 +111,14 @@ public class GameScreen implements Screen, InputProcessor {
         }
 
         // Put the items in the inventory table:
-        for (Integer id : invItems.keySet()) {
-            MaxonItem item = MaxonItemRegister.get(id);
-
-            if (item != null) {
-                InventoryAnimatedItem invItem = new InventoryAnimatedItem(item, skin, invItems.get(id));
-                inventoryTable.add(invItem).size(64, 64).pad(5f);
-            }
-        }
+        reorderInvItems();
 
         inventoryTable.align(Align.left|Align.top);
 
         stage.addActor(inventoryTable);
 
         // Setting the background for pet shop:
-        shopBg = new Image(btnDisabled);
+        shopBg = new Image(widgetSkin, "down");
         shopBg.setSize((Gdx.graphics.getWidth() / 2.0f) - 512f, (Gdx.graphics.getHeight() / 2.0f) - 8f);
         shopBg.setPosition(8, inventoryBg.getY() + inventoryBg.getHeight() + 8f);
         stage.addActor(shopBg);
@@ -153,7 +136,7 @@ public class GameScreen implements Screen, InputProcessor {
         // Adding the pet items in pet table:
         for (final MaxonItem item : MaxonItemRegister.getItems()) {
             PurchaseItem purchaseItem = new PurchaseItem(
-                    skin, btnUp, item.icon, item.name, item.desc, item.price
+                    skin, widgetSkin, item.icon, item.name, item.desc, MaxonConstants.DECIMAL_FORMAT2.format(item.price)
             );
 
             purchaseItem.addListener(new ClickListener() {
@@ -162,13 +145,13 @@ public class GameScreen implements Screen, InputProcessor {
                     if (player.points > item.price) {
                         player.points -= item.price;
                         player.multiplier += item.multiplier;
-                        player.purchasedItems.add(item.id);
+                        player.inv.add(item.id);
                         items.add(item);
 
                         invItems.clear();
                         inventoryTable.clear();
 
-                        for (Integer id : player.purchasedItems) {
+                        for (Integer id : player.inv) {
                             if (invItems.containsKey(id)) {
                                 invItems.put(id, invItems.get(id) + 1);
                             } else {
@@ -177,14 +160,7 @@ public class GameScreen implements Screen, InputProcessor {
                         }
 
                         // Put the items in the inventory table:
-                        for (Integer id : invItems.keySet()) {
-                            MaxonItem item = MaxonItemRegister.get(id);
-
-                            if (item != null) {
-                                InventoryAnimatedItem invItem = new InventoryAnimatedItem(item, skin, invItems.get(id));
-                                inventoryTable.add(invItem).size(64, 64).pad(5f);
-                            }
-                        }
+                        reorderInvItems();
                     }
                 }
             });
@@ -202,7 +178,7 @@ public class GameScreen implements Screen, InputProcessor {
         stage.addActor(petScroll);
 
         // Background for points label:
-        pointsBg = new Image(btnDisabled);
+        pointsBg = new Image(widgetSkin, "down");
         pointsBg.setSize((Gdx.graphics.getWidth() - (shopBg.getX() + shopBg.getWidth()) - 8f), 64f);
         pointsBg.setPosition(shopBg.getX() + shopBg.getWidth() + 4f, Gdx.graphics.getHeight() - pointsBg.getHeight() - 4f);
 
@@ -220,30 +196,10 @@ public class GameScreen implements Screen, InputProcessor {
 
         stage.addActor(pointsLabel);
 
-        bgTile = game.assetManager.get("sprites/menu/tile_1.png", Texture.class);
-        bgTileAlt = game.assetManager.get("sprites/menu/tile_2.png", Texture.class);
-
         // Generate the background:
         bgTiles = new ArrayList<>();
 
-        for (int i = 0; i < Gdx.graphics.getHeight() / bgTile.getHeight() + 1; i++) {
-            bgTiles.add(i, new ArrayList<Sprite>());
-
-            for (int j = -1; j < Gdx.graphics.getWidth() / bgTile.getWidth(); j++) {
-                Sprite spr = new Sprite();
-
-                if ((j + i) % 2 == 0) {
-                    spr.setTexture(bgTile);
-                } else {
-                    spr.setTexture(bgTileAlt);
-                }
-
-                spr.setSize(bgTile.getWidth(), bgTile.getHeight());
-
-                spr.setPosition(bgTile.getWidth() * j, bgTile.getHeight() * i);
-                bgTiles.get(i).add(spr);
-            }
-        }
+        genNewBgTiles((int) stage.getWidth(), (int) stage.getHeight());
 
         // Table for Maxon cat:
         mainTable = new Table();
@@ -294,7 +250,7 @@ public class GameScreen implements Screen, InputProcessor {
 
                 player.points += multiplier;
 
-                final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", String.valueOf(1 * player.multiplier)), skin, "default");
+                final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)), skin, "default");
 
                 label.setPosition(
                         mainTable.getX() + actor.getActorX(),
@@ -362,8 +318,8 @@ public class GameScreen implements Screen, InputProcessor {
 
         // Update the points label:
         pointsLabel.setText(game.locale.FormattedText("game.points",
-                String.valueOf(player.points),
-                String.valueOf(player.multiplier)
+                MaxonConstants.DECIMAL_FORMAT.format(player.points),
+                MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)
         ));
 
         stage.draw();
@@ -374,26 +330,46 @@ public class GameScreen implements Screen, InputProcessor {
     public void resize(int width, int height) {
         bgTiles.clear();
 
-        for (int i = 0; i < Gdx.graphics.getHeight() / bgTile.getHeight() + 1; i++) {
-            bgTiles.add(i, new ArrayList<Sprite>());
+        genNewBgTiles(width, height);
 
-            for (int j = -1; j < Gdx.graphics.getWidth() / bgTile.getWidth(); j++) {
-                Sprite spr = new Sprite();
+        stage.getViewport().update(width, height, true);
+    }
+
+    private void reorderInvItems() {
+        inventoryTable.clear();
+
+        for (int i = 0; i < invItems.keySet().size(); i++) {
+            MaxonItem item = MaxonItemRegister.get(i);
+
+            if (item != null) {
+                InventoryAnimatedItem invItem = new InventoryAnimatedItem(item, skin, invItems.get(i));
+                Cell<InventoryAnimatedItem> cell = inventoryTable.add(invItem).size(64, 64).pad(5f);
+
+                if (i != 0 && i % 5 == 0) {
+                    cell.row();
+                }
+            }
+        }
+    }
+
+    private void genNewBgTiles(int width, int height) {
+        for (int i = 0; i < height / environmentAtlas.findRegion("tile").getRegionHeight() + 1; i++) {
+            bgTiles.add(i, new ArrayList<Sprite>());
+            for (int j = -1; j < width / environmentAtlas.findRegion("tile").getRegionWidth(); j++) {
+                Sprite spr = new Sprite(environmentAtlas.findRegion("tile"));
 
                 if ((j + i) % 2 == 0) {
-                    spr.setTexture(bgTile);
+                    spr.setColor(0.98f, 0.71f, 0.22f, 1f);
                 } else {
-                    spr.setTexture(bgTileAlt);
+                    spr.setColor(0.84f, 0.61f, 0.20f, 1f);
                 }
 
-                spr.setSize(bgTile.getWidth(), bgTile.getHeight());
+                spr.setSize(64, 64);
 
-                spr.setPosition(bgTile.getWidth() * j, bgTile.getHeight() * i);
+                spr.setPosition(spr.getWidth() * j, spr.getHeight() * i);
                 bgTiles.get(i).add(spr);
             }
         }
-
-        stage.getViewport().update(width, height, true);
     }
 
     @Override public void pause() {}
@@ -411,11 +387,9 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            try {
-                GameDataSystem.SaveData(player);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            player.lastTimestamp = System.currentTimeMillis();
+            player.elapsedTime = (System.currentTimeMillis() - playTimestamp) + player.elapsedTime;
+            GameDataSystem.save(player, String.format("0%s.maxon", (slotId >= 0) ? slotId : "latest"));
 
             game.setScreen(new MenuScreen(game));
             dispose();
@@ -432,9 +406,9 @@ public class GameScreen implements Screen, InputProcessor {
         cat.nextFrame();
         maxon.setDrawable(cat.getDrawable());
 
-        player.points += 1 * player.multiplier;
+        player.points += player.multiplier;
 
-        final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", String.valueOf(1 * player.multiplier)), skin, "default");
+        final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)), skin, "default");
 
         label.setPosition(
                 mainTable.getX() + actor.getActorX(),
