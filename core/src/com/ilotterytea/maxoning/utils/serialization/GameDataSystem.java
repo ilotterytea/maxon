@@ -1,9 +1,11 @@
 package com.ilotterytea.maxoning.utils.serialization;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Null;
 import com.google.gson.Gson;
 import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.player.MaxonSavegame;
+import com.ilotterytea.maxoning.utils.OsUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,12 +61,12 @@ public class GameDataSystem {
     public static void save(@NotNull MaxonSavegame savegame, @NotNull String file_name) {
         try {
             log.info("Saving the game...");
-            FileOutputStream fos = new FileOutputStream(String.format("%s/%s", dir.getAbsolutePath(), file_name));
+            FileOutputStream fos = new FileOutputStream(String.format("%s/%s", (OsUtils.isAndroid || OsUtils.isIos) ? Gdx.files.getExternalStoragePath() : dir.getAbsolutePath(), file_name));
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
             oos.writeUTF(gson.toJson(savegame));
             oos.close();
-            log.info(String.format("Success! Savegame located at %s/%s", dir.getAbsolutePath(), file_name));
+            log.info(String.format("Success! Savegame located at %s/%s", (OsUtils.isAndroid || OsUtils.isIos) ? Gdx.files.getExternalStoragePath() : dir.getAbsolutePath(), file_name));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -77,12 +79,27 @@ public class GameDataSystem {
      * @see MaxonSavegame
      */
     public static MaxonSavegame load(@Null String file_name) {
-        MaxonSavegame sav = new MaxonSavegame();
+        MaxonSavegame sav = null;
 
-        if (new File(dir.getAbsolutePath() + "/" + file_name).exists()) {
+        if (new File(dir.getAbsolutePath() + "/" + file_name).exists() && !(OsUtils.isAndroid || OsUtils.isIos)) {
             try {
                 log.info(String.format("Trying to get the savegame at %s/%s...", dir.getAbsolutePath(), file_name));
                 FileInputStream fis = new FileInputStream(String.format("%s/%s", dir.getAbsolutePath(), file_name));
+                ObjectInputStream oos = new ObjectInputStream(fis);
+
+                sav = gson.fromJson(oos.readUTF(), MaxonSavegame.class);
+                oos.close();
+
+                log.info(String.format("Successfully loaded the savegame from %s/%s!", dir.getAbsolutePath(), file_name));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if ((OsUtils.isAndroid || OsUtils.isIos) && Gdx.files.local(Gdx.files.getExternalStoragePath() + "/" + file_name).exists()) {
+            try {
+                log.info(String.format("Trying to get the savegame at %s/%s...", Gdx.files.getExternalStoragePath(), file_name));
+                FileInputStream fis = new FileInputStream(String.format("%s/%s", Gdx.files.getExternalStoragePath(), file_name));
                 ObjectInputStream oos = new ObjectInputStream(fis);
 
                 sav = gson.fromJson(oos.readUTF(), MaxonSavegame.class);
