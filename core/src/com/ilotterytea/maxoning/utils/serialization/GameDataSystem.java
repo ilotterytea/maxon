@@ -96,16 +96,16 @@ public class GameDataSystem {
             }
         }
 
-        if ((OsUtils.isAndroid || OsUtils.isIos) && Gdx.files.local(Gdx.files.getExternalStoragePath() + "/" + file_name).exists()) {
+        if ((OsUtils.isAndroid || OsUtils.isIos) && new File(Gdx.files.getExternalStoragePath() + file_name).exists()) {
             try {
-                log.info(String.format("Trying to get the savegame at %s/%s...", Gdx.files.getExternalStoragePath(), file_name));
-                FileInputStream fis = new FileInputStream(String.format("%s/%s", Gdx.files.getExternalStoragePath(), file_name));
+                log.info(String.format("Trying to get the savegame at %s%s...", Gdx.files.getExternalStoragePath(), file_name));
+                FileInputStream fis = new FileInputStream(String.format("%s%s", Gdx.files.getExternalStoragePath(), file_name));
                 ObjectInputStream oos = new ObjectInputStream(fis);
 
                 sav = gson.fromJson(oos.readUTF(), MaxonSavegame.class);
                 oos.close();
 
-                log.info(String.format("Successfully loaded the savegame from %s/%s!", dir.getAbsolutePath(), file_name));
+                log.info(String.format("Successfully loaded the savegame from %s%s!", Gdx.files.getExternalStoragePath(), file_name));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
