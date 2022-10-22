@@ -3,7 +3,6 @@ package com.ilotterytea.maxoning.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -42,7 +41,7 @@ public class MenuScreen implements Screen {
     // Atlases:
     TextureAtlas environmentAtlas, brandAtlas;
 
-    private ArrayList<ArrayList<Sprite>> bgMenuTiles;
+    private final MovingChessBackground bg;
     private ArrayList<LeafParticle> leafTiles, delLeafTiles;
 
     private final boolean isAutumn =
@@ -161,9 +160,15 @@ public class MenuScreen implements Screen {
         Gdx.input.setInputProcessor(new InputMultiplexer(stage));
 
         // Generate background tiles:
-        bgMenuTiles = new ArrayList<>();
+        this.bg = new MovingChessBackground(
+                1,
+                1,
+                stage.getWidth(),
+                stage.getHeight(),
+                widgetSkin.getDrawable("bgTile01"),
+                widgetSkin.getDrawable("bgTile02")
+        );
 
-        genNewBgTiles((int) stage.getWidth(), (int) stage.getHeight());
         leafTiles = new ArrayList<>();
         delLeafTiles = new ArrayList<>();
     }
@@ -208,37 +213,13 @@ public class MenuScreen implements Screen {
 
         game.batch.begin();
 
-        for (ArrayList<Sprite> array : bgMenuTiles) {
-            for (Sprite spr : array) {
-                spr.setPosition(spr.getX() + 1, spr.getY());
-                spr.draw(game.batch);
-            }
-        }
+        bg.draw(game.batch);
 
         for (LeafParticle spr : leafTiles) {
             spr.draw(game.batch);
         }
 
         game.batch.end();
-
-        for (ArrayList<Sprite> array : bgMenuTiles) {
-            for (int i = 0; i < array.size(); i++) {
-                Sprite spr = array.get(i);
-                Sprite f_spr = array.get(0);
-
-                if (spr.getX() > Gdx.graphics.getWidth()) {
-                    Sprite n_spr = spr;
-                    n_spr.setPosition(f_spr.getX() - spr.getWidth(), f_spr.getY());
-
-                    if (spr.getTexture() == f_spr.getTexture()) {
-                        n_spr.setTexture(array.get(1).getTexture());
-                    }
-
-                    array.remove(spr);
-                    array.add(0, n_spr);
-                }
-            }
-        }
 
         if (!isSummer) {
             for (LeafParticle spr : leafTiles) {
@@ -257,9 +238,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        bgMenuTiles.clear();
-
-        genNewBgTiles(width, height);
+        bg.update(width, height);
 
         stage.getViewport().update(width, height, true);
     }
@@ -316,28 +295,6 @@ public class MenuScreen implements Screen {
                     }
                 });
                 table.add(widget).width(512f).padBottom(8f).row();
-            }
-        }
-    }
-
-    private void genNewBgTiles(int width, int height) {
-        bgMenuTiles.clear();
-
-        for (int i = 0; i < height / environmentAtlas.findRegion("tile").getRegionHeight() + 1; i++) {
-            bgMenuTiles.add(i, new ArrayList<Sprite>());
-            for (int j = -1; j < width / environmentAtlas.findRegion("tile").getRegionWidth(); j++) {
-                Sprite spr = new Sprite(environmentAtlas.findRegion("tile"));
-
-                if ((j + i) % 2 == 0) {
-                    spr.setColor(0.98f, 0.71f, 0.22f, 1f);
-                } else {
-                    spr.setColor(0.84f, 0.61f, 0.20f, 1f);
-                }
-
-                spr.setSize(64, 64);
-
-                spr.setPosition(spr.getWidth() * j, spr.getHeight() * i);
-                bgMenuTiles.get(i).add(spr);
             }
         }
     }
