@@ -30,6 +30,14 @@
       color: { hex: "#30303022" }
       name: tile
     },
+    bgTile01: {
+      color: { hex: "#ffa61bff" }
+      name: tile
+    },
+    bgTile02: {
+      color: { hex: "#e98e42ff" }
+      name: tile
+    }
   }
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
     default: {
