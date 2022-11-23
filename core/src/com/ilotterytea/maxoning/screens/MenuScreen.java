@@ -17,13 +17,11 @@ import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.player.MaxonSavegame;
 import com.ilotterytea.maxoning.ui.*;
-import com.ilotterytea.maxoning.utils.math.Math;
 import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class MenuScreen implements Screen {
 
@@ -42,14 +40,6 @@ public class MenuScreen implements Screen {
     TextureAtlas environmentAtlas, brandAtlas;
 
     private final MovingChessBackground bg;
-    private ArrayList<LeafParticle> leafTiles, delLeafTiles;
-
-    private final boolean isAutumn =
-            // Autumn.
-            ((Calendar.getInstance().get(Calendar.MONTH) + 1 > 8) && (Calendar.getInstance().get(Calendar.MONTH) + 1 < 12)) ||
-            // Spring.
-            ((Calendar.getInstance().get(Calendar.MONTH) + 1 < 6) && (Calendar.getInstance().get(Calendar.MONTH) + 1 > 2));
-    private final boolean isSummer = (Calendar.getInstance().get(Calendar.MONTH) + 1 > 5 && Calendar.getInstance().get(Calendar.MONTH) + 1 < 9);
 
     public MenuScreen(final MaxonGame game) {
         this.game = game;
@@ -168,9 +158,6 @@ public class MenuScreen implements Screen {
                 widgetSkin.getDrawable("bgTile01"),
                 widgetSkin.getDrawable("bgTile02")
         );
-
-        leafTiles = new ArrayList<>();
-        delLeafTiles = new ArrayList<>();
     }
 
     @Override public void show() {
@@ -183,54 +170,11 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Generate a new leaf:
-        if (!isSummer) {
-            LeafParticle _leaf = new LeafParticle(
-                    (isAutumn) ? environmentAtlas.findRegion("leaf") : environmentAtlas.findRegion("snowflake"),
-                    (float) java.lang.Math.floor(java.lang.Math.random() * Gdx.graphics.getWidth()),
-                    Gdx.graphics.getHeight(),
-                    (float) Math.getRandomNumber(-257, 256) + 1,
-                    (float) Math.getRandomNumber(-257, 256) + 1,
-                    (float) Math.getRandomNumber(5, 15));
-
-            _leaf.setScale(5f);
-
-            if (isAutumn) {
-                switch (Math.getRandomNumber(0, 3)) {
-                    case 0: _leaf.setColor(Color.CORAL); break;
-                    case 1: _leaf.setColor(Color.YELLOW); break;
-                    default: _leaf.setColor(Color.RED); break;
-                }
-            } else {
-                switch (Math.getRandomNumber(0, 1)) {
-                    case 0: _leaf.setColor(Color.WHITE); break;
-                    case 1: _leaf.setColor(Color.SKY);
-                }
-            }
-
-            leafTiles.add(_leaf);
-        }
-
         game.batch.begin();
 
         bg.draw(game.batch);
 
-        for (LeafParticle spr : leafTiles) {
-            spr.draw(game.batch);
-        }
-
         game.batch.end();
-
-        if (!isSummer) {
-            for (LeafParticle spr : leafTiles) {
-                if (spr.getX() > Gdx.graphics.getWidth() || spr.getY() > Gdx.graphics.getHeight()) {
-                    delLeafTiles.add(spr);
-                }
-            }
-
-            for (LeafParticle spr : delLeafTiles) { leafTiles.remove(spr); }
-            delLeafTiles.clear();
-        }
 
         stage.draw();
         stage.act(delta);
