@@ -2,6 +2,7 @@ package com.ilotterytea.maxoning.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
@@ -10,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -17,27 +21,33 @@ import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.player.MaxonSavegame;
 import com.ilotterytea.maxoning.ui.*;
+import com.ilotterytea.maxoning.utils.I18N;
 import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MenuScreen implements Screen {
 
     final MaxonGame game;
 
     final Stage stage;
-    final Skin skin, widgetSkin;
+    final Skin skin, widgetSkin, iconSkin;
 
-    Image brandLogo, blackBg, menuBg;
+    Image brandLogo, blackBg;
 
     final Music menuMusic;
 
-    Table menuTable, savegameTable;
+    Table menuTable;
+
+    TextButton startBtn;
+    Label savLabel;
 
     // Atlases:
-    TextureAtlas environmentAtlas, brandAtlas;
+    TextureAtlas environmentAtlas, brandAtlas, iconAtlas;
 
     private final MovingChessBackground bg;
 
@@ -50,10 +60,14 @@ public class MenuScreen implements Screen {
         // Brand atlas:
         brandAtlas = game.assetManager.get("sprites/gui/brand.atlas", TextureAtlas.class);
 
+        // Icon atlas:
+        iconAtlas = game.assetManager.get("sprites/gui/widgeticons.atlas", TextureAtlas.class);
+
         // Stage and skin:
         this.stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         this.skin = new Skin(Gdx.files.internal("main.skin"));
         this.widgetSkin = new Skin(Gdx.files.internal("sprites/gui/widgets.skin"));
+        this.iconSkin = new Skin(Gdx.files.internal("sprites/gui/widgeticons.skin"));
 
         // Main Menu music:
         this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
@@ -67,56 +81,69 @@ public class MenuScreen implements Screen {
 
         stage.addActor(blackBg);
 
-        // Save game table:
-        savegameTable = new Table();
-        loadSavegamesToTable(savegameTable);
-
-        // Quick buttons:
-        Table quickTable = new Table();
-        quickTable.align(Align.right);
-
-        // Options button:
-        TextButton optionsButton = new TextButton("Options", widgetSkin, "default");
-        optionsButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-            }
-        });
-
-        quickTable.add(optionsButton).height(48f).minWidth(90f).pad(4f);
+        // // Menu table:
+        float iconSize = 48f, iconPad = 6f;
+        menuTable = new Table();
+        menuTable.setSize(stage.getWidth() / 2f, iconSize);
+        menuTable.setPosition(0, 0);
+        menuTable.pad(iconPad);
+        menuTable.align(Align.bottomLeft);
 
         // Quit button:
-        TextButton quitButton = new TextButton("Quit", widgetSkin, "default");
-        quitButton.addListener(new ClickListener() {
+        ImageButton quitBtn = new ImageButton(iconSkin, "quit");
+
+        quitBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.exit();
             }
         });
 
-        quickTable.add(quitButton).height(48f).minWidth(90f).pad(4f);
+        menuTable.add(quitBtn).size(iconSize).pad(iconPad);
 
-        // Menu table:
-        menuTable = new Table();
-        menuTable.setPosition(0, 0);
-        menuTable.setSize(stage.getWidth(), stage.getHeight());
-        menuTable.align(Align.center);
+        // Options button:
+        ImageButton optBtn = new ImageButton(iconSkin, "options");
 
-        Label menuTitle = new Label("Please select a save slot", skin, "default");
-        menuTitle.setAlignment(Align.left);
+        optBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                showOptions();
+            }
+        });
 
-        menuTable.add(menuTitle).width(512f).row();
-        menuTable.add(savegameTable).width(512f).maxWidth(640f).row();
-        menuTable.add(quickTable).width(512f);
+        menuTable.add(optBtn).size(iconSize).pad(iconPad);
 
         stage.addActor(menuTable);
+
+        // // Press start:
+        startBtn = new TextButton(game.locale.TranslatableText("menu.pressStart"), skin);
+        startBtn.setPosition((stage.getWidth() / 2f) - (startBtn.getWidth() / 2f), 8f);
+
+        startBtn.addAction(
+                Actions.repeat(
+                        -1,
+                        Actions.sequence(
+                                Actions.fadeIn(1f),
+                                Actions.delay(2f),
+                                Actions.fadeOut(1f),
+                                Actions.delay(2f)
+                        )
+                )
+        );
+
+        stage.addActor(startBtn);
+
+        // // Savegame:
+        savLabel = new Label("test", skin);
+        savLabel.setPosition((stage.getWidth() / 2f) - (savLabel.getWidth() / 2f), 8f + startBtn.getY() + startBtn.getHeight());
+
+        stage.addActor(savLabel);
 
         // // Logo:
         brandLogo = new Image(brandAtlas.findRegion("brand"));
         brandLogo.setPosition(
                 (stage.getWidth() / 2f) - (brandLogo.getWidth() / 2f),
-                stage.getHeight() - brandLogo.getHeight() * 1.5f
+                (stage.getHeight() / 2f) - (brandLogo.getHeight() / 2f)
         );
 
         brandLogo.setOrigin(
@@ -185,6 +212,303 @@ public class MenuScreen implements Screen {
         bg.update(width, height);
 
         stage.getViewport().update(width, height, true);
+    }
+
+    private void showOptions() {
+        startBtn.addAction(Actions.moveTo(startBtn.getX(), -startBtn.getY() - startBtn.getHeight(), 1f, Interpolation.exp10Out));
+        savLabel.addAction(Actions.moveTo(savLabel.getX(), -savLabel.getY() - savLabel.getHeight(), 1f, Interpolation.exp10Out));
+        menuTable.addAction(Actions.moveTo(menuTable.getX(), -menuTable.getY() - menuTable.getHeight(), 1f, Interpolation.exp10Out));
+
+        brandLogo.clearActions();
+        brandLogo.addAction(
+                Actions.sequence(
+                        Actions.parallel(
+                                Actions.moveTo(
+                                        (stage.getWidth() / 2f) - (brandLogo.getWidth() / 2f),
+                                        stage.getHeight() - brandLogo.getHeight() * 1.5f,
+                                        1f,
+                                        Interpolation.fade
+                                ),
+                                Actions.rotateTo(0f, .25f, Interpolation.fade)
+                        ),
+                        Actions.repeat(
+                                RepeatAction.FOREVER,
+                                Actions.sequence(
+                                        Actions.parallel(
+                                                Actions.rotateTo(-5f, 5f, Interpolation.smoother),
+                                                Actions.scaleTo(0.9f, 0.9f, 5f, Interpolation.smoother)
+                                        ),
+                                        Actions.parallel(
+                                                Actions.rotateTo(5f, 5f, Interpolation.smoother),
+                                                Actions.scaleTo(1.1f, 1.1f, 5f, Interpolation.smoother)
+                                        )
+                                )
+                        )
+                )
+        );
+
+        // Main options window:
+        final Table mOptTable = new Table();
+        mOptTable.setPosition(0, 0);
+        mOptTable.align(Align.center);
+        mOptTable.setSize(stage.getWidth(), stage.getHeight());
+        stage.addActor(mOptTable);
+
+        // Options title:
+        Label optTitle = new Label(game.locale.TranslatableText("options.title"), skin);
+        optTitle.setAlignment(Align.left);
+        mOptTable.add(optTitle).width(512f).row();
+
+        // Options table:
+        Table optTable = new Table(widgetSkin);
+        optTable.setBackground("plain_down");
+        optTable.align(Align.topLeft);
+
+        // Scroll panel for options:
+        ScrollPane optScroll = new ScrollPane(optTable);
+        optScroll.setScrollingDisabled(true, false);
+        mOptTable.add(optScroll).width(512f).height(384f).row();
+
+        // - - -  General category  - - -:
+        Label genLabel = new Label(game.locale.TranslatableText("options.general"), skin);
+        optTable.add(genLabel).expandX().row();
+
+        Table genCategory = new Table();
+        optTable.add(genCategory).expandX().row();
+
+        // Show debug:
+        Label debLabel = new Label(game.locale.TranslatableText("options.debug"), skin);
+        debLabel.setAlignment(Align.left);
+        genCategory.add(debLabel).width(256f);
+
+        final TextButton debButton = new TextButton((game.prefs.getBoolean("debug", false)) ? "ON" : "OFF", widgetSkin);
+
+        debButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                boolean value = game.prefs.getBoolean("debug", false);
+
+                game.prefs.putBoolean("debug", !value);
+                game.prefs.flush();
+
+                value = !value;
+
+                debButton.getLabel().setText((value) ? "ON" : "OFF");
+            }
+        });
+
+        genCategory.add(debButton).width(256f).row();
+
+        // - - -  Audio category  - - -:
+        Label audioLabel = new Label(game.locale.TranslatableText("options.audio"), skin);
+        optTable.add(audioLabel).expandX().row();
+
+        Table audioCategory = new Table();
+        optTable.add(audioCategory).expandX().row();
+
+        // Music:
+        Label musLabel = new Label(game.locale.TranslatableText("options.music"), skin);
+        musLabel.setAlignment(Align.left);
+        audioCategory.add(musLabel).width(256f);
+
+        final TextButton musButton = new TextButton((game.prefs.getBoolean("music", true)) ? "ON" : "OFF", widgetSkin);
+
+        musButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                boolean value = game.prefs.getBoolean("music", true);
+
+                game.prefs.putBoolean("music", !value);
+                game.prefs.flush();
+
+                value = !value;
+
+                if (value) menuMusic.play();
+                else menuMusic.pause();
+
+                musButton.getLabel().setText((value) ? "ON" : "OFF");
+            }
+        });
+
+        audioCategory.add(musButton).width(256f).row();
+
+        // Sound:
+        Label sndLabel = new Label(game.locale.TranslatableText("options.sound"), skin);
+        sndLabel.setAlignment(Align.left);
+        audioCategory.add(sndLabel).width(256f);
+
+        final TextButton sndButton = new TextButton((game.prefs.getBoolean("sfx", true)) ? "ON" : "OFF", widgetSkin);
+
+        sndButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                boolean value = game.prefs.getBoolean("sfx", true);
+
+                game.prefs.putBoolean("sfx", !value);
+                game.prefs.flush();
+
+                value = !value;
+
+                sndButton.getLabel().setText((value) ? "ON" : "OFF");
+            }
+        });
+
+        audioCategory.add(sndButton).width(256f).row();
+
+        // - - -  Video category  - - -:
+        Label videoLabel = new Label(game.locale.TranslatableText("options.video"), skin);
+        optTable.add(videoLabel).expandX().row();
+
+        Table videoCategory = new Table();
+        optTable.add(videoCategory).expandX().row();
+
+        // Vertical sync:
+        Label vscLabel = new Label(game.locale.TranslatableText("options.vsync"), skin);
+        vscLabel.setAlignment(Align.left);
+        videoCategory.add(vscLabel).width(256f);
+
+        final TextButton vscButton = new TextButton((game.prefs.getBoolean("vsync", true)) ? "ON" : "OFF", widgetSkin);
+
+        vscButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                boolean value = game.prefs.getBoolean("vsync", true);
+
+                game.prefs.putBoolean("vsync", !value);
+                game.prefs.flush();
+
+                value = !value;
+
+                Gdx.graphics.setVSync(value);
+
+                vscButton.getLabel().setText((value) ? "ON" : "OFF");
+            }
+        });
+
+        videoCategory.add(vscButton).width(256f).row();
+
+        // Full screen:
+        Label fscLabel = new Label(game.locale.TranslatableText("options.fullscreen"), skin);
+        fscLabel.setAlignment(Align.left);
+        videoCategory.add(fscLabel).width(256f);
+
+        final TextButton fscButton = new TextButton((game.prefs.getBoolean("fullscreen", true)) ? "ON" : "OFF", widgetSkin);
+
+        fscButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                boolean value = game.prefs.getBoolean("fullscreen", true);
+
+                game.prefs.putBoolean("fullscreen", !value);
+                game.prefs.flush();
+
+                value = !value;
+                Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+                if (value) Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+                else Gdx.graphics.setWindowedMode(dim.width, dim.height);
+
+                fscButton.getLabel().setText((value) ? "ON" : "OFF");
+            }
+        });
+
+        videoCategory.add(fscButton).width(256f).row();
+
+        // - - -  Switch the language  - - -:
+        String[] fh4Locale = game.locale.getFileHandle().nameWithoutExtension().split("_");
+        Locale locale = new Locale(fh4Locale[0], fh4Locale[1]);
+        final TextButton langButton = new TextButton(game.locale.FormattedText("options.language", locale.getDisplayLanguage(), locale.getDisplayCountry()), widgetSkin);
+
+        langButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                int index = 0;
+                ArrayList<FileHandle> fhArray = new ArrayList<>();
+                fhArray.add(MaxonConstants.FILE_RU_RU);
+                fhArray.add(MaxonConstants.FILE_EN_US);
+
+                if (fhArray.indexOf(game.locale.getFileHandle()) + 1 < fhArray.size()) {
+                    index = fhArray.indexOf(game.locale.getFileHandle()) + 1;
+                }
+
+                FileHandle fhNext = fhArray.get(index);
+
+                game.locale = new I18N(fhNext);
+                game.prefs.putString("lang", fhNext.nameWithoutExtension());
+                game.prefs.flush();
+
+                String[] fh4Locale = fhNext.nameWithoutExtension().split("_");
+                Locale locale = new Locale(fh4Locale[0], fh4Locale[1]);
+
+                langButton.setText(game.locale.FormattedText("options.language", locale.getDisplayLanguage(), locale.getDisplayCountry()));
+                game.setScreen(new SplashScreen(game));
+                menuMusic.stop();
+            }
+        });
+
+        optTable.add(langButton).width(512f).row();
+
+        // - - -  Reset save data  - - -:
+        TextButton resetButton = new TextButton(game.locale.TranslatableText("options.reset"), widgetSkin);
+        optTable.add(resetButton).width(512f).row();
+
+        // Game info:
+        Label infLabel = new Label(String.format("%s - %s", MaxonConstants.GAME_NAME, MaxonConstants.GAME_VERSION), skin);
+        infLabel.setAlignment(Align.center);
+        optTable.add(infLabel).maxWidth(512f).row();
+
+        // // Action buttons:
+        Table actTable = new Table(widgetSkin);
+        actTable.setBackground("plain_down");
+        actTable.setWidth(512f);
+        actTable.align(Align.right);
+        mOptTable.add(actTable).width(512f).maxWidth(512f).pad(5f);
+
+        TextButton closeBtn = new TextButton("Back to main menu", widgetSkin);
+
+        closeBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                mOptTable.remove();
+
+                brandLogo.clearActions();
+                brandLogo.addAction(
+                        Actions.sequence(
+                                Actions.parallel(
+                                        Actions.rotateTo(0f, 1f),
+                                        Actions.moveTo(
+                                                (stage.getWidth() / 2f) - (brandLogo.getWidth() / 2f),
+                                                (stage.getHeight() / 2f) - (brandLogo.getHeight() / 2f),
+                                                1f,
+                                                Interpolation.fade
+                                        )
+                                ),
+                                Actions.repeat(
+                                        RepeatAction.FOREVER,
+                                        Actions.sequence(
+                                                Actions.parallel(
+                                                        Actions.rotateTo(-5f, 5f, Interpolation.smoother),
+                                                        Actions.scaleTo(0.9f, 0.9f, 5f, Interpolation.smoother)
+                                                ),
+                                                Actions.parallel(
+                                                        Actions.rotateTo(5f, 5f, Interpolation.smoother),
+                                                        Actions.scaleTo(1.1f, 1.1f, 5f, Interpolation.smoother)
+                                                )
+                                        )
+                                )
+                        )
+                );
+
+                startBtn.addAction(Actions.moveTo(startBtn.getX(), 8f, 1f, Interpolation.smoother));
+                savLabel.addAction(Actions.moveTo(savLabel.getX(), 16f + startBtn.getHeight(), 1f, Interpolation.smoother));
+                menuTable.addAction(Actions.moveTo(menuTable.getX(), 0, 1f, Interpolation.smoother));
+            }
+        });
+
+        actTable.add(closeBtn).pad(5f);
+
+        TextButton saveBtn = new TextButton("Apply", widgetSkin);
+        actTable.add(saveBtn).pad(5f);
     }
 
     private void loadSavegamesToTable(Table table) {
