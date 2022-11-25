@@ -1,0 +1,65 @@
+name: Build the game and save as draft release.
+
+on:
+  push:
+    branches: [ master ]
+
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build for desktop
+        run: ./gradlew desktop:dist
+
+      - name: Upload the game
+        uses: actions/upload-artifact@v2
+        with:
+          name: Maxoning.jar
+          path: desktop/build/libs/Maxoning.jar
+
+  release:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref}}
+          draft: true
+          prerelease: false
+
+      - name: Upload JAR release
+        uses: actions/upload-release-asset@v1
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/Maxoning.jar
+          asset_name: Maxoning.jar
+          asset_content_type: application/x-java-archive
