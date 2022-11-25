@@ -1,10 +1,10 @@
 {
   com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
+    quit: {
+      up: exit
+    },
     options: {
       up: options
-    },
-    exit: {
-      up: exit
     }
   }
 }
