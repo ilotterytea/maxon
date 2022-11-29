@@ -49,6 +49,8 @@ public class MenuScreen implements Screen {
     // Atlases:
     TextureAtlas environmentAtlas, brandAtlas, iconAtlas;
 
+    MaxonSavegame sav;
+
     private final MovingChessBackground bg;
 
     public MenuScreen(final MaxonGame game) {
@@ -68,6 +70,8 @@ public class MenuScreen implements Screen {
         this.skin = new Skin(Gdx.files.internal("main.skin"));
         this.widgetSkin = new Skin(Gdx.files.internal("sprites/gui/widgets.skin"));
         this.iconSkin = new Skin(Gdx.files.internal("sprites/gui/widgeticons.skin"));
+
+        sav = GameDataSystem.load("latest.sav");
 
         // Main Menu music:
         this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
@@ -134,7 +138,8 @@ public class MenuScreen implements Screen {
         stage.addActor(startBtn);
 
         // // Savegame:
-        savLabel = new Label("test", skin);
+        savLabel = new Label(
+                (sav == null) ? game.locale.TranslatableText("menu.last_savegame.empty") : game.locale.FormattedText("menu.last_savegame.found"), skin);
         savLabel.setPosition((stage.getWidth() / 2f) - (savLabel.getWidth() / 2f), 8f + startBtn.getY() + startBtn.getHeight());
 
         stage.addActor(savLabel);
