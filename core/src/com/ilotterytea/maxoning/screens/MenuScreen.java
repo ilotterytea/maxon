@@ -217,7 +217,7 @@ public class MenuScreen implements Screen {
     private void showOptions() {
         startBtn.addAction(Actions.moveTo(startBtn.getX(), -startBtn.getY() - startBtn.getHeight(), 1f, Interpolation.exp10Out));
         savLabel.addAction(Actions.moveTo(savLabel.getX(), -savLabel.getY() - savLabel.getHeight(), 1f, Interpolation.exp10Out));
-        menuTable.addAction(Actions.moveTo(menuTable.getX(), -menuTable.getY() - menuTable.getHeight(), 1f, Interpolation.exp10Out));
+        menuTable.addAction(Actions.moveTo(menuTable.getX(), -menuTable.getY() - menuTable.getHeight() - 48f, 1f, Interpolation.exp10Out));
 
         brandLogo.clearActions();
         brandLogo.addAction(
