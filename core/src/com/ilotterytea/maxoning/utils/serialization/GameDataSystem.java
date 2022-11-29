@@ -111,11 +111,6 @@ public class GameDataSystem {
             }
         }
 
-        if (sav == null) {
-            sav = new MaxonSavegame();
-            save(sav, file_name);
-        }
-
         return sav;
     }
 }
