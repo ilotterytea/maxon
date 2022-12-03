@@ -34,6 +34,14 @@
       color: { hex: "#ffa61bff" }
       name: tile
     },
+    gray_tile: {
+      color: { hex: "#888888" },
+      name: tile
+    },
+    green_tile: {
+      color: { hex: "#00ff00" },
+      name: tile
+    }
     bgTile02: {
       color: { hex: "#e98e42ff" }
       name: tile
@@ -81,6 +89,12 @@
   com.badlogic.gdx.scenes.scene2d.ui.Table: {
     default: {
       background: plain_up
+    }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
+    default-horizontal: {
+      background: gray_tile,
+      knobBefore: green_tile
     }
   }
 }
