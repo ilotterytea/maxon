@@ -12,7 +12,7 @@ public class MaxonSavegame implements Serializable {
     /** Earned Squish Points. */
     public int points = 0;
     /** Multiplier. */
-    public short multiplier = 0;
+    public short multiplier = 1;
 
     /** Home inventory. */
     public ArrayList<Integer> inv = new ArrayList<>();
