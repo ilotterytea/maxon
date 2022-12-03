@@ -22,6 +22,7 @@ import com.ilotterytea.maxoning.player.MaxonItem;
 import com.ilotterytea.maxoning.player.MaxonItemRegister;
 import com.ilotterytea.maxoning.player.MaxonSavegame;
 import com.ilotterytea.maxoning.ui.*;
+import com.ilotterytea.maxoning.utils.math.Math;
 import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
 
@@ -34,6 +35,7 @@ public class GameScreen implements Screen, InputProcessor {
     final MaxonGame game;
     final int slotId;
     final long playTimestamp;
+    boolean isShopping = false, isInventoryEnabled = false;
 
     MaxonSavegame player;
 
@@ -42,13 +44,15 @@ public class GameScreen implements Screen, InputProcessor {
 
     TextureAtlas widgetAtlas, environmentAtlas;
 
-    Label pointsLabel;
+    Label pointsLabel, multiplierLabel;
     Image blackBg, inventoryBg, shopBg, pointsBg;
     AnimatedImage cat;
     AnimatedImageButton maxon;
 
-    Table petTable, inventoryTable, mainTable;
+    Table boardTable, quickTable;
     ScrollPane petScroll;
+
+    Dialog notEnoughPointsDialog;
 
     ArrayList<MaxonItem> items;
     Map<Integer, Integer> invItems;
@@ -76,30 +80,6 @@ public class GameScreen implements Screen, InputProcessor {
             items.add(MaxonItemRegister.get(id));
         }
 
-        // Make the background a little darker:
-        blackBg = new Image(environmentAtlas.findRegion("tile"));
-        blackBg.setColor(0f, 0f, 0f, 0.5f);
-        blackBg.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage.addActor(blackBg);
-
-        // Setting the background for inventory:
-        inventoryBg = new Image(widgetSkin, "down");
-        inventoryBg.setSize((Gdx.graphics.getWidth() / 2.0f) - 512f, (Gdx.graphics.getHeight() / 2.0f) - 8f);
-        inventoryBg.setPosition(8, 4);
-        stage.addActor(inventoryBg);
-
-        // Setting the title for inventory "window":
-        Label inventoryLabel = new Label(game.locale.TranslatableText("game.inventory.title"), skin);
-        inventoryLabel.setWidth(inventoryBg.getWidth());
-        inventoryLabel.setPosition(inventoryBg.getX(), inventoryBg.getY() + inventoryBg.getHeight() - inventoryLabel.getHeight());
-        inventoryLabel.setAlignment(Align.center);
-        stage.addActor(inventoryLabel);
-
-        // Inventory:
-        inventoryTable = new Table();
-        inventoryTable.setSize(inventoryBg.getWidth(), inventoryBg.getHeight() - inventoryLabel.getHeight());
-        inventoryTable.setPosition(inventoryBg.getX(), inventoryBg.getY());
-
         invItems = new HashMap<>();
 
         for (Integer id : player.inv) {
@@ -110,101 +90,84 @@ public class GameScreen implements Screen, InputProcessor {
             }
         }
 
-        // Put the items in the inventory table:
-        reorderInvItems();
+        // Make the background a little darker:
+        blackBg = new Image(environmentAtlas.findRegion("tile"));
+        blackBg.setColor(0f, 0f, 0f, 0.5f);
+        blackBg.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        stage.addActor(blackBg);
 
-        inventoryTable.align(Align.left|Align.top);
+        // - - - - - -  I N F O  B O A R D  - - - - - - :
+        boardTable = new Table(widgetSkin);
+        boardTable.setBackground("board_bg");
+        boardTable.setSize(stage.getWidth(), 86f);
+        boardTable.setPosition(0, stage.getHeight() - boardTable.getHeight());
+        boardTable.align(Align.left | Align.center);
 
-        stage.addActor(inventoryTable);
+        stage.addActor(boardTable);
 
-        // Setting the background for pet shop:
-        shopBg = new Image(widgetSkin, "down");
-        shopBg.setSize((Gdx.graphics.getWidth() / 2.0f) - 512f, (Gdx.graphics.getHeight() / 2.0f) - 8f);
-        shopBg.setPosition(8, inventoryBg.getY() + inventoryBg.getHeight() + 8f);
-        stage.addActor(shopBg);
+        // - - -  P O I N T S  - - - :
+        // Icon for points label:
+        Image pointsIcon = new Image(widgetAtlas.findRegion("coin"));
+        boardTable.add(pointsIcon).size(24f).padLeft(6f).padRight(6f);
 
-        // Setting the title for pet shop "window":
-        Label petshopLabel = new Label(game.locale.TranslatableText("game.petShop"), skin);
-        petshopLabel.setWidth(shopBg.getWidth());
-        petshopLabel.setPosition(shopBg.getX(), shopBg.getY() + shopBg.getHeight() - petshopLabel.getHeight());
-        petshopLabel.setAlignment(Align.center);
-        stage.addActor(petshopLabel);
+        // Label for points:
+        pointsLabel = new Label(MaxonConstants.DECIMAL_FORMAT.format(sav.points), skin);
+        pointsLabel.setAlignment(Align.left);
+        boardTable.add(pointsLabel).row();
 
-        // Table for pets:
-        petTable = new Table();
+        // - - -  M U L T I P L I E R  - - - :
+        // Icon for multiplier label:
+        Image multiplierIcon = new Image(widgetAtlas.findRegion("multiplier"));
+        boardTable.add(multiplierIcon).size(24f).padLeft(6f).padRight(6f);
 
-        // Adding the pet items in pet table:
-        for (final MaxonItem item : MaxonItemRegister.getItems()) {
-            PurchaseItem purchaseItem = new PurchaseItem(
-                    skin, widgetSkin, item.icon, item.name, item.desc, MaxonConstants.DECIMAL_FORMAT2.format(item.price)
-            );
+        // Label for multiplier:
+        multiplierLabel = new Label(MaxonConstants.DECIMAL_FORMAT.format(sav.multiplier), skin);
+        multiplierLabel.setAlignment(Align.left);
+        boardTable.add(multiplierLabel).row();
 
-            purchaseItem.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    if (player.points > item.price) {
-                        player.points -= item.price;
-                        player.multiplier += item.multiplier;
-                        player.inv.add(item.id);
-                        items.add(item);
+        // - - - - - -  Q U I C K  A C T I O N S  B O A R D  - - - - - - :
+        quickTable = new Table(widgetSkin);
+        quickTable.setBackground("board_bg");
+        quickTable.setSize(stage.getWidth(), 64f);
+        quickTable.setPosition(0, 0);
+        quickTable.align(Align.center);
 
-                        invItems.clear();
-                        inventoryTable.clear();
+        // - - -  S H O P  B U T T O N  - - - :
+        ImageButton shopButton = new ImageButton(widgetSkin, "shop");
 
-                        for (Integer id : player.inv) {
-                            if (invItems.containsKey(id)) {
-                                invItems.put(id, invItems.get(id) + 1);
-                            } else {
-                                invItems.put(id, 1);
-                            }
-                        }
-
-                        // Put the items in the inventory table:
-                        reorderInvItems();
-                    }
+        shopButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!isShopping && !isInventoryEnabled) {
+                    showShop();
+                    isShopping = true;
                 }
-            });
+            }
+        });
 
-            petTable.add(purchaseItem).width(shopBg.getWidth() - 12f).minHeight(128f).maxHeight(256f).padBottom(5f).row();
-        }
+        quickTable.add(shopButton).size(64f).pad(6f);
 
-        petTable.align(Align.center);
+        // - - -  I N V E N T O R Y  B U T T O N  - - - :
+        ImageButton inventoryButton = new ImageButton(widgetSkin, "inventory");
 
-        // Scroll panel for pet shop table:
-        petScroll = new ScrollPane(petTable);
-        petScroll.setPosition(shopBg.getX() + 4f, shopBg.getY() + 4f);
-        petScroll.setSize(shopBg.getWidth() - 8f, shopBg.getHeight() - petshopLabel.getHeight() - 8f);
+        inventoryButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!isShopping && !isInventoryEnabled) {
+                    showInventory();
+                    isInventoryEnabled = true;
+                }
+            }
+        });
 
-        stage.addActor(petScroll);
+        quickTable.add(inventoryButton).size(64f).pad(6f);
 
-        // Background for points label:
-        pointsBg = new Image(widgetSkin, "down");
-        pointsBg.setSize((Gdx.graphics.getWidth() - (shopBg.getX() + shopBg.getWidth()) - 8f), 64f);
-        pointsBg.setPosition(shopBg.getX() + shopBg.getWidth() + 4f, Gdx.graphics.getHeight() - pointsBg.getHeight() - 4f);
-
-        stage.addActor(pointsBg);
-
-        // Points label:
-        pointsLabel = new Label(game.locale.FormattedText("game.points",
-                String.valueOf(player.points),
-                String.valueOf(player.multiplier)
-        ), skin);
-
-        pointsLabel.setPosition(pointsBg.getX(), pointsBg.getY());
-        pointsLabel.setSize(pointsBg.getWidth(), pointsBg.getHeight());
-        pointsLabel.setAlignment(Align.center);
-
-        stage.addActor(pointsLabel);
+        stage.addActor(quickTable);
 
         // Generate the background:
         bgTiles = new ArrayList<>();
 
         genNewBgTiles((int) stage.getWidth(), (int) stage.getHeight());
-
-        // Table for Maxon cat:
-        mainTable = new Table();
-        mainTable.setPosition(inventoryBg.getX() + inventoryBg.getWidth() + 4f, inventoryBg.getY());
-        mainTable.setSize(Gdx.graphics.getWidth() - (inventoryBg.getX() + inventoryBg.getWidth()) - 8f, Gdx.graphics.getHeight() - pointsBg.getHeight() - 8f);
 
         // Creating the Maxon cat:
         cat = new AnimatedImage(
@@ -214,6 +177,11 @@ public class GameScreen implements Screen, InputProcessor {
         );
         cat.disableAnim(); // Disable the image animation.
         maxon = new AnimatedImageButton(cat); // Make button with animated image.
+        maxon.setSize(cat.getWidth() * 2f, cat.getHeight() * 2f);
+        maxon.setPosition(
+                (stage.getWidth() / 2f) - (maxon.getWidth() / 2f),
+                (stage.getHeight() / 2f) - (maxon.getHeight() / 2f)
+        );
 
         maxon.addListener(new ClickListener() {
             @Override public void clicked(InputEvent event, float x, float y) {
@@ -221,8 +189,7 @@ public class GameScreen implements Screen, InputProcessor {
             }
         });
 
-        mainTable.add(maxon).size(cat.getWidth() * 2f, cat.getHeight() * 2f).center();
-        stage.addActor(mainTable);
+        stage.addActor(maxon);
 
         DebugLabel debugLabel = new DebugLabel(skin);
 
@@ -233,6 +200,8 @@ public class GameScreen implements Screen, InputProcessor {
 
         stage.addActor(debugLabel);
 
+        notEnoughPointsDialog = new Dialog(game.locale.TranslatableText("dialogs.not_enough_points"), widgetSkin, "dialog");
+
         Gdx.input.setInputProcessor(new InputMultiplexer(this, new CrossProcessor(), stage));
     }
 
@@ -241,7 +210,6 @@ public class GameScreen implements Screen, InputProcessor {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                Cell<AnimatedImageButton> actor = mainTable.getCell(maxon);
                 float multiplier = 0;
 
                 for (MaxonItem item : items) {
@@ -253,18 +221,18 @@ public class GameScreen implements Screen, InputProcessor {
                 final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)), skin, "default");
 
                 label.setPosition(
-                        mainTable.getX() + actor.getActorX(),
-                        mainTable.getY() + actor.getActorY() + actor.getActorHeight()
+                        maxon.getX(),
+                        maxon.getY() + maxon.getHeight()
                 );
 
-                label.setWidth(actor.getActorWidth());
+                label.setWidth(maxon.getWidth());
 
                 label.setAlignment(Align.center);
 
                 label.addAction(Actions.parallel(
                         Actions.fadeOut(5f),
                         Actions.moveTo(
-                                label.getX(), label.getY() + (float) Math.floor(Math.random() * 156), 5f, Interpolation.exp5Out)
+                                label.getX(), label.getY() + Math.getRandomNumber(10, 156), 5f, Interpolation.exp5Out)
                 ));
 
                 Timer.schedule(new Timer.Task() {
@@ -318,7 +286,11 @@ public class GameScreen implements Screen, InputProcessor {
 
         // Update the points label:
         pointsLabel.setText(game.locale.FormattedText("game.points",
-                MaxonConstants.DECIMAL_FORMAT.format(player.points),
+                MaxonConstants.DECIMAL_FORMAT.format(player.points)
+        ));
+
+        // Update the multiplier label:
+        multiplierLabel.setText(game.locale.FormattedText("game.multiplier",
                 MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)
         ));
 
@@ -333,23 +305,6 @@ public class GameScreen implements Screen, InputProcessor {
         genNewBgTiles(width, height);
 
         stage.getViewport().update(width, height, true);
-    }
-
-    private void reorderInvItems() {
-        inventoryTable.clear();
-
-        for (int i = 0; i < invItems.keySet().size(); i++) {
-            MaxonItem item = MaxonItemRegister.get(i);
-
-            if (item != null) {
-                InventoryAnimatedItem invItem = new InventoryAnimatedItem(item, skin, invItems.get(i));
-                Cell<InventoryAnimatedItem> cell = inventoryTable.add(invItem).size(64, 64).pad(5f);
-
-                if (i != 0 && i % 5 == 0) {
-                    cell.row();
-                }
-            }
-        }
     }
 
     private void genNewBgTiles(int width, int height) {
@@ -370,6 +325,140 @@ public class GameScreen implements Screen, InputProcessor {
                 bgTiles.get(i).add(spr);
             }
         }
+    }
+
+    private void showShop() {
+        // - - - - - -  S H O P  T A B L E  - - - - - - :
+        final Table shopTable = new Table(widgetSkin);
+        shopTable.setBackground("board_bg");
+        shopTable.setSize(stage.getWidth() - 20f, stage.getHeight() - (boardTable.getHeight() + quickTable.getHeight() + 20f));
+        shopTable.setPosition(10f, quickTable.getHeight() + 10f);
+        shopTable.align(Align.top | Align.center);
+
+        stage.addActor(shopTable);
+
+        // Header table:
+        Table headShopTable = new Table();
+        shopTable.add(headShopTable).width(shopTable.getWidth()).row();
+
+        // - - -  S H O P  T I T L E  - - -:
+        Label shopTitle = new Label(game.locale.TranslatableText("game.petShop"), skin);
+        headShopTable.add(shopTitle).expandX();
+
+        // - - -  C L O S E  B U T T O N  - - - :
+        TextButton closeButton = new TextButton("X", widgetSkin);
+
+        closeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                shopTable.remove();
+                isShopping = !isShopping;
+            }
+        });
+
+        headShopTable.add(closeButton).row();
+
+        // - - -  S H O P  C O N T E N T  - - - :
+        Table contentTable = new Table();
+
+        // Adding items to shop:
+        for (final MaxonItem item : MaxonItemRegister.getItems()) {
+            PurchaseItem p_item = new PurchaseItem(
+                    skin,
+                    widgetSkin,
+                    item
+            );
+
+            p_item.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (player.points < item.price) {
+                        notEnoughPointsDialog.show(stage);
+
+                        Timer.schedule(new Timer.Task() {
+                            @Override
+                            public void run() {
+                                notEnoughPointsDialog.hide(Actions.fadeOut(2f, Interpolation.smoother));
+                            }
+                        }, 2);
+
+                        return;
+                    }
+
+                    player.points -= item.price;
+                    player.multiplier += item.multiplier;
+                    player.inv.add(item.id);
+
+                    if (invItems.containsKey(item.id)) {
+                        invItems.put(item.id, invItems.get(item.id) + 1);
+                    } else {
+                        invItems.put(item.id, 1);
+                    }
+                }
+            });
+
+            contentTable.add(p_item).pad(6f).width(shopTable.getWidth()).row();
+        }
+
+        // Scroll panel for content table:
+        ScrollPane contentPane = new ScrollPane(contentTable);
+        contentPane.setScrollingDisabled(true, false);
+        shopTable.add(contentPane);
+    }
+
+    private void showInventory() {
+        // - - - - - -  I N V E N T O R Y  T A B L E  - - - - - - :
+        final Table inventoryTable = new Table(widgetSkin);
+        inventoryTable.setBackground("board_bg");
+        inventoryTable.setSize(stage.getWidth() - 20f, stage.getHeight() - (boardTable.getHeight() + quickTable.getHeight() + 20f));
+        inventoryTable.setPosition(10f, quickTable.getHeight() + 10f);
+        inventoryTable.align(Align.top | Align.center);
+
+        stage.addActor(inventoryTable);
+
+        // Header table:
+        Table headInventoryTable = new Table();
+        inventoryTable.add(headInventoryTable).width(inventoryTable.getWidth()).row();
+
+        // - - -  S H O P  T I T L E  - - -:
+        Label inventoryTitle = new Label(game.locale.TranslatableText("game.inventory.title"), skin);
+        headInventoryTable.add(inventoryTitle).expandX();
+
+        // - - -  C L O S E  B U T T O N  - - - :
+        TextButton closeButton = new TextButton("X", widgetSkin);
+
+        closeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                inventoryTable.remove();
+                isInventoryEnabled = !isInventoryEnabled;
+            }
+        });
+
+        headInventoryTable.add(closeButton).row();
+
+        // - - -  I N V E N T O R Y  C O N T E N T  - - - :
+        Table contentTable = new Table();
+        contentTable.align(Align.left);
+
+        // Adding items to inventory:
+        for (int i = 0; i < invItems.keySet().size(); i++) {
+            MaxonItem item = MaxonItemRegister.get(i);
+
+            if (item != null) {
+                InventoryAnimatedItem invItem = new InventoryAnimatedItem(item, skin, invItems.get(i));
+                Cell<InventoryAnimatedItem> cell = contentTable.add(invItem).size(64, 64).pad(5f);
+
+                if (i != 0 && i % (inventoryTable.getWidth() / 69f) == 0) {
+                    cell.row();
+                }
+            }
+        };
+
+        // Scroll panel for content table:
+        ScrollPane contentPane = new ScrollPane(contentTable);
+        contentPane.setScrollingDisabled(true, false);
+        inventoryTable.add(contentPane);
     }
 
     @Override public void pause() {}
@@ -401,8 +490,6 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     private void displayPointIncrease() {
-        Cell<AnimatedImageButton> actor = mainTable.getCell(maxon);
-
         cat.nextFrame();
         maxon.setDrawable(cat.getDrawable());
 
@@ -411,18 +498,18 @@ public class GameScreen implements Screen, InputProcessor {
         final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)), skin, "default");
 
         label.setPosition(
-                mainTable.getX() + actor.getActorX(),
-                mainTable.getY() + actor.getActorY() + actor.getActorHeight()
+                maxon.getX(),
+                maxon.getY() + maxon.getHeight()
         );
 
-        label.setWidth(actor.getActorWidth());
+        label.setWidth(maxon.getWidth());
 
         label.setAlignment(Align.center);
 
         label.addAction(Actions.parallel(
                 Actions.fadeOut(5f),
                 Actions.moveTo(
-                        label.getX(), label.getY() + (float) Math.floor(Math.random() * 156), 5f, Interpolation.exp5Out)
+                        label.getX(), label.getY() + Math.getRandomNumber(10, 156), 5f, Interpolation.exp5Out)
         ));
 
         Timer.schedule(new Timer.Task() {

@@ -22,8 +22,11 @@
   "options.audio": "Audio",
 
   "game.petShop": "Pet Shop",
-  "game.points": "%s Squish Points (x%s/click)",
+  "game.points": "%s",
+  "game.multiplier": "%s/click",
   "game.newPoint": "{SHAKE}{RAINBOW}+%s{ENDRAINBOW}{ENDSHAKE}",
+
+  "dialogs.not_enough_points": "Not enough points!",
 
   "game.inventory.title": "Inventory",
 
