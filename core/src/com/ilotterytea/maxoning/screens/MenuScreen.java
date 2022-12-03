@@ -22,6 +22,7 @@ import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.player.MaxonSavegame;
 import com.ilotterytea.maxoning.ui.*;
 import com.ilotterytea.maxoning.utils.I18N;
+import com.ilotterytea.maxoning.utils.formatters.NumberFormatter;
 import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 
 import java.awt.*;
@@ -71,7 +72,7 @@ public class MenuScreen implements Screen {
         this.widgetSkin = new Skin(Gdx.files.internal("sprites/gui/widgets.skin"));
         this.iconSkin = new Skin(Gdx.files.internal("sprites/gui/widgeticons.skin"));
 
-        sav = GameDataSystem.load("latest.sav");
+        sav = GameDataSystem.load("00.maxon");
 
         // Main Menu music:
         this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
@@ -154,7 +155,7 @@ public class MenuScreen implements Screen {
 
         // // Savegame:
         savLabel = new Label(
-                (sav == null) ? game.locale.TranslatableText("menu.last_savegame.empty") : game.locale.FormattedText("menu.last_savegame.found"), skin);
+                (sav == null) ? game.locale.TranslatableText("menu.last_savegame.empty") : game.locale.FormattedText("menu.last_savegame.found", sav.petName, NumberFormatter.format(sav.points), NumberFormatter.format(sav.multiplier), String.valueOf(sav.inv.size())), skin);
         savLabel.setPosition((stage.getWidth() / 2f) - (savLabel.getWidth() / 2f), 8f + startBtn.getY() + startBtn.getHeight());
 
         stage.addActor(savLabel);
