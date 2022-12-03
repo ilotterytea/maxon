@@ -22,10 +22,13 @@
   "options.audio": "Аудио",
 
   "game.petShop": "Магазин Щекастых",
-  "game.points": "%s Баллы жмякания (x%s/клик)",
+  "game.points": "%s",
+  "game.multiplier": "%s/жмяк",
   "game.newPoint": "{SHAKE}{RAINBOW}+%s{ENDRAINBOW}{ENDSHAKE}",
 
   "game.inventory.title": "Инвентарь",
+
+  "dialogs.not_enough_points": "Недостаточно поинтов!",
 
   "pet.bror.name": "Cонный Брор                          ",
   "pet.bror.desc": "Засыпающий Брор поможет тебе гладить Максона практически до потери сознания.",

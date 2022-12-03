@@ -2,36 +2,33 @@ package com.ilotterytea.maxoning.ui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
+import com.ilotterytea.maxoning.MaxonConstants;
+import com.ilotterytea.maxoning.player.MaxonItem;
 
-public class PurchaseItem extends Stack {
+public class PurchaseItem extends Table {
     public PurchaseItem(
             Skin skin,
             Skin widgetSkin,
-            AnimatedImage icon,
-            CharSequence name,
-            CharSequence desc,
-            String price
+            MaxonItem item
     ) {
-        super(new Image(widgetSkin, "up"));
+        super(widgetSkin);
+        super.setBackground("up");
+        super.align(Align.left | Align.center);
+
+        super.add(item.icon).size(81f).pad(6f);
 
         Table summary = new Table();
-        summary.setHeight(super.getHeight());
+        summary.align(Align.topLeft);
 
-        Label title = new Label(String.format("%s\n(%s)", name, price), skin, "purchaseitem_title");
+        Label name = new Label(String.format("%s ($%s) (x%s/click)", item.name, MaxonConstants.DECIMAL_FORMAT.format(item.price), MaxonConstants.DECIMAL_FORMAT.format(item.multiplier)), skin);
+        name.setAlignment(Align.left);
 
-        summary.add(title).fillX().row();
+        Label desc = new Label(item.desc, skin);
+        desc.setAlignment(Align.left);
 
-        Label description = new Label(desc, skin, "purchaseitem_desc");
-        description.setWrap(true);
+        summary.add(name).width(desc.getWidth()).row();
+        summary.add(desc);
 
-        summary.add(description).fillX().row();
-
-        Table main = new Table();
-        main.add(icon).size(81, 81).left().pad(5f);
-        main.add(summary).fillY().fillX().right().pad(5f);
-
-        main.align(Align.left);
-
-        super.addActor(main);
+        super.add(summary);
     }
 }
