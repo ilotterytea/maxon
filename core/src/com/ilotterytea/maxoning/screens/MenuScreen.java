@@ -123,6 +123,21 @@ public class MenuScreen implements Screen {
         startBtn = new TextButton(game.locale.TranslatableText("menu.pressStart"), skin);
         startBtn.setPosition((stage.getWidth() / 2f) - (startBtn.getWidth() / 2f), 8f);
 
+        startBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                try {
+                    game.setScreen(new GameScreen(
+                            game,
+                            (sav == null) ? new MaxonSavegame() : sav,
+                            0
+                    ));
+                } catch (IOException | ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
         startBtn.addAction(
                 Actions.repeat(
                         -1,
