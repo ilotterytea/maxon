@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
@@ -20,16 +21,18 @@ public class SplashScreen implements Screen {
     final MaxonGame game;
 
     final Stage stage;
-    final Skin skin;
+    final Skin skin, widgetSkin;
 
     TextureAtlas brandAtlas, envAtlas;
     Image dev, pub;
+    ProgressBar bar;
 
     public SplashScreen(MaxonGame game) {
         this.game = game;
 
         this.stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         this.skin = new Skin(Gdx.files.internal("main.skin"));
+        this.widgetSkin = new Skin(Gdx.files.internal("sprites/gui/widgets.skin"));
 
         Table logoTable = new Table();
 
@@ -44,7 +47,10 @@ public class SplashScreen implements Screen {
         logoTable.add(pub).size(pub.getWidth() * 5f, pub.getHeight() * 5f).pad(16f).row();
 
         dev = new Image(brandAtlas.findRegion("devOld"));
-        logoTable.add(dev).size(dev.getWidth() * 5f, dev.getHeight() * 5f);
+        logoTable.add(dev).size(dev.getWidth() * 5f, dev.getHeight() * 5f).row();
+
+        bar = new ProgressBar(0f, 100f, 1f, false, widgetSkin);
+        logoTable.add(bar).size(dev.getWidth() * 5f, 24f);
 
         stage.addActor(logoTable);
 
@@ -80,6 +86,7 @@ public class SplashScreen implements Screen {
         stage.act(delta);
 
         update();
+        bar.setValue(100f / (game.assetManager.getQueuedAssets() + 1));
     }
 
     @Override
