@@ -59,6 +59,8 @@ public class GameDataSystem {
      * @see MaxonSavegame
      */
     public static void save(@NotNull MaxonSavegame savegame, @NotNull String file_name) {
+        if (!dir.exists()) dir.mkdirs();
+
         try {
             log.info("Saving the game...");
             FileOutputStream fos = new FileOutputStream(String.format("%s/%s", (OsUtils.isAndroid || OsUtils.isIos) ? Gdx.files.getExternalStoragePath() : dir.getAbsolutePath(), file_name));
