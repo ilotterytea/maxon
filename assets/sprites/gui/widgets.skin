@@ -66,6 +66,9 @@
     },
     shop: {
       up: shop
+    },
+    gift: {
+      up: package
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {

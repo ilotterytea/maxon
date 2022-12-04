@@ -246,6 +246,89 @@ public class GameScreen implements Screen, InputProcessor {
             }
         }, 5, 5);
 
+        // Random gifts:
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                final ImageButton gift = new ImageButton(widgetSkin, "gift");
+                gift.setPosition(stage.getWidth() + gift.getWidth(), Math.getRandomNumber((int) gift.getHeight(), (int) stage.getHeight() - (int) gift.getHeight()));
+                gift.addAction(
+                        Actions.repeat(
+                                3,
+                                Actions.sequence(
+                                        Actions.moveTo(-gift.getWidth(), gift.getY(), 15f, Interpolation.linear),
+                                        Actions.moveTo(stage.getWidth() + gift.getWidth(), Math.getRandomNumber((int) gift.getHeight(), (int) stage.getHeight() - (int) gift.getHeight()), 15f, Interpolation.linear)
+                                )
+                        )
+                );
+
+
+                gift.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        int giftId = Math.getRandomNumber(0, 25);
+                        final TypingLabel label = new TypingLabel(game.locale.TranslatableText("gifts.empty"), skin);
+
+                        switch (giftId) {
+                            // Points
+                            case 0:
+                                int randPoints = Math.getRandomNumber(150, 3000);
+                                label.setText(game.locale.FormattedText("gifts.points", String.valueOf(randPoints)));
+                                player.points += randPoints;
+                                break;
+
+                            // Multiplier
+                            case 1:
+                                int randMp = Math.getRandomNumber(1, 10);
+                                label.setText(game.locale.FormattedText("gifts.multiplier", String.valueOf(randMp)));
+                                player.multiplier += randMp;
+                                break;
+
+
+                            // Random pet
+                            case 2:
+                                int randPet = Math.getRandomNumber(0, 1);
+                                assert MaxonItemRegister.get(randPet) != null;
+                                String name = MaxonItemRegister.get(randPet).name;
+                                label.setText(game.locale.FormattedText("gifts.new_pet", name));
+                                player.inv.add(randPet);
+                                if (invItems.containsKey(randPet)) {
+                                    invItems.put(randPet, invItems.get(randPet) + 1);
+                                } else {
+                                    invItems.put(randPet, 1);
+                                }
+                                break;
+                            // Default
+                            default:
+                                break;
+                        }
+
+                        label.setPosition(
+                                gift.getX(),
+                                gift.getY()
+                        );
+
+                        label.addAction(Actions.sequence(
+                                Actions.delay(3f),
+                                Actions.fadeOut(2f)
+                        ));
+
+                        stage.addActor(label);
+                        gift.remove();
+
+                        Timer.schedule(new Timer.Task() {
+                            @Override
+                            public void run() {
+                                label.remove();
+                            }
+                        }, 5f);
+                    }
+                });
+
+                stage.addActor(gift);
+            }
+        }, 600, 600);
+
         render(Gdx.graphics.getDeltaTime());
     }
 
