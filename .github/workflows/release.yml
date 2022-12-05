@@ -53,6 +53,9 @@ jobs:
           draft: true
           prerelease: false
 
+      - name: Display structure of downloaded files
+        run: ls -R
+
       - name: Upload JAR release
         uses: actions/upload-release-asset@v1
 
