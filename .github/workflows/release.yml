@@ -29,7 +29,7 @@ jobs:
       - name: Upload the game
         uses: actions/upload-artifact@v2
         with:
-          name: Maxoning.jar
+          name: deskjars
           path: desktop/build/libs/Maxoning.jar
 
   release:
@@ -53,9 +53,6 @@ jobs:
           draft: true
           prerelease: false
 
-      - name: Display structure of downloaded files
-        run: ls -R
-
       - name: Upload JAR release
         uses: actions/upload-release-asset@v1
 
@@ -63,6 +60,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./Maxoning.jar
+          asset_path: deskjars/Maxoning.jar
           asset_name: Maxoning.jar
           asset_content_type: application/x-java-archive
