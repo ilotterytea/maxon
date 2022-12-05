@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.ilotterytea.maxoning.MaxonGame;
+import com.ilotterytea.maxoning.player.MaxonSavegame;
 import com.ilotterytea.maxoning.utils.AssetLoading;
 import com.ilotterytea.maxoning.utils.OsUtils;
 import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
@@ -66,7 +67,8 @@ public class SplashScreen implements Screen {
             AssetLoading.registerItems(game.assetManager, game.locale);
             if (OsUtils.isAndroid || OsUtils.isIos) {
                 try {
-                    game.setScreen(new GameScreen(game, GameDataSystem.load("latest.sav"), -1));
+                    MaxonSavegame sav = GameDataSystem.load("latest.sav");
+                    game.setScreen(new GameScreen(game, (sav == null) ? new MaxonSavegame() : sav, -1));
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
