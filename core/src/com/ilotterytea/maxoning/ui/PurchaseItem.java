@@ -8,10 +8,9 @@ import com.ilotterytea.maxoning.player.MaxonItem;
 public class PurchaseItem extends Table {
     public PurchaseItem(
             Skin skin,
-            Skin widgetSkin,
             MaxonItem item
     ) {
-        super(widgetSkin);
+        super(skin);
         super.setBackground("up");
         super.align(Align.left | Align.center);
 

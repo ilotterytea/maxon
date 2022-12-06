@@ -26,7 +26,6 @@ import com.ilotterytea.maxoning.utils.formatters.NumberFormatter;
 import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -36,9 +35,10 @@ public class MenuScreen implements Screen {
     final MaxonGame game;
 
     final Stage stage;
-    final Skin skin, widgetSkin, iconSkin;
+    final Skin skin;
+    TextureAtlas brandAtlas;
 
-    Image brandLogo, blackBg;
+    Image brandLogo;
 
     final Music menuMusic;
 
@@ -47,8 +47,6 @@ public class MenuScreen implements Screen {
     TextButton startBtn;
     Label savLabel;
 
-    // Atlases:
-    TextureAtlas environmentAtlas, brandAtlas, iconAtlas;
 
     MaxonSavegame sav;
 
@@ -57,37 +55,18 @@ public class MenuScreen implements Screen {
     public MenuScreen(final MaxonGame game) {
         this.game = game;
 
-        // Environment atlas for leafs, snowflakes and background tiles:
-        environmentAtlas = game.assetManager.get("sprites/env/environment.atlas", TextureAtlas.class);
-
-        // Brand atlas:
-        brandAtlas = game.assetManager.get("sprites/gui/brand.atlas", TextureAtlas.class);
-
-        // Icon atlas:
-        iconAtlas = game.assetManager.get("sprites/gui/widgeticons.atlas", TextureAtlas.class);
-
         // Stage and skin:
         this.stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-        this.skin = new Skin(Gdx.files.internal("main.skin"));
-        this.widgetSkin = new Skin(Gdx.files.internal("sprites/gui/widgets.skin"));
-        this.iconSkin = new Skin(Gdx.files.internal("sprites/gui/widgeticons.skin"));
+        this.skin = game.assetManager.get("MainSpritesheet.skin", Skin.class);
+        brandAtlas = game.assetManager.get("sprites/gui/brand.atlas", TextureAtlas.class);
 
         sav = GameDataSystem.load("00.maxon");
 
         // Main Menu music:
         this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
 
-        // Make the background a little darker:
-        brandLogo = new Image(brandAtlas.findRegion("brand"));
-        blackBg = new Image(environmentAtlas.findRegion("tile"));
-
-        blackBg.setColor(0f, 0f, 0f, 0.25f);
-        blackBg.setSize(stage.getWidth(), stage.getHeight());
-
-        stage.addActor(blackBg);
-
         // // Menu table:
-        float iconSize = 48f, iconPad = 6f;
+        float iconSize = 64f, iconPad = 6f;
         menuTable = new Table();
         menuTable.setSize(stage.getWidth() / 2f, iconSize);
         menuTable.setPosition(0, 0);
@@ -95,7 +74,7 @@ public class MenuScreen implements Screen {
         menuTable.align(Align.bottomLeft);
 
         // Quit button:
-        ImageButton quitBtn = new ImageButton(iconSkin, "quit");
+        ImageButton quitBtn = new ImageButton(skin, "quit");
 
         quitBtn.addListener(new ClickListener() {
             @Override
@@ -107,7 +86,7 @@ public class MenuScreen implements Screen {
         menuTable.add(quitBtn).size(iconSize).pad(iconPad);
 
         // Options button:
-        ImageButton optBtn = new ImageButton(iconSkin, "options");
+        ImageButton optBtn = new ImageButton(skin, "options");
 
         optBtn.addListener(new ClickListener() {
             @Override
@@ -121,7 +100,7 @@ public class MenuScreen implements Screen {
         stage.addActor(menuTable);
 
         // // Press start:
-        startBtn = new TextButton(game.locale.TranslatableText("menu.pressStart"), skin);
+        startBtn = new TextButton(game.locale.TranslatableText("menu.pressStart"), skin, "text");
         startBtn.setPosition((stage.getWidth() / 2f) - (startBtn.getWidth() / 2f), 8f);
 
         startBtn.addListener(new ClickListener() {
@@ -203,8 +182,8 @@ public class MenuScreen implements Screen {
                 1,
                 stage.getWidth(),
                 stage.getHeight(),
-                widgetSkin.getDrawable("bgTile01"),
-                widgetSkin.getDrawable("bgTile02")
+                skin.getDrawable("tile_01"),
+                skin.getDrawable("tile_02")
         );
     }
 
@@ -281,8 +260,8 @@ public class MenuScreen implements Screen {
         mOptTable.add(optTitle).width(512f).row();
 
         // Options table:
-        Table optTable = new Table(widgetSkin);
-        optTable.setBackground("plain_down");
+        Table optTable = new Table(skin);
+        optTable.setBackground("bg");
         optTable.align(Align.topLeft);
 
         // Scroll panel for options:
@@ -302,7 +281,7 @@ public class MenuScreen implements Screen {
         debLabel.setAlignment(Align.left);
         genCategory.add(debLabel).width(256f);
 
-        final TextButton debButton = new TextButton((game.prefs.getBoolean("debug", false)) ? "ON" : "OFF", widgetSkin);
+        final TextButton debButton = new TextButton((game.prefs.getBoolean("debug", false)) ? "ON" : "OFF", skin);
 
         debButton.addListener(new ClickListener() {
             @Override
@@ -332,7 +311,7 @@ public class MenuScreen implements Screen {
         musLabel.setAlignment(Align.left);
         audioCategory.add(musLabel).width(256f);
 
-        final TextButton musButton = new TextButton((game.prefs.getBoolean("music", true)) ? "ON" : "OFF", widgetSkin);
+        final TextButton musButton = new TextButton((game.prefs.getBoolean("music", true)) ? "ON" : "OFF", skin);
 
         musButton.addListener(new ClickListener() {
             @Override
@@ -358,7 +337,7 @@ public class MenuScreen implements Screen {
         sndLabel.setAlignment(Align.left);
         audioCategory.add(sndLabel).width(256f);
 
-        final TextButton sndButton = new TextButton((game.prefs.getBoolean("sfx", true)) ? "ON" : "OFF", widgetSkin);
+        final TextButton sndButton = new TextButton((game.prefs.getBoolean("sfx", true)) ? "ON" : "OFF", skin);
 
         sndButton.addListener(new ClickListener() {
             @Override
@@ -388,7 +367,7 @@ public class MenuScreen implements Screen {
         vscLabel.setAlignment(Align.left);
         videoCategory.add(vscLabel).width(256f);
 
-        final TextButton vscButton = new TextButton((game.prefs.getBoolean("vsync", true)) ? "ON" : "OFF", widgetSkin);
+        final TextButton vscButton = new TextButton((game.prefs.getBoolean("vsync", true)) ? "ON" : "OFF", skin);
 
         vscButton.addListener(new ClickListener() {
             @Override
@@ -413,7 +392,7 @@ public class MenuScreen implements Screen {
         fscLabel.setAlignment(Align.left);
         videoCategory.add(fscLabel).width(256f);
 
-        final TextButton fscButton = new TextButton((game.prefs.getBoolean("fullscreen", true)) ? "ON" : "OFF", widgetSkin);
+        final TextButton fscButton = new TextButton((game.prefs.getBoolean("fullscreen", true)) ? "ON" : "OFF", skin);
 
         fscButton.addListener(new ClickListener() {
             @Override
@@ -438,7 +417,7 @@ public class MenuScreen implements Screen {
         // - - -  Switch the language  - - -:
         String[] fh4Locale = game.locale.getFileHandle().nameWithoutExtension().split("_");
         Locale locale = new Locale(fh4Locale[0], fh4Locale[1]);
-        final TextButton langButton = new TextButton(game.locale.FormattedText("options.language", locale.getDisplayLanguage(), locale.getDisplayCountry()), widgetSkin);
+        final TextButton langButton = new TextButton(game.locale.FormattedText("options.language", locale.getDisplayLanguage(), locale.getDisplayCountry()), skin);
 
         langButton.addListener(new ClickListener() {
             @Override
@@ -470,7 +449,7 @@ public class MenuScreen implements Screen {
         optTable.add(langButton).width(512f).row();
 
         // - - -  Reset save data  - - -:
-        TextButton resetButton = new TextButton(game.locale.TranslatableText("options.reset"), widgetSkin);
+        TextButton resetButton = new TextButton(game.locale.TranslatableText("options.reset"), skin);
         optTable.add(resetButton).width(512f).row();
 
         // Game info:
@@ -479,13 +458,13 @@ public class MenuScreen implements Screen {
         optTable.add(infLabel).maxWidth(512f).row();
 
         // // Action buttons:
-        Table actTable = new Table(widgetSkin);
-        actTable.setBackground("plain_down");
+        Table actTable = new Table(skin);
+        actTable.setBackground("bg");
         actTable.setWidth(512f);
         actTable.align(Align.right);
         mOptTable.add(actTable).width(512f).maxWidth(512f).pad(5f);
 
-        TextButton closeBtn = new TextButton("Back to main menu", widgetSkin);
+        TextButton closeBtn = new TextButton("Back to main menu", skin);
 
         closeBtn.addListener(new ClickListener() {
             @Override
@@ -528,16 +507,16 @@ public class MenuScreen implements Screen {
 
         actTable.add(closeBtn).pad(5f);
 
-        TextButton saveBtn = new TextButton("Apply", widgetSkin);
+        TextButton saveBtn = new TextButton("Apply", skin);
         actTable.add(saveBtn).pad(5f);
     }
 
-    private void loadSavegamesToTable(Table table) {
+    /*private void loadSavegamesToTable(Table table) {
         for (int i = 0; i < 3; i++) {
             if (new File(MaxonConstants.GAME_SAVEGAME_FOLDER + String.format("/0%s.maxon", i)).exists()) {
                 final MaxonSavegame sav = GameDataSystem.load("0" + i + ".maxon");
                 SaveGameWidget widget = new SaveGameWidget(
-                        skin, widgetSkin, sav
+                        skin, sav
                 );
                 final int finalI = i;
                 widget.addListener(new ClickListener() {
@@ -586,13 +565,12 @@ public class MenuScreen implements Screen {
                 table.add(widget).width(512f).padBottom(8f).row();
             }
         }
-    }
+    }*/
 
     @Override public void pause() {}
     @Override public void resume() {}
     @Override public void hide() { dispose(); }
     @Override public void dispose() {
-        stage.clear();
-        skin.dispose();
+        stage.dispose();
     }
 }

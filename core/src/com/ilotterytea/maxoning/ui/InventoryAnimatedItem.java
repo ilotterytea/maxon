@@ -17,7 +17,7 @@ public class InventoryAnimatedItem extends Stack {
 
         TextTooltip.TextTooltipStyle style = new TextTooltip.TextTooltipStyle();
         style.label = new Label.LabelStyle();
-        style.label.font = skin.getFont("default_lidl");
+        style.label.font = skin.getFont("small");
         style.label.fontColor = skin.getColor("white");
 
         super.add(table);
