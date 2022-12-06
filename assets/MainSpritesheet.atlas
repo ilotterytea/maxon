@@ -1,0 +1,204 @@
+
+MainSpritesheet.png
+size: 1024, 256
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+bg
+  rotate: false
+  xy: 256, 0
+  size: 64, 64
+  split: 8, 8, 8, 8
+  pad: 8, 8, 8, 8
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+checkmark
+  rotate: false
+  xy: 256, 64
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+circle
+  rotate: false
+  xy: 192, 64
+  size: 64, 64
+  split: 30, 30, 30, 30
+  pad: 30, 30, 30, 30
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+close
+  rotate: false
+  xy: 320, 128
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+delete
+  rotate: false
+  xy: 128, 64
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+down
+  rotate: false
+  xy: 384, 192
+  size: 64, 64
+  split: 12, 12, 12, 12
+  pad: 12, 12, 12, 12
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+fg
+  rotate: false
+  xy: 512, 128
+  size: 64, 64
+  split: 8, 8, 8, 8
+  pad: 8, 8, 8, 8
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+gift
+  rotate: false
+  xy: 0, 0
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+gradient
+  rotate: false
+  xy: 256, 128
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+green_up
+  rotate: false
+  xy: 448, 192
+  size: 64, 64
+  split: 12, 12, 12, 12
+  pad: 12, 12, 12, 12
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+inventory
+  rotate: false
+  xy: 0, 128
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+multiplier
+  rotate: false
+  xy: 384, 64
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+options
+  rotate: false
+  xy: 128, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+over
+  rotate: false
+  xy: 384, 0
+  size: 64, 64
+  split: 12, 12, 12, 12
+  pad: 12, 12, 12, 12
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+points
+  rotate: false
+  xy: 448, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+r_down
+  rotate: false
+  xy: 448, 128
+  size: 64, 64
+  split: 30, 30, 30, 30
+  pad: 30, 30, 30, 30
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+r_over
+  rotate: false
+  xy: 320, 64
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+r_up
+  rotate: false
+  xy: 320, 192
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+shop
+  rotate: false
+  xy: 128, 128
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+shutdown
+  rotate: false
+  xy: 512, 192
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+source_code
+  rotate: false
+  xy: 256, 192
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+tile
+  rotate: false
+  xy: 576, 192
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+twitch
+  rotate: false
+  xy: 320, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+twitter
+  rotate: false
+  xy: 192, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+up
+  rotate: false
+  xy: 448, 64
+  size: 64, 64
+  split: 12, 12, 12, 12
+  pad: 12, 12, 12, 12
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+youtube
+  rotate: false
+  xy: 384, 128
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1

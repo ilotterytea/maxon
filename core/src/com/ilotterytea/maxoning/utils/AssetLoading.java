@@ -1,9 +1,11 @@
 package com.ilotterytea.maxoning.utils;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.ilotterytea.maxoning.anim.SpriteUtils;
 import com.ilotterytea.maxoning.player.MaxonItemEnum;
 import com.ilotterytea.maxoning.player.MaxonItemRegister;
@@ -18,6 +20,9 @@ public class AssetLoading {
         am.load("sprites/gui/ilotterytea.atlas", TextureAtlas.class);
         am.load("sprites/gui/widgets.atlas", TextureAtlas.class);
         am.load("sprites/gui/widgeticons.atlas", TextureAtlas.class);
+
+        am.load("MainSpritesheet.atlas", TextureAtlas.class);
+        am.load("MainSpritesheet.skin", Skin.class, new SkinLoader.SkinParameter("MainSpritesheet.atlas"));
 
         // Cat item textures:
         am.load("sprites/sheet/loadingCircle.png", Texture.class);
