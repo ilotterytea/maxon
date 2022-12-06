@@ -37,7 +37,7 @@ public class MobileMenuScreen implements Screen {
     private final MaxonGame game;
     private Stage stage;
 
-    private Skin skin, widgetSkin;
+    private Skin skin;
 
     private MovingChessBackground bg;
 
@@ -50,8 +50,7 @@ public class MobileMenuScreen implements Screen {
     @Override
     public void show() {
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-        skin = new Skin(Gdx.files.internal("main.skin"));
-        widgetSkin = new Skin(Gdx.files.internal("sprites/gui/widgets.skin"));
+        skin = game.assetManager.get("MainSpritesheet.skin", Skin.class);
 
         TextureAtlas brandAtlas = game.assetManager.get("sprites/gui/brand.atlas", TextureAtlas.class);
 
@@ -63,8 +62,8 @@ public class MobileMenuScreen implements Screen {
                 1,
                 stage.getWidth(),
                 stage.getHeight(),
-                widgetSkin.getDrawable("bgTile01"),
-                widgetSkin.getDrawable("bgTile02")
+                skin.getDrawable("tile_01"),
+                skin.getDrawable("tile_02")
         );
 
         // Cat:
@@ -137,7 +136,7 @@ public class MobileMenuScreen implements Screen {
                 (sav == null) ?
                         game.locale.TranslatableText("menu.playGame") :
                         game.locale.TranslatableText("menu.continue"),
-                widgetSkin
+                skin
         );
 
         startBtn.addListener(new ClickListener() {
@@ -164,7 +163,7 @@ public class MobileMenuScreen implements Screen {
         // Language button:
         String[] fh4Locale = game.locale.getFileHandle().nameWithoutExtension().split("_");
         Locale locale = new Locale(fh4Locale[0], fh4Locale[1]);
-        final TextButton langBtn = new TextButton(locale.getDisplayLanguage(), widgetSkin);
+        final TextButton langBtn = new TextButton(locale.getDisplayLanguage(), skin);
 
         langBtn.addListener(new ClickListener() {
             @Override
@@ -241,7 +240,5 @@ public class MobileMenuScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        skin.dispose();
-        widgetSkin.dispose();
     }
 }

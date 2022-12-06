@@ -18,9 +18,9 @@ public class SplashScreen implements Screen {
     final MaxonGame game;
 
     final Stage stage;
-    final Skin skin, widgetSkin;
+    final Skin skin;
 
-    TextureAtlas brandAtlas, envAtlas;
+    TextureAtlas brandAtlas;
     Image dev, pub;
     ProgressBar bar;
 
@@ -28,8 +28,7 @@ public class SplashScreen implements Screen {
         this.game = game;
 
         this.stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-        this.skin = new Skin(Gdx.files.internal("main.skin"));
-        this.widgetSkin = new Skin(Gdx.files.internal("sprites/gui/widgets.skin"));
+        this.skin = new Skin(Gdx.files.internal("MainSpritesheet.skin"));
 
         Table logoTable = new Table();
 
@@ -38,7 +37,6 @@ public class SplashScreen implements Screen {
         logoTable.align(Align.center);
 
         brandAtlas = new TextureAtlas(Gdx.files.internal("sprites/gui/ilotterytea.atlas"));
-        envAtlas = new TextureAtlas(Gdx.files.internal("sprites/env/environment.atlas"));
 
         pub = new Image(brandAtlas.findRegion("org"));
         logoTable.add(pub).size(pub.getWidth() * 5f, pub.getHeight() * 5f).pad(16f).row();
@@ -46,7 +44,7 @@ public class SplashScreen implements Screen {
         dev = new Image(brandAtlas.findRegion("devOld"));
         logoTable.add(dev).size(dev.getWidth() * 5f, dev.getHeight() * 5f).row();
 
-        bar = new ProgressBar(0f, 100f, 1f, false, widgetSkin);
+        bar = new ProgressBar(0f, 100f, 1f, false, skin);
         logoTable.add(bar).size(dev.getWidth() * 5f, 24f);
 
         stage.addActor(logoTable);
@@ -92,6 +90,5 @@ public class SplashScreen implements Screen {
     @Override public void hide() { dispose(); }
     @Override public void dispose() {
         brandAtlas.dispose();
-        envAtlas.dispose();
     }
 }
