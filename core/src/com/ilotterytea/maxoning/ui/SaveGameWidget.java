@@ -11,11 +11,10 @@ import com.ilotterytea.maxoning.utils.formatters.NumberFormatter;
 public class SaveGameWidget extends Button {
     public SaveGameWidget(
             Skin skin,
-            Skin widgetSkin,
             @Null MaxonSavegame sav
     ) {
         // Setting the stack:
-        super(widgetSkin, "slot");
+        super(skin, "slot");
 
         // // // Save slot data:
         // // Info row:

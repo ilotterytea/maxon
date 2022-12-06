@@ -40,17 +40,15 @@ public class GameScreen implements Screen, InputProcessor {
     MaxonSavegame player;
 
     Stage stage;
-    Skin skin, widgetSkin;
+    Skin skin;
 
-    TextureAtlas widgetAtlas, environmentAtlas;
+    TextureAtlas mainAtlas;
 
     Label pointsLabel, multiplierLabel;
-    Image blackBg, inventoryBg, shopBg, pointsBg;
     AnimatedImage cat;
     AnimatedImageButton maxon;
 
     Table boardTable, quickTable;
-    ScrollPane petScroll;
 
     Dialog notEnoughPointsDialog;
 
@@ -68,11 +66,8 @@ public class GameScreen implements Screen, InputProcessor {
 
         // Initializing the stage and skin:
         stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-        skin = new Skin(Gdx.files.internal("main.skin"));
-        widgetSkin = new Skin(Gdx.files.internal("sprites/gui/widgets.skin"));
-
-        widgetAtlas = game.assetManager.get("sprites/gui/widgets.atlas", TextureAtlas.class);
-        environmentAtlas = game.assetManager.get("sprites/env/environment.atlas", TextureAtlas.class);
+        skin = game.assetManager.get("MainSpritesheet.skin", Skin.class);
+        mainAtlas = game.assetManager.get("MainSpritesheet.atlas", TextureAtlas.class);
 
         items = new ArrayList<>();
 
@@ -90,15 +85,9 @@ public class GameScreen implements Screen, InputProcessor {
             }
         }
 
-        // Make the background a little darker:
-        blackBg = new Image(environmentAtlas.findRegion("tile"));
-        blackBg.setColor(0f, 0f, 0f, 0.5f);
-        blackBg.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage.addActor(blackBg);
-
         // - - - - - -  I N F O  B O A R D  - - - - - - :
-        boardTable = new Table(widgetSkin);
-        boardTable.setBackground("board_bg");
+        boardTable = new Table(skin);
+        boardTable.setBackground("board");
         boardTable.setSize(stage.getWidth(), 86f);
         boardTable.setPosition(0, stage.getHeight() - boardTable.getHeight());
         boardTable.align(Align.left | Align.center);
@@ -107,7 +96,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         // - - -  P O I N T S  - - - :
         // Icon for points label:
-        Image pointsIcon = new Image(widgetAtlas.findRegion("coin"));
+        Image pointsIcon = new Image(mainAtlas.findRegion("points"));
         boardTable.add(pointsIcon).size(24f).padLeft(6f).padRight(6f);
 
         // Label for points:
@@ -117,7 +106,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         // - - -  M U L T I P L I E R  - - - :
         // Icon for multiplier label:
-        Image multiplierIcon = new Image(widgetAtlas.findRegion("multiplier"));
+        Image multiplierIcon = new Image(mainAtlas.findRegion("multiplier"));
         boardTable.add(multiplierIcon).size(24f).padLeft(6f).padRight(6f);
 
         // Label for multiplier:
@@ -126,14 +115,14 @@ public class GameScreen implements Screen, InputProcessor {
         boardTable.add(multiplierLabel).row();
 
         // - - - - - -  Q U I C K  A C T I O N S  B O A R D  - - - - - - :
-        quickTable = new Table(widgetSkin);
-        quickTable.setBackground("board_bg");
+        quickTable = new Table(skin);
+        quickTable.setBackground("board");
         quickTable.setSize(stage.getWidth(), 64f);
         quickTable.setPosition(0, 0);
         quickTable.align(Align.center);
 
         // - - -  S H O P  B U T T O N  - - - :
-        ImageButton shopButton = new ImageButton(widgetSkin, "shop");
+        ImageButton shopButton = new ImageButton(skin, "shop");
 
         shopButton.addListener(new ClickListener() {
             @Override
@@ -148,7 +137,7 @@ public class GameScreen implements Screen, InputProcessor {
         quickTable.add(shopButton).size(64f).pad(6f);
 
         // - - -  I N V E N T O R Y  B U T T O N  - - - :
-        ImageButton inventoryButton = new ImageButton(widgetSkin, "inventory");
+        ImageButton inventoryButton = new ImageButton(skin, "inventory");
 
         inventoryButton.addListener(new ClickListener() {
             @Override
@@ -200,7 +189,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         stage.addActor(debugLabel);
 
-        notEnoughPointsDialog = new Dialog(game.locale.TranslatableText("dialogs.not_enough_points"), widgetSkin, "dialog");
+        notEnoughPointsDialog = new Dialog(game.locale.TranslatableText("dialogs.not_enough_points"), skin, "dialog");
 
         Gdx.input.setInputProcessor(new InputMultiplexer(this, new CrossProcessor(), stage));
     }
@@ -250,7 +239,7 @@ public class GameScreen implements Screen, InputProcessor {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                final ImageButton gift = new ImageButton(widgetSkin, "gift");
+                final ImageButton gift = new ImageButton(skin, "gift");
                 gift.setPosition(stage.getWidth() + gift.getWidth(), Math.getRandomNumber((int) gift.getHeight(), (int) stage.getHeight() - (int) gift.getHeight()));
                 gift.addAction(
                         Actions.repeat(
@@ -391,10 +380,10 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     private void genNewBgTiles(int width, int height) {
-        for (int i = 0; i < height / environmentAtlas.findRegion("tile").getRegionHeight() + 1; i++) {
+        for (int i = 0; i < height / mainAtlas.findRegion("tile").getRegionHeight() + 1; i++) {
             bgTiles.add(i, new ArrayList<Sprite>());
-            for (int j = -1; j < width / environmentAtlas.findRegion("tile").getRegionWidth(); j++) {
-                Sprite spr = new Sprite(environmentAtlas.findRegion("tile"));
+            for (int j = -1; j < width / mainAtlas.findRegion("tile").getRegionWidth(); j++) {
+                Sprite spr = new Sprite(mainAtlas.findRegion("tile"));
 
                 if ((j + i) % 2 == 0) {
                     spr.setColor(0.98f, 0.71f, 0.22f, 1f);
@@ -412,8 +401,8 @@ public class GameScreen implements Screen, InputProcessor {
 
     private void showShop() {
         // - - - - - -  S H O P  T A B L E  - - - - - - :
-        final Table shopTable = new Table(widgetSkin);
-        shopTable.setBackground("board_bg");
+        final Table shopTable = new Table(skin);
+        shopTable.setBackground("bg");
         shopTable.setSize(stage.getWidth() - 20f, stage.getHeight() - (boardTable.getHeight() + quickTable.getHeight() + 20f));
         shopTable.setPosition(10f, quickTable.getHeight() + 10f);
         shopTable.align(Align.top | Align.center);
@@ -429,7 +418,7 @@ public class GameScreen implements Screen, InputProcessor {
         headShopTable.add(shopTitle).expandX();
 
         // - - -  C L O S E  B U T T O N  - - - :
-        TextButton closeButton = new TextButton("X", widgetSkin);
+        TextButton closeButton = new TextButton("X", skin);
 
         closeButton.addListener(new ClickListener() {
             @Override
@@ -448,7 +437,6 @@ public class GameScreen implements Screen, InputProcessor {
         for (final MaxonItem item : MaxonItemRegister.getItems()) {
             PurchaseItem p_item = new PurchaseItem(
                     skin,
-                    widgetSkin,
                     item
             );
 
@@ -491,8 +479,8 @@ public class GameScreen implements Screen, InputProcessor {
 
     private void showInventory() {
         // - - - - - -  I N V E N T O R Y  T A B L E  - - - - - - :
-        final Table inventoryTable = new Table(widgetSkin);
-        inventoryTable.setBackground("board_bg");
+        final Table inventoryTable = new Table(skin);
+        inventoryTable.setBackground("bg");
         inventoryTable.setSize(stage.getWidth() - 20f, stage.getHeight() - (boardTable.getHeight() + quickTable.getHeight() + 20f));
         inventoryTable.setPosition(10f, quickTable.getHeight() + 10f);
         inventoryTable.align(Align.top | Align.center);
@@ -508,7 +496,7 @@ public class GameScreen implements Screen, InputProcessor {
         headInventoryTable.add(inventoryTitle).expandX();
 
         // - - -  C L O S E  B U T T O N  - - - :
-        TextButton closeButton = new TextButton("X", widgetSkin);
+        TextButton closeButton = new TextButton("X", skin);
 
         closeButton.addListener(new ClickListener() {
             @Override
@@ -553,7 +541,6 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public void dispose() {
         stage.clear();
-        skin.dispose();
     }
 
     @Override
