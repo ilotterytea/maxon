@@ -52,9 +52,16 @@ down
   orig: 64, 64
   offset: 0, 0
   index: -1
+down_arrow
+  rotate: false
+  xy: 512, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 fg
   rotate: false
-  xy: 576, 128
+  xy: 640, 128
   size: 64, 64
   split: 8, 8, 8, 8
   pad: 8, 8, 8, 8
@@ -77,7 +84,7 @@ gradient
   index: -1
 green_up
   rotate: false
-  xy: 512, 192
+  xy: 448, 64
   size: 64, 64
   split: 12, 12, 12, 12
   pad: 12, 12, 12, 12
@@ -91,9 +98,16 @@ inventory
   orig: 128, 128
   offset: 0, 0
   index: -1
+left_arrow
+  rotate: false
+  xy: 448, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 multiplier
   rotate: false
-  xy: 448, 64
+  xy: 512, 128
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -107,7 +121,7 @@ options
   index: -1
 over
   rotate: false
-  xy: 448, 0
+  xy: 512, 64
   size: 64, 64
   split: 12, 12, 12, 12
   pad: 12, 12, 12, 12
@@ -116,14 +130,14 @@ over
   index: -1
 points
   rotate: false
-  xy: 512, 0
+  xy: 576, 0
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 r_down
   rotate: false
-  xy: 512, 128
+  xy: 576, 128
   size: 64, 64
   split: 30, 30, 30, 30
   pad: 30, 30, 30, 30
@@ -144,6 +158,13 @@ r_up
   orig: 64, 64
   offset: 0, 0
   index: -1
+right_arrow
+  rotate: false
+  xy: 576, 192
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 shop
   rotate: false
   xy: 128, 0
@@ -153,7 +174,7 @@ shop
   index: -1
 shutdown
   rotate: false
-  xy: 576, 192
+  xy: 640, 192
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -167,14 +188,14 @@ source_code
   index: -1
 tile
   rotate: false
-  xy: 640, 192
+  xy: 704, 192
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 twitch
   rotate: false
-  xy: 384, 0
+  xy: 448, 128
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -195,16 +216,23 @@ unknown
   index: -1
 up
   rotate: false
-  xy: 512, 64
+  xy: 576, 64
   size: 64, 64
   split: 12, 12, 12, 12
   pad: 12, 12, 12, 12
   orig: 64, 64
   offset: 0, 0
   index: -1
+up_arrow
+  rotate: false
+  xy: 384, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 youtube
   rotate: false
-  xy: 448, 128
+  xy: 512, 192
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
