@@ -41,9 +41,14 @@
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
-    default: { font: default, fontColor: { hex: "#ffffff" } },
+    default: { font: default, fontColor: lightgrey },
+    value: { font: default, fontColor: yellow }
     debug: { font: default, fontColor: { hex: "#ffffff" }, background: tile_03 },
-    with_background: { font: default, fontColor: white, background: fg }
+    with_background: { font: default, fontColor: white, background: fg },
+    header: { font: default, fontColor: yellow },
+    header_with_bg: { font: default, fontColor: yellow, background: fg }
+    subheader: { font: default, fontColor: white },
+    subheader_with_bg: { font: default, fontColor: white, background: fg }
   },
 
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {

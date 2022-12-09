@@ -263,38 +263,40 @@ public class MenuScreen implements Screen {
         );
 
         // Main options window:
-        final Table mOptTable = new Table();
-        mOptTable.align(Align.center);
-        mOptTable.setWidth(512f);
-        mOptTable.setX((stage.getWidth() / 2f) - (mOptTable.getWidth() / 2f));
-        stage.addActor(mOptTable);
+        final Table optionsTable = new Table(skin);
+        optionsTable.setBackground("bg");
+        optionsTable.align(Align.top | Align.center);
+        optionsTable.setSize(768f, 640f);
+        optionsTable.setX((stage.getWidth() / 2f) - (optionsTable.getWidth() / 2f));
+        stage.addActor(optionsTable);
+
+        float paddingBottom = 10f;
 
         // Options title:
-        Label optTitle = new Label(game.locale.TranslatableText("options.title"), skin);
-        optTitle.setAlignment(Align.left);
-        mOptTable.add(optTitle).width(512f).row();
+        Label optTitle = new Label(game.locale.TranslatableText("options.title"), skin, "header_with_bg");
+        optTitle.setAlignment(Align.center);
+        optionsTable.add(optTitle).width(optionsTable.getWidth()).row();
 
-        // Options table:
-        Table optTable = new Table(skin);
-        optTable.setBackground("bg");
-        optTable.align(Align.topLeft);
+        Table contentTable = new Table();
+        contentTable.align(Align.top | Align.center);
+        contentTable.setWidth(optionsTable.getWidth());
 
         // Scroll panel for options:
-        ScrollPane optScroll = new ScrollPane(optTable);
+        ScrollPane optScroll = new ScrollPane(contentTable);
         optScroll.setScrollingDisabled(true, false);
-        mOptTable.add(optScroll).width(512f).height(384f).row();
+        optionsTable.add(optScroll).width(optionsTable.getWidth()).height(512f).padBottom(paddingBottom).row();
 
         // - - -  General category  - - -:
-        Label genLabel = new Label(game.locale.TranslatableText("options.general"), skin);
-        optTable.add(genLabel).expandX().row();
+        Label genLabel = new Label(game.locale.TranslatableText("options.general"), skin, "subheader_with_bg");
+        contentTable.add(genLabel).fillX().padBottom(paddingBottom).row();
 
         Table genCategory = new Table();
-        optTable.add(genCategory).expandX().row();
+        contentTable.add(genCategory).fillX().padBottom(paddingBottom).row();
 
         // Show debug:
         Label debLabel = new Label(game.locale.TranslatableText("options.debug"), skin);
         debLabel.setAlignment(Align.left);
-        genCategory.add(debLabel).width(256f);
+        genCategory.add(debLabel).width(optionsTable.getWidth() / 2f).padBottom(paddingBottom);
 
         final TextButton debButton = new TextButton((game.prefs.getBoolean("debug", false)) ? "ON" : "OFF", skin);
 
@@ -312,19 +314,19 @@ public class MenuScreen implements Screen {
             }
         });
 
-        genCategory.add(debButton).width(256f).row();
+        genCategory.add(debButton).width(optionsTable.getWidth() / 2f).padBottom(paddingBottom).row();
 
         // - - -  Audio category  - - -:
-        Label audioLabel = new Label(game.locale.TranslatableText("options.audio"), skin);
-        optTable.add(audioLabel).expandX().row();
+        Label audioLabel = new Label(game.locale.TranslatableText("options.audio"), skin, "subheader_with_bg");
+        contentTable.add(audioLabel).fillX().padBottom(paddingBottom).row();
 
         Table audioCategory = new Table();
-        optTable.add(audioCategory).expandX().row();
+        contentTable.add(audioCategory).fillX().padBottom(paddingBottom).row();
 
         // Music:
         Label musLabel = new Label(game.locale.TranslatableText("options.music"), skin);
         musLabel.setAlignment(Align.left);
-        audioCategory.add(musLabel).width(256f);
+        audioCategory.add(musLabel).width(optionsTable.getWidth() / 2f).padBottom(paddingBottom);
 
         final TextButton musButton = new TextButton((game.prefs.getBoolean("music", true)) ? "ON" : "OFF", skin);
 
@@ -345,12 +347,12 @@ public class MenuScreen implements Screen {
             }
         });
 
-        audioCategory.add(musButton).width(256f).row();
+        audioCategory.add(musButton).width(optionsTable.getWidth() / 2f).padBottom(paddingBottom).row();
 
         // Sound:
         Label sndLabel = new Label(game.locale.TranslatableText("options.sound"), skin);
         sndLabel.setAlignment(Align.left);
-        audioCategory.add(sndLabel).width(256f);
+        audioCategory.add(sndLabel).width(optionsTable.getWidth() / 2f).padBottom(paddingBottom);
 
         final TextButton sndButton = new TextButton((game.prefs.getBoolean("sfx", true)) ? "ON" : "OFF", skin);
 
@@ -368,19 +370,19 @@ public class MenuScreen implements Screen {
             }
         });
 
-        audioCategory.add(sndButton).width(256f).row();
+        audioCategory.add(sndButton).width(optionsTable.getWidth() / 2f).padBottom(paddingBottom).row();
 
         // - - -  Video category  - - -:
-        Label videoLabel = new Label(game.locale.TranslatableText("options.video"), skin);
-        optTable.add(videoLabel).expandX().row();
+        Label videoLabel = new Label(game.locale.TranslatableText("options.video"), skin, "subheader_with_bg");
+        contentTable.add(videoLabel).fillX().padBottom(paddingBottom).row();
 
         Table videoCategory = new Table();
-        optTable.add(videoCategory).expandX().row();
+        contentTable.add(videoCategory).fillX().padBottom(paddingBottom).row();
 
         // Vertical sync:
         Label vscLabel = new Label(game.locale.TranslatableText("options.vsync"), skin);
         vscLabel.setAlignment(Align.left);
-        videoCategory.add(vscLabel).width(256f);
+        videoCategory.add(vscLabel).width(optionsTable.getWidth() / 2f).padBottom(paddingBottom);
 
         final TextButton vscButton = new TextButton((game.prefs.getBoolean("vsync", true)) ? "ON" : "OFF", skin);
 
@@ -400,12 +402,12 @@ public class MenuScreen implements Screen {
             }
         });
 
-        videoCategory.add(vscButton).width(256f).row();
+        videoCategory.add(vscButton).width(optionsTable.getWidth() / 2f).padBottom(paddingBottom).row();
 
         // Full screen:
         Label fscLabel = new Label(game.locale.TranslatableText("options.fullscreen"), skin);
         fscLabel.setAlignment(Align.left);
-        videoCategory.add(fscLabel).width(256f);
+        videoCategory.add(fscLabel).width(optionsTable.getWidth() / 2f).padBottom(paddingBottom);
 
         final TextButton fscButton = new TextButton((game.prefs.getBoolean("fullscreen", true)) ? "ON" : "OFF", skin);
 
@@ -427,7 +429,7 @@ public class MenuScreen implements Screen {
             }
         });
 
-        videoCategory.add(fscButton).width(256f).row();
+        videoCategory.add(fscButton).width(optionsTable.getWidth() / 2f).padBottom(paddingBottom).row();
 
         // - - -  Switch the language  - - -:
         String[] fh4Locale = game.locale.getFileHandle().nameWithoutExtension().split("_");
@@ -461,23 +463,23 @@ public class MenuScreen implements Screen {
             }
         });
 
-        optTable.add(langButton).width(512f).row();
+        contentTable.add(langButton).width(optionsTable.getWidth()).padBottom(paddingBottom).row();
 
         // - - -  Reset save data  - - -:
         TextButton resetButton = new TextButton(game.locale.TranslatableText("options.reset"), skin);
-        optTable.add(resetButton).width(512f).row();
+        contentTable.add(resetButton).width(optionsTable.getWidth()).padBottom(paddingBottom).row();
 
         // Game info:
         Label infLabel = new Label(String.format("%s - %s", MaxonConstants.GAME_NAME, MaxonConstants.GAME_VERSION), skin);
         infLabel.setAlignment(Align.center);
-        optTable.add(infLabel).maxWidth(512f).row();
+        optionsTable.add(infLabel).maxWidth(optionsTable.getWidth() / 2f).row();
 
         // // Action buttons:
         Table actTable = new Table(skin);
-        actTable.setBackground("bg");
-        actTable.setWidth(512f);
+        actTable.setBackground("fg");
+        actTable.setWidth(optionsTable.getWidth());
         actTable.align(Align.right);
-        mOptTable.add(actTable).width(512f).maxWidth(512f).pad(5f);
+        optionsTable.add(actTable).width(optionsTable.getWidth()).maxWidth(optionsTable.getWidth()).pad(5f);
 
         TextButton closeBtn = new TextButton("Back to main menu", skin);
 
@@ -485,7 +487,7 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 inOptions = !inOptions;
-                mOptTable.addAction(Actions.moveTo(mOptTable.getX(), -stage.getHeight(), 2f, Interpolation.smoother));
+                optionsTable.addAction(Actions.moveTo(optionsTable.getX(), -stage.getHeight(), 2f, Interpolation.smoother));
 
                 brandLogo.clearActions();
                 brandLogo.addAction(
@@ -528,8 +530,8 @@ public class MenuScreen implements Screen {
         TextButton saveBtn = new TextButton("Apply", skin);
         actTable.add(saveBtn).pad(5f);
 
-        mOptTable.setY(-stage.getHeight());
-        mOptTable.addAction(Actions.moveTo(mOptTable.getX(), (stage.getHeight() / 2f) - (mOptTable.getHeight() / 2f), 2f, Interpolation.smoother));
+        optionsTable.setY(-optionsTable.getHeight());
+        optionsTable.addAction(Actions.moveTo(optionsTable.getX(), (stage.getHeight() / 2f) - (optionsTable.getHeight() / 2f), 2f, Interpolation.smoother));
     }
 
     private void generateSaves() {
