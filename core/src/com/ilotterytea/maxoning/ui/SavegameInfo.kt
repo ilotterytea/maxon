@@ -92,7 +92,7 @@ class SavegameInfo(
             val nameLabel = Label("Your name", skin)
             content.add(nameLabel).width(246f).pad(4f)
             // Label for points count:
-            val nameField = TextField("test", skin)
+            val nameField = TextField(System.getProperty("user.name"), skin)
             content.add(nameField).width(246f).pad(4f).row()
 
 
