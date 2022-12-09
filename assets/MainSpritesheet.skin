@@ -42,7 +42,8 @@
   },
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
     default: { font: default, fontColor: { hex: "#ffffff" } },
-    debug: { font: default, fontColor: { hex: "#ffffff" }, background: tile_03 }
+    debug: { font: default, fontColor: { hex: "#ffffff" }, background: tile_03 },
+    with_background: { font: default, fontColor: white, background: fg }
   },
 
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
@@ -68,7 +69,10 @@
     shop: { up: shop },
     inventory: { up: inventory },
     gift: { up: gift },
-    close: { up: close }
+    close: { up: close },
+    delete: { up: delete },
+    right_arrow: { up: right_arrow },
+    left_arrow: { up: left_arrow }
   },
 
   com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
@@ -82,6 +86,15 @@
     default-horizontal: {
       background: tile_05,
       knobBefore: tile_04
+    }
+  },
+
+  com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
+    default: {
+      font: default,
+      background: fg,
+      cursor: tile_01,
+      selection: tile_02
     }
   }
 }
