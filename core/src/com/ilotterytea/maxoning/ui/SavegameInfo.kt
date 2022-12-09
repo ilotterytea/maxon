@@ -26,7 +26,7 @@ class SavegameInfo(
         this.height = 324f
         this.align(Align.top)
 
-        val title = Label(if (sav != null) "Save ${savId + 1}" else "New Game", skin, "with_background")
+        val title = Label(if (sav != null) "Save ${savId + 1} (${sav.name})" else "New Game", skin, "with_background")
         this.add(title).width(506f).pad(6f).row()
 
         val content = Table()
