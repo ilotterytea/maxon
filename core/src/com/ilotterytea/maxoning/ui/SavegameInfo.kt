@@ -102,7 +102,7 @@ class SavegameInfo(
             playButton.addListener(object : ClickListener() {
                 override fun clicked(event: InputEvent, x: Float, y: Float) {
                     val _sav = MaxonSavegame()
-                    _sav.name = nameField.messageText
+                    _sav.name = nameField.text
 
                     game.screen = GameScreen(game, _sav, savId)
                 }
