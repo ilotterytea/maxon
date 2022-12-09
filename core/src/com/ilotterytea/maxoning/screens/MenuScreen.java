@@ -119,7 +119,7 @@ public class MenuScreen implements Screen {
         brandLogo = new Image(brandAtlas.findRegion("brand"));
         brandLogo.setPosition(
                 (stage.getWidth() / 2f) - (brandLogo.getWidth() / 2f),
-                (stage.getHeight() / 2f) - (brandLogo.getHeight() / 2f)
+                stage.getHeight() - brandLogo.getHeight() * 1.2f
         );
 
         brandLogo.setOrigin(
@@ -235,32 +235,7 @@ public class MenuScreen implements Screen {
         menuTable.addAction(Actions.moveTo(menuTable.getX(), -menuTable.getY() - menuTable.getHeight() - 48f, 1f, Interpolation.smoother));
 
         brandLogo.clearActions();
-        brandLogo.addAction(
-                Actions.sequence(
-                        Actions.parallel(
-                                Actions.moveTo(
-                                        (stage.getWidth() / 2f) - (brandLogo.getWidth() / 2f),
-                                        stage.getHeight() - brandLogo.getHeight() * 1.5f,
-                                        1f,
-                                        Interpolation.fade
-                                ),
-                                Actions.rotateTo(0f, .25f, Interpolation.fade)
-                        ),
-                        Actions.repeat(
-                                RepeatAction.FOREVER,
-                                Actions.sequence(
-                                        Actions.parallel(
-                                                Actions.rotateTo(-5f, 5f, Interpolation.smoother),
-                                                Actions.scaleTo(0.9f, 0.9f, 5f, Interpolation.smoother)
-                                        ),
-                                        Actions.parallel(
-                                                Actions.rotateTo(5f, 5f, Interpolation.smoother),
-                                                Actions.scaleTo(1.1f, 1.1f, 5f, Interpolation.smoother)
-                                        )
-                                )
-                        )
-                )
-        );
+        brandLogo.addAction(Actions.moveTo(brandLogo.getX(), stage.getHeight() + brandLogo.getHeight(), 1f, Interpolation.smoother));
 
         // Main options window:
         final Table optionsTable = new Table(skin);
@@ -496,7 +471,7 @@ public class MenuScreen implements Screen {
                                         Actions.rotateTo(0f, 1f),
                                         Actions.moveTo(
                                                 (stage.getWidth() / 2f) - (brandLogo.getWidth() / 2f),
-                                                (stage.getHeight() / 2f) - (brandLogo.getHeight() / 2f),
+                                                stage.getHeight() - brandLogo.getHeight() * 1.2f,
                                                 1f,
                                                 Interpolation.fade
                                         )
