@@ -264,9 +264,9 @@ public class MenuScreen implements Screen {
 
         // Main options window:
         final Table mOptTable = new Table();
-        mOptTable.setPosition(0, 0);
         mOptTable.align(Align.center);
-        mOptTable.setSize(stage.getWidth(), stage.getHeight());
+        mOptTable.setWidth(512f);
+        mOptTable.setX((stage.getWidth() / 2f) - (mOptTable.getWidth() / 2f));
         stage.addActor(mOptTable);
 
         // Options title:
@@ -485,7 +485,7 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 inOptions = !inOptions;
-                mOptTable.remove();
+                mOptTable.addAction(Actions.moveTo(mOptTable.getX(), -stage.getHeight(), 2f, Interpolation.smoother));
 
                 brandLogo.clearActions();
                 brandLogo.addAction(
@@ -527,6 +527,9 @@ public class MenuScreen implements Screen {
 
         TextButton saveBtn = new TextButton("Apply", skin);
         actTable.add(saveBtn).pad(5f);
+
+        mOptTable.setY(-stage.getHeight());
+        mOptTable.addAction(Actions.moveTo(mOptTable.getX(), (stage.getHeight() / 2f) - (mOptTable.getHeight() / 2f), 2f, Interpolation.smoother));
     }
 
     private void generateSaves() {
