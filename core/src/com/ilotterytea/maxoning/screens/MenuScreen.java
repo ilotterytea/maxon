@@ -46,6 +46,7 @@ public class MenuScreen implements Screen {
     Table menuTable;
 
     TextButton startBtn;
+    ImageButton rArrowBtn, lArrowBtn;
     Label savLabel;
 
 
@@ -57,6 +58,8 @@ public class MenuScreen implements Screen {
     int curSav;
     SavegameInfo curSavInfo;
     Image curSavImg;
+
+    boolean inOptions = false;
 
     private final MovingChessBackground bg;
 
@@ -164,16 +167,15 @@ public class MenuScreen implements Screen {
         updateCurrentVisualSavegame(false);
 
         // Save control buttons:
-        ImageButton rArrowBtn = new ImageButton(skin, "right_arrow");
+        rArrowBtn = new ImageButton(skin, "right_arrow");
         rArrowBtn.setPosition(
-                stage.getWidth() - (rArrowBtn.getWidth() + 64f),
+                stage.getWidth() - (rArrowBtn.getWidth() * 2),
                 (stage.getHeight() / 2f) - (rArrowBtn.getHeight() / 2f)
         );
         rArrowBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("TEST", String.format("%s - %s", savImgs.size(), savInfos.size()));
-                updateCurrentVisualSavegame(false);
+                if (!inOptions) updateCurrentVisualSavegame(false);
             }
         });
 
@@ -181,15 +183,15 @@ public class MenuScreen implements Screen {
 
 
         // Save control buttons:
-        ImageButton lArrowBtn = new ImageButton(skin, "left_arrow");
+        lArrowBtn = new ImageButton(skin, "left_arrow");
         lArrowBtn.setPosition(
-                lArrowBtn.getWidth() + 64f,
+                lArrowBtn.getWidth(),
                 (stage.getHeight() / 2f) - (lArrowBtn.getHeight() / 2f)
         );
         lArrowBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                updateCurrentVisualSavegame(true);
+                if (!inOptions) updateCurrentVisualSavegame(true);
             }
         });
 
@@ -224,9 +226,13 @@ public class MenuScreen implements Screen {
     }
 
     private void showOptions() {
-        startBtn.addAction(Actions.moveTo(startBtn.getX(), -startBtn.getY() - startBtn.getHeight(), 1f, Interpolation.exp10Out));
-        savLabel.addAction(Actions.moveTo(savLabel.getX(), -savLabel.getY() - savLabel.getHeight(), 1f, Interpolation.exp10Out));
-        menuTable.addAction(Actions.moveTo(menuTable.getX(), -menuTable.getY() - menuTable.getHeight() - 48f, 1f, Interpolation.exp10Out));
+        inOptions = !inOptions;
+
+        lArrowBtn.addAction(Actions.moveTo(-lArrowBtn.getWidth(), lArrowBtn.getY(), 1f, Interpolation.smoother));
+        rArrowBtn.addAction(Actions.moveTo(stage.getWidth(), rArrowBtn.getY(), 1f, Interpolation.smoother));
+        curSavInfo.addAction(Actions.moveTo(curSavInfo.getX(), -curSavInfo.getHeight(), 1f, Interpolation.smoother));
+        curSavImg.addAction(Actions.moveTo(curSavImg.getX(), -curSavImg.getHeight(), 2f, Interpolation.smoother));
+        menuTable.addAction(Actions.moveTo(menuTable.getX(), -menuTable.getY() - menuTable.getHeight() - 48f, 1f, Interpolation.smoother));
 
         brandLogo.clearActions();
         brandLogo.addAction(
@@ -478,6 +484,7 @@ public class MenuScreen implements Screen {
         closeBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                inOptions = !inOptions;
                 mOptTable.remove();
 
                 brandLogo.clearActions();
@@ -508,8 +515,10 @@ public class MenuScreen implements Screen {
                         )
                 );
 
-                startBtn.addAction(Actions.moveTo(startBtn.getX(), 8f, 1f, Interpolation.smoother));
-                savLabel.addAction(Actions.moveTo(savLabel.getX(), 16f + startBtn.getHeight(), 1f, Interpolation.smoother));
+                lArrowBtn.addAction(Actions.moveTo(lArrowBtn.getWidth(), lArrowBtn.getY(), 1f, Interpolation.smoother));
+                rArrowBtn.addAction(Actions.moveTo(stage.getWidth() - rArrowBtn.getWidth() * 2, rArrowBtn.getY(), 1f, Interpolation.smoother));
+                curSavInfo.addAction(Actions.moveTo(curSavInfo.getX(), 6f, 1f, Interpolation.smoother));
+                curSavImg.addAction(Actions.moveTo(curSavImg.getX(), (stage.getHeight() / 2f) - (curSavImg.getHeight() / 2f), 2f, Interpolation.smoother));
                 menuTable.addAction(Actions.moveTo(menuTable.getX(), 0, 1f, Interpolation.smoother));
             }
         });
