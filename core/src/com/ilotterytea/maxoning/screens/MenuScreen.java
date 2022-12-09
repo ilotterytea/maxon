@@ -281,7 +281,6 @@ public class MenuScreen implements Screen {
                 boolean value = game.prefs.getBoolean("debug", false);
 
                 game.prefs.putBoolean("debug", !value);
-                game.prefs.flush();
 
                 value = !value;
 
@@ -311,7 +310,6 @@ public class MenuScreen implements Screen {
                 boolean value = game.prefs.getBoolean("music", true);
 
                 game.prefs.putBoolean("music", !value);
-                game.prefs.flush();
 
                 value = !value;
 
@@ -337,7 +335,6 @@ public class MenuScreen implements Screen {
                 boolean value = game.prefs.getBoolean("sfx", true);
 
                 game.prefs.putBoolean("sfx", !value);
-                game.prefs.flush();
 
                 value = !value;
 
@@ -367,7 +364,6 @@ public class MenuScreen implements Screen {
                 boolean value = game.prefs.getBoolean("vsync", true);
 
                 game.prefs.putBoolean("vsync", !value);
-                game.prefs.flush();
 
                 value = !value;
 
@@ -392,7 +388,6 @@ public class MenuScreen implements Screen {
                 boolean value = game.prefs.getBoolean("fullscreen", true);
 
                 game.prefs.putBoolean("fullscreen", !value);
-                game.prefs.flush();
 
                 value = !value;
                 Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -427,7 +422,6 @@ public class MenuScreen implements Screen {
 
                 game.locale = new I18N(fhNext);
                 game.prefs.putString("lang", fhNext.nameWithoutExtension());
-                game.prefs.flush();
 
                 String[] fh4Locale = fhNext.nameWithoutExtension().split("_");
                 Locale locale = new Locale(fh4Locale[0], fh4Locale[1]);
@@ -503,6 +497,14 @@ public class MenuScreen implements Screen {
         actTable.add(closeBtn).pad(5f);
 
         TextButton saveBtn = new TextButton("Apply", skin);
+
+        saveBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.prefs.flush();
+            }
+        });
+
         actTable.add(saveBtn).pad(5f);
 
         optionsTable.setY(-optionsTable.getHeight());
