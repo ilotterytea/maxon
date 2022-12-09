@@ -42,6 +42,7 @@
   },
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
     default: { font: default, fontColor: lightgrey },
+    small-default: { font: small, fontColor: lightgrey }
     value: { font: default, fontColor: yellow }
     debug: { font: default, fontColor: { hex: "#ffffff" }, background: tile_03 },
     with_background: { font: default, fontColor: white, background: fg },
