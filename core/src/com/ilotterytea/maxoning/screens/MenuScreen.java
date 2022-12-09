@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,14 +20,14 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.MaxonGame;
+import com.ilotterytea.maxoning.anim.SpriteUtils;
 import com.ilotterytea.maxoning.player.MaxonSavegame;
+import com.ilotterytea.maxoning.player.utils.PetUtils;
 import com.ilotterytea.maxoning.ui.*;
 import com.ilotterytea.maxoning.utils.I18N;
-import com.ilotterytea.maxoning.utils.formatters.NumberFormatter;
 import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 
 import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -36,7 +37,7 @@ public class MenuScreen implements Screen {
 
     final Stage stage;
     final Skin skin;
-    TextureAtlas brandAtlas;
+    TextureAtlas brandAtlas, mainAtlas;
 
     Image brandLogo;
 
@@ -50,15 +51,27 @@ public class MenuScreen implements Screen {
 
     MaxonSavegame sav;
 
+    ArrayList<SavegameInfo> savInfos;
+    ArrayList<Image> savImgs;
+
+    int curSav;
+    SavegameInfo curSavInfo;
+    Image curSavImg;
+
     private final MovingChessBackground bg;
 
     public MenuScreen(final MaxonGame game) {
         this.game = game;
 
+        savInfos = new ArrayList<>();
+        savImgs = new ArrayList<>();
+        curSav = -1;
+
         // Stage and skin:
         this.stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         this.skin = game.assetManager.get("MainSpritesheet.skin", Skin.class);
         brandAtlas = game.assetManager.get("sprites/gui/brand.atlas", TextureAtlas.class);
+        mainAtlas = game.assetManager.get("MainSpritesheet.atlas", TextureAtlas.class);
 
         sav = GameDataSystem.load("00.maxon");
 
@@ -98,46 +111,6 @@ public class MenuScreen implements Screen {
         menuTable.add(optBtn).size(iconSize).pad(iconPad);
 
         stage.addActor(menuTable);
-
-        // // Press start:
-        startBtn = new TextButton(game.locale.TranslatableText("menu.pressStart"), skin, "text");
-        startBtn.setPosition((stage.getWidth() / 2f) - (startBtn.getWidth() / 2f), 8f);
-
-        startBtn.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                try {
-                    game.setScreen(new GameScreen(
-                            game,
-                            (sav == null) ? new MaxonSavegame() : sav,
-                            0
-                    ));
-                } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-
-        startBtn.addAction(
-                Actions.repeat(
-                        -1,
-                        Actions.sequence(
-                                Actions.fadeIn(1f),
-                                Actions.delay(2f),
-                                Actions.fadeOut(1f),
-                                Actions.delay(2f)
-                        )
-                )
-        );
-
-        stage.addActor(startBtn);
-
-        // // Savegame:
-        savLabel = new Label(
-                (sav == null) ? game.locale.TranslatableText("menu.last_savegame.empty") : game.locale.FormattedText("menu.last_savegame.found", sav.petName, NumberFormatter.format(sav.points), NumberFormatter.format(sav.multiplier), String.valueOf(sav.inv.size())), skin);
-        savLabel.setPosition((stage.getWidth() / 2f) - (savLabel.getWidth() / 2f), 8f + startBtn.getY() + startBtn.getHeight());
-
-        stage.addActor(savLabel);
 
         // // Logo:
         brandLogo = new Image(brandAtlas.findRegion("brand"));
@@ -185,6 +158,42 @@ public class MenuScreen implements Screen {
                 skin.getDrawable("tile_01"),
                 skin.getDrawable("tile_02")
         );
+
+        generateSaves();
+
+        updateCurrentVisualSavegame(false);
+
+        // Save control buttons:
+        ImageButton rArrowBtn = new ImageButton(skin, "right_arrow");
+        rArrowBtn.setPosition(
+                stage.getWidth() - (rArrowBtn.getWidth() + 64f),
+                (stage.getHeight() / 2f) - (rArrowBtn.getHeight() / 2f)
+        );
+        rArrowBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("TEST", String.format("%s - %s", savImgs.size(), savInfos.size()));
+                updateCurrentVisualSavegame(false);
+            }
+        });
+
+        stage.addActor(rArrowBtn);
+
+
+        // Save control buttons:
+        ImageButton lArrowBtn = new ImageButton(skin, "left_arrow");
+        lArrowBtn.setPosition(
+                lArrowBtn.getWidth() + 64f,
+                (stage.getHeight() / 2f) - (lArrowBtn.getHeight() / 2f)
+        );
+        lArrowBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                updateCurrentVisualSavegame(true);
+            }
+        });
+
+        stage.addActor(lArrowBtn);
     }
 
     @Override public void show() {
@@ -511,61 +520,72 @@ public class MenuScreen implements Screen {
         actTable.add(saveBtn).pad(5f);
     }
 
-    /*private void loadSavegamesToTable(Table table) {
-        for (int i = 0; i < 3; i++) {
-            if (new File(MaxonConstants.GAME_SAVEGAME_FOLDER + String.format("/0%s.maxon", i)).exists()) {
-                final MaxonSavegame sav = GameDataSystem.load("0" + i + ".maxon");
-                SaveGameWidget widget = new SaveGameWidget(
-                        skin, sav
-                );
-                final int finalI = i;
-                widget.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        try {
-                            game.setScreen(new GameScreen(game, sav, finalI));
-                        } catch (IOException | ClassNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
-                        dispose();
-                    }
-                });
-                table.add(widget).width(512f).padBottom(8f).row();
-            } else {
+    private void generateSaves() {
+        ArrayList<MaxonSavegame> saves = GameDataSystem.getSavegames();
+        int i = -1;
 
-                final MaxonSavegame sav = new MaxonSavegame();
-                final SaveGameWidget widget = new SaveGameWidget(
-                        skin, widgetSkin, null
-                );
-                final int finalI = i;
-                widget.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        sav.petId = 0;
-                        sav.inv = new ArrayList<>();
-                        sav.multiplier = 5;
-                        sav.points = 0;
-                        sav.roomId = 0;
-                        sav.seed = System.currentTimeMillis();
-                        sav.name = "SAVE " + (finalI + 1);
-                        sav.elapsedTime = 0;
-                        sav.lastTimestamp = System.currentTimeMillis();
-                        sav.outInv = new ArrayList<>();
+        for (MaxonSavegame sav : saves) {
+            i++;
 
-                        GameDataSystem.save(sav, "0" + finalI + ".maxon");
-
-                        try {
-                            game.setScreen(new GameScreen(game, sav, finalI));
-                        } catch (IOException | ClassNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
-                        dispose();
-                    }
-                });
-                table.add(widget).width(512f).padBottom(8f).row();
-            }
+            savInfos.add(new SavegameInfo(game, skin, sav, i));
+            savImgs.add(new Image(
+                        PetUtils.animatedImageById(game.assetManager, sav.petId).getDrawable()
+                    )
+            );
         }
-    }*/
+
+        savInfos.add(new SavegameInfo(game, skin, null, i + 1));
+        savImgs.add(new Image(
+                mainAtlas.findRegion("unknown")
+        ));
+    }
+
+    private void updateCurrentVisualSavegame(boolean indexNegative) {
+        if (indexNegative) curSav--;
+        else curSav++;
+
+        if (curSav < 0) {
+            curSav = savInfos.size() - 1;
+        }
+
+        if (savInfos.size() - 1 < curSav || savImgs.size() - 1 < curSav) {
+            curSav = 0;
+        }
+
+        // Set the image:
+        if (curSavImg != null) {
+            curSavImg.remove();
+            curSavImg.setSize(
+                    curSavImg.getWidth() / 2f,
+                    curSavImg.getHeight() / 2f
+            );
+        }
+        curSavImg = savImgs.get(curSav);
+
+        curSavImg.setSize(
+                curSavImg.getWidth() * 2f,
+                curSavImg.getHeight() * 2f
+        );
+
+        curSavImg.setPosition(
+                (stage.getWidth() / 2f) - (curSavImg.getWidth() / 2f),
+                (stage.getHeight() / 2f) - (curSavImg.getHeight() / 2f)
+        );
+
+        stage.addActor(curSavImg);
+
+        // Set the info:
+        if (curSavInfo != null) curSavInfo.remove();
+
+        curSavInfo = savInfos.get(curSav);
+
+        curSavInfo.setPosition(
+                (stage.getWidth() / 2f) - (curSavInfo.getWidth() / 2f),
+                6f
+        );
+
+        stage.addActor(curSavInfo);
+    }
 
     @Override public void pause() {}
     @Override public void resume() {}
