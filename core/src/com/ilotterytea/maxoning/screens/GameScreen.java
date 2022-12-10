@@ -3,7 +3,6 @@ package com.ilotterytea.maxoning.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -55,7 +54,7 @@ public class GameScreen implements Screen, InputProcessor {
     ArrayList<MaxonItem> items;
     Map<Integer, Integer> invItems;
 
-    ArrayList<ArrayList<Sprite>> bgTiles;
+    MovingChessBackground bg;
 
     public GameScreen(MaxonGame game, MaxonSavegame sav, int slotId) throws IOException, ClassNotFoundException {
         this.game = game;
@@ -154,9 +153,11 @@ public class GameScreen implements Screen, InputProcessor {
         stage.addActor(quickTable);
 
         // Generate the background:
-        bgTiles = new ArrayList<>();
-
-        genNewBgTiles((int) stage.getWidth(), (int) stage.getHeight());
+        bg = new MovingChessBackground(
+                1f, 0f, stage.getWidth(), stage.getHeight(),
+                skin.getDrawable("tile_01"),
+                skin.getDrawable("tile_02")
+        );
 
         // Creating the Maxon cat:
         cat = new AnimatedImage(
@@ -325,33 +326,9 @@ public class GameScreen implements Screen, InputProcessor {
 
         game.batch.begin();
 
-        for (ArrayList<Sprite> array : bgTiles) {
-            for (Sprite spr : array) {
-                spr.setPosition(spr.getX() + 1, spr.getY());
-                spr.draw(game.batch);
-            }
-        }
+        bg.draw(game.batch);
 
         game.batch.end();
-
-        for (ArrayList<Sprite> array : bgTiles) {
-            for (int i = 0; i < array.size(); i++) {
-                Sprite spr = array.get(i);
-                Sprite f_spr = array.get(0);
-
-                if (spr.getX() > Gdx.graphics.getWidth()) {
-                    Sprite n_spr = spr;
-                    n_spr.setPosition(f_spr.getX() - spr.getWidth(), f_spr.getY());
-
-                    if (spr.getTexture() == f_spr.getTexture()) {
-                        n_spr.setTexture(array.get(1).getTexture());
-                    }
-
-                    array.remove(spr);
-                    array.add(0, n_spr);
-                }
-            }
-        }
 
         // Update the points label:
         pointsLabel.setText(game.locale.FormattedText("game.points",
@@ -369,31 +346,8 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public void resize(int width, int height) {
-        bgTiles.clear();
-
-        genNewBgTiles(width, height);
-
+        bg.update(width, height);
         stage.getViewport().update(width, height, true);
-    }
-
-    private void genNewBgTiles(int width, int height) {
-        for (int i = 0; i < height / mainAtlas.findRegion("tile").getRegionHeight() + 1; i++) {
-            bgTiles.add(i, new ArrayList<Sprite>());
-            for (int j = -1; j < width / mainAtlas.findRegion("tile").getRegionWidth(); j++) {
-                Sprite spr = new Sprite(mainAtlas.findRegion("tile"));
-
-                if ((j + i) % 2 == 0) {
-                    spr.setColor(0.98f, 0.71f, 0.22f, 1f);
-                } else {
-                    spr.setColor(0.84f, 0.61f, 0.20f, 1f);
-                }
-
-                spr.setSize(64, 64);
-
-                spr.setPosition(spr.getWidth() * j, spr.getHeight() * i);
-                bgTiles.get(i).add(spr);
-            }
-        }
     }
 
     private void showShop() {
