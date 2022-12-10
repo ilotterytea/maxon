@@ -385,7 +385,7 @@ public class MenuScreen implements Screen {
         // Full screen:
         Label fscLabel = new Label(game.locale.TranslatableText("options.fullscreen"), skin);
         fscLabel.setAlignment(Align.left);
-        videoCategory.add(fscLabel).width(optionsTable.getWidth() / 2f).padBottom(paddingBottom);
+        //videoCategory.add(fscLabel).width(optionsTable.getWidth() / 2f).padBottom(paddingBottom);
 
         final TextButton fscButton = new TextButton((game.prefs.getBoolean("fullscreen", true)) ? "ON" : "OFF", skin);
 
@@ -406,7 +406,7 @@ public class MenuScreen implements Screen {
             }
         });
 
-        videoCategory.add(fscButton).width(optionsTable.getWidth() / 2f).padBottom(paddingBottom).row();
+        //videoCategory.add(fscButton).width(optionsTable.getWidth() / 2f).padBottom(paddingBottom).row();
 
         // - - -  Switch the language  - - -:
         String[] fh4Locale = game.locale.getFileHandle().nameWithoutExtension().split("_");
