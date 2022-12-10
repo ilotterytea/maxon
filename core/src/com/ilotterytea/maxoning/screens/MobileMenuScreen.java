@@ -50,7 +50,7 @@ public class MobileMenuScreen implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        stage = new Stage(new FillViewport(Gdx.graphics.getWidth() / game.prefs.getFloat("scale", 2f), Gdx.graphics.getHeight() / game.prefs.getFloat("scale", 2f)));
         skin = game.assetManager.get("MainSpritesheet.skin", Skin.class);
 
         TextureAtlas brandAtlas = game.assetManager.get("sprites/gui/brand.atlas", TextureAtlas.class);
