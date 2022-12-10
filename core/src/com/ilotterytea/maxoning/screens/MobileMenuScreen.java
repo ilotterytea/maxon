@@ -2,6 +2,7 @@ package com.ilotterytea.maxoning.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -55,6 +56,9 @@ public class MobileMenuScreen implements Screen {
         TextureAtlas brandAtlas = game.assetManager.get("sprites/gui/brand.atlas", TextureAtlas.class);
 
         sav = GameDataSystem.load("latest.sav");
+        Music menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
+        menuMusic.setLooping(true);
+        menuMusic.play();
 
         // Background:
         bg = new MovingChessBackground(
