@@ -1,6 +1,7 @@
 package com.ilotterytea.maxoning.screens;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.anim.SpriteUtils;
+import com.ilotterytea.maxoning.audio.Playlist;
 import com.ilotterytea.maxoning.inputprocessors.CrossProcessor;
 import com.ilotterytea.maxoning.player.MaxonItem;
 import com.ilotterytea.maxoning.player.MaxonItemRegister;
@@ -55,11 +57,21 @@ public class GameScreen implements Screen, InputProcessor {
     Map<Integer, Integer> invItems;
 
     MovingChessBackground bg;
+    Playlist playlist;
 
     public GameScreen(MaxonGame game, MaxonSavegame sav, int slotId) throws IOException, ClassNotFoundException {
         this.game = game;
         this.slotId = slotId;
         this.playTimestamp = System.currentTimeMillis();
+
+        playlist = new Playlist(
+                game.assetManager.get("mus/game/onwards.wav", Music.class),
+                game.assetManager.get("mus/game/paris.wav", Music.class),
+                game.assetManager.get("mus/game/adieu.wav", Music.class),
+                game.assetManager.get("mus/game/shopping_spree.wav", Music.class)
+        );
+        playlist.setShuffleMode(true);
+        playlist.next();
 
         player = sav;
 
@@ -324,6 +336,10 @@ public class GameScreen implements Screen, InputProcessor {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        if (!playlist.getPlayingNow().isPlaying()) {
+            playlist.next();
+        }
+
         game.batch.begin();
 
         bg.draw(game.batch);
@@ -487,7 +503,10 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override public void resume() {}
 
-    @Override public void hide() { dispose(); }
+    @Override public void hide() {
+        playlist.getPlayingNow().stop();
+        dispose();
+    }
 
     @Override
     public void dispose() {
