@@ -13,6 +13,14 @@
   "menu.quit": "QUIT TO DESKTOP",
   "menu.continue": "CONTINUE",
 
+  "savegame.title": "Save %s (%s)",
+  "savegame.new": "New savegame...",
+  "savegame.points": "Points",
+  "savegame.multiplier": "Multiplier",
+  "savegame.multiplier.count": "+%s/click",
+  "savegame.purchased": "Purchased items",
+  "savegame.your_name": "Say your name",
+
   "options.title": "Options",
   "options.music": "Music",
   "options.sound": "Sound",

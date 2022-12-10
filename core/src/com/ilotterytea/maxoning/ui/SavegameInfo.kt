@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Align
 import com.ilotterytea.maxoning.MaxonGame
 import com.ilotterytea.maxoning.player.MaxonSavegame
 import com.ilotterytea.maxoning.screens.GameScreen
+import com.ilotterytea.maxoning.utils.I18N
 import com.ilotterytea.maxoning.utils.formatters.NumberFormatter
 
 /**
@@ -16,6 +17,7 @@ import com.ilotterytea.maxoning.utils.formatters.NumberFormatter
  */
 class SavegameInfo(
     game: MaxonGame,
+    i18n: I18N,
     skin: Skin,
     sav: MaxonSavegame?,
     savId: Int
@@ -26,7 +28,7 @@ class SavegameInfo(
         this.height = 324f
         this.align(Align.top)
 
-        val title = Label(if (sav != null) "Save ${savId + 1} (${sav.name})" else "New Game", skin, "header_with_bg")
+        val title = Label(if (sav != null) i18n.FormattedText("savegame.title", (savId + 1).toString(), sav.name) else i18n.TranslatableText("savegame.new"), skin, "header_with_bg")
         this.add(title).width(506f).pad(6f).row()
 
         val content = Table()
@@ -40,7 +42,7 @@ class SavegameInfo(
         if (sav != null) {
             // - - -  P O I N T S  - - - :
             // Label for points:
-            val pointsLabel = Label("Points", skin)
+            val pointsLabel = Label(i18n.TranslatableText("savegame.points"), skin)
             content.add(pointsLabel).width(246f).pad(4f)
             // Label for points count:
             val pointsCLabel = Label(NumberFormatter.format(sav.points.toLong()), skin, "value")
@@ -49,16 +51,16 @@ class SavegameInfo(
 
             // - - -  M U L T I P L I E R  - - - :
             // Label for multiplier:
-            val mpLabel = Label("Multiplier", skin)
+            val mpLabel = Label(i18n.TranslatableText("savegame.multiplier"), skin)
             content.add(mpLabel).width(246f).pad(4f)
             // Label for multiplier count:
-            val mpCLabel = Label("+${NumberFormatter.format(sav.multiplier.toLong())}/click", skin, "value")
+            val mpCLabel = Label(i18n.FormattedText("savegame.multiplier.count", NumberFormatter.format(sav.multiplier.toLong())), skin, "value")
             mpCLabel.setAlignment(Align.right)
             content.add(mpCLabel).width(246f).pad(4f).row()
 
             // - - -   P U R C H A S E D  I T E M S  - - - :
             // Label for purchased items:
-            val piLabel = Label("Inventory size", skin)
+            val piLabel = Label(i18n.TranslatableText("savegame.purchased"), skin)
             content.add(piLabel).width(246f).pad(4f)
             // Label for purchased items count:
             val piCLabel = Label(sav.inv.size.toString(), skin, "value")
@@ -77,7 +79,7 @@ class SavegameInfo(
             //actions.add(delButton).pad(4f)
 
             // Play button:
-            val playButton = TextButton("Play!", skin)
+            val playButton = TextButton(i18n.TranslatableText("menu.continue"), skin)
 
             playButton.addListener(object : ClickListener() {
                 override fun clicked(event: InputEvent, x: Float, y: Float) {
@@ -89,7 +91,7 @@ class SavegameInfo(
         } else {
             // - - -  N A M E  - - - :
             // Label for points:
-            val nameLabel = Label("Your name", skin)
+            val nameLabel = Label(i18n.TranslatableText("savegame.your_name"), skin)
             content.add(nameLabel).width(246f).pad(4f)
             // Label for points count:
             val nameField = TextField(System.getProperty("user.name"), skin)
@@ -97,7 +99,7 @@ class SavegameInfo(
 
 
             // Play button:
-            val playButton = TextButton("START!", skin)
+            val playButton = TextButton(i18n.TranslatableText("menu.playGame"), skin)
 
             playButton.addListener(object : ClickListener() {
                 override fun clicked(event: InputEvent, x: Float, y: Float) {
