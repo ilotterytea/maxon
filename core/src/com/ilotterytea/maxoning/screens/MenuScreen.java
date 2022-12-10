@@ -48,6 +48,7 @@ public class MenuScreen implements Screen {
     TextButton startBtn;
     ImageButton rArrowBtn, lArrowBtn;
     Label savLabel;
+    final DebugInfo debugInfo;
 
 
     MaxonSavegame sav;
@@ -145,10 +146,10 @@ public class MenuScreen implements Screen {
 
         stage.addActor(brandLogo);
 
-        // Debug label:
-        DebugLabel debug = new DebugLabel(skin);
-        debug.setPosition(4, stage.getHeight() - debug.getHeight() - 4);
-        stage.addActor(debug);
+        // Debug info:
+        debugInfo = new DebugInfo(skin, game.locale);
+        debugInfo.setPosition(4, stage.getHeight() - debugInfo.getHeight() - 4);
+        if (game.prefs.getBoolean("debug")) stage.addActor(debugInfo);
 
         Gdx.input.setInputProcessor(new InputMultiplexer(stage));
 
@@ -283,6 +284,9 @@ public class MenuScreen implements Screen {
                 game.prefs.putBoolean("debug", !value);
 
                 value = !value;
+
+                if (value) stage.addActor(debugInfo);
+                else debugInfo.remove();
 
                 debButton.getLabel().setText((value) ? "ON" : "OFF");
             }
