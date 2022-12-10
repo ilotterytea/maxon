@@ -29,6 +29,8 @@ public class GameDataSystem {
      * @see MaxonSavegame
      */
     public static ArrayList<MaxonSavegame> getSavegames() {
+        if (!dir.exists()) dir.mkdirs();
+        
         ArrayList<MaxonSavegame> saves = new ArrayList<>();
         File[] files = dir.listFiles();
 
