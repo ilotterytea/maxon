@@ -19,6 +19,8 @@ public class MaxonItemRegister {
         items.add(new MaxonItem(id, name, desc, icon, type, price, multiplier));
     }
 
+    public static void clear() { items.clear(); }
+
     public static void unRegister(
             int id
     ) {
