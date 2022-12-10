@@ -74,7 +74,7 @@ class SavegameInfo(
                 }
             })
 
-            actions.add(delButton).pad(4f)
+            //actions.add(delButton).pad(4f)
 
             // Play button:
             val playButton = TextButton("Play!", skin)
@@ -85,7 +85,7 @@ class SavegameInfo(
                 }
             })
 
-            actions.add(playButton).width(444f)
+            actions.add(playButton).width(508f)
         } else {
             // - - -  N A M E  - - - :
             // Label for points:
