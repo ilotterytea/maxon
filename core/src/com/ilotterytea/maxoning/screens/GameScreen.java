@@ -71,7 +71,7 @@ public class GameScreen implements Screen, InputProcessor {
                 game.assetManager.get("mus/game/shopping_spree.wav", Music.class)
         );
         playlist.setShuffleMode(true);
-        playlist.next();
+        if (game.prefs.getBoolean("music", true)) playlist.next();
 
         player = sav;
 
@@ -336,7 +336,7 @@ public class GameScreen implements Screen, InputProcessor {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (!playlist.getPlayingNow().isPlaying()) {
+        if (game.prefs.getBoolean("music", true) && !playlist.getPlayingNow().isPlaying()) {
             playlist.next();
         }
 
