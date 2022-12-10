@@ -81,6 +81,7 @@ public class MenuScreen implements Screen {
 
         // Main Menu music:
         this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
+        menuMusic.setLooping(true);
 
         // // Menu table:
         float iconSize = 64f, iconPad = 6f;
@@ -200,6 +201,8 @@ public class MenuScreen implements Screen {
     }
 
     @Override public void show() {
+        if (game.prefs.getBoolean("music", true)) menuMusic.play();
+
         // Start to render:
         render(Gdx.graphics.getDeltaTime());
     }
