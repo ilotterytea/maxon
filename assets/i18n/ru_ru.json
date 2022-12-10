@@ -13,6 +13,14 @@
   "menu.quit": "ВЫЙТИ НА РАБОЧИЙ СТОЛ",
   "menu.continue": "ПРОДОЛЖИТЬ",
 
+  "savegame.title": "Сохранение %s (%s)",
+  "savegame.new": "Новое сохранение...",
+  "savegame.points": "Баллов жмяканья",
+  "savegame.multiplier": "Множитель",
+  "savegame.multiplier.count": "+%s/жмяк",
+  "savegame.purchased": "Купленных предметов",
+  "savegame.your_name": "Ваше имя",
+
   "options.title": "Настройки",
   "options.music": "Музыка",
   "options.sound": "Звук",
