@@ -180,14 +180,14 @@ public class GameScreen implements Screen, InputProcessor {
 
         stage.addActor(maxon);
 
-        DebugLabel debugLabel = new DebugLabel(skin);
+        DebugInfo debugInfo = new DebugInfo(skin, game.locale);
 
-        debugLabel.setPosition(
+        debugInfo.setPosition(
                 8,
-                (Gdx.graphics.getHeight() - debugLabel.getHeight()) - 8
+                (Gdx.graphics.getHeight() - debugInfo.getHeight()) - 8
         );
 
-        stage.addActor(debugLabel);
+        if (game.prefs.getBoolean("debug")) stage.addActor(debugInfo);
 
         notEnoughPointsDialog = new Dialog(game.locale.TranslatableText("dialogs.not_enough_points"), skin, "dialog");
 
