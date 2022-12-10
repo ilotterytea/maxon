@@ -209,6 +209,13 @@ public class GameScreen implements Screen, InputProcessor {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
+                GameDataSystem.save(player, "latest.sav");
+            }
+        }, 10, 10);
+
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
                 float multiplier = 0;
 
                 for (MaxonItem item : items) {
