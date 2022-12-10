@@ -182,10 +182,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         DebugInfo debugInfo = new DebugInfo(skin, game.locale);
 
-        debugInfo.setPosition(
-                8,
-                (Gdx.graphics.getHeight() - debugInfo.getHeight()) - 8
-        );
+        debugInfo.setPosition(4, (stage.getHeight() / 2f) + 128f);
 
         if (game.prefs.getBoolean("debug")) stage.addActor(debugInfo);
 

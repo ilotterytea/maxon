@@ -148,7 +148,7 @@ public class MenuScreen implements Screen {
 
         // Debug info:
         debugInfo = new DebugInfo(skin, game.locale);
-        debugInfo.setPosition(4, stage.getHeight() - debugInfo.getHeight() - 4);
+        debugInfo.setPosition(4, (stage.getHeight() / 2f) + 128f);
         if (game.prefs.getBoolean("debug")) stage.addActor(debugInfo);
 
         Gdx.input.setInputProcessor(new InputMultiplexer(stage));
