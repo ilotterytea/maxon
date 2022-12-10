@@ -19,10 +19,10 @@ public class PurchaseItem extends Table {
         Table summary = new Table();
         summary.align(Align.topLeft);
 
-        Label name = new Label(String.format("%s ($%s) (x%s/click)", item.name, MaxonConstants.DECIMAL_FORMAT.format(item.price), MaxonConstants.DECIMAL_FORMAT.format(item.multiplier)), skin);
+        Label name = new Label(item.name, skin, "subheader");
         name.setAlignment(Align.left);
 
-        Label desc = new Label(item.desc, skin);
+        Label desc = new Label(String.format("%s SQP (%s/click)", MaxonConstants.DECIMAL_FORMAT.format(item.price), MaxonConstants.DECIMAL_FORMAT.format(item.multiplier)), skin);
         desc.setAlignment(Align.left);
 
         summary.add(name).width(desc.getWidth()).row();
