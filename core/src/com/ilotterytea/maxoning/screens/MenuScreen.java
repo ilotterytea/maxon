@@ -441,10 +441,6 @@ public class MenuScreen implements Screen {
 
         contentTable.add(langButton).width(optionsTable.getWidth()).padBottom(paddingBottom).row();
 
-        // - - -  Reset save data  - - -:
-        TextButton resetButton = new TextButton(game.locale.TranslatableText("options.reset"), skin);
-        contentTable.add(resetButton).width(optionsTable.getWidth()).padBottom(paddingBottom).row();
-
         // Game info:
         Label infLabel = new Label(String.format("%s-%s - %s", System.getProperty("os.name"), System.getProperty("os.arch"), MaxonConstants.GAME_VERSION), skin, "small-pixeled");
         infLabel.setAlignment(Align.center);
