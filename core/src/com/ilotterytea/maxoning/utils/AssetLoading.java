@@ -45,6 +45,10 @@ public class AssetLoading {
         // Music:
         am.load("mus/menu/mus_menu_intro.ogg", Music.class);
         am.load("mus/menu/mus_menu_loop.ogg", Music.class);
+        am.load("mus/game/onwards.wav", Music.class);
+        am.load("mus/game/paris.wav", Music.class);
+        am.load("mus/game/adieu.wav", Music.class);
+        am.load("mus/game/shopping_spree.wav", Music.class);
         // Sounds:
     }
 
