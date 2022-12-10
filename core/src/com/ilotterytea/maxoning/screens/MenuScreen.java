@@ -525,14 +525,14 @@ public class MenuScreen implements Screen {
         for (MaxonSavegame sav : saves) {
             i++;
 
-            savInfos.add(new SavegameInfo(game, skin, sav, i));
+            savInfos.add(new SavegameInfo(game, game.locale, skin, sav, i));
             savImgs.add(new Image(
                         PetUtils.animatedImageById(game.assetManager, sav.petId).getDrawable()
                     )
             );
         }
 
-        savInfos.add(new SavegameInfo(game, skin, null, i + 1));
+        savInfos.add(new SavegameInfo(game, game.locale, skin, null, i + 1));
         savImgs.add(new Image(
                 mainAtlas.findRegion("unknown")
         ));
