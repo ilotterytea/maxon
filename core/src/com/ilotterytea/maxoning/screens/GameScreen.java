@@ -116,7 +116,7 @@ public class GameScreen implements Screen, InputProcessor {
         // - - - - - -  Q U I C K  A C T I O N S  B O A R D  - - - - - - :
         quickTable = new Table(skin);
         quickTable.setBackground("board");
-        quickTable.setSize(stage.getWidth(), 64f);
+        quickTable.setSize(stage.getWidth(), 134f);
         quickTable.setPosition(0, 0);
         quickTable.align(Align.center);
 
@@ -133,7 +133,7 @@ public class GameScreen implements Screen, InputProcessor {
             }
         });
 
-        quickTable.add(shopButton).size(64f).pad(6f);
+        quickTable.add(shopButton).size(128f).pad(6f);
 
         // - - -  I N V E N T O R Y  B U T T O N  - - - :
         ImageButton inventoryButton = new ImageButton(skin, "inventory");
@@ -148,7 +148,7 @@ public class GameScreen implements Screen, InputProcessor {
             }
         });
 
-        quickTable.add(inventoryButton).size(64f).pad(6f);
+        quickTable.add(inventoryButton).size(128f).pad(6f);
 
         stage.addActor(quickTable);
 
