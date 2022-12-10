@@ -443,7 +443,7 @@ public class MenuScreen implements Screen {
         contentTable.add(resetButton).width(optionsTable.getWidth()).padBottom(paddingBottom).row();
 
         // Game info:
-        Label infLabel = new Label(String.format("%s - %s", MaxonConstants.GAME_NAME, MaxonConstants.GAME_VERSION), skin, "small-default");
+        Label infLabel = new Label(String.format("%s-%s - %s", System.getProperty("os.name"), System.getProperty("os.arch"), MaxonConstants.GAME_VERSION), skin, "small-pixeled");
         infLabel.setAlignment(Align.center);
         optionsTable.add(infLabel).maxWidth(optionsTable.getWidth() / 2f).row();
 
