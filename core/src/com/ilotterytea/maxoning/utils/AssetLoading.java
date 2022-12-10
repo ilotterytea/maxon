@@ -53,6 +53,8 @@ public class AssetLoading {
     }
 
     public static void registerItems(AssetManager am, I18N i18n) {
+        MaxonItemRegister.clear();
+
         MaxonItemRegister.register(
                 0, i18n.TranslatableText("pet.bror.name"), i18n.TranslatableText("pet.bror.desc"),
                 new AnimatedImage(SpriteUtils.splitToTextureRegions(am.get("sprites/sheet/bror.png", Texture.class), 112, 112, 11, 7)),
