@@ -587,7 +587,10 @@ public class MenuScreen implements Screen {
 
     @Override public void pause() {}
     @Override public void resume() {}
-    @Override public void hide() { dispose(); }
+    @Override public void hide() {
+        menuMusic.stop();
+        dispose();
+    }
     @Override public void dispose() {
         stage.dispose();
     }
