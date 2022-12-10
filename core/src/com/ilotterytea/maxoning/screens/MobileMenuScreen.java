@@ -43,6 +43,7 @@ public class MobileMenuScreen implements Screen {
     private MovingChessBackground bg;
 
     private MaxonSavegame sav;
+    private Music menuMusic;
 
     public MobileMenuScreen(MaxonGame game) {
         this.game = game;
@@ -56,7 +57,7 @@ public class MobileMenuScreen implements Screen {
         TextureAtlas brandAtlas = game.assetManager.get("sprites/gui/brand.atlas", TextureAtlas.class);
 
         sav = GameDataSystem.load("latest.sav");
-        Music menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
+        menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
         menuMusic.setLooping(true);
         menuMusic.play();
 
@@ -239,7 +240,10 @@ public class MobileMenuScreen implements Screen {
     }
 
     @Override
-    public void hide() { dispose(); }
+    public void hide() {
+        menuMusic.stop();
+        dispose();
+    }
 
     @Override
     public void dispose() {
