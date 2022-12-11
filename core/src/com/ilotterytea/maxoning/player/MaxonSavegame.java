@@ -10,9 +10,9 @@ import java.util.ArrayList;
  */
 public class MaxonSavegame implements Serializable {
     /** Earned Squish Points. */
-    public int points = 0;
+    public long points = 0L;
     /** Multiplier. */
-    public int multiplier = 1;
+    public long multiplier = 1;
 
     /** Home inventory. */
     public ArrayList<Integer> inv = new ArrayList<>();
