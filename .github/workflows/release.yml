@@ -26,30 +26,11 @@ jobs:
       - name: Build for desktop
         run: ./gradlew desktop:dist
 
-      - name: Build for android
-        run: ./gradlew android:assembleRelease
-
       - name: Upload the desktop game
         uses: actions/upload-artifact@v2
         with:
           name: deskjars
           path: desktop/build/libs/Maxoning.jar
-
-      - name: Sign APK file
-        uses: r0adkll/sign-android-release@v1
-        id: sign_apk
-        with:
-          releaseDirectory: android/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-
-      - name: Upload the Android game
-        uses: actions/upload-artifact@v2
-        with:
-          name: apks
-          path: ${{ steps.sign_apk.outputs.signedReleaseFile }}
 
   release:
     needs: [ build ]
@@ -82,14 +63,3 @@ jobs:
           asset_path: deskjars/Maxoning.jar
           asset_name: Maxoning.jar
           asset_content_type: application/x-java-archive
-
-      - name: Upload APK release
-        uses: actions/upload-release-asset@v1
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: apks/android-release-unsigned-signed.apk
-          asset_name: Maxoning.apk
-          asset_content_type: application/vnd.android.package-archive
