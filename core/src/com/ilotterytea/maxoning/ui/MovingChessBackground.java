@@ -111,7 +111,7 @@ public class MovingChessBackground {
 
                     tile.setPosition(fTile.getX() - tile.getWidth(), fTile.getY());
 
-                    if (tile.getDrawable() == fTile.getDrawable()) {
+                    if (array.size() > 1 && tile.getDrawable() == fTile.getDrawable()) {
                         tile.setDrawable(array.get(1).getDrawable());
                     }
 
