@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.utils.AssetLoading;
-import com.ilotterytea.maxoning.utils.OsUtils;
 
 public class SplashScreen implements Screen {
     final MaxonGame game;
@@ -59,11 +58,7 @@ public class SplashScreen implements Screen {
     private void update() {
         if (game.assetManager.update()) {
             AssetLoading.registerItems(game.assetManager, game.locale);
-            if (OsUtils.isAndroid || OsUtils.isIos) {
-                game.setScreen(new MobileMenuScreen(game));
-            } else {
-                game.setScreen(new MenuScreen(game));
-            }
+            game.setScreen(new MenuScreen(game));
             dispose();
         }
     }
