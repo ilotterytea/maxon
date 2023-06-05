@@ -1,9 +1,8 @@
-sourceCompatibility = 1.7
-dependencies {
-    //implementation 'org.jetbrains:annotations-java5:20.1.0'
-}
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+eclipse.project.name = appName + '-core'
 
-sourceSets.main.java.srcDirs = [ "src/" ]
-
-eclipse.project.name = appName + "-core"
+dependencies {
+  api "com.badlogicgames.gdx:gdx:$gdxVersion"
+  api "com.github.tommyettinger:regexodus:$regExodusVersion"
+  api "com.rafaskoberg.gdx:typing-label:$typingLabelVersion"
+}
