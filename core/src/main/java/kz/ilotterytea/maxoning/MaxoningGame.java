@@ -1,6 +1,7 @@
 package kz.ilotterytea.maxoning;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -8,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 public class MaxoningGame extends Game {
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
+    private AssetManager assetManager;
     private static MaxoningGame instance;
 
     public SpriteBatch getBatch() {
@@ -16,6 +18,10 @@ public class MaxoningGame extends Game {
 
     public ShapeRenderer getShapeRenderer() {
         return shapeRenderer;
+    }
+
+    public AssetManager getAssetManager() {
+        return assetManager;
     }
 
     public static MaxoningGame getInstance() {
@@ -30,6 +36,7 @@ public class MaxoningGame extends Game {
     public void create() {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
+        assetManager = new AssetManager();
         setScreen(new FirstScreen());
     }
 }
