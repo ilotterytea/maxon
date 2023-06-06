@@ -1,6 +1,8 @@
 package kz.ilotterytea.maxoning;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -12,6 +14,8 @@ public class MaxoningGame extends Game {
     private ShapeRenderer shapeRenderer;
     private AssetManager assetManager;
     private LocalizationManager localizationManager;
+    private Preferences settingsPreferences;
+    private Preferences saveGamePreferences;
     private static MaxoningGame instance;
 
     public SpriteBatch getBatch() {
@@ -30,6 +34,14 @@ public class MaxoningGame extends Game {
         return localizationManager;
     }
 
+    public Preferences getSettingsPreferences() {
+        return settingsPreferences;
+    }
+
+    public Preferences getSaveGamePreferences() {
+        return saveGamePreferences;
+    }
+
     public static MaxoningGame getInstance() {
         return instance;
     }
@@ -46,6 +58,9 @@ public class MaxoningGame extends Game {
 
         localizationManager = new LocalizationManager();
         localizationManager.loadLocalizations("l10n");
+
+        settingsPreferences = Gdx.app.getPreferences("settings");
+        saveGamePreferences = Gdx.app.getPreferences("savegame");
 
         setScreen(new FirstScreen());
     }
