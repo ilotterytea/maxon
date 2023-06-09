@@ -41,6 +41,8 @@ public class SplashScreen implements Screen {
     private void update() {
         if (GAME.getAssetManager().update(2500)) {
             Gdx.app.log("SplashScreen", "ASSETS LOADED!");
+
+            GAME.setScreen(new MenuScreen());
         }
 
         progress = logoImage.getWidth() / (GAME.getAssetManager().getQueuedAssets() + 1f);
