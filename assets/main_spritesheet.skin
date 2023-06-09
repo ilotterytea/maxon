@@ -1,0 +1,75 @@
+{
+  com.badlogic.gdx.graphics.g2d.BitmapFont: {
+    default: {
+      file: fonts/MaxonSansRegular.fnt,
+      scaledSize: 18
+    }
+
+    bold: {
+      file: fonts/MaxonSans.fnt,
+      scaledSize: 18
+    }
+  }
+
+  Color: {
+    transparent: { hex: "#00000000" }
+    yellow: { hex: "#ffe60fff" }
+    black: { hex: "#000000ff" }
+    white: { hex: "#ffffffff" }
+  }
+
+  TintedDrawable: {
+    selected_button: {
+      name: sample16,
+      color: white
+    }
+    default_button: {
+      name: sample16,
+      color: black
+    }
+    transparent_button: {
+      name: sample16,
+      color: transparent
+    }
+  }
+
+  com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+    default: {
+      font: bold,
+      fontColor: white,
+      up: transparent_button,
+      over: selected_button,
+      overFontColor: black
+    }
+  }
+
+  com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
+    exit_button: {
+      up: exit
+    }
+    music_on_button: {
+      up: music_on
+    }
+    music_off_button: {
+      up: music_off
+    }
+    windowed_screen_button: {
+      up: windowed
+    }
+    full_screen_button: {
+      up: fullscreen
+    }
+  }
+
+  com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+    default: {
+      font: default,
+      fontColor: white
+    }
+
+    bold: {
+      font: bold,
+      fontColor: yellow
+    }
+  }
+}

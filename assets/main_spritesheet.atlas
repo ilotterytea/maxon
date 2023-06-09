@@ -1,0 +1,118 @@
+
+main_spritesheet.png
+size: 2048, 512
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+english
+  rotate: false
+  xy: 1024, 144
+  size: 256, 184
+  orig: 256, 184
+  offset: 0, 0
+  index: -1
+exit
+  rotate: false
+  xy: 1280, 144
+  size: 197, 184
+  orig: 197, 184
+  offset: 0, 0
+  index: -1
+fullscreen
+  rotate: false
+  xy: 1536, 328
+  size: 184, 184
+  orig: 184, 184
+  offset: 0, 0
+  index: -1
+gradient
+  rotate: false
+  xy: 0, 0
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+maxon
+  rotate: false
+  xy: 512, 0
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+music_off
+  rotate: false
+  xy: 1280, 328
+  size: 256, 184
+  orig: 256, 184
+  offset: 0, 0
+  index: -1
+music_on
+  rotate: false
+  xy: 768, 328
+  size: 256, 184
+  orig: 256, 184
+  offset: 0, 0
+  index: -1
+reset
+  rotate: false
+  xy: 1720, 328
+  size: 145, 184
+  orig: 145, 184
+  offset: 0, 0
+  index: -1
+russian
+  rotate: false
+  xy: 1024, 328
+  size: 256, 184
+  orig: 256, 184
+  offset: 0, 0
+  index: -1
+sample
+  rotate: false
+  xy: 256, 256
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+sample16
+  rotate: false
+  xy: 768, 128
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tile0
+  rotate: false
+  xy: 0, 256
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+tile1
+  rotate: false
+  xy: 512, 256
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+tile2
+  rotate: false
+  xy: 256, 0
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+unknown_language
+  rotate: false
+  xy: 768, 144
+  size: 256, 184
+  orig: 256, 184
+  offset: 0, 0
+  index: -1
+windowed
+  rotate: false
+  xy: 1477, 144
+  size: 184, 184
+  orig: 184, 184
+  offset: 0, 0
+  index: -1
