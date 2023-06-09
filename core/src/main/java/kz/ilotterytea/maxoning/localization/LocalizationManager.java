@@ -73,4 +73,8 @@ public class LocalizationManager {
 
         this.LOADED_LOCALIZATIONS.put(localeId, map);
     }
+
+    public HashMap<String, HashMap<LineId, String>> getLoadedLocalizations() {
+        return LOADED_LOCALIZATIONS;
+    }
 }
