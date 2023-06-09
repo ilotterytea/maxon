@@ -7,6 +7,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import kz.ilotterytea.maxoning.localization.LocalizationManager;
+import kz.ilotterytea.maxoning.screens.SplashScreen;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class MaxoningGame extends Game {
@@ -62,6 +63,6 @@ public class MaxoningGame extends Game {
         settingsPreferences = Gdx.app.getPreferences("settings");
         saveGamePreferences = Gdx.app.getPreferences("savegame");
 
-        setScreen(new FirstScreen());
+        setScreen(new SplashScreen());
     }
 }
