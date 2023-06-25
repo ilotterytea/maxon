@@ -6,6 +6,8 @@ use bevy::{
 };
 use bevy_framepace::FramepacePlugin;
 
+mod assets;
+
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
