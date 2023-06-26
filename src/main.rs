@@ -1,9 +1,11 @@
+use assets::AppAssets;
 use bevy::{
     diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
     prelude::*,
     window::{Window, WindowPlugin},
     DefaultPlugins,
 };
+use bevy_asset_loader::prelude::*;
 use bevy_framepace::FramepacePlugin;
 
 mod assets;
@@ -21,8 +23,26 @@ fn main() {
             }),
             ..default()
         }))
+        // Game states
+        .add_state::<AppState>()
+        // Loading state
+        .add_loading_state(LoadingState::new(AppState::Boot).continue_to_state(AppState::Splash))
+        .add_collection_to_loading_state::<_, AppAssets>(AppState::Boot)
+        // FPS Debug
         .add_plugin(FrameTimeDiagnosticsPlugin)
         .add_plugin(LogDiagnosticsPlugin::default())
+        // Framerate lock
         .add_plugin(FramepacePlugin)
         .run();
+}
+
+#[derive(Clone, Eq, PartialEq, Debug, Hash, Default, States)]
+pub enum AppState {
+    #[default]
+    Boot,
+    Splash,
+    Menu,
+    Game,
+    Pause,
+    Error,
 }
