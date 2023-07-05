@@ -7,5 +7,7 @@ edition = "2021"
 
 [dependencies]
 bevy = "0.10.1"
+bevy-persistent = { version = "0.2.0", features = ["ini"] }
 bevy_asset_loader = { version = "0.16.1", features = ["2d", "3d"] }
 bevy_framepace = "0.12.1"
+serde = { version = "1.0.166", features = ["derive"] }
