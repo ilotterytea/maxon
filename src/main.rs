@@ -5,9 +5,11 @@ use bevy::{
     window::PresentMode,
 };
 use bevy_asset_loader::prelude::*;
+use game::GamePlugin;
 use startup_systems::spawn_2d_camera;
 
 mod assets;
+mod game;
 mod startup_systems;
 
 fn main() {
@@ -27,6 +29,7 @@ fn main() {
         // Loading state
         .add_loading_state(LoadingState::new(AppState::Boot).continue_to_state(AppState::Menu))
         .add_collection_to_loading_state::<_, AppAssets>(AppState::Boot)
+        .add_plugins(GamePlugin)
         // Diagnostics
         .add_plugins((LogDiagnosticsPlugin::default(), FrameTimeDiagnosticsPlugin))
         .run();
