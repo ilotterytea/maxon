@@ -27,7 +27,7 @@ fn main() {
         // Initializing startup systems
         .add_systems(Startup, spawn_2d_camera)
         // Loading state
-        .add_loading_state(LoadingState::new(AppState::Boot).continue_to_state(AppState::Menu))
+        .add_loading_state(LoadingState::new(AppState::Boot).continue_to_state(AppState::Game))
         .add_collection_to_loading_state::<_, AppAssets>(AppState::Boot)
         .add_plugins(GamePlugin)
         // Diagnostics
