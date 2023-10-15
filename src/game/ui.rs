@@ -9,6 +9,9 @@ use super::{
 #[derive(Component)]
 pub struct UiTextMoneyComponent;
 
+#[derive(Component)]
+pub struct UiTextItemCostComponent(pub String);
+
 pub fn generate_ui(
     mut commands: Commands,
     player_data: Res<PlayerData>,
@@ -136,18 +139,21 @@ pub fn generate_ui(
                                             })
                                             // Price
                                             .with_children(|parent| {
-                                                parent.spawn(TextBundle {
-                                                    style: Style {
-                                                        flex_grow: 2.0,
-                                                        width: Val::Percent(100.0),
+                                                parent.spawn((
+                                                    TextBundle {
+                                                        style: Style {
+                                                            flex_grow: 2.0,
+                                                            width: Val::Percent(100.0),
+                                                            ..default()
+                                                        },
+                                                        text: Text::from_section(
+                                                            item.price.to_string(),
+                                                            TextStyle::default(),
+                                                        ),
                                                         ..default()
                                                     },
-                                                    text: Text::from_section(
-                                                        item.price.to_string(),
-                                                        TextStyle::default(),
-                                                    ),
-                                                    ..default()
-                                                });
+                                                    UiTextItemCostComponent(item.id.clone()),
+                                                ));
                                             });
                                     });
                             }
