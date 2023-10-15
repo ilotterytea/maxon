@@ -1,11 +1,20 @@
+use crate::assets::AppAssets;
 use bevy::prelude::*;
 
-use super::player::PlayerData;
+use super::{
+    item::{ItemComponent, Items},
+    player::PlayerData,
+};
 
 #[derive(Component)]
 pub struct UiTextMoneyComponent;
 
-pub fn generate_ui(mut commands: Commands, player_data: Res<PlayerData>) {
+pub fn generate_ui(
+    mut commands: Commands,
+    player_data: Res<PlayerData>,
+    items: Res<Items>,
+    app_assets: Res<AppAssets>,
+) {
     commands
         .spawn(NodeBundle {
             style: Style {
@@ -59,16 +68,90 @@ pub fn generate_ui(mut commands: Commands, player_data: Res<PlayerData>) {
                 })
                 // Shop
                 .with_children(|parent| {
-                    parent.spawn(NodeBundle {
-                        style: Style {
-                            height: Val::Percent(100.0),
-                            padding: UiRect::all(Val::Percent(1.0)),
-                            display: Display::Flex,
-                            flex_direction: FlexDirection::Column,
+                    parent
+                        .spawn(NodeBundle {
+                            style: Style {
+                                height: Val::Percent(100.0),
+                                padding: UiRect::all(Val::Percent(1.0)),
+                                display: Display::Flex,
+                                flex_direction: FlexDirection::Column,
+                                ..default()
+                            },
                             ..default()
-                        },
-                        ..default()
-                    });
+                        })
+                        .with_children(|parent| {
+                            for item in items.0.iter() {
+                                parent
+                                    .spawn((
+                                        ButtonBundle {
+                                            style: Style {
+                                                display: Display::Flex,
+                                                flex_direction: FlexDirection::Row,
+                                                align_items: AlignItems::Center,
+                                                margin: UiRect::all(Val::Px(5.0)),
+                                                ..default()
+                                            },
+                                            background_color: Color::PINK.into(),
+                                            ..default()
+                                        },
+                                        ItemComponent(item.id.clone()),
+                                    ))
+                                    // Icon
+                                    .with_children(|parent| {
+                                        parent.spawn(ImageBundle {
+                                            style: Style {
+                                                max_width: Val::Percent(15.0),
+                                                ..default()
+                                            },
+                                            image: UiImage::new(app_assets.icon.clone()),
+                                            ..default()
+                                        });
+                                    })
+                                    // Information
+                                    .with_children(|parent| {
+                                        parent
+                                            .spawn(NodeBundle {
+                                                style: Style {
+                                                    display: Display::Flex,
+                                                    flex_direction: FlexDirection::Column,
+                                                    flex_grow: 1.0,
+                                                    ..default()
+                                                },
+                                                ..default()
+                                            })
+                                            // Label
+                                            .with_children(|parent| {
+                                                parent.spawn(TextBundle {
+                                                    style: Style {
+                                                        flex_grow: 1.0,
+                                                        width: Val::Percent(100.0),
+                                                        ..default()
+                                                    },
+                                                    text: Text::from_section(
+                                                        item.id.clone(),
+                                                        TextStyle::default(),
+                                                    ),
+                                                    ..default()
+                                                });
+                                            })
+                                            // Price
+                                            .with_children(|parent| {
+                                                parent.spawn(TextBundle {
+                                                    style: Style {
+                                                        flex_grow: 2.0,
+                                                        width: Val::Percent(100.0),
+                                                        ..default()
+                                                    },
+                                                    text: Text::from_section(
+                                                        item.price.to_string(),
+                                                        TextStyle::default(),
+                                                    ),
+                                                    ..default()
+                                                });
+                                            });
+                                    });
+                            }
+                        });
                 })
                 // empty space
                 .with_children(|parent| {

@@ -9,6 +9,9 @@ pub struct Item {
 #[derive(Resource)]
 pub struct Items(pub Vec<Item>);
 
+#[derive(Component)]
+pub struct ItemComponent(pub String);
+
 pub fn initialize_items(mut commands: Commands) {
     let items: Vec<Item> = vec![Item {
         id: "bror".to_string(),
