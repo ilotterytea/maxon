@@ -371,7 +371,9 @@ dependencies = [
  "anyhow",
  "bevy",
  "bevy_asset_loader_derive",
+ "bevy_common_assets",
  "path-slash",
+ "serde",
 ]
 
 [[package]]
@@ -403,6 +405,19 @@ dependencies = [
  "oboe",
  "parking_lot",
  "rodio",
+]
+
+[[package]]
+name = "bevy_common_assets"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a0e5659f20aeaa1703e76d87c62d66f92aaa56e431fbed71bb38345b576aa6f0"
+dependencies = [
+ "anyhow",
+ "bevy",
+ "ron",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -2115,6 +2130,8 @@ version = "0.1.0"
 dependencies = [
  "bevy",
  "bevy_asset_loader",
+ "bevy_common_assets",
+ "serde",
 ]
 
 [[package]]
@@ -2786,18 +2803,18 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 
 [[package]]
 name = "serde"
-version = "1.0.188"
+version = "1.0.189"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cf9e0fcba69a370eed61bcf2b728575f726b50b55cba78064753d708ddc7549e"
+checksum = "8e422a44e74ad4001bdc8eede9a4570ab52f71190e9c076d14369f38b9200537"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.188"
+version = "1.0.189"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4eca7ac642d82aa35b60049a6eccb4be6be75e599bd2e9adb5f875a737654af2"
+checksum = "1e48d1f918009ce3145511378cf68d613e3b3d9137d67272562080d68a2b32d5"
 dependencies = [
  "proc-macro2",
  "quote",
