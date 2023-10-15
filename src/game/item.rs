@@ -5,7 +5,8 @@ use super::player::PlayerData;
 pub struct Item {
     pub id: String,
     pub price: i128,
-    pub multiplier: f32,
+    pub init_price: i128,
+    pub multiplier: i128,
 }
 
 #[derive(Resource)]
