@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use bevy::prelude::*;
 
 use crate::assets::AppAssets;
@@ -5,11 +7,17 @@ use crate::assets::AppAssets;
 #[derive(Resource)]
 pub struct PlayerData {
     pub money: i128,
+    pub multiplier: i128,
+    pub purchased_items: HashMap<String, i32>,
 }
 
 impl Default for PlayerData {
     fn default() -> Self {
-        Self { money: 0 }
+        Self {
+            money: 0,
+            multiplier: 1,
+            purchased_items: HashMap::new(),
+        }
     }
 }
 
