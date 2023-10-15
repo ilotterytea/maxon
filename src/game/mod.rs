@@ -2,7 +2,11 @@ use bevy::prelude::*;
 
 use crate::AppState;
 
-use self::{item::initialize_items, player::*, ui::*};
+use self::{
+    item::{check_item_for_purchase, initialize_items, purchase_item},
+    player::*,
+    ui::*,
+};
 
 mod item;
 mod player;
@@ -21,7 +25,7 @@ impl Plugin for GamePlugin {
                     click_on_player,
                     update_ui,
                     purchase_item,
-                    check_item_purchaseable,
+                    check_item_for_purchase,
                 )
                     .run_if(in_state(AppState::Game)),
             );
