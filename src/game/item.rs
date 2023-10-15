@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use super::player::PlayerData;
+use super::{player::PlayerData, ui::UiTextItemCostComponent};
 
 pub struct Item {
     pub id: String,
@@ -42,14 +42,47 @@ pub fn check_item_for_purchase(
 }
 
 pub fn purchase_item(
+    mut player_data: ResMut<PlayerData>,
+    mut items: ResMut<Items>,
     button_query: Query<
         (&Interaction, &ItemComponent),
         (Changed<Interaction>, With<ItemComponent>),
     >,
+    mut item_cost_query: Query<
+        (&mut Text, &UiTextItemCostComponent),
+        With<UiTextItemCostComponent>,
+    >,
 ) {
     for (i, c) in button_query.iter() {
         match *i {
-            Interaction::Pressed => println!("click! {}", c.0),
+            Interaction::Pressed => {
+                println!("click! {}", c.0);
+
+                if let Some(item) = items.0.iter_mut().find(|x| x.id.eq(&c.0)) {
+                    if player_data.money < item.price {
+                        continue;
+                    }
+
+                    player_data.money -= item.price;
+                    player_data.multiplier += item.multiplier;
+
+                    let amount = if let Some(v) = player_data.purchased_items.get(&c.0) {
+                        v + 1
+                    } else {
+                        1
+                    };
+
+                    player_data.purchased_items.insert(c.0.clone(), amount);
+
+                    item.price = (item.init_price as f32 * 1.15_f32.powi(amount)).round() as i128;
+
+                    if let Some((mut text, _)) =
+                        item_cost_query.iter_mut().find(|x| x.1 .0.eq(&c.0))
+                    {
+                        text.sections[0].value = item.price.to_string();
+                    }
+                }
+            }
             _ => {}
         }
     }
