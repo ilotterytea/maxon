@@ -17,7 +17,13 @@ impl Plugin for GamePlugin {
             .add_systems(OnEnter(AppState::Game), (generate_player, generate_ui))
             .add_systems(
                 Update,
-                (click_on_player, update_ui).run_if(in_state(AppState::Game)),
+                (
+                    click_on_player,
+                    update_ui,
+                    purchase_item,
+                    check_item_purchaseable,
+                )
+                    .run_if(in_state(AppState::Game)),
             );
     }
 }
