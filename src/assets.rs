@@ -9,6 +9,9 @@ pub struct AppAssets {
     #[asset(path = "sprites/sheet/loadingCircle.png")]
     pub cat_maxon: Handle<TextureAtlas>,
 
+    #[asset(path = "icon.png")]
+    pub icon: Handle<Image>,
+
     #[asset(path = "i18n/en_us.locale.json")]
     pub locale_english: Handle<Localization>,
 }
