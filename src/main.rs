@@ -5,23 +5,29 @@ use bevy::{
     window::PresentMode,
 };
 use bevy_asset_loader::prelude::*;
+use bevy_common_assets::json::JsonAssetPlugin;
 use game::GamePlugin;
+use localization::Localization;
 use startup_systems::spawn_2d_camera;
 
 mod assets;
 mod game;
+mod localization;
 mod startup_systems;
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins.set(WindowPlugin {
-            primary_window: Some(Window {
-                title: "Maxon Petting Simulator".into(),
-                present_mode: PresentMode::AutoVsync,
+        .add_plugins((
+            DefaultPlugins.set(WindowPlugin {
+                primary_window: Some(Window {
+                    title: "Maxon Petting Simulator".into(),
+                    present_mode: PresentMode::AutoVsync,
+                    ..default()
+                }),
                 ..default()
             }),
-            ..default()
-        }))
+            JsonAssetPlugin::<Localization>::new(&["locale.json"]),
+        ))
         // App states
         .add_state::<AppState>()
         // Initializing startup systems
