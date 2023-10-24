@@ -14,6 +14,7 @@ mod assets;
 mod game;
 mod localization;
 mod startup_systems;
+mod style;
 
 fn main() {
     App::new()
