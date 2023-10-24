@@ -1,6 +1,17 @@
 use bevy::prelude::*;
 
-use super::{player::PlayerData, ui::UiTextItemCostComponent};
+use crate::style::{
+    ITEM_BG_ACTIVE_COLOR, ITEM_BG_INACTIVE_COLOR, ITEM_DESC_ACTIVE_COLOR, ITEM_DESC_INACTIVE_COLOR,
+    ITEM_HEADER_ACTIVE_COLOR, ITEM_HEADER_INACTIVE_COLOR,
+};
+
+use super::{
+    player::PlayerData,
+    ui::{
+        UiTextItemCostComponent, UiTextItemHeaderComponent, UiTextItemIconComponent,
+        UiTextMoneyComponent,
+    },
+};
 
 pub struct Item {
     pub id: String,
@@ -26,16 +37,40 @@ pub fn initialize_items(mut commands: Commands) {
 }
 
 pub fn check_item_for_purchase(
-    mut button_query: Query<(&mut BackgroundColor, &ItemComponent), With<ItemComponent>>,
+    mut set: ParamSet<(
+        Query<(&mut BackgroundColor, &ItemComponent), With<ItemComponent>>,
+        Query<(&mut Text, &UiTextItemHeaderComponent), With<UiTextItemHeaderComponent>>,
+        Query<(&mut Text, &UiTextItemCostComponent), With<UiTextItemCostComponent>>,
+    )>,
     player_data: Res<PlayerData>,
     items: Res<Items>,
 ) {
-    for (mut bg, c) in button_query.iter_mut() {
+    for (mut bg, c) in set.p0().iter_mut() {
         if let Some(item) = items.0.iter().find(|x| x.id.eq(&c.0)) {
             if item.price > player_data.money {
-                *bg = Color::DARK_GRAY.into();
+                *bg = ITEM_BG_INACTIVE_COLOR.into();
             } else {
-                *bg = Color::ORANGE.into();
+                *bg = ITEM_BG_ACTIVE_COLOR.into();
+            }
+        }
+    }
+
+    for (mut text, c) in set.p1().iter_mut() {
+        if let Some(item) = items.0.iter().find(|x| x.id.eq(&c.0)) {
+            if item.price > player_data.money {
+                text.sections[0].style.color = ITEM_HEADER_INACTIVE_COLOR;
+            } else {
+                text.sections[0].style.color = ITEM_HEADER_ACTIVE_COLOR;
+            }
+        }
+    }
+
+    for (mut text, c) in set.p2().iter_mut() {
+        if let Some(item) = items.0.iter().find(|x| x.id.eq(&c.0)) {
+            if item.price > player_data.money {
+                text.sections[0].style.color = ITEM_DESC_INACTIVE_COLOR;
+            } else {
+                text.sections[0].style.color = ITEM_DESC_ACTIVE_COLOR;
             }
         }
     }
