@@ -5,6 +5,9 @@ use crate::localization::Localization;
 
 #[derive(AssetCollection, Resource)]
 pub struct AppAssets {
+    #[asset(path = "fonts/font_text.ttf")]
+    pub font_text: Handle<Font>,
+
     #[asset(texture_atlas(tile_size_x = 112., tile_size_y = 112., columns = 10, rows = 4))]
     #[asset(path = "sprites/sheet/loadingCircle.png")]
     pub cat_maxon: Handle<TextureAtlas>,
