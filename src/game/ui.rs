@@ -1,4 +1,8 @@
-use crate::assets::AppAssets;
+use crate::{
+    assets::AppAssets,
+    localization::{LineId, Localization},
+    style::{get_item_header_text_style, ITEM_BG_ACTIVE_COLOR, ITEM_BORDER_COLOR},
+};
 use bevy::prelude::*;
 
 use super::{
@@ -12,12 +16,21 @@ pub struct UiTextMoneyComponent;
 #[derive(Component)]
 pub struct UiTextItemCostComponent(pub String);
 
+#[derive(Component)]
+pub struct UiTextItemHeaderComponent(pub String);
+
+#[derive(Component)]
+pub struct UiTextItemIconComponent(pub String);
+
 pub fn generate_ui(
     mut commands: Commands,
     player_data: Res<PlayerData>,
     items: Res<Items>,
     app_assets: Res<AppAssets>,
+    locales: Res<Assets<Localization>>,
 ) {
+    let locale = locales.get(&app_assets.locale_english).unwrap();
+
     commands
         .spawn(NodeBundle {
             style: Style {
@@ -75,11 +88,13 @@ pub fn generate_ui(
                         .spawn(NodeBundle {
                             style: Style {
                                 height: Val::Percent(100.0),
-                                padding: UiRect::all(Val::Percent(1.0)),
+                                //padding: UiRect::all(Val::Percent(1.0)),
                                 display: Display::Flex,
+                                flex_grow: 1.0,
                                 flex_direction: FlexDirection::Column,
                                 ..default()
                             },
+                            background_color: Color::PINK.into(),
                             ..default()
                         })
                         .with_children(|parent| {
@@ -91,24 +106,31 @@ pub fn generate_ui(
                                                 display: Display::Flex,
                                                 flex_direction: FlexDirection::Row,
                                                 align_items: AlignItems::Center,
-                                                margin: UiRect::all(Val::Px(5.0)),
+                                                width: Val::Percent(100.0),
+                                                min_height: Val::Percent(3.0),
+                                                //margin: UiRect::all(Val::Px(5.0)),
+                                                border: UiRect::bottom(Val::Percent(1.5)),
                                                 ..default()
                                             },
-                                            background_color: Color::PINK.into(),
+                                            border_color: ITEM_BORDER_COLOR.into(),
+                                            background_color: ITEM_BG_ACTIVE_COLOR.into(),
                                             ..default()
                                         },
                                         ItemComponent(item.id.clone()),
                                     ))
                                     // Icon
                                     .with_children(|parent| {
-                                        parent.spawn(ImageBundle {
-                                            style: Style {
-                                                max_width: Val::Percent(15.0),
+                                        parent.spawn((
+                                            ImageBundle {
+                                                style: Style {
+                                                    max_width: Val::Percent(15.0),
+                                                    ..default()
+                                                },
+                                                image: UiImage::new(app_assets.icon.clone()),
                                                 ..default()
                                             },
-                                            image: UiImage::new(app_assets.icon.clone()),
-                                            ..default()
-                                        });
+                                            UiTextItemIconComponent(item.id.clone()),
+                                        ));
                                     })
                                     // Information
                                     .with_children(|parent| {
@@ -124,18 +146,26 @@ pub fn generate_ui(
                                             })
                                             // Label
                                             .with_children(|parent| {
-                                                parent.spawn(TextBundle {
-                                                    style: Style {
-                                                        flex_grow: 1.0,
-                                                        width: Val::Percent(100.0),
+                                                parent.spawn((
+                                                    TextBundle {
+                                                        style: Style {
+                                                            flex_grow: 1.0,
+                                                            width: Val::Percent(100.0),
+                                                            margin: UiRect::all(Val::Percent(1.0)),
+                                                            ..default()
+                                                        },
+                                                        text: Text::from_section(
+                                                            locale
+                                                                .get_literal_line(LineId::ItemBror)
+                                                                .unwrap(),
+                                                            get_item_header_text_style(
+                                                                app_assets.font_text.clone(),
+                                                            ),
+                                                        ),
                                                         ..default()
                                                     },
-                                                    text: Text::from_section(
-                                                        item.id.clone(),
-                                                        TextStyle::default(),
-                                                    ),
-                                                    ..default()
-                                                });
+                                                    UiTextItemHeaderComponent(item.id.clone()),
+                                                ));
                                             })
                                             // Price
                                             .with_children(|parent| {
@@ -144,11 +174,14 @@ pub fn generate_ui(
                                                         style: Style {
                                                             flex_grow: 2.0,
                                                             width: Val::Percent(100.0),
+                                                            margin: UiRect::all(Val::Percent(1.0)),
                                                             ..default()
                                                         },
                                                         text: Text::from_section(
                                                             item.price.to_string(),
-                                                            TextStyle::default(),
+                                                            get_item_header_text_style(
+                                                                app_assets.font_text.clone(),
+                                                            ),
                                                         ),
                                                         ..default()
                                                     },
@@ -164,7 +197,7 @@ pub fn generate_ui(
                     parent.spawn(NodeBundle {
                         style: Style {
                             height: Val::Percent(100.0),
-                            flex_grow: 1.0,
+                            flex_grow: 4.0,
                             ..default()
                         },
                         ..default()
