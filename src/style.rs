@@ -25,3 +25,11 @@ pub fn get_item_desc_text_style(font: Handle<Font>) -> TextStyle {
         color: ITEM_DESC_ACTIVE_COLOR,
     }
 }
+
+pub fn get_category_header_text_style(font: Handle<Font>) -> TextStyle {
+    TextStyle {
+        font,
+        font_size: 32.0,
+        color: ITEM_HEADER_ACTIVE_COLOR,
+    }
+}
