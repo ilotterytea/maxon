@@ -1,7 +1,10 @@
 use crate::{
     assets::AppAssets,
     localization::{LineId, Localization},
-    style::{get_item_header_text_style, ITEM_BG_ACTIVE_COLOR, ITEM_BORDER_COLOR},
+    style::{
+        get_category_header_text_style, get_item_header_text_style, ITEM_BG_ACTIVE_COLOR,
+        ITEM_BORDER_COLOR,
+    },
 };
 use bevy::prelude::*;
 
@@ -97,6 +100,29 @@ pub fn generate_ui(
                             background_color: Color::PINK.into(),
                             ..default()
                         })
+                        // Shop Header
+                        .with_children(|parent| {
+                            parent.spawn(
+                                TextBundle {
+                                    style: Style {
+                                        align_self: AlignSelf::Center,
+                                        margin: UiRect::all(Val::Percent(1.0)),
+                                        ..default()
+                                    },
+                                    text: Text::from_section(
+                                        locale
+                                            .get_literal_line(LineId::CategoryShopHeader)
+                                            .unwrap(),
+                                        get_category_header_text_style(
+                                            app_assets.font_text.clone(),
+                                        ),
+                                    ),
+                                    ..default()
+                                }
+                                .with_text_alignment(TextAlignment::Center),
+                            );
+                        })
+                        // Shop Items
                         .with_children(|parent| {
                             for item in items.0.iter() {
                                 parent
