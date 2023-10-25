@@ -7,6 +7,7 @@ use serde::Deserialize;
 
 #[derive(Deserialize, PartialEq, Eq, Hash)]
 pub enum LineId {
+    CategoryShopHeader,
     ItemBror,
 }
 
