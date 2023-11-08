@@ -13,6 +13,7 @@ use startup_systems::spawn_2d_camera;
 mod assets;
 mod game;
 mod localization;
+mod settings;
 mod startup_systems;
 mod style;
 

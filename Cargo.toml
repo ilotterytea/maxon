@@ -7,6 +7,8 @@ edition = "2021"
 
 [dependencies]
 bevy = "0.11.3"
+bevy-persistent = { version = "0.3.4", features = ["json"] }
 bevy_asset_loader = { version = "0.17.0", features = ["2d", "3d", "standard_dynamic_assets"] }
 bevy_common_assets = { version = "0.7.0", features = ["json"] }
+dirs = "5.0.1"
 serde = { version = "1.0.189", features = ["derive"] }
