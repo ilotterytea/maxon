@@ -10,6 +10,7 @@ use game::GamePlugin;
 use localization::Localization;
 use startup_systems::spawn_2d_camera;
 
+mod animation;
 mod assets;
 mod game;
 mod localization;
