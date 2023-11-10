@@ -1,14 +1,19 @@
 use bevy::prelude::*;
 
-use crate::style::{
-    ITEM_BG_ACTIVE_COLOR, ITEM_BG_INACTIVE_COLOR, ITEM_DESC_ACTIVE_COLOR, ITEM_DESC_INACTIVE_COLOR,
-    ITEM_HEADER_ACTIVE_COLOR, ITEM_HEADER_INACTIVE_COLOR,
+use crate::{
+    assets::AppAssets,
+    game::building::{Building, BuildingField},
+    style::{
+        get_item_desc_text_style, ITEM_BG_ACTIVE_COLOR, ITEM_BG_INACTIVE_COLOR,
+        ITEM_DESC_ACTIVE_COLOR, ITEM_DESC_INACTIVE_COLOR, ITEM_HEADER_ACTIVE_COLOR,
+        ITEM_HEADER_INACTIVE_COLOR,
+    },
 };
 
 use super::{
     player::PlayerData,
     ui::{
-        UiTextItemCostComponent, UiTextItemHeaderComponent, UiTextItemIconComponent,
+        UiInventory, UiTextItemCostComponent, UiTextItemHeaderComponent, UiTextItemIconComponent,
         UiTextMoneyComponent,
     },
 };
@@ -87,38 +92,104 @@ pub fn purchase_item(
         (&mut Text, &UiTextItemCostComponent),
         With<UiTextItemCostComponent>,
     >,
+    mut commands: Commands,
+    inv_query: Query<Entity, With<UiInventory>>,
+    app_assets: Res<AppAssets>,
 ) {
-    for (i, c) in button_query.iter() {
-        match *i {
-            Interaction::Pressed => {
-                println!("click! {}", c.0);
+    if let Ok(e) = inv_query.get_single() {
+        for (i, c) in button_query.iter() {
+            match *i {
+                Interaction::Pressed => {
+                    println!("click! {}", c.0);
 
-                if let Some(item) = items.0.iter_mut().find(|x| x.id.eq(&c.0)) {
-                    if player_data.money < item.price {
-                        continue;
-                    }
+                    if let Some(item) = items.0.iter_mut().find(|x| x.id.eq(&c.0)) {
+                        if player_data.money < item.price {
+                            continue;
+                        }
 
-                    player_data.money -= item.price;
-                    player_data.multiplier += item.multiplier;
+                        player_data.money -= item.price;
+                        player_data.multiplier += item.multiplier;
 
-                    let amount = if let Some(v) = player_data.purchased_items.get(&c.0) {
-                        v + 1
-                    } else {
-                        1
-                    };
+                        let amount = if let Some(v) = player_data.purchased_items.get(&c.0) {
+                            v + 1
+                        } else {
+                            1
+                        };
 
-                    player_data.purchased_items.insert(c.0.clone(), amount);
+                        player_data.purchased_items.insert(c.0.clone(), amount);
 
-                    item.price = (item.init_price as f32 * 1.15_f32.powi(amount)).round() as i128;
+                        item.price =
+                            (item.init_price as f32 * 1.15_f32.powi(amount)).round() as i128;
 
-                    if let Some((mut text, _)) =
-                        item_cost_query.iter_mut().find(|x| x.1 .0.eq(&c.0))
-                    {
-                        text.sections[0].value = item.price.to_string();
+                        if let Some((mut text, _)) =
+                            item_cost_query.iter_mut().find(|x| x.1 .0.eq(&c.0))
+                        {
+                            text.sections[0].value = item.price.to_string();
+                        }
+
+                        // Create a new building in inventory
+                        if amount == 1 {
+                            if let Ok(building) = Building::from_str(c.0.as_str()) {
+                                let handles = building.get_image_handles(&app_assets);
+
+                                let eid = commands
+                                    .spawn((
+                                        NodeBundle {
+                                            style: Style {
+                                                display: Display::Flex,
+                                                flex_direction: FlexDirection::Column,
+                                                width: Val::Percent(100.0),
+                                                height: Val::Percent(15.0),
+                                                border: UiRect::all(Val::Px(2.0)),
+                                                ..default()
+                                            },
+                                            background_color: Color::GRAY.into(),
+                                            border_color: Color::DARK_GRAY.into(),
+                                            ..default()
+                                        },
+                                        building.clone(),
+                                    ))
+                                    // Control panel
+                                    .with_children(|parent| {
+                                        parent.spawn(
+                                            TextBundle::from_section(
+                                                "kek",
+                                                get_item_desc_text_style(
+                                                    app_assets.font_text.clone(),
+                                                ),
+                                            )
+                                            .with_style(Style {
+                                                width: Val::Percent(100.0),
+                                                flex_grow: 1.0,
+                                                ..default()
+                                            }),
+                                        );
+                                    })
+                                    // Field
+                                    .with_children(|parent| {
+                                        parent.spawn((
+                                            ImageBundle {
+                                                image: UiImage::new(handles.0),
+                                                style: Style {
+                                                    width: Val::Percent(100.0),
+                                                    height: Val::Percent(100.0),
+                                                    flex_grow: 2.0,
+                                                    ..default()
+                                                },
+                                                ..default()
+                                            },
+                                            BuildingField(building),
+                                        ));
+                                    })
+                                    .id();
+
+                                commands.entity(e).add_child(eid);
+                            }
+                        }
                     }
                 }
+                _ => {}
             }
-            _ => {}
         }
     }
 }
