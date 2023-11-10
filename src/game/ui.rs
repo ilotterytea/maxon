@@ -33,10 +33,8 @@ pub fn generate_ui(
     player_data: Res<PlayerData>,
     items: Res<Items>,
     app_assets: Res<AppAssets>,
-    locales: Res<Assets<Localization>>,
+    locale: Res<Localization>,
 ) {
-    let locale = locales.get(&app_assets.locale_english).unwrap();
-
     commands
         .spawn(NodeBundle {
             style: Style {

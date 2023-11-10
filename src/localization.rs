@@ -3,15 +3,18 @@ use bevy::{
     reflect::{TypePath, TypeUuid},
     utils::HashMap,
 };
+use bevy_persistent::Persistent;
 use serde::Deserialize;
 
-#[derive(Deserialize, PartialEq, Eq, Hash)]
+use crate::{assets::AppAssets, settings::Settings};
+
+#[derive(Deserialize, PartialEq, Eq, Hash, Clone)]
 pub enum LineId {
     CategoryShopHeader,
     ItemBror,
 }
 
-#[derive(Deserialize, Resource, TypePath, TypeUuid)]
+#[derive(Deserialize, Resource, TypePath, TypeUuid, Clone)]
 #[uuid = "413be529-bfeb-41b3-9db0-4b8b380a2c46"]
 pub struct Localization(pub HashMap<LineId, String>);
 
@@ -40,5 +43,20 @@ impl Localization {
             ));
         }
         None
+    }
+}
+
+pub fn init_localization(
+    mut commands: Commands,
+    settings: Res<Persistent<Settings>>,
+    app_assets: Res<AppAssets>,
+    string_assets: Res<Assets<Localization>>,
+) {
+    let locale = match settings.language.as_str() {
+        "english" | _ => &app_assets.locale_english,
+    };
+
+    if let Some(asset) = string_assets.get(locale) {
+        commands.insert_resource(asset.clone());
     }
 }
