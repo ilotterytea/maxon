@@ -2,8 +2,8 @@ use crate::{
     assets::AppAssets,
     localization::{LineId, Localization},
     style::{
-        get_category_header_text_style, get_item_header_text_style, ITEM_BG_ACTIVE_COLOR,
-        ITEM_BORDER_COLOR,
+        get_category_header_text_style, get_item_desc_text_style, get_item_header_text_style,
+        ITEM_BG_ACTIVE_COLOR, ITEM_BORDER_COLOR,
     },
 };
 use bevy::prelude::*;
@@ -206,7 +206,7 @@ pub fn generate_ui(
                                                         },
                                                         text: Text::from_section(
                                                             item.price.to_string(),
-                                                            get_item_header_text_style(
+                                                            get_item_desc_text_style(
                                                                 app_assets.font_text.clone(),
                                                             ),
                                                         ),
