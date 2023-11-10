@@ -9,6 +9,7 @@ use bevy_common_assets::json::JsonAssetPlugin;
 use game::GamePlugin;
 use localization::Localization;
 use menu::MenuPlugin;
+use settings::init_settings;
 use startup_systems::spawn_2d_camera;
 
 mod animation;
@@ -36,7 +37,7 @@ fn main() {
         // App states
         .add_state::<AppState>()
         // Initializing startup systems
-        .add_systems(Startup, spawn_2d_camera)
+        .add_systems(Startup, (spawn_2d_camera, init_settings))
         // Loading state
         .add_loading_state(LoadingState::new(AppState::Boot).continue_to_state(AppState::Menu))
         .add_collection_to_loading_state::<_, AppAssets>(AppState::Boot)
