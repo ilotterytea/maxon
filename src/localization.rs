@@ -11,6 +11,7 @@ use crate::{assets::AppAssets, settings::Settings};
 #[derive(Deserialize, PartialEq, Eq, Hash, Clone)]
 pub enum LineId {
     CategoryShopHeader,
+    CategoryInventoryHeader,
     ItemBror,
 }
 
