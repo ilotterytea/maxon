@@ -8,12 +8,14 @@ use bevy_asset_loader::prelude::*;
 use bevy_common_assets::json::JsonAssetPlugin;
 use game::GamePlugin;
 use localization::Localization;
+use menu::MenuPlugin;
 use startup_systems::spawn_2d_camera;
 
 mod animation;
 mod assets;
 mod game;
 mod localization;
+mod menu;
 mod settings;
 mod startup_systems;
 mod style;
@@ -36,9 +38,9 @@ fn main() {
         // Initializing startup systems
         .add_systems(Startup, spawn_2d_camera)
         // Loading state
-        .add_loading_state(LoadingState::new(AppState::Boot).continue_to_state(AppState::Game))
+        .add_loading_state(LoadingState::new(AppState::Boot).continue_to_state(AppState::Menu))
         .add_collection_to_loading_state::<_, AppAssets>(AppState::Boot)
-        .add_plugins(GamePlugin)
+        .add_plugins((GamePlugin, MenuPlugin))
         // Diagnostics
         .add_plugins((LogDiagnosticsPlugin::default(), FrameTimeDiagnosticsPlugin))
         .run();
