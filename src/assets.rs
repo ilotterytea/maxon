@@ -21,4 +21,7 @@ pub struct AppAssets {
     // - - - B U I L D I N G S - - -
     #[asset(path = "sprites/buildings/bedroom_background.png")]
     pub building_bedroom_background: Handle<Image>,
+
+    #[asset(path = "sprites/buildings/kitchen_background.png")]
+    pub building_kitchen_background: Handle<Image>,
 }
