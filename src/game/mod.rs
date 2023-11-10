@@ -3,11 +3,13 @@ use bevy::prelude::*;
 use crate::AppState;
 
 use self::{
+    building::update_existing_buildings,
     item::{check_item_for_purchase, initialize_items, purchase_item},
     player::*,
     ui::*,
 };
 
+mod building;
 mod item;
 mod player;
 mod ui;
@@ -26,6 +28,7 @@ impl Plugin for GamePlugin {
                     update_ui,
                     purchase_item,
                     check_item_for_purchase,
+                    update_existing_buildings,
                 )
                     .run_if(in_state(AppState::Game)),
             );
