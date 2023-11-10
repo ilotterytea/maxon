@@ -25,6 +25,9 @@ pub struct UiTextItemHeaderComponent(pub String);
 #[derive(Component)]
 pub struct UiTextItemIconComponent(pub String);
 
+#[derive(Component)]
+pub struct UiInventory;
+
 pub fn generate_ui(
     mut commands: Commands,
     player_data: Res<PlayerData>,
@@ -228,6 +231,61 @@ pub fn generate_ui(
                         },
                         ..default()
                     });
+                })
+                // Inventory
+                .with_children(|parent| {
+                    parent
+                        .spawn(NodeBundle {
+                            style: Style {
+                                height: Val::Percent(100.0),
+                                max_height: Val::Percent(100.0),
+                                //padding: UiRect::all(Val::Percent(1.0)),
+                                display: Display::Flex,
+                                flex_grow: 1.0,
+                                flex_direction: FlexDirection::Column,
+                                ..default()
+                            },
+                            background_color: Color::PINK.into(),
+                            ..default()
+                        })
+                        // Inventory header
+                        .with_children(|parent| {
+                            parent.spawn(
+                                TextBundle {
+                                    style: Style {
+                                        align_self: AlignSelf::Center,
+                                        margin: UiRect::all(Val::Percent(1.0)),
+                                        ..default()
+                                    },
+                                    text: Text::from_section(
+                                        locale
+                                            .get_literal_line(LineId::CategoryInventoryHeader)
+                                            .unwrap(),
+                                        get_category_header_text_style(
+                                            app_assets.font_text.clone(),
+                                        ),
+                                    ),
+                                    ..default()
+                                }
+                                .with_text_alignment(TextAlignment::Center),
+                            );
+                        })
+                        // Inventory items
+                        .with_children(|parent| {
+                            parent.spawn((
+                                NodeBundle {
+                                    style: Style {
+                                        display: Display::Flex,
+                                        flex_direction: FlexDirection::Column,
+                                        flex_grow: 2.0,
+                                        ..default()
+                                    },
+                                    background_color: Color::RED.into(),
+                                    ..default()
+                                },
+                                UiInventory,
+                            ));
+                        });
                 });
         });
 }
