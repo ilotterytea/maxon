@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use crate::{
     assets::AppAssets,
+    constants::ITEM_PRICE_MULTIPLIER,
     game::building::{Building, BuildingField},
     style::{
         get_item_desc_text_style, ITEM_BG_ACTIVE_COLOR, ITEM_BG_INACTIVE_COLOR,
@@ -21,7 +22,6 @@ use super::{
 pub struct Item {
     pub id: String,
     pub price: i128,
-    pub init_price: i128,
     pub multiplier: i128,
 }
 
@@ -118,8 +118,9 @@ pub fn purchase_item(
 
                         player_data.purchased_items.insert(c.0.clone(), amount);
 
+                        let init_price = item.price as f32 / ITEM_PRICE_MULTIPLIER.powi(amount - 1);
                         item.price =
-                            (item.init_price as f32 * 1.15_f32.powi(amount)).round() as i128;
+                            (init_price * ITEM_PRICE_MULTIPLIER.powi(amount)).round() as i128;
 
                         if let Some((mut text, _)) =
                             item_cost_query.iter_mut().find(|x| x.1 .0.eq(&c.0))
