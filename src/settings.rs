@@ -2,6 +2,8 @@ use bevy::prelude::{Commands, Resource};
 use bevy_persistent::{Persistent, StorageFormat};
 use serde::{Deserialize, Serialize};
 
+use crate::constants::{APP_DEVELOPER, APP_NAME};
+
 #[derive(Resource, Serialize, Deserialize)]
 pub struct Settings {
     pub is_fullscreen: bool,
@@ -22,8 +24,8 @@ impl Default for Settings {
 pub fn init_settings(mut commands: Commands) {
     let path = dirs::preference_dir()
         .unwrap()
-        .join("ilotterytea")
-        .join("MaxonPettingSimulator");
+        .join(APP_DEVELOPER)
+        .join(APP_NAME);
 
     commands.insert_resource(
         Persistent::<Settings>::builder()
