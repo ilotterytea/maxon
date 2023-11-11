@@ -14,6 +14,7 @@ use startup_systems::spawn_2d_camera;
 
 mod animation;
 mod assets;
+mod constants;
 mod game;
 mod localization;
 mod menu;
