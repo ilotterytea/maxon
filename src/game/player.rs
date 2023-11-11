@@ -1,10 +1,15 @@
 use std::collections::HashMap;
 
 use bevy::prelude::*;
+use bevy_persistent::{Persistent, StorageFormat};
+use serde::{Deserialize, Serialize};
 
-use crate::assets::AppAssets;
+use crate::{
+    assets::AppAssets,
+    constants::{APP_DEVELOPER, APP_NAME},
+};
 
-#[derive(Resource)]
+#[derive(Resource, Serialize, Deserialize)]
 pub struct PlayerData {
     pub money: i128,
     pub multiplier: i128,
@@ -19,6 +24,20 @@ impl Default for PlayerData {
             purchased_items: HashMap::new(),
         }
     }
+}
+
+pub fn init_player_data(mut commands: Commands) {
+    let path = dirs::data_dir().unwrap().join(APP_DEVELOPER).join(APP_NAME);
+
+    commands.insert_resource(
+        Persistent::<PlayerData>::builder()
+            .name("PlayerData")
+            .format(StorageFormat::Json)
+            .path(path.join("savegame.maxon"))
+            .default(PlayerData::default())
+            .build()
+            .expect("Failed to build player data"),
+    );
 }
 
 #[derive(Component)]

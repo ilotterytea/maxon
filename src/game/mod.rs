@@ -18,8 +18,7 @@ pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(PlayerData::default())
-            .add_systems(Startup, initialize_items)
+        app.add_systems(Startup, (initialize_items, init_player_data))
             .add_systems(OnEnter(AppState::Game), (generate_player, generate_ui))
             .add_systems(
                 Update,
