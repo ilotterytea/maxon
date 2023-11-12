@@ -15,7 +15,7 @@ pub enum LineId {
     ItemBror,
 }
 
-#[derive(Deserialize, Resource, TypePath, TypeUuid, Clone)]
+#[derive(Deserialize, Resource, TypePath, TypeUuid, Clone, Asset)]
 #[uuid = "413be529-bfeb-41b3-9db0-4b8b380a2c46"]
 pub struct Localization(pub HashMap<LineId, String>);
 
