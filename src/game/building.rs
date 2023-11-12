@@ -78,18 +78,23 @@ pub fn update_existing_buildings(
 ) {
     for (be, b, c, t) in building_query.iter() {
         let bid = b.0.to_string();
-        // Clearing children
-        commands.entity(be).clear_children();
-
-        if c.is_some() {
-            let c = c.unwrap();
-
-            for child in c {
-                commands.entity(*child).despawn_recursive();
-            }
-        }
 
         if let Some(count) = player_data.purchased_items.get(&bid) {
+            // Clearing children
+            if c.is_some() {
+                let c = c.unwrap();
+
+                if c.len() as i32 == *count {
+                    continue;
+                }
+
+                commands.entity(be).clear_children();
+
+                for child in c {
+                    commands.entity(*child).despawn_recursive();
+                }
+            }
+
             // Identifying child image
             let handles = b.0.get_image_handles(&app_assets);
             let background = image_server.get(&handles.0).unwrap();
