@@ -22,8 +22,8 @@ use super::{
 
 pub struct Item {
     pub id: String,
-    pub price: i128,
-    pub multiplier: i128,
+    pub price: f64,
+    pub multiplier: f64,
 }
 
 #[derive(Resource)]
@@ -122,9 +122,8 @@ pub fn purchase_item(
                             })
                             .expect("Failed to update player data");
 
-                        let init_price = item.price as f32 / ITEM_PRICE_MULTIPLIER.powi(amount - 1);
-                        item.price =
-                            (init_price * ITEM_PRICE_MULTIPLIER.powi(amount)).round() as i128;
+                        let init_price = item.price as f64 / ITEM_PRICE_MULTIPLIER.powi(amount - 1);
+                        item.price = (init_price * ITEM_PRICE_MULTIPLIER.powi(amount)).round();
 
                         if let Some((mut text, _)) =
                             item_cost_query.iter_mut().find(|x| x.1 .0.eq(&c.0))

@@ -11,16 +11,16 @@ use crate::{
 
 #[derive(Resource, Serialize, Deserialize)]
 pub struct PlayerData {
-    pub money: i128,
-    pub multiplier: i128,
+    pub money: f64,
+    pub multiplier: f64,
     pub purchased_items: HashMap<String, i32>,
 }
 
 impl Default for PlayerData {
     fn default() -> Self {
         Self {
-            money: 0,
-            multiplier: 1,
+            money: 0.0,
+            multiplier: 1.0,
             purchased_items: HashMap::new(),
         }
     }
@@ -91,7 +91,7 @@ pub fn click_on_player(
 
                 player_data
                     .update(|data| {
-                        data.money += 1;
+                        data.money += 1.0;
                     })
                     .expect("Failed to update player data");
             }
