@@ -1,6 +1,7 @@
 use std::str::FromStr;
 
 use bevy::prelude::*;
+use bevy_persistent::Persistent;
 
 use crate::{animation::Animation, assets::AppAssets};
 
@@ -67,7 +68,7 @@ impl ToString for Building {
 pub fn update_existing_buildings(
     mut commands: Commands,
     app_assets: Res<AppAssets>,
-    player_data: Res<PlayerData>,
+    player_data: Res<Persistent<PlayerData>>,
     image_server: Res<Assets<Image>>,
     sheet_server: Res<Assets<TextureAtlas>>,
     building_query: Query<

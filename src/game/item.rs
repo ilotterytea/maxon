@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_persistent::Persistent;
 
 use crate::{
     assets::AppAssets,
@@ -47,7 +48,7 @@ pub fn check_item_for_purchase(
         Query<(&mut Text, &UiTextItemHeaderComponent), With<UiTextItemHeaderComponent>>,
         Query<(&mut Text, &UiTextItemCostComponent), With<UiTextItemCostComponent>>,
     )>,
-    player_data: Res<PlayerData>,
+    player_data: Res<Persistent<PlayerData>>,
     items: Res<Items>,
 ) {
     for (mut bg, c) in set.p0().iter_mut() {
@@ -82,7 +83,7 @@ pub fn check_item_for_purchase(
 }
 
 pub fn purchase_item(
-    mut player_data: ResMut<PlayerData>,
+    mut player_data: ResMut<Persistent<PlayerData>>,
     mut items: ResMut<Items>,
     button_query: Query<
         (&Interaction, &ItemComponent),
@@ -107,16 +108,19 @@ pub fn purchase_item(
                             continue;
                         }
 
-                        player_data.money -= item.price;
-                        player_data.multiplier += item.multiplier;
-
                         let amount = if let Some(v) = player_data.purchased_items.get(&c.0) {
                             v + 1
                         } else {
                             1
                         };
 
-                        player_data.purchased_items.insert(c.0.clone(), amount);
+                        player_data
+                            .update(|data| {
+                                data.money -= item.price;
+                                data.multiplier += item.multiplier;
+                                data.purchased_items.insert(c.0.clone(), amount);
+                            })
+                            .expect("Failed to update player data");
 
                         let init_price = item.price as f32 / ITEM_PRICE_MULTIPLIER.powi(amount - 1);
                         item.price =

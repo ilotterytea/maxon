@@ -7,6 +7,7 @@ use crate::{
     },
 };
 use bevy::prelude::*;
+use bevy_persistent::Persistent;
 
 use super::{
     item::{ItemComponent, Items},
@@ -30,7 +31,7 @@ pub struct UiInventory;
 
 pub fn generate_ui(
     mut commands: Commands,
-    player_data: Res<PlayerData>,
+    player_data: Res<Persistent<PlayerData>>,
     items: Res<Items>,
     app_assets: Res<AppAssets>,
     locale: Res<Localization>,
@@ -289,7 +290,7 @@ pub fn generate_ui(
 }
 
 pub fn update_ui(
-    player_data: Res<PlayerData>,
+    player_data: Res<Persistent<PlayerData>>,
     mut money_text_query: Query<&mut Text, With<UiTextMoneyComponent>>,
 ) {
     if let Ok(mut money_text) = money_text_query.get_single_mut() {

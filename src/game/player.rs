@@ -58,7 +58,7 @@ pub fn click_on_player(
     mouse_input: Res<Input<MouseButton>>,
     window: Query<&Window>,
     mut player_sprite: Query<&mut TextureAtlasSprite, With<PlayerComponent>>,
-    mut player_data: ResMut<PlayerData>,
+    mut player_data: ResMut<Persistent<PlayerData>>,
     app_assets: Res<AppAssets>,
     assets: Res<Assets<TextureAtlas>>,
 ) {
@@ -89,7 +89,11 @@ pub fn click_on_player(
                     s.index = 0;
                 }
 
-                player_data.money += 1;
+                player_data
+                    .update(|data| {
+                        data.money += 1;
+                    })
+                    .expect("Failed to update player data");
             }
         }
     }
