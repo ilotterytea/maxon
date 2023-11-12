@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::AppState;
+use crate::{animation::update_animations, AppState};
 
 use self::{
     building::update_existing_buildings,
@@ -28,6 +28,7 @@ impl Plugin for GamePlugin {
                     purchase_item,
                     check_item_for_purchase,
                     update_existing_buildings,
+                    update_animations,
                 )
                     .run_if(in_state(AppState::Game)),
             );
