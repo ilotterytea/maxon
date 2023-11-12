@@ -27,10 +27,19 @@ pub enum BuildingCharacter {
 
 impl Building {
     pub fn get_image_handles(&self, assets: &Res<AppAssets>) -> (Handle<Image>, BuildingCharacter) {
+        let timer = Timer::from_seconds(0.02, TimerMode::Repeating);
+
         match self {
             Self::Bedroom => (
                 assets.building_bedroom_background.clone(),
-                BuildingCharacter::Static(assets.icon.clone()),
+                BuildingCharacter::Animated(
+                    assets.cat_sleepy.clone(),
+                    Animation {
+                        timer,
+                        frame_count: 75,
+                        is_active: true,
+                    },
+                ),
             ),
             _ => (
                 assets.icon.clone(),
