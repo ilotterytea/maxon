@@ -93,18 +93,18 @@ pub fn update_existing_buildings(
             // Identifying child image
             let handles = b.0.get_image_handles(&app_assets);
             let background = image_server.get(&handles.0).unwrap();
-            //let character = match handles.1 { BuildingCharacter::Static(h) => image_server.get(&h).unwrap(), BuildingCharacter::Animated(t, a) => };
 
             // Generating positions
             let image_width = 32.0;
             let image_height = 32.0;
 
             let mut pos_x = -image_width;
-            let mut pos_y = (t.translation.y + background.size().y * t.scale.y) / 2.0;
+            let mut pos_y = (t.translation.y + background.size().y as f32 * t.scale.y) / 2.0;
 
             // Generating children
             for i in 0..*count {
                 let character = handles.1.clone();
+
                 pos_x += image_width + 5.0;
                 let y = image_height / 2.0;
 
@@ -119,17 +119,15 @@ pub fn update_existing_buildings(
                     ..default()
                 };
 
-                let transform = Transform::from_xyz(pos_x, pos_y, 0.0);
-
                 let cid = match character {
                     BuildingCharacter::Animated(ta, a) => commands.spawn((
-                        SpriteSheetBundle {
-                            sprite: TextureAtlasSprite {
+                        AtlasImageBundle {
+                            texture_atlas_image: UiTextureAtlasImage {
                                 index: 0,
                                 ..default()
                             },
                             texture_atlas: ta,
-                            transform,
+                            style,
                             ..default()
                         },
                         a,
@@ -137,7 +135,6 @@ pub fn update_existing_buildings(
                     BuildingCharacter::Static(i) => commands.spawn(ImageBundle {
                         image: UiImage::new(i),
                         style,
-                        transform,
                         ..default()
                     }),
                 }
