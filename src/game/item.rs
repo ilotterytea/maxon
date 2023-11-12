@@ -33,11 +33,28 @@ pub struct Items(pub Vec<Item>);
 pub struct ItemComponent(pub String);
 
 pub fn initialize_items(mut commands: Commands) {
-    let items: Vec<Item> = vec![Item {
-        id: "bror".to_string(),
-        price: 10,
-        multiplier: 0.1,
-    }];
+    let items: Vec<Item> = vec![
+        Item {
+            id: "Building.Bedroom".to_string(),
+            price: 10.0,
+            multiplier: 0.1,
+        },
+        Item {
+            id: "Building.Kitchen".to_string(),
+            price: 100.0,
+            multiplier: 1.0,
+        },
+        Item {
+            id: "Building.Canyon".to_string(),
+            price: 1200.0,
+            multiplier: 8.0,
+        },
+        Item {
+            id: "Building.Sea".to_string(),
+            price: 13000.0,
+            multiplier: 48.0,
+        },
+    ];
 
     commands.insert_resource(Items(items));
 }
