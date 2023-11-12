@@ -12,6 +12,10 @@ pub struct AppAssets {
     #[asset(path = "sprites/sheet/loadingCircle.png")]
     pub cat_maxon: Handle<TextureAtlas>,
 
+    #[asset(texture_atlas(tile_size_x = 64., tile_size_y = 64., columns = 15, rows = 5))]
+    #[asset(path = "sprites/sheet/sleepy.png")]
+    pub cat_sleepy: Handle<TextureAtlas>,
+
     #[asset(path = "icon.png")]
     pub icon: Handle<Image>,
 
