@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use bevy::prelude::*;
 use bevy_persistent::Persistent;
 
