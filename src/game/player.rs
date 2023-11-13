@@ -20,7 +20,7 @@ impl Default for PlayerData {
     fn default() -> Self {
         Self {
             money: 0.0,
-            multiplier: 1.0,
+            multiplier: 0.0,
             purchased_items: HashMap::new(),
         }
     }
@@ -96,5 +96,27 @@ pub fn click_on_player(
                     .expect("Failed to update player data");
             }
         }
+    }
+}
+
+#[derive(Resource)]
+pub struct MultiplierTimer(Timer);
+
+pub fn generate_multiplier_timer(mut commands: Commands) {
+    commands.insert_resource(MultiplierTimer(Timer::from_seconds(
+        0.1,
+        TimerMode::Repeating,
+    )));
+}
+
+pub fn tick_multiplier_timer(
+    delta_time: Res<Time>,
+    mut player_data: ResMut<Persistent<PlayerData>>,
+    mut timer: ResMut<MultiplierTimer>,
+) {
+    timer.0.tick(delta_time.delta());
+
+    if timer.0.just_finished() {
+        player_data.money += player_data.multiplier / 10.0;
     }
 }
