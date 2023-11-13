@@ -66,7 +66,7 @@ pub fn generate_ui(
                     parent.spawn((
                         TextBundle {
                             text: Text::from_sections([TextSection::new(
-                                player_data.money.to_string(),
+                                player_data.money.trunc().to_string(),
                                 TextStyle::default(),
                             )]),
                             ..default()
