@@ -1,0 +1,23 @@
+{
+  "name": "MaxonPettingSimulator",
+  "version-semver": "1.0.0",
+  "dependencies": [
+    {
+      "name": "fmt",
+      "version>=": "10.0.0"
+    }
+  ],
+  "default-features": [],
+  "features": {
+    "test": {
+      "description": "Dependencies for testing",
+      "dependencies": [
+        {
+          "name": "catch2",
+          "version>=": "3.3.2#1"
+        }
+      ]
+    }
+  },
+  "builtin-baseline": "9055f88ba53a99f51e3c733fe9c79703dc23d57d"
+}
