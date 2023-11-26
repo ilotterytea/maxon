@@ -35,9 +35,11 @@ void handle_event(Game* game) {
 
 void Game::init() {}
 
-void Game::update() {
-  if (this->window.pollEvent(this->event)) {
-    handle_event(this);
+void Game::run() {
+  while (this->m_window.isOpen()) {
+    if (this->m_window.pollEvent(this->m_event)) {
+      handle_event(this);
+    }
   }
 }
 

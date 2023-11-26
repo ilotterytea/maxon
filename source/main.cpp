@@ -4,11 +4,7 @@ auto main() -> int {
   Game game;
 
   game.init();
-
-  while (game.getWindow().isOpen()) {
-    game.update();
-  }
-
+  game.run();
   game.dispose();
 
   return 0;

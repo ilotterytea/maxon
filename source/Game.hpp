@@ -14,7 +14,7 @@ class Game {
   Game() : window(sf::VideoMode(800, 600), ""), event() {}
 
   void init();
-  void update();
+  void run();
   void dispose();
 
   sf::RenderWindow& getWindow() { return this->window; }
