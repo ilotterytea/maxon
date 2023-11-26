@@ -6,19 +6,18 @@
 #include <SFML/Window/VideoMode.hpp>
 
 class Game {
- private:
-  sf::RenderWindow window;
-  sf::Event event;
+  sf::RenderWindow m_window;
+  sf::Event m_event;
 
  public:
-  Game() : window(sf::VideoMode(800, 600), ""), event() {}
+  Game() : m_window(sf::VideoMode(800, 600), ""), m_event() {}
 
   void init();
   void run();
   void dispose();
 
-  sf::RenderWindow& getWindow() { return this->window; }
-  const sf::Event& getEvent() { return this->event; }
+  auto get_window() -> sf::RenderWindow& { return this->m_window; }
+  auto get_event() -> const sf::Event& { return this->m_event; }
 
   ~Game() {}
 };

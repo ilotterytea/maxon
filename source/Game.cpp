@@ -6,8 +6,8 @@
 #include <iostream>
 
 void handle_event(Game* game) {
-  const sf::Event& event = game->getEvent();
-  sf::RenderWindow& window = game->getWindow();
+  const sf::Event& event = game->get_event();
+  sf::RenderWindow& window = game->get_window();
 
   switch (event.type) {
     case sf::Event::Closed: {
