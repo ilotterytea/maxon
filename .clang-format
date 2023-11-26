@@ -1,2 +1,7 @@
 ---
 BasedOnStyle: Google
+FixNamespaceComments: 'false'
+NamespaceIndentation: All
+
+...
+
