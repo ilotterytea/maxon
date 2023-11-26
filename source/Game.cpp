@@ -33,7 +33,7 @@ void handle_event(Game* game) {
   }
 }
 
-void Game::init() {}
+void Game::init() { this->m_asset_manager.load_texture("assets/icon.png"); }
 
 void Game::run() {
   while (this->m_window.isOpen()) {

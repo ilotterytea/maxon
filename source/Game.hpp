@@ -5,9 +5,13 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/VideoMode.hpp>
 
+#include "AssetManager.hpp"
+
 class Game {
   sf::RenderWindow m_window;
   sf::Event m_event;
+
+  Maxon::AssetManager m_asset_manager;
 
  public:
   Game() : m_window(sf::VideoMode(800, 600), ""), m_event() {}
