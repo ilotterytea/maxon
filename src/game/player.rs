@@ -2,11 +2,13 @@ use std::collections::HashMap;
 
 use bevy::prelude::*;
 use bevy_persistent::{Persistent, StorageFormat};
+use bevy_sprite3d::{AtlasSprite3d, Sprite3dParams};
 use serde::{Deserialize, Serialize};
 
 use crate::{
     assets::AppAssets,
     constants::{APP_DEVELOPER, APP_NAME},
+    startup_systems::CameraType,
 };
 
 #[derive(Resource, Serialize, Deserialize)]
@@ -43,15 +45,27 @@ pub fn init_player_data(mut commands: Commands) {
 #[derive(Component)]
 pub struct PlayerComponent;
 
-pub fn generate_player(mut commands: Commands, app_assets: Res<AppAssets>) {
-    commands.spawn((
-        SpriteSheetBundle {
-            sprite: TextureAtlasSprite::new(0),
-            texture_atlas: app_assets.cat_maxon.clone(),
-            ..default()
-        },
-        PlayerComponent,
-    ));
+pub fn generate_player(
+    mut commands: Commands,
+    app_assets: Res<AppAssets>,
+    mut sprite_params: Sprite3dParams,
+    camera_query: Query<(&mut Transform, &CameraType), With<CameraType>>,
+) {
+    if let Some((t, _)) = camera_query.iter().find(|x| x.1.eq(&CameraType::ThreeD)) {
+        commands.spawn((
+            AtlasSprite3d {
+                atlas: app_assets.cat_maxon.clone(),
+                index: 0,
+                unlit: true,
+                transform: Transform::from_xyz(-4.0, 2.2, -4.0)
+                    .with_scale(Vec3::new(3.0, 3.0, 3.0))
+                    .looking_at(t.translation, Vec3::Y),
+                ..default()
+            }
+            .bundle(&mut sprite_params),
+            PlayerComponent,
+        ));
+    }
 }
 
 pub fn click_on_player(
