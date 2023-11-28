@@ -22,6 +22,10 @@ pub struct AppAssets {
     #[asset(path = "i18n/en_us.locale.json")]
     pub locale_english: Handle<Localization>,
 
+    // - - - M O D E L S - - -
+    #[asset(path = "models/scenes/mdl_maxon_room.glb")]
+    pub mdl_maxon_room: Handle<Scene>,
+
     // - - - B U I L D I N G S - - -
     #[asset(path = "sprites/buildings/bedroom_background.png")]
     pub building_bedroom_background: Handle<Image>,
