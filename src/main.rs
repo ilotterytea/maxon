@@ -6,6 +6,7 @@ use bevy::{
 };
 use bevy_asset_loader::prelude::*;
 use bevy_common_assets::json::JsonAssetPlugin;
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use game::GamePlugin;
 use localization::Localization;
 use menu::MenuPlugin;
@@ -45,6 +46,8 @@ fn main() {
         .add_plugins((GamePlugin, MenuPlugin))
         // Diagnostics
         .add_plugins((LogDiagnosticsPlugin::default(), FrameTimeDiagnosticsPlugin))
+        // World inspector
+        .add_plugins(WorldInspectorPlugin::new())
         .run();
 }
 
