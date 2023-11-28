@@ -6,12 +6,14 @@ use self::{
     building::update_existing_buildings,
     item::{check_item_for_purchase, initialize_items, purchase_item},
     player::*,
+    systems::generate_game_scene,
     ui::*,
 };
 
 mod building;
 mod item;
 mod player;
+mod systems;
 mod ui;
 
 pub struct GamePlugin;
@@ -26,7 +28,10 @@ impl Plugin for GamePlugin {
                 generate_multiplier_timer,
             ),
         )
-        .add_systems(OnEnter(AppState::Game), (generate_player, generate_ui))
+        .add_systems(
+            OnEnter(AppState::Game),
+            (generate_player, generate_ui, generate_game_scene),
+        )
         .add_systems(
             Update,
             (
