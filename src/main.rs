@@ -7,6 +7,7 @@ use bevy::{
 use bevy_asset_loader::prelude::*;
 use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use bevy_sprite3d::Sprite3dPlugin;
 use game::GamePlugin;
 use localization::Localization;
 use menu::MenuPlugin;
@@ -44,6 +45,8 @@ fn main() {
         .add_loading_state(LoadingState::new(AppState::Boot).continue_to_state(AppState::Menu))
         .add_collection_to_loading_state::<_, AppAssets>(AppState::Boot)
         .add_plugins((GamePlugin, MenuPlugin))
+        // 3D Sprites
+        .add_plugins(Sprite3dPlugin)
         // Diagnostics
         .add_plugins((LogDiagnosticsPlugin::default(), FrameTimeDiagnosticsPlugin))
         // World inspector

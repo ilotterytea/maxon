@@ -1012,6 +1012,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_sprite3d"
+version = "2.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ae3980ac4d5c02003b91221e2ef03484208155d3dec752264bb4a6415b629b92"
+dependencies = [
+ "bevy",
+]
+
+[[package]]
 name = "bevy_tasks"
 version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2456,6 +2465,7 @@ dependencies = [
  "bevy-persistent",
  "bevy_asset_loader",
  "bevy_common_assets",
+ "bevy_sprite3d",
  "dirs",
  "serde",
 ]
