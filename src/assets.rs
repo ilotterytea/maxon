@@ -22,6 +22,16 @@ pub struct AppAssets {
     #[asset(path = "i18n/en_us.locale.json")]
     pub locale_english: Handle<Localization>,
 
+    // - - - UI  S P R I T E S - - -
+    #[asset(path = "sprites/gui/btn_sleep.png")]
+    pub ui_fatigue: Handle<Image>,
+
+    #[asset(path = "sprites/gui/btn_pleasure.png")]
+    pub ui_pleasure: Handle<Image>,
+
+    #[asset(path = "sprites/gui/btn_food.png")]
+    pub ui_hunger: Handle<Image>,
+
     // - - - M O D E L S - - -
     #[asset(path = "models/scenes/mdl_maxon_room.glb")]
     pub mdl_maxon_room: Handle<Scene>,
