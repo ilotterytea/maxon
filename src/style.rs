@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+pub const CONTROLPANEL_BG_COLOR: Color = Color::rgba(0.0, 0.0, 0.0, 0.5);
+
 pub const ITEM_BG_INACTIVE_COLOR: Color = Color::rgb(0.25, 0.25, 0.25);
 pub const ITEM_BG_ACTIVE_COLOR: Color = Color::rgb(0.35, 0.35, 0.35);
 pub const ITEM_BORDER_COLOR: Color = Color::rgb(0.25, 0.25, 0.25);
