@@ -23,14 +23,14 @@ pub struct AppAssets {
     pub locale_english: Handle<Localization>,
 
     // - - - UI  S P R I T E S - - -
-    #[asset(path = "sprites/gui/btn_sleep.png")]
-    pub ui_fatigue: Handle<Image>,
+    #[asset(path = "sprites/gui/btn_fatigue.png")]
+    pub ui_btn_fatigue: Handle<Image>,
 
-    #[asset(path = "sprites/gui/btn_pleasure.png")]
-    pub ui_pleasure: Handle<Image>,
+    #[asset(path = "sprites/gui/btn_happiness.png")]
+    pub ui_btn_happiness: Handle<Image>,
 
-    #[asset(path = "sprites/gui/btn_food.png")]
-    pub ui_hunger: Handle<Image>,
+    #[asset(path = "sprites/gui/btn_hunger.png")]
+    pub ui_btn_hunger: Handle<Image>,
 
     // - - - M O D E L S - - -
     #[asset(path = "models/scenes/mdl_maxon_room.glb")]
