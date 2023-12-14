@@ -23,6 +23,10 @@ pub struct AppAssets {
     pub locale_english: Handle<Localization>,
 
     // - - - UI  S P R I T E S - - -
+    #[asset(texture_atlas(tile_size_x = 256., tile_size_y = 256., columns = 3, rows = 3))]
+    #[asset(path = "sprites/gui/bar_level.png")]
+    pub ui_bar_level: Handle<TextureAtlas>,
+
     #[asset(path = "sprites/gui/btn_fatigue.png")]
     pub ui_btn_fatigue: Handle<Image>,
 
