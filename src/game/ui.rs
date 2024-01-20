@@ -36,33 +36,27 @@ pub enum UiButtonControl {
     Fatigue,
 }
 
-pub fn generate_ui(mut commands: Commands, app_assets: Res<AppAssets>) {
+pub fn generate_control_ui(mut commands: Commands, app_assets: Res<AppAssets>) {
     commands
         .spawn(NodeBundle {
             style: Style {
-                flex_direction: FlexDirection::Column,
+                position_type: PositionType::Absolute,
+                bottom: Val::Px(0.0),
+                left: Val::Px(0.0),
                 width: Val::Percent(100.0),
-                height: Val::Percent(100.0),
+                max_height: Val::Percent(15.0),
                 ..default()
             },
             background_color: Color::NONE.into(),
             ..default()
         })
         .with_children(|parent| {
-            // Empty space
-            parent.spawn(NodeBundle {
-                style: Style {
-                    flex_grow: 6.0,
-                    ..default()
-                },
-                background_color: Color::NONE.into(),
-                ..default()
-            });
-
             // Control panel
             parent
                 .spawn(NodeBundle {
                     style: Style {
+                        width: Val::Percent(100.0),
+                        height: Val::Percent(100.0),
                         justify_content: JustifyContent::SpaceBetween,
                         align_items: AlignItems::Center,
                         flex_grow: 0.0,
