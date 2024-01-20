@@ -20,29 +20,39 @@ pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(
-            Startup,
-            (
-                initialize_items,
-                init_player_data,
-                generate_multiplier_timer,
-            ),
-        )
-        .add_systems(
-            OnEnter(AppState::Game),
-            (generate_player, generate_control_ui, generate_game_scene),
-        )
-        .add_systems(
-            Update,
-            (
-                update_ui,
-                purchase_item,
-                check_item_for_purchase,
-                update_existing_buildings,
-                update_animations,
-                tick_multiplier_timer,
+        app.add_state::<RoomState>()
+            .add_systems(
+                Startup,
+                (
+                    initialize_items,
+                    init_player_data,
+                    generate_multiplier_timer,
+                ),
             )
-                .run_if(in_state(AppState::Game)),
-        );
+            .add_systems(
+                OnEnter(AppState::Game),
+                (generate_player, generate_control_ui, generate_game_scene),
+            )
+            .add_systems(
+                Update,
+                (
+                    update_ui,
+                    purchase_item,
+                    check_item_for_purchase,
+                    update_existing_buildings,
+                    update_animations,
+                    tick_multiplier_timer,
+                )
+                    .run_if(in_state(RoomState::LivingRoom).and_then(in_state(AppState::Menu))),
+            );
     }
+}
+
+#[derive(Clone, Eq, PartialEq, Debug, Hash, Default, States)]
+pub enum RoomState {
+    #[default]
+    LivingRoom,
+    Kitchen,
+    Bedroom,
+    Basement,
 }
