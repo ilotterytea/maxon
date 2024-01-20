@@ -35,7 +35,6 @@ impl Plugin for GamePlugin {
         .add_systems(
             Update,
             (
-                click_on_player,
                 update_ui,
                 purchase_item,
                 check_item_for_purchase,
