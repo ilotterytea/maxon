@@ -27,7 +27,7 @@ pub fn generate_game_scene(
         .iter_mut()
         .find(|x| x.1.eq(&CameraType::ThreeD))
     {
-        t.translation = Vec3::new(2.0, 5.0, 2.0);
-        t.rotation = Quat::from_xyzw(-0.06, 0.4, 0.03, 0.91);
+        t.translation = Vec3::new(4.0, 2.5, 4.0);
+        t.rotation = Quat::from_axis_angle(Vec3::new(0.0, 1.0, 0.0), 0.784);
     }
 }
