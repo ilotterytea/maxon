@@ -7,6 +7,7 @@ use bevy::{
 use bevy_asset_loader::prelude::*;
 use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use bevy_mod_picking::{debug::DebugPickingMode, DefaultPickingPlugins};
 use bevy_sprite3d::Sprite3dPlugin;
 use game::GamePlugin;
 use localization::Localization;
@@ -51,6 +52,9 @@ fn main() {
         .add_plugins((LogDiagnosticsPlugin::default(), FrameTimeDiagnosticsPlugin))
         // World inspector
         .add_plugins(WorldInspectorPlugin::new())
+        // 3D Picking
+        .add_plugins(DefaultPickingPlugins)
+        .insert_resource(State::new(DebugPickingMode::Disabled))
         .run();
 }
 
