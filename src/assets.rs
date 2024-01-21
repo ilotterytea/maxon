@@ -43,6 +43,10 @@ pub struct AppAssets {
     #[asset(path = "models/scenes/mdl_basement.glb#Scene0")]
     pub mdl_basement_room: Handle<Scene>,
 
+    // - - - M O D E L S - - -
+    #[asset(path = "models/mdl_petbed.glb#Scene0")]
+    pub mdl_petbed: Handle<Scene>,
+
     // - - - B U I L D I N G S - - -
     #[asset(path = "sprites/buildings/bedroom_background.png")]
     pub building_bedroom_background: Handle<Image>,
