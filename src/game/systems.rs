@@ -1,10 +1,11 @@
 use bevy::prelude::*;
 
-use crate::{assets::AppAssets, constants::LIGHT_ROOM, startup_systems::CameraType};
+use crate::{assets::AppAssets, constants::ROOM_LIGHTS, startup_systems::CameraType};
 
 use super::RoomState;
 
 pub fn generate_game_scene(mut commands: Commands, app_assets: Res<AppAssets>) {
+    // Living room
     commands.spawn(SceneBundle {
         scene: app_assets.mdl_maxon_room.clone(),
         ..default()
@@ -15,10 +16,29 @@ pub fn generate_game_scene(mut commands: Commands, app_assets: Res<AppAssets>) {
             intensity: 5000.0,
             range: 15.0,
             shadows_enabled: true,
-            color: LIGHT_ROOM,
+            color: ROOM_LIGHTS[0],
             ..default()
         },
         transform: Transform::from_xyz(0.0, 7.2, 0.0),
+        ..default()
+    });
+
+    // Basement
+    commands.spawn(SceneBundle {
+        scene: app_assets.mdl_basement_room.clone(),
+        transform: Transform::from_xyz(0.0, -13.0, 0.0),
+        ..default()
+    });
+
+    commands.spawn(PointLightBundle {
+        point_light: PointLight {
+            intensity: 4000.0,
+            range: 48.0,
+            shadows_enabled: true,
+            color: ROOM_LIGHTS[1],
+            ..default()
+        },
+        transform: Transform::from_xyz(0.0, -8.0, 0.0),
         ..default()
     });
 }

@@ -64,6 +64,7 @@ pub enum RoomState {
 impl RoomState {
     pub fn get_camera_transform(&self) -> ([f32; 3], [f32; 4]) {
         match self {
+            Self::Basement => CAMERA_TRANSFORMS[1],
             _ => CAMERA_TRANSFORMS[0],
         }
     }
