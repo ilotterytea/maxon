@@ -1,6 +1,6 @@
 use bevy::prelude::Color;
 
-pub const LIGHT_ROOM: Color = Color::rgb(1.0, 0.96, 0.92);
+pub const LIGHT_ROOM: Color = Color::rgb(0.85, 0.8, 1.0);
 
 pub const APP_DEVELOPER: &str = "ilotterytea";
 pub const APP_NAME: &str = "MaxonPettingSimulator";

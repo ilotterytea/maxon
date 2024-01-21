@@ -4,11 +4,7 @@ use crate::{assets::AppAssets, constants::LIGHT_ROOM, startup_systems::CameraTyp
 
 use super::RoomState;
 
-pub fn generate_game_scene(
-    state: Res<State<RoomState>>,
-    mut commands: Commands,
-    app_assets: Res<AppAssets>,
-) {
+pub fn generate_game_scene(mut commands: Commands, app_assets: Res<AppAssets>) {
     commands.spawn(SceneBundle {
         scene: app_assets.mdl_maxon_room.clone(),
         ..default()
@@ -16,12 +12,13 @@ pub fn generate_game_scene(
 
     commands.spawn(PointLightBundle {
         point_light: PointLight {
-            intensity: 4000.0,
+            intensity: 5000.0,
+            range: 15.0,
             shadows_enabled: true,
             color: LIGHT_ROOM,
             ..default()
         },
-        transform: Transform::from_xyz(0.0, 7.0, 0.0),
+        transform: Transform::from_xyz(0.0, 7.2, 0.0),
         ..default()
     });
 }
