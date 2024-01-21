@@ -50,23 +50,29 @@ pub fn generate_player(
     mut commands: Commands,
     app_assets: Res<AppAssets>,
     mut sprite_params: Sprite3dParams,
-    camera_query: Query<(&mut Transform, &CameraType), With<CameraType>>,
+) {
+    commands.spawn((
+        AtlasSprite3d {
+            atlas: app_assets.cat_maxon.clone(),
+            index: 0,
+            unlit: true,
+            transform: Transform::from_xyz(-4.0, 2.2, -4.0).with_scale(Vec3::new(3.0, 3.0, 3.0)),
+            ..default()
+        }
+        .bundle(&mut sprite_params),
+        PlayerComponent,
+        On::<Pointer<Click>>::run(click_on_player),
+    ));
+}
+
+pub fn update_player_look(
+    camera_query: Query<(&mut Transform, &CameraType), (With<CameraType>, Changed<Transform>)>,
+    mut player_query: Query<&mut Transform, (With<PlayerComponent>, Without<CameraType>)>,
 ) {
     if let Some((t, _)) = camera_query.iter().find(|x| x.1.eq(&CameraType::ThreeD)) {
-        commands.spawn((
-            AtlasSprite3d {
-                atlas: app_assets.cat_maxon.clone(),
-                index: 0,
-                unlit: true,
-                transform: Transform::from_xyz(-4.0, 2.2, -4.0)
-                    .with_scale(Vec3::new(3.0, 3.0, 3.0))
-                    .looking_at(t.translation, Vec3::Y),
-                ..default()
-            }
-            .bundle(&mut sprite_params),
-            PlayerComponent,
-            On::<Pointer<Click>>::run(click_on_player),
-        ));
+        if let Ok(mut p_t) = player_query.get_single_mut() {
+            *p_t = p_t.looking_at(t.translation, Vec3::Y);
+        }
     }
 }
 

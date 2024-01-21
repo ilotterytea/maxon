@@ -42,9 +42,12 @@ impl Plugin for GamePlugin {
                     update_existing_buildings,
                     update_animations,
                     tick_multiplier_timer,
-                    update_camera_transform,
                 )
-                    .run_if(in_state(RoomState::LivingRoom).and_then(in_state(AppState::Menu))),
+                    .run_if(in_state(RoomState::LivingRoom).and_then(in_state(AppState::Game))),
+            )
+            .add_systems(
+                Update,
+                (update_camera_transform).run_if(in_state(AppState::Game)),
             );
     }
 }
