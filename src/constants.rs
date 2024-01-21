@@ -7,9 +7,9 @@ pub const APP_NAME: &str = "MaxonPettingSimulator";
 
 pub const ITEM_PRICE_MULTIPLIER: f64 = 1.15;
 
-pub const CAMERA_POSITIONS: [(
-    (f32, f32, f32),      // position (x,y,z)
-    (f32, f32, f32, f32), // rotation (x,y,z,angle)
+pub const CAMERA_TRANSFORMS: [(
+    [f32; 3], // position (x,y,z)
+    [f32; 4], // rotation (x,y,z,angle
 ); 1] = [
-    ((4.0, 2.5, 4.0), (0.0, 1.0, 0.0, 0.784)), // Living room
+    ([4.0, 2.5, 4.0], [0.0, 1.0, 0.0, 0.784]), // Living room
 ];

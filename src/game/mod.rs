@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{animation::update_animations, constants::CAMERA_POSITIONS, AppState};
+use crate::{animation::update_animations, constants::CAMERA_TRANSFORMS, AppState};
 
 use self::{
     building::update_existing_buildings,
@@ -58,9 +58,9 @@ pub enum RoomState {
 }
 
 impl RoomState {
-    pub fn get_camera_transform(&self) -> ((f32, f32, f32), (f32, f32, f32, f32)) {
+    pub fn get_camera_transform(&self) -> ([f32; 3], [f32; 4]) {
         match self {
-            _ => CAMERA_POSITIONS[0],
+            _ => CAMERA_TRANSFORMS[0],
         }
     }
 }
