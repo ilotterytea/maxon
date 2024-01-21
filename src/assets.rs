@@ -36,11 +36,11 @@ pub struct AppAssets {
     #[asset(path = "sprites/gui/btn_hunger.png")]
     pub ui_btn_hunger: Handle<Image>,
 
-    // - - - M O D E L S - - -
-    #[asset(path = "models/scenes/mdl_maxon_room.glb")]
+    // - - - S C E N E S - - -
+    #[asset(path = "models/scenes/mdl_maxon_room.glb#Scene0")]
     pub mdl_maxon_room: Handle<Scene>,
 
-    #[asset(path = "models/scenes/mdl_basement.glb")]
+    #[asset(path = "models/scenes/mdl_basement.glb#Scene0")]
     pub mdl_basement_room: Handle<Scene>,
 
     // - - - B U I L D I N G S - - -
