@@ -6,7 +6,7 @@ use self::{
     building::update_existing_buildings,
     item::{check_item_for_purchase, initialize_items, purchase_item},
     player::*,
-    systems::generate_game_scene,
+    systems::{generate_game_scene, update_camera_transform},
     ui::*,
 };
 
@@ -42,6 +42,7 @@ impl Plugin for GamePlugin {
                     update_existing_buildings,
                     update_animations,
                     tick_multiplier_timer,
+                    update_camera_transform,
                 )
                     .run_if(in_state(RoomState::LivingRoom).and_then(in_state(AppState::Menu))),
             );
