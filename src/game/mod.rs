@@ -47,7 +47,7 @@ impl Plugin for GamePlugin {
             )
             .add_systems(
                 Update,
-                (update_camera_transform).run_if(in_state(AppState::Game)),
+                (update_camera_transform, update_player_look).run_if(in_state(AppState::Game)),
             );
     }
 }
