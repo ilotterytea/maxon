@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::{animation::update_animations, constants::CAMERA_TRANSFORMS, AppState};
 
 use self::{
-    building::update_existing_buildings,
+    building::{generate_buildings, update_building_index, update_existing_buildings},
     item::{check_item_for_purchase, initialize_items, purchase_item},
     player::*,
     systems::{generate_game_scene, update_camera_transform},
@@ -31,7 +31,12 @@ impl Plugin for GamePlugin {
             )
             .add_systems(
                 OnEnter(AppState::Game),
-                (generate_player, generate_control_ui, generate_game_scene),
+                (
+                    generate_player,
+                    generate_control_ui,
+                    generate_game_scene,
+                    generate_buildings,
+                ),
             )
             .add_systems(
                 Update,
@@ -48,6 +53,11 @@ impl Plugin for GamePlugin {
             .add_systems(
                 Update,
                 (update_camera_transform, update_player_look).run_if(in_state(AppState::Game)),
+            )
+            .add_systems(
+                Update,
+                (update_building_index)
+                    .run_if(in_state(RoomState::Basement).and_then(in_state(AppState::Game))),
             );
     }
 }

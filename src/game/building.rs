@@ -19,6 +19,16 @@ pub enum Building {
     MissingNo,
 }
 
+#[derive(Component, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct BuildingComponent {
+    pub index: isize,
+}
+
+#[derive(Resource)]
+pub struct BuildingResource {
+    pub selected_index: isize,
+}
+
 #[derive(Clone)]
 pub enum BuildingCharacter {
     Static(Handle<Image>),
@@ -70,6 +80,40 @@ impl ToString for Building {
             Self::Canyon => "Building.Canyon".to_string(),
             Self::Sea => "Building.Sea".to_string(),
             Self::MissingNo => "Building.MissingNo".to_string(),
+        }
+    }
+}
+
+pub fn generate_buildings(mut commands: Commands, app_assets: Res<AppAssets>) {
+    let mut pos = [0.0, -9.0, -4.0];
+
+    for i in 0..3 {
+        commands.spawn((
+            SceneBundle {
+                scene: app_assets.mdl_petbed.clone(),
+                transform: Transform::from_xyz(pos[0], pos[1], pos[2]),
+                ..default()
+            },
+            Name::new(format!("Building {}", i)),
+            BuildingComponent { index: i },
+        ));
+
+        pos[0] += 4.0;
+    }
+
+    commands.insert_resource(BuildingResource { selected_index: 0 });
+}
+
+pub fn update_building_index(
+    resource: Res<BuildingResource>,
+    mut query: Query<(&mut Transform, &BuildingComponent), With<BuildingComponent>>,
+) {
+    if resource.is_changed() {
+        for (mut t, c) in query.iter_mut() {
+            let index = c.index - resource.selected_index;
+            let x = 4.0 * index as f32;
+
+            t.translation.x = -x;
         }
     }
 }
