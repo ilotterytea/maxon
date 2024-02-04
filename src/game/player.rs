@@ -9,7 +9,6 @@ use serde::{Deserialize, Serialize};
 use crate::{
     assets::AppAssets,
     constants::{APP_DEVELOPER, APP_NAME},
-    startup_systems::CameraType,
 };
 
 #[derive(Resource, Serialize, Deserialize)]
@@ -66,10 +65,10 @@ pub fn generate_player(
 }
 
 pub fn update_player_look(
-    camera_query: Query<(&mut Transform, &CameraType), (With<CameraType>, Changed<Transform>)>,
-    mut player_query: Query<&mut Transform, (With<PlayerComponent>, Without<CameraType>)>,
+    camera_query: Query<&mut Transform, (With<Camera>, Changed<Transform>)>,
+    mut player_query: Query<&mut Transform, (With<PlayerComponent>, Without<Camera>)>,
 ) {
-    if let Some((t, _)) = camera_query.iter().find(|x| x.1.eq(&CameraType::ThreeD)) {
+    for t in camera_query.iter() {
         if let Ok(mut p_t) = player_query.get_single_mut() {
             *p_t = p_t.looking_at(t.translation, Vec3::Y);
         }

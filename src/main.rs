@@ -13,7 +13,7 @@ use game::GamePlugin;
 use gamefiles::init_settings;
 use localization::Localization;
 use menu::MenuPlugin;
-use startup_systems::{spawn_2d_camera, spawn_3d_camera};
+use startup_systems::spawn_3d_camera;
 
 mod animation;
 mod assets;
@@ -41,7 +41,7 @@ fn main() {
         // App states
         .add_state::<AppState>()
         // Initializing startup systems
-        .add_systems(Startup, (spawn_2d_camera, spawn_3d_camera, init_settings))
+        .add_systems(Startup, (spawn_3d_camera, init_settings))
         // Loading state
         .add_loading_state(LoadingState::new(AppState::Boot).continue_to_state(AppState::Menu))
         .add_collection_to_loading_state::<_, AppAssets>(AppState::Boot)

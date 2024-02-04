@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{assets::AppAssets, constants::ROOM_LIGHTS, startup_systems::CameraType};
+use crate::{assets::AppAssets, constants::ROOM_LIGHTS};
 
 use super::RoomState;
 
@@ -57,15 +57,12 @@ pub fn generate_game_scene(mut commands: Commands, app_assets: Res<AppAssets>) {
 
 pub fn update_camera_transform(
     state: Res<State<RoomState>>,
-    mut camera_query: Query<(&mut Transform, &CameraType), With<CameraType>>,
+    mut camera_query: Query<&mut Transform, With<Camera>>,
 ) {
     // maybe i could optimize it with state change detection
     // but not right now
     // so buy a $10k pc for this silly game
-    if let Some((mut t, _)) = camera_query
-        .iter_mut()
-        .find(|x| x.1.eq(&CameraType::ThreeD))
-    {
+    for mut t in camera_query.iter_mut() {
         let trs = state.get_camera_transform();
         let pos = trs.0;
         let rot = trs.1;
