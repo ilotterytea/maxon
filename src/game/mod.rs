@@ -10,7 +10,7 @@ use self::{
     ui::*,
 };
 
-mod building;
+pub mod building;
 mod item;
 mod player;
 mod systems;

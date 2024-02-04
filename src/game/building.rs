@@ -2,6 +2,7 @@ use std::str::FromStr;
 
 use bevy::prelude::*;
 use bevy_persistent::Persistent;
+use serde::{Deserialize, Serialize};
 
 use crate::{animation::Animation, assets::AppAssets};
 
@@ -10,7 +11,7 @@ use super::{item::Items, player::PlayerData, ui::UiInventory};
 #[derive(Component)]
 pub struct BuildingField(pub Building);
 
-#[derive(Component, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Component, Deserialize, Serialize, Hash, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Building {
     Bedroom,
     Kitchen,
@@ -20,23 +21,26 @@ pub enum Building {
 }
 
 #[derive(Component, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct BuildingComponent {
+pub(super) struct BuildingComponent {
     pub index: isize,
 }
 
 #[derive(Resource)]
-pub struct BuildingResource {
+pub(super) struct BuildingResource {
     pub selected_index: isize,
 }
 
 #[derive(Clone)]
-pub enum BuildingCharacter {
+pub(super) enum BuildingCharacter {
     Static(Handle<Image>),
     Animated(Handle<TextureAtlas>, Animation),
 }
 
 impl Building {
-    pub fn get_image_handles(&self, assets: &Res<AppAssets>) -> (Handle<Image>, BuildingCharacter) {
+    pub(super) fn get_image_handles(
+        &self,
+        assets: &Res<AppAssets>,
+    ) -> (Handle<Image>, BuildingCharacter) {
         let timer = Timer::from_seconds(0.02, TimerMode::Repeating);
 
         match self {
@@ -84,7 +88,7 @@ impl ToString for Building {
     }
 }
 
-pub fn generate_buildings(mut commands: Commands, app_assets: Res<AppAssets>) {
+pub(super) fn generate_buildings(mut commands: Commands, app_assets: Res<AppAssets>) {
     let mut pos = [0.0, -9.0, -4.0];
 
     for i in 0..3 {
@@ -104,7 +108,7 @@ pub fn generate_buildings(mut commands: Commands, app_assets: Res<AppAssets>) {
     commands.insert_resource(BuildingResource { selected_index: 0 });
 }
 
-pub fn update_building_position(
+pub(super) fn update_building_position(
     resource: Res<BuildingResource>,
     mut query: Query<&mut Transform, With<BuildingComponent>>,
 ) {
