@@ -10,18 +10,18 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_mod_picking::{debug::DebugPickingMode, DefaultPickingPlugins};
 use bevy_sprite3d::Sprite3dPlugin;
 use game::GamePlugin;
+use gamefiles::init_settings;
 use localization::Localization;
 use menu::MenuPlugin;
-use settings::init_settings;
 use startup_systems::{spawn_2d_camera, spawn_3d_camera};
 
 mod animation;
 mod assets;
 mod constants;
 mod game;
+mod gamefiles;
 mod localization;
 mod menu;
-mod settings;
 mod startup_systems;
 mod style;
 
