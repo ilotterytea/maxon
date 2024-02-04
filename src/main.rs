@@ -10,18 +10,18 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_mod_picking::{debug::DebugPickingMode, DefaultPickingPlugins};
 use bevy_sprite3d::Sprite3dPlugin;
 use game::GamePlugin;
-use gamefiles::{init_savegame, init_settings};
 use localization::Localization;
 use menu::MenuPlugin;
+use settings::init_settings;
 use startup_systems::spawn_3d_camera;
 
 mod animation;
 mod assets;
 mod constants;
 mod game;
-mod gamefiles;
 mod localization;
 mod menu;
+mod settings;
 mod startup_systems;
 mod style;
 
@@ -41,7 +41,7 @@ fn main() {
         // App states
         .add_state::<AppState>()
         // Initializing startup systems
-        .add_systems(Startup, (spawn_3d_camera, init_settings, init_savegame))
+        .add_systems(Startup, (spawn_3d_camera, init_settings))
         // Loading state
         .add_loading_state(LoadingState::new(AppState::Boot).continue_to_state(AppState::Menu))
         .add_collection_to_loading_state::<_, AppAssets>(AppState::Boot)

@@ -6,7 +6,7 @@ use bevy::{
 use bevy_persistent::Persistent;
 use serde::Deserialize;
 
-use crate::{assets::AppAssets, gamefiles::Settings};
+use crate::{assets::AppAssets, settings::Settings};
 
 #[derive(Deserialize, PartialEq, Eq, Hash, Clone)]
 pub enum LineId {

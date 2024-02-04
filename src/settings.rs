@@ -42,23 +42,3 @@ pub fn init_settings(mut commands: Commands) {
             .expect("Failed to initialize settings"),
     );
 }
-
-#[derive(Resource, Serialize, Deserialize, Default)]
-pub struct Savegame {
-    pub points: usize,
-    pub slaves: HashMap<Building, usize>,
-}
-
-pub fn init_savegame(mut commands: Commands) {
-    let path = dirs::data_dir().unwrap().join(APP_DEVELOPER).join(APP_NAME);
-
-    commands.insert_resource(
-        Persistent::<Savegame>::builder()
-            .name("Savegame")
-            .format(StorageFormat::Json)
-            .path(path.join("savegame.maxon"))
-            .default(Savegame::default())
-            .build()
-            .expect("Failed to initialize savegame"),
-    );
-}
