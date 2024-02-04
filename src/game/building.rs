@@ -104,16 +104,16 @@ pub fn generate_buildings(mut commands: Commands, app_assets: Res<AppAssets>) {
     commands.insert_resource(BuildingResource { selected_index: 0 });
 }
 
-pub fn update_building_index(
+pub fn update_building_position(
     resource: Res<BuildingResource>,
-    mut query: Query<(&mut Transform, &BuildingComponent), With<BuildingComponent>>,
+    mut query: Query<&mut Transform, With<BuildingComponent>>,
 ) {
     if resource.is_changed() {
-        for (mut t, c) in query.iter_mut() {
-            let index = c.index - resource.selected_index;
-            let x = 4.0 * index as f32;
+        for (i, mut t) in query.iter_mut().enumerate() {
+            let index = i as isize - resource.selected_index;
+            let x = index as f32 * 4.0;
 
-            t.translation.x = -x;
+            t.translation.x = x;
         }
     }
 }

@@ -56,7 +56,7 @@ impl Plugin for GamePlugin {
             )
             .add_systems(
                 Update,
-                (update_building_index)
+                update_building_position
                     .run_if(in_state(RoomState::Basement).and_then(in_state(AppState::Game))),
             );
     }
