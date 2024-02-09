@@ -13,21 +13,11 @@ use crate::{
 
 use super::building::Building;
 
-#[derive(Resource, Serialize, Deserialize)]
+#[derive(Resource, Serialize, Deserialize, Default)]
 pub struct PlayerData {
     pub money: f64,
     pub multiplier: f64,
     pub buildings: HashMap<Building, i32>,
-}
-
-impl Default for PlayerData {
-    fn default() -> Self {
-        Self {
-            money: 0.0,
-            multiplier: 0.0,
-            buildings: HashMap::new(),
-        }
-    }
 }
 
 pub fn init_player_data(mut commands: Commands) {
