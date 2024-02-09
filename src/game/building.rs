@@ -88,10 +88,14 @@ impl ToString for Building {
     }
 }
 
-pub(super) fn generate_buildings(mut commands: Commands, app_assets: Res<AppAssets>) {
+pub(super) fn generate_buildings(
+    mut commands: Commands,
+    app_assets: Res<AppAssets>,
+    savegame: Res<Persistent<PlayerData>>,
+) {
     let mut pos = [0.0, -9.0, -4.0];
 
-    for i in 0..3 {
+    for (i, building) in savegame.buildings.keys().enumerate() {
         commands.spawn((
             SceneBundle {
                 scene: app_assets.mdl_petbed.clone(),
@@ -99,7 +103,8 @@ pub(super) fn generate_buildings(mut commands: Commands, app_assets: Res<AppAsse
                 ..default()
             },
             Name::new(format!("Building {}", i)),
-            BuildingComponent { index: i },
+            BuildingComponent { index: i as isize },
+            building.clone(),
         ));
 
         pos[0] += 4.0;
