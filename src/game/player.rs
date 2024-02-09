@@ -17,7 +17,7 @@ use super::building::Building;
 pub struct PlayerData {
     pub money: f64,
     pub multiplier: f64,
-    pub buildings: HashMap<Building, i32>,
+    pub buildings: HashMap<Building, usize>,
 }
 
 pub fn init_player_data(mut commands: Commands) {
