@@ -6,7 +6,11 @@ use serde::{Deserialize, Serialize};
 
 use crate::{animation::Animation, assets::AppAssets};
 
-use super::{item::Items, player::PlayerData, ui::UiInventory};
+use super::{
+    item::Items,
+    player::PlayerData,
+    ui::{BuildingMovementButton, UiInventory},
+};
 
 #[derive(Component)]
 pub struct BuildingField(pub Building);
@@ -120,6 +124,36 @@ pub(super) fn update_building_position(
             t.translation.x = x;
         }
     }
+}
+
+pub(super) fn update_selected_building_index(
+    mut building_resource: ResMut<BuildingResource>,
+    button_query: Query<
+        (&Interaction, &BuildingMovementButton),
+        (With<BuildingMovementButton>, Changed<Interaction>),
+    >,
+) {
+    let mut index_delta = 0;
+
+    for (i, b) in button_query.iter() {
+        if b.eq(&BuildingMovementButton::Left) {
+            match *i {
+                Interaction::Pressed => {
+                    index_delta -= 1;
+                }
+                _ => {}
+            }
+        } else if b.eq(&BuildingMovementButton::Right) {
+            match *i {
+                Interaction::Pressed => {
+                    index_delta += 1;
+                }
+                _ => {}
+            }
+        }
+    }
+
+    building_resource.selected_index += index_delta;
 }
 
 pub fn update_existing_buildings(
