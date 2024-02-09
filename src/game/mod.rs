@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::{animation::update_animations, constants::CAMERA_TRANSFORMS, AppState};
 
 use self::{
-    building::{generate_buildings, update_building_index, update_existing_buildings},
+    building::{generate_buildings, update_building_position, update_existing_buildings},
     item::{check_item_for_purchase, initialize_items, purchase_item},
     player::*,
     systems::{generate_game_scene, update_camera_transform},
