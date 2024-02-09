@@ -36,6 +36,7 @@ impl Plugin for GamePlugin {
                     generate_control_ui,
                     generate_game_scene,
                     generate_buildings,
+                    building_movement_buttons,
                 ),
             )
             .add_systems(
