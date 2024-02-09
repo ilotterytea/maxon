@@ -2,6 +2,7 @@ use std::str::FromStr;
 
 use bevy::prelude::*;
 use bevy_persistent::Persistent;
+use bevy_sprite3d::{AtlasSprite3d, Sprite3d, Sprite3dParams};
 use serde::{Deserialize, Serialize};
 
 use crate::{animation::Animation, assets::AppAssets};
@@ -159,5 +160,56 @@ pub(super) fn update_selected_building_index(
 
     if (0..building_len).contains(&(building_resource.selected_index + index_delta)) {
         building_resource.selected_index += index_delta;
+    }
+}
+
+pub(super) fn update_building_units(
+    mut commands: Commands,
+    app_assets: Res<AppAssets>,
+    building_query: Query<(Entity, &Building, &Children), With<Building>>,
+    savegame: Res<Persistent<PlayerData>>,
+    mut sprite_params: Sprite3dParams,
+) {
+    for (e, b, c) in building_query.iter() {
+        if let Some(amount) = savegame.buildings.get(b) {
+            let difference = amount - c.len();
+
+            if difference == 0 {
+                continue;
+            }
+
+            let image_handles = b.get_image_handles(&app_assets);
+            let character_image_handle = image_handles.1;
+
+            for _ in 0..difference {
+                let transform =
+                    Transform::from_xyz(0.0, 0.25, 0.0).with_scale(Vec3::new(0.5, 0.5, 0.5));
+
+                let id = match character_image_handle {
+                    BuildingCharacter::Static(ref v) => commands.spawn(
+                        Sprite3d {
+                            image: v.clone(),
+                            transform,
+                            ..default()
+                        }
+                        .bundle(&mut sprite_params),
+                    ),
+
+                    BuildingCharacter::Animated(ref v, ref a) => commands.spawn((
+                        AtlasSprite3d {
+                            atlas: v.clone(),
+                            index: 0,
+                            transform,
+                            ..default()
+                        }
+                        .bundle(&mut sprite_params),
+                        a.clone(),
+                    )),
+                }
+                .id();
+
+                commands.entity(e).add_child(id);
+            }
+        }
     }
 }
