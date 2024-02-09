@@ -3,6 +3,7 @@ use std::str::FromStr;
 use bevy::prelude::*;
 use bevy_persistent::Persistent;
 use bevy_sprite3d::{AtlasSprite3d, Sprite3d, Sprite3dParams};
+use bevy_turborand::prelude::*;
 use serde::{Deserialize, Serialize};
 
 use crate::{animation::Animation, assets::AppAssets};
@@ -169,6 +170,7 @@ pub(super) fn update_building_units(
     building_query: Query<(Entity, &Building, &Children), With<Building>>,
     savegame: Res<Persistent<PlayerData>>,
     mut sprite_params: Sprite3dParams,
+    mut rng: ResMut<GlobalRng>,
 ) {
     for (e, b, c) in building_query.iter() {
         if let Some(amount) = savegame.buildings.get(b) {
@@ -182,8 +184,17 @@ pub(super) fn update_building_units(
             let character_image_handle = image_handles.1;
 
             for _ in 0..difference {
-                let transform =
-                    Transform::from_xyz(0.0, 0.25, 0.0).with_scale(Vec3::new(0.5, 0.5, 0.5));
+                let pos_range = -8..8;
+                let scale_range = 2..5;
+
+                let scale = rng.usize(scale_range) as f32 / 10.0;
+
+                let transform = Transform::from_xyz(
+                    rng.isize(pos_range.clone()) as f32 / 10.0,
+                    0.25,
+                    rng.isize(pos_range) as f32 / 10.0,
+                )
+                .with_scale(Vec3::new(scale, scale, scale));
 
                 let id = match character_image_handle {
                     BuildingCharacter::Static(ref v) => commands.spawn(
