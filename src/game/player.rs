@@ -11,11 +11,13 @@ use crate::{
     constants::{APP_DEVELOPER, APP_NAME},
 };
 
+use super::building::Building;
+
 #[derive(Resource, Serialize, Deserialize)]
 pub struct PlayerData {
     pub money: f64,
     pub multiplier: f64,
-    pub purchased_items: HashMap<String, i32>,
+    pub buildings: HashMap<Building, i32>,
 }
 
 impl Default for PlayerData {
@@ -23,7 +25,7 @@ impl Default for PlayerData {
         Self {
             money: 0.0,
             multiplier: 0.0,
-            purchased_items: HashMap::new(),
+            buildings: HashMap::new(),
         }
     }
 }
