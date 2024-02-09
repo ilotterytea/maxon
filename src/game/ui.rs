@@ -142,7 +142,7 @@ pub fn update_ui(
     }
 }
 
-#[derive(Component)]
+#[derive(Component, PartialEq, Eq, PartialOrd, Ord)]
 pub(super) enum BuildingMovementButton {
     Left,
     Right,
