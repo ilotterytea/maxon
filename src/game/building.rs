@@ -132,6 +132,7 @@ pub(super) fn update_selected_building_index(
         (&Interaction, &BuildingMovementButton),
         (With<BuildingMovementButton>, Changed<Interaction>),
     >,
+    building_query: Query<Entity, With<Building>>,
 ) {
     let mut index_delta = 0;
 
@@ -153,7 +154,11 @@ pub(super) fn update_selected_building_index(
         }
     }
 
-    building_resource.selected_index += index_delta;
+    let building_len = building_query.iter().len() as isize;
+
+    if (0..building_len).contains(&(building_resource.selected_index + index_delta)) {
+        building_resource.selected_index += index_delta;
+    }
 }
 
 pub fn update_existing_buildings(
