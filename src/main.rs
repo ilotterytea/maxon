@@ -9,6 +9,7 @@ use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_mod_picking::{debug::DebugPickingMode, DefaultPickingPlugins};
 use bevy_sprite3d::Sprite3dPlugin;
+use bevy_turborand::prelude::RngPlugin;
 use game::GamePlugin;
 use localization::Localization;
 use menu::MenuPlugin;
@@ -55,6 +56,8 @@ fn main() {
         // 3D Picking
         .add_plugins(DefaultPickingPlugins)
         .insert_resource(State::new(DebugPickingMode::Disabled))
+        // RNG
+        .add_plugins(RngPlugin::default())
         .run();
 }
 

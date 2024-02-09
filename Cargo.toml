@@ -13,5 +13,6 @@ bevy_asset_loader = { version = "0.18.0", features = ["2d", "3d", "standard_dyna
 bevy_common_assets = { version = "0.8.0", features = ["json"] }
 bevy_mod_picking = "0.17.0"
 bevy_sprite3d = "2.7.0"
+bevy_turborand = "0.7.0"
 dirs = "5.0.1"
 serde = { version = "1.0.189", features = ["derive"] }
