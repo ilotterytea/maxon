@@ -6,11 +6,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{animation::Animation, assets::AppAssets};
 
-use super::{
-    item::Items,
-    player::PlayerData,
-    ui::{BuildingMovementButton, UiInventory},
-};
+use super::{player::PlayerData, ui::BuildingMovementButton};
 
 #[derive(Component)]
 pub struct BuildingField(pub Building);
@@ -158,91 +154,5 @@ pub(super) fn update_selected_building_index(
 
     if (0..building_len).contains(&(building_resource.selected_index + index_delta)) {
         building_resource.selected_index += index_delta;
-    }
-}
-
-pub fn update_existing_buildings(
-    mut commands: Commands,
-    app_assets: Res<AppAssets>,
-    player_data: Res<Persistent<PlayerData>>,
-    image_server: Res<Assets<Image>>,
-    sheet_server: Res<Assets<TextureAtlas>>,
-    building_query: Query<
-        (Entity, &BuildingField, Option<&Children>, &Transform),
-        With<BuildingField>,
-    >,
-) {
-    for (be, b, c, t) in building_query.iter() {
-        let bid = b.0.to_string();
-
-        if let Some(count) = player_data.purchased_items.get(&bid) {
-            // Clearing children
-            if c.is_some() {
-                let c = c.unwrap();
-
-                if c.len() as i32 == *count {
-                    continue;
-                }
-
-                commands.entity(be).clear_children();
-
-                for child in c {
-                    commands.entity(*child).despawn_recursive();
-                }
-            }
-
-            // Identifying child image
-            let handles = b.0.get_image_handles(&app_assets);
-            let background = image_server.get(&handles.0).unwrap();
-
-            // Generating positions
-            let image_width = 32.0;
-            let image_height = 32.0;
-
-            let mut pos_x = -image_width;
-            let mut pos_y = (t.translation.y + background.size().y as f32 * t.scale.y) / 2.0;
-
-            // Generating children
-            for i in 0..*count {
-                let character = handles.1.clone();
-
-                pos_x += image_width + 5.0;
-                let y = image_height / 2.0;
-
-                pos_y += if i % 2 == 0 { -y } else { y };
-
-                let style = Style {
-                    position_type: PositionType::Absolute,
-                    left: Val::Px(pos_x),
-                    bottom: Val::Px(pos_y),
-                    width: Val::Px(image_width),
-                    height: Val::Px(image_height),
-                    ..default()
-                };
-
-                let cid = match character {
-                    BuildingCharacter::Animated(ta, a) => commands.spawn((
-                        AtlasImageBundle {
-                            texture_atlas_image: UiTextureAtlasImage {
-                                index: 0,
-                                ..default()
-                            },
-                            texture_atlas: ta,
-                            style,
-                            ..default()
-                        },
-                        a,
-                    )),
-                    BuildingCharacter::Static(i) => commands.spawn(ImageBundle {
-                        image: UiImage::new(i),
-                        style,
-                        ..default()
-                    }),
-                }
-                .id();
-
-                commands.entity(be).add_child(cid);
-            }
-        }
     }
 }

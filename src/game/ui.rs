@@ -9,10 +9,7 @@ use crate::{
 use bevy::prelude::*;
 use bevy_persistent::Persistent;
 
-use super::{
-    item::{ItemComponent, Items},
-    player::PlayerData,
-};
+use super::player::PlayerData;
 
 #[derive(Component)]
 pub struct UiTextMoneyComponent;
