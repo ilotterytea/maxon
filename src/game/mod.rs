@@ -24,6 +24,7 @@ impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_state::<RoomState>()
             .add_systems(Startup, (init_player_data, generate_multiplier_timer))
+            .add_systems(OnEnter(AppState::Game), set_default_room_state)
             .add_systems(
                 OnEnter(AppState::Game),
                 (
@@ -57,11 +58,12 @@ impl Plugin for GamePlugin {
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash, Default, States)]
 pub enum RoomState {
-    #[default]
     LivingRoom,
     Kitchen,
     Bedroom,
     Basement,
+    #[default]
+    None,
 }
 
 impl RoomState {
@@ -71,4 +73,8 @@ impl RoomState {
             _ => CAMERA_TRANSFORMS[0],
         }
     }
+}
+
+fn set_default_room_state(mut state: ResMut<NextState<RoomState>>) {
+    state.set(RoomState::LivingRoom);
 }
