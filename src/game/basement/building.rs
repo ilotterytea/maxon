@@ -136,25 +136,25 @@ pub(super) fn update_selected_building_index(
         (With<BuildingMovementButton>, Changed<Interaction>),
     >,
     building_query: Query<Entity, With<Building>>,
+    keyboard_input: Res<Input<KeyCode>>,
 ) {
     let mut index_delta = 0;
 
     for (i, b) in button_query.iter() {
-        if b.eq(&BuildingMovementButton::Left) {
-            match *i {
-                Interaction::Pressed => {
-                    index_delta -= 1;
-                }
-                _ => {}
-            }
-        } else if b.eq(&BuildingMovementButton::Right) {
-            match *i {
-                Interaction::Pressed => {
-                    index_delta += 1;
-                }
-                _ => {}
+        if *i == Interaction::Pressed {
+            match *b {
+                BuildingMovementButton::Left => index_delta = -1,
+                BuildingMovementButton::Right => index_delta = 1,
             }
         }
+    }
+
+    if keyboard_input.just_pressed(KeyCode::A) || keyboard_input.just_pressed(KeyCode::Left) {
+        index_delta = -1;
+    }
+
+    if keyboard_input.just_pressed(KeyCode::D) || keyboard_input.just_pressed(KeyCode::Right) {
+        index_delta = 1;
     }
 
     let building_len = building_query.iter().len() as isize;
