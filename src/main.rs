@@ -10,7 +10,6 @@ use bevy_easings::EasingsPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_mod_picking::{debug::DebugPickingMode, DefaultPickingPlugins};
 use bevy_sprite3d::Sprite3dPlugin;
-use bevy_text_mesh::TextMeshPlugin;
 use bevy_turborand::prelude::RngPlugin;
 use game::GamePlugin;
 use localization::Localization;
@@ -62,8 +61,6 @@ fn main() {
         .add_plugins(RngPlugin::default())
         // Easings (animation)
         .add_plugins(EasingsPlugin)
-        // Text mesh plugin
-        .add_plugins(TextMeshPlugin)
         .run();
 }
 
