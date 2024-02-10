@@ -4,10 +4,7 @@ use bevy::prelude::{Commands, Resource};
 use bevy_persistent::{Persistent, StorageFormat};
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    constants::{APP_DEVELOPER, APP_NAME},
-    game::building::Building,
-};
+use crate::constants::{APP_DEVELOPER, APP_NAME};
 
 #[derive(Resource, Serialize, Deserialize)]
 pub struct Settings {

@@ -11,7 +11,7 @@ use crate::{
     constants::{APP_DEVELOPER, APP_NAME},
 };
 
-use super::building::Building;
+use super::basement::building::Building;
 
 #[derive(Resource, Serialize, Deserialize, Default)]
 pub struct PlayerData {

@@ -6,9 +6,9 @@ use bevy_sprite3d::{AtlasSprite3d, Sprite3d, Sprite3dParams};
 use bevy_turborand::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::{animation::Animation, assets::AppAssets};
+use crate::{animation::Animation, assets::AppAssets, game::PlayerData};
 
-use super::{player::PlayerData, ui::BuildingMovementButton};
+use super::ui::BuildingMovementButton;
 
 #[derive(Component)]
 pub struct BuildingField(pub Building);
