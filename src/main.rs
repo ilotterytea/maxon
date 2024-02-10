@@ -8,6 +8,7 @@ use bevy_asset_loader::prelude::*;
 use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_easings::EasingsPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use bevy_mod_billboard::prelude::BillboardPlugin;
 use bevy_mod_picking::{debug::DebugPickingMode, DefaultPickingPlugins};
 use bevy_sprite3d::Sprite3dPlugin;
 use bevy_turborand::prelude::RngPlugin;
@@ -61,6 +62,8 @@ fn main() {
         .add_plugins(RngPlugin::default())
         // Easings (animation)
         .add_plugins(EasingsPlugin)
+        // Billboard
+        .add_plugins(BillboardPlugin)
         .run();
 }
 

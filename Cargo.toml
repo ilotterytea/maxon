@@ -12,6 +12,7 @@ bevy-persistent = { version = "0.4.0", features = ["json"] }
 bevy_asset_loader = { version = "0.18.0", features = ["2d", "3d", "standard_dynamic_assets"] }
 bevy_common_assets = { version = "0.8.0", features = ["json"] }
 bevy_easings = "0.12.2"
+bevy_mod_billboard = "0.5.1"
 bevy_mod_picking = "0.17.0"
 bevy_sprite3d = "2.7.0"
 bevy_turborand = "0.7.0"
