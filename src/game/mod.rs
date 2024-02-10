@@ -10,7 +10,6 @@ use self::{
 };
 
 pub mod basement;
-mod item;
 mod player;
 mod systems;
 mod ui;

@@ -14,6 +14,7 @@ use self::{
 use super::RoomState;
 
 pub mod building;
+mod item;
 mod systems;
 mod ui;
 
