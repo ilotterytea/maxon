@@ -1,6 +1,7 @@
-use std::str::FromStr;
+use std::{str::FromStr, time::Duration};
 
 use bevy::prelude::*;
+use bevy_easings::{Ease, EaseMethod, EasingType};
 use bevy_persistent::Persistent;
 use bevy_sprite3d::{AtlasSprite3d, Sprite3d, Sprite3dParams};
 use bevy_turborand::prelude::*;
@@ -116,15 +117,28 @@ pub(super) fn generate_buildings(
 }
 
 pub(super) fn update_building_position(
+    mut commands: Commands,
     resource: Res<BuildingResource>,
-    mut query: Query<&mut Transform, With<BuildingComponent>>,
+    mut query: Query<(&mut Transform, Entity), With<BuildingComponent>>,
 ) {
     if resource.is_changed() {
-        for (i, mut t) in query.iter_mut().enumerate() {
+        for (i, (mut t, e)) in query.iter_mut().enumerate() {
             let index = i as isize - resource.selected_index;
             let x = index as f32 * 4.0;
 
-            t.translation.x = x;
+            let mut t2 = t.clone();
+
+            t2.translation.x = x;
+
+            let component = t.ease_to(
+                t2,
+                EaseMethod::Linear,
+                EasingType::Once {
+                    duration: Duration::from_millis(250),
+                },
+            );
+
+            commands.entity(e).insert(component);
         }
     }
 }
