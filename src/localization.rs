@@ -4,15 +4,48 @@ use bevy::{
     utils::HashMap,
 };
 use bevy_persistent::Persistent;
-use serde::Deserialize;
+use serde::{
+    de::{Error, Visitor},
+    Deserialize,
+};
 
 use crate::{assets::AppAssets, settings::Settings};
 
-#[derive(Deserialize, PartialEq, Eq, Hash, Clone)]
+#[derive(PartialEq, Eq, Hash, Clone)]
 pub enum LineId {
     CategoryShopHeader,
     CategoryInventoryHeader,
     ItemBror,
+}
+
+impl<'de> Deserialize<'de> for LineId {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        struct CustomVisitor;
+
+        impl<'de> Visitor<'de> for CustomVisitor {
+            type Value = LineId;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("a string representing LineId")
+            }
+
+            fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                let parts: Vec<&str> = v.split('.').collect();
+
+                match parts.as_slice() {
+                    _ => Err(Error::custom("unknown variant")),
+                }
+            }
+        }
+
+        deserializer.deserialize_str(CustomVisitor)
+    }
 }
 
 #[derive(Deserialize, Resource, TypePath, TypeUuid, Clone, Asset)]
