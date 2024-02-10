@@ -36,6 +36,10 @@ pub struct AppAssets {
     #[asset(path = "sprites/gui/btn_hunger.png")]
     pub ui_btn_hunger: Handle<Image>,
 
+    #[asset(texture_atlas(tile_size_x = 256., tile_size_y = 256., columns = 2, rows = 2))]
+    #[asset(path = "sprites/gui/gradient.png")]
+    pub ui_gradient: Handle<TextureAtlas>,
+
     // - - - S C E N E S - - -
     #[asset(path = "models/scenes/mdl_maxon_room.glb#Scene0")]
     pub mdl_maxon_room: Handle<Scene>,
