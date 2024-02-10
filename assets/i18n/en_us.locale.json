@@ -48,50 +48,48 @@
 
   "game.inventory.title": "Inventory",
 
-  "pet.bror.name": "The Suspicious and Sleepy Bro",
-  "pet.bror.desc": "A falling asleep Bror will help you to pet Maxon almost to besvimers",
+  "building.bedroom.name": "The Suspicious and Sleepy Bro",
+  "building.bedroom.desc": "A falling asleep Bror will help you to pet Maxon almost to besvimers",
 
-  "pet.sandwich.name": "The Sandwich Cat",
-  "pet.sandwich.desc": "Even though his head is shielded from the light by bread, he can still to pet Maxon by his cheeks.",
+  "building.kitchen.name": "The Sandwich Cat",
+  "building.kitchen.desc": "Even though his head is shielded from the light by bread, he can still to pet Maxon by his cheeks.",
 
-  "pet.manlooshka.name": "Manlooshka",
-  "pet.manlooshka.desc": "rrrrr",
+  "building.canyon.name": "Manlooshka",
+  "building.canyon.desc": "rrrrr",
 
-  "pet.thirsty.name": "The Thirsty Cat",
-  "pet.thirsty.desc": "Every time the kitty drinks water, drops of spilled water fall on the screen and pet Maxon's dry cheeks.",
+  "building.sea.name": "The Thirsty Cat",
+  "building.sea.desc": "Every time the kitty drinks water, drops of spilled water fall on the screen and pet Maxon's dry cheeks.",
 
-  "pet.furios.name": "The Furios Cat",
-  "pet.furios.desc": "Petting FURIOSLY !!!",
+  "building.bathroom.name": "The Furios Cat",
+  "building.bathroom.desc": "Petting FURIOSLY !!!",
   
-  "pet.tvcat.name": "TV cat",
-  "pet.tvcat.desc": "just a funny cat playing with tv",
+  "building.living_room.name": "TV cat",
+  "building.living_room.desc": "just a funny cat playing with tv",
 
-  "pet.progcat.name": "Programmer cat",
-  "pet.progcat.desc": "Using his programming skills, he developed software to pet Maxon more efficiently.",
+  "building.server_room.name": "Programmer cat",
+  "building.server_room.desc": "Using his programming skills, he developed software to pet Maxon more efficiently.",
 
-  "pet.screamcat.name": "Screaming cat",
-  "pet.screamcat.desc": "His scream is so loud, that it shakes Maxon's cheeks.",
+  "building.asylum.name": "Screaming cat",
+  "building.asylum.desc": "His scream is so loud, that it shakes Maxon's cheeks.",
 
-  "pet.hellcat.name": "Hellcat",
-  "pet.hellcat.desc": "Petting Maxon with POWER OF HELL.",
+  "building.hell.name": "Hellcat",
+  "building.hell.desc": "Petting Maxon with POWER OF HELL.",
 
-  "pet.lurker.name": "Lurking cat",
-  "pet.lurker.desc": "Finds the best spots to pet Maxon in.",
+  "building.abyss.name": "Lurking cat",
+  "building.abyss.desc": "Finds the best spots to pet Maxon in.",
 
-  "pet.piano.name": "Piano cat",
-  "pet.piano.desc": "Gives best pettings with his trained paws.",
+  "building.ballroom.name": "Piano cat",
+  "building.ballroom.desc": "Gives best pettings with his trained paws.",
 
-  "pet.bee.name": "Bee cat",
-  "pet.bee.desc": "Collects pollen from Maxon's cheeks.",
+  "building.meadow.name": "Bee cat",
+  "building.meadow.desc": "Collects pollen from Maxon's cheeks.",
 
-  "pet.busy.name": "Business cat",
-  "pet.busy.desc": "Pets Maxon with help of all his influence.",
+  "building.office.name": "Business cat",
+  "building.office.desc": "Pets Maxon with help of all his influence.",
 
-  "pet.aeae.name": "Aeae",
-  "pet.aeae.desc": "back and forth, back and forth.",
+  "building.aeae.name": "Aeae",
+  "building.aeae.desc": "back and forth, back and forth.",
 
-  "pet.succat.name": "Sucking cat",
-  "pet.succat.desc": "Maskot. Increases amount of petting with his sucking power."
-
-
+  "building.kindergarden.name": "Sucking cat",
+  "building.kindergarden.desc": "Maskot. Increases amount of petting with his sucking power."
 }
