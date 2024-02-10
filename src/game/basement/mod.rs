@@ -7,12 +7,14 @@ use self::{
         generate_buildings, update_building_position, update_building_units,
         update_selected_building_index,
     },
+    systems::generate_basement_scene,
     ui::building_movement_buttons,
 };
 
 use super::RoomState;
 
 pub mod building;
+mod systems;
 mod ui;
 
 pub(super) struct GameBasementPlugin;
@@ -21,7 +23,11 @@ impl Plugin for GameBasementPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
             OnEnter(RoomState::Basement),
-            (generate_buildings, building_movement_buttons),
+            (
+                generate_basement_scene,
+                generate_buildings,
+                building_movement_buttons,
+            ),
         )
         .add_systems(
             Update,
