@@ -13,9 +13,100 @@ use crate::{assets::AppAssets, settings::Settings};
 
 #[derive(PartialEq, Eq, Hash, Clone)]
 pub enum LineId {
-    CategoryShopHeader,
-    CategoryInventoryHeader,
-    ItemBror,
+    DebugVersion,
+    DebugCfps,
+    DebugCmem,
+
+    SplashDisclaimer,
+
+    MenuLastsavegameFound,
+    MenuLastsavegameEmpty,
+
+    MenuPressstart,
+    MenuPlaygame,
+    MenuOptions,
+    MenuQuit,
+    MenuContinue,
+
+    SavegameTitle,
+    SavegameNew,
+    SavegamePoints,
+    SavegameMultiplier,
+    SavegameMultiplierCount,
+    SavegamePurchased,
+    SavegameYourname,
+
+    OptionsTitle,
+    OptionsMusic,
+    OptionsSound,
+    OptionsVsync,
+    OptionsFullscreen,
+    OptionsLanguage,
+    OptionsDebug,
+    OptionsReset,
+    OptionsClose,
+    OptionsGeneral,
+    OptionsVideo,
+    OptionsAudio,
+
+    GamePetshop,
+    GamePoints,
+    GameMultiplier,
+    GameNewpoint,
+
+    DialogsNotenoughpoints,
+
+    GiftsEmpty,
+    GiftsMultiplier,
+    GiftsPoints,
+    GiftsNewpet,
+
+    GameInventoryTitle,
+
+    PetBrorName,
+    PetBrorDesc,
+
+    PetSandwichName,
+    PetSandwichDesc,
+
+    PetManlooshkaName,
+    PetManlooshkaDesc,
+
+    PetThirstyName,
+    PetThirstyDesc,
+
+    PetFuriosName,
+    PetFuriosDesc,
+
+    PetTvcatName,
+    PetTvcatDesc,
+
+    PetProgcatName,
+    PetProgcatDesc,
+
+    PetScreamcatName,
+    PetScreamcatDesc,
+
+    PetHellcatName,
+    PetHellcatDesc,
+
+    PetLurkerName,
+    PetLurkerDesc,
+
+    PetPianoName,
+    PetPianoDesc,
+
+    PetBeeName,
+    PetBeeDesc,
+
+    PetBusyName,
+    PetBusyDesc,
+
+    PetAeaeName,
+    PetAeaeDesc,
+
+    PetSuccatName,
+    PetSuccatDesc,
 }
 
 impl<'de> Deserialize<'de> for LineId {
@@ -39,6 +130,76 @@ impl<'de> Deserialize<'de> for LineId {
                 let parts: Vec<&str> = v.split('.').collect();
 
                 match parts.as_slice() {
+                    ["debug", "version"] => Ok(LineId::DebugVersion),
+                    ["debug", "c_fps"] => Ok(LineId::DebugCfps),
+                    ["debug", "c_mem"] => Ok(LineId::DebugCmem),
+                    ["splash", "disclaimer"] => Ok(LineId::SplashDisclaimer),
+                    ["menu", "last_savegame", "found"] => Ok(LineId::MenuLastsavegameFound),
+                    ["menu", "last_savegame", "empty"] => Ok(LineId::MenuLastsavegameEmpty),
+                    ["menu", "pressStart"] => Ok(LineId::MenuPressstart),
+                    ["menu", "playGame"] => Ok(LineId::MenuPlaygame),
+                    ["menu", "options"] => Ok(LineId::MenuOptions),
+                    ["menu", "quit"] => Ok(LineId::MenuQuit),
+                    ["menu", "continue"] => Ok(LineId::MenuContinue),
+                    ["savegame", "title"] => Ok(LineId::SavegameTitle),
+                    ["savegame", "new"] => Ok(LineId::SavegameNew),
+                    ["savegame", "points"] => Ok(LineId::SavegamePoints),
+                    ["savegame", "multiplier"] => Ok(LineId::SavegameMultiplier),
+                    ["savegame", "multiplier", "count"] => Ok(LineId::SavegameMultiplierCount),
+                    ["savegame", "purchased"] => Ok(LineId::SavegamePurchased),
+                    ["savegame", "your_name"] => Ok(LineId::SavegameYourname),
+                    ["options", "title"] => Ok(LineId::OptionsTitle),
+                    ["options", "music"] => Ok(LineId::OptionsMusic),
+                    ["options", "sound"] => Ok(LineId::OptionsSound),
+                    ["options", "vsync"] => Ok(LineId::OptionsVsync),
+                    ["options", "fullscreen"] => Ok(LineId::OptionsFullscreen),
+                    ["options", "language"] => Ok(LineId::OptionsLanguage),
+                    ["options", "debug"] => Ok(LineId::OptionsDebug),
+                    ["options", "reset"] => Ok(LineId::OptionsReset),
+                    ["options", "close"] => Ok(LineId::OptionsClose),
+                    ["options", "general"] => Ok(LineId::OptionsGeneral),
+                    ["options", "video"] => Ok(LineId::OptionsVideo),
+                    ["options", "audio"] => Ok(LineId::OptionsAudio),
+                    ["game", "petShop"] => Ok(LineId::GamePetshop),
+                    ["game", "points"] => Ok(LineId::GamePoints),
+                    ["game", "multiplier"] => Ok(LineId::GameMultiplier),
+                    ["game", "newPoint"] => Ok(LineId::GameNewpoint),
+                    ["dialogs", "not_enough_points"] => Ok(LineId::DialogsNotenoughpoints),
+                    ["gifts", "empty"] => Ok(LineId::GiftsEmpty),
+                    ["gifts", "multiplier"] => Ok(LineId::GiftsMultiplier),
+                    ["gifts", "points"] => Ok(LineId::GiftsPoints),
+                    ["gifts", "new_pet"] => Ok(LineId::GiftsNewpet),
+                    ["game", "inventory", "title"] => Ok(LineId::GameInventoryTitle),
+                    ["pet", "bror", "name"] => Ok(LineId::PetBrorName),
+                    ["pet", "bror", "desc"] => Ok(LineId::PetBrorDesc),
+                    ["pet", "sandwich", "name"] => Ok(LineId::PetSandwichName),
+                    ["pet", "sandwich", "desc"] => Ok(LineId::PetSandwichDesc),
+                    ["pet", "manlooshka", "name"] => Ok(LineId::PetManlooshkaName),
+                    ["pet", "manlooshka", "desc"] => Ok(LineId::PetManlooshkaDesc),
+                    ["pet", "thirsty", "name"] => Ok(LineId::PetThirstyName),
+                    ["pet", "thirsty", "desc"] => Ok(LineId::PetThirstyDesc),
+                    ["pet", "furios", "name"] => Ok(LineId::PetFuriosName),
+                    ["pet", "furios", "desc"] => Ok(LineId::PetFuriosDesc),
+                    ["pet", "tvcat", "name"] => Ok(LineId::PetTvcatName),
+                    ["pet", "tvcat", "desc"] => Ok(LineId::PetTvcatDesc),
+                    ["pet", "progcat", "name"] => Ok(LineId::PetProgcatName),
+                    ["pet", "progcat", "desc"] => Ok(LineId::PetProgcatDesc),
+                    ["pet", "screamcat", "name"] => Ok(LineId::PetScreamcatName),
+                    ["pet", "screamcat", "desc"] => Ok(LineId::PetScreamcatDesc),
+                    ["pet", "hellcat", "name"] => Ok(LineId::PetHellcatName),
+                    ["pet", "hellcat", "desc"] => Ok(LineId::PetHellcatDesc),
+                    ["pet", "lurker", "name"] => Ok(LineId::PetLurkerName),
+                    ["pet", "lurker", "desc"] => Ok(LineId::PetLurkerDesc),
+                    ["pet", "piano", "name"] => Ok(LineId::PetPianoName),
+                    ["pet", "piano", "desc"] => Ok(LineId::PetPianoDesc),
+                    ["pet", "bee", "name"] => Ok(LineId::PetBeeName),
+                    ["pet", "bee", "desc"] => Ok(LineId::PetBeeDesc),
+                    ["pet", "busy", "name"] => Ok(LineId::PetBusyName),
+                    ["pet", "busy", "desc"] => Ok(LineId::PetBusyDesc),
+                    ["pet", "aeae", "name"] => Ok(LineId::PetAeaeName),
+                    ["pet", "aeae", "desc"] => Ok(LineId::PetAeaeDesc),
+                    ["pet", "succat", "name"] => Ok(LineId::PetSuccatName),
+                    ["pet", "succat", "desc"] => Ok(LineId::PetSuccatDesc),
                     _ => Err(Error::custom("unknown variant")),
                 }
             }
