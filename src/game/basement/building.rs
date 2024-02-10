@@ -2,12 +2,16 @@ use std::{str::FromStr, time::Duration};
 
 use bevy::prelude::*;
 use bevy_easings::{Ease, EaseMethod, EasingType};
+use bevy_mod_billboard::BillboardTextBundle;
 use bevy_persistent::Persistent;
 use bevy_sprite3d::{AtlasSprite3d, Sprite3d, Sprite3dParams};
 use bevy_turborand::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::{animation::Animation, assets::AppAssets, game::PlayerData};
+use crate::{
+    animation::Animation, assets::AppAssets, game::PlayerData,
+    style::get_building_header_text_style,
+};
 
 use super::ui::BuildingMovementButton;
 
@@ -99,16 +103,27 @@ pub(super) fn generate_buildings(
     let mut pos = [0.0, -9.0, -4.0];
 
     for (i, building) in savegame.buildings.keys().enumerate() {
-        commands.spawn((
-            SceneBundle {
-                scene: app_assets.mdl_petbed.clone(),
-                transform: Transform::from_xyz(pos[0], pos[1], pos[2]),
-                ..default()
-            },
-            Name::new(format!("Building {}", i)),
-            BuildingComponent { index: i as isize },
-            building.clone(),
-        ));
+        commands
+            .spawn((
+                SceneBundle {
+                    scene: app_assets.mdl_petbed.clone(),
+                    transform: Transform::from_xyz(pos[0], pos[1], pos[2]),
+                    ..default()
+                },
+                Name::new(format!("Building {}", i)),
+                BuildingComponent { index: i as isize },
+                building.clone(),
+            ))
+            .with_children(|parent| {
+                parent.spawn(BillboardTextBundle {
+                    text: Text::from_section(
+                        building.to_string(),
+                        get_building_header_text_style(app_assets.font_text.clone()),
+                    ),
+                    transform: Transform::from_xyz(0.0, 2.0, 0.0).with_scale(Vec3::splat(0.013)),
+                    ..default()
+                });
+            });
 
         pos[0] += 4.0;
     }
