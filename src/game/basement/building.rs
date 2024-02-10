@@ -111,7 +111,8 @@ pub(super) fn generate_buildings(
             .spawn((
                 SceneBundle {
                     scene: app_assets.mdl_petbed.clone(),
-                    transform: Transform::from_xyz(pos[0], pos[1], pos[2]),
+                    transform: Transform::from_xyz(pos[0], pos[1], pos[2])
+                        .with_scale(Vec3::splat(0.5)),
                     ..default()
                 },
                 Name::new(format!("Building {}", i)),
@@ -153,11 +154,17 @@ pub(super) fn update_building_position(
     mut query: Query<(&mut Transform, Entity), With<BuildingComponent>>,
 ) {
     if resource.is_changed() {
-        for (i, (mut t, e)) in query.iter_mut().enumerate() {
+        for (i, (t, e)) in query.iter_mut().enumerate() {
             let index = i as isize - resource.selected_index;
             let x = index as f32 * 4.0;
 
-            let mut t2 = t.clone();
+            let mut t2 = *t;
+
+            t2.scale = Vec3::splat(if resource.selected_index == i as isize {
+                1.0
+            } else {
+                0.5
+            });
 
             t2.translation.x = x;
 
