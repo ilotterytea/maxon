@@ -6,6 +6,7 @@ use bevy::{
 };
 use bevy_asset_loader::prelude::*;
 use bevy_common_assets::json::JsonAssetPlugin;
+use bevy_easings::EasingsPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_mod_picking::{debug::DebugPickingMode, DefaultPickingPlugins};
 use bevy_sprite3d::Sprite3dPlugin;
@@ -58,6 +59,8 @@ fn main() {
         .insert_resource(State::new(DebugPickingMode::Disabled))
         // RNG
         .add_plugins(RngPlugin::default())
+        // Easings (animation)
+        .add_plugins(EasingsPlugin)
         .run();
 }
 
