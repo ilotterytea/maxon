@@ -9,7 +9,10 @@ use bevy_turborand::prelude::*;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    animation::Animation, assets::AppAssets, game::PlayerData,
+    animation::Animation,
+    assets::AppAssets,
+    game::PlayerData,
+    localization::{LineId, Localization},
     style::get_building_header_text_style,
 };
 
@@ -99,6 +102,7 @@ pub(super) fn generate_buildings(
     mut commands: Commands,
     app_assets: Res<AppAssets>,
     savegame: Res<Persistent<PlayerData>>,
+    locale: Res<Localization>,
 ) {
     let mut pos = [0.0, -9.0, -4.0];
 
@@ -117,7 +121,19 @@ pub(super) fn generate_buildings(
             .with_children(|parent| {
                 parent.spawn(BillboardTextBundle {
                     text: Text::from_section(
-                        building.to_string(),
+                        {
+                            let name = format!("{}.name", building.to_string().to_lowercase());
+
+                            if let Some(line_id) = LineId::from_str(name.as_str()) {
+                                if let Some(line) = locale.get_literal_line(line_id) {
+                                    line
+                                } else {
+                                    name
+                                }
+                            } else {
+                                name
+                            }
+                        },
                         get_building_header_text_style(app_assets.font_text.clone()),
                     ),
                     transform: Transform::from_xyz(0.0, 2.0, 0.0).with_scale(Vec3::splat(0.013)),
