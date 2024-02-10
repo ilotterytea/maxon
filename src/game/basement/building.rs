@@ -178,17 +178,26 @@ pub(super) fn update_selected_building_index(
     }
 }
 
+#[derive(Component)]
+pub struct BuildingUnit;
+
 pub(super) fn update_building_units(
     mut commands: Commands,
     app_assets: Res<AppAssets>,
     building_query: Query<(Entity, &Building, &Children), With<Building>>,
+    building_unit_query: Query<Entity, With<BuildingUnit>>,
     savegame: Res<Persistent<PlayerData>>,
     mut sprite_params: Sprite3dParams,
     mut rng: ResMut<GlobalRng>,
 ) {
     for (e, b, c) in building_query.iter() {
         if let Some(amount) = savegame.buildings.get(b) {
-            let difference = amount - c.len();
+            let children = c
+                .iter()
+                .filter(|x| building_unit_query.iter().any(|y| (*x).eq(&y)))
+                .collect::<Vec<&Entity>>();
+
+            let difference = amount - children.len();
 
             if difference == 0 {
                 continue;
@@ -231,6 +240,7 @@ pub(super) fn update_building_units(
                         a.clone(),
                     )),
                 }
+                .insert(BuildingUnit)
                 .id();
 
                 commands.entity(e).add_child(id);
