@@ -143,29 +143,29 @@ pub(super) fn init_buildings(mut commands: Commands) {
 pub(super) fn generate_buildings(
     mut commands: Commands,
     app_assets: Res<AppAssets>,
-    savegame: Res<Persistent<PlayerData>>,
     locale: Res<Localization>,
+    buildings: Res<Buildings>,
 ) {
     let mut pos = [0.0, -9.0, -4.0];
 
-    for (i, building) in savegame.buildings.keys().enumerate() {
+    for (i, data) in buildings.0.iter().enumerate() {
         commands
             .spawn((
                 SceneBundle {
-                    scene: building.get_scene_handle(&app_assets),
+                    scene: data.building.get_scene_handle(&app_assets),
                     transform: Transform::from_xyz(pos[0], pos[1], pos[2])
                         .with_scale(Vec3::splat(0.5)),
                     ..default()
                 },
                 Name::new(format!("Building {}", i)),
                 BuildingComponent { index: i as isize },
-                building.clone(),
+                data.building.clone(),
             ))
             .with_children(|parent| {
                 parent.spawn(BillboardTextBundle {
                     text: Text::from_section(
                         {
-                            let name = format!("{}.name", building.to_string().to_lowercase());
+                            let name = format!("{}.name", data.building.to_string().to_lowercase());
 
                             if let Some(line_id) = LineId::from_str(name.as_str()) {
                                 if let Some(line) = locale.get_literal_line(line_id) {
