@@ -71,6 +71,12 @@ impl Building {
             ),
         }
     }
+
+    pub(super) fn get_scene_handle(&self, assets: &Res<AppAssets>) -> Handle<Scene> {
+        match self {
+            _ => assets.mdl_petbed.clone(),
+        }
+    }
 }
 
 impl FromStr for Building {
@@ -110,7 +116,7 @@ pub(super) fn generate_buildings(
         commands
             .spawn((
                 SceneBundle {
-                    scene: app_assets.mdl_petbed.clone(),
+                    scene: building.get_scene_handle(&app_assets),
                     transform: Transform::from_xyz(pos[0], pos[1], pos[2])
                         .with_scale(Vec3::splat(0.5)),
                     ..default()
