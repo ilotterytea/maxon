@@ -104,6 +104,42 @@ impl ToString for Building {
     }
 }
 
+#[derive(Resource)]
+pub struct Buildings(pub Vec<BuildingData>);
+
+pub struct BuildingData {
+    pub building: Building,
+    pub price: f32,
+    pub multiplier: f32,
+}
+
+pub(super) fn init_buildings(mut commands: Commands) {
+    let buildings = vec![
+        BuildingData {
+            building: Building::Bedroom,
+            price: 15.0,
+            multiplier: 0.1,
+        },
+        BuildingData {
+            building: Building::Kitchen,
+            price: 100.0,
+            multiplier: 1.0,
+        },
+        BuildingData {
+            building: Building::Canyon,
+            price: 1100.0,
+            multiplier: 8.0,
+        },
+        BuildingData {
+            building: Building::Sea,
+            price: 12000.0,
+            multiplier: 48.0,
+        },
+    ];
+
+    commands.insert_resource(Buildings(buildings));
+}
+
 pub(super) fn generate_buildings(
     mut commands: Commands,
     app_assets: Res<AppAssets>,

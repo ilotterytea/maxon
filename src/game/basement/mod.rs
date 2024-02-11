@@ -4,7 +4,7 @@ use crate::AppState;
 
 use self::{
     building::{
-        generate_buildings, update_building_position, update_building_units,
+        generate_buildings, init_buildings, update_building_position, update_building_units,
         update_selected_building_index,
     },
     systems::generate_basement_scene,
@@ -22,22 +22,23 @@ pub(super) struct GameBasementPlugin;
 
 impl Plugin for GameBasementPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(
-            OnEnter(RoomState::Basement),
-            (
-                generate_basement_scene,
-                generate_buildings,
-                building_movement_buttons,
-            ),
-        )
-        .add_systems(
-            Update,
-            (
-                update_building_position,
-                update_selected_building_index,
-                update_building_units,
+        app.add_systems(Startup, init_buildings)
+            .add_systems(
+                OnEnter(RoomState::Basement),
+                (
+                    generate_basement_scene,
+                    generate_buildings,
+                    building_movement_buttons,
+                ),
             )
-                .run_if(in_state(RoomState::Basement).and_then(in_state(AppState::Game))),
-        );
+            .add_systems(
+                Update,
+                (
+                    update_building_position,
+                    update_selected_building_index,
+                    update_building_units,
+                )
+                    .run_if(in_state(RoomState::Basement).and_then(in_state(AppState::Game))),
+            );
     }
 }
