@@ -145,14 +145,25 @@ pub(super) fn generate_buildings(
     app_assets: Res<AppAssets>,
     locale: Res<Localization>,
     buildings: Res<Buildings>,
+    savegame: Res<Persistent<PlayerData>>,
 ) {
     let mut pos = [0.0, -9.0, -4.0];
 
     for (i, data) in buildings.0.iter().enumerate() {
+        let scene = if savegame
+            .buildings
+            .iter()
+            .any(|(k, v)| k.eq(&data.building) && v.ne(&0))
+        {
+            data.building.get_scene_handle(&app_assets)
+        } else {
+            app_assets.mdl_building_unknown.clone()
+        };
+
         commands
             .spawn((
                 SceneBundle {
-                    scene: data.building.get_scene_handle(&app_assets),
+                    scene,
                     transform: Transform::from_xyz(pos[0], pos[1], pos[2])
                         .with_scale(Vec3::splat(0.5)),
                     ..default()
