@@ -16,6 +16,12 @@ use crate::{
 const UNIT_AREA_SPAWN: (Range<isize>, Range<isize>) = (-80..0, -60..0);
 
 #[derive(Component)]
+pub(super) struct UnitRoot;
+
+#[derive(Component)]
+pub(super) struct UnitParent;
+
+#[derive(Component)]
 pub struct Unit;
 
 pub fn spawn_units(
@@ -32,7 +38,7 @@ pub fn spawn_units(
     let buildings = buildings.0.iter();
 
     let parent = commands
-        .spawn((SpatialBundle::default(), Name::new("Buildings")))
+        .spawn((SpatialBundle::default(), Name::new("Buildings"), UnitRoot))
         .id();
 
     for b in buildings {
@@ -41,10 +47,13 @@ pub fn spawn_units(
                 continue;
             }
 
-            let (_, character) = b.building.get_image_handles(&app_assets);
-
             let e = commands
-                .spawn((SpatialBundle::default(), Name::new(b.building.to_string())))
+                .spawn((
+                    SpatialBundle::default(),
+                    Name::new(b.building.to_string()),
+                    UnitParent,
+                    b.building.clone(),
+                ))
                 .id();
 
             commands.entity(parent).add_child(e);
