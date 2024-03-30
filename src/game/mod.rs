@@ -7,12 +7,14 @@ use self::{
     player::*,
     systems::{generate_game_scene, update_camera_transform},
     ui::*,
+    units::GameUnitPlugin,
 };
 
 pub mod basement;
 mod player;
 mod systems;
 mod ui;
+mod units;
 
 pub struct GamePlugin;
 
@@ -21,6 +23,7 @@ impl Plugin for GamePlugin {
         app.add_state::<RoomState>()
             .add_systems(Startup, (init_player_data, generate_multiplier_timer))
             .add_plugins(GameBasementPlugin)
+            .add_plugins(GameUnitPlugin)
             .add_systems(OnEnter(AppState::Game), set_default_room_state)
             .add_systems(
                 OnEnter(RoomState::LivingRoom),
