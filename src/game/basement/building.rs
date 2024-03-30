@@ -41,16 +41,13 @@ pub(super) struct BuildingResource {
 }
 
 #[derive(Clone)]
-pub(super) enum BuildingCharacter {
+pub enum BuildingCharacter {
     Static(Handle<Image>),
     Animated(Handle<TextureAtlas>, Animation),
 }
 
 impl Building {
-    pub(super) fn get_image_handles(
-        &self,
-        assets: &Res<AppAssets>,
-    ) -> (Handle<Image>, BuildingCharacter) {
+    pub fn get_image_handles(&self, assets: &Res<AppAssets>) -> (Handle<Image>, BuildingCharacter) {
         let timer = Timer::from_seconds(0.02, TimerMode::Repeating);
 
         match self {
@@ -72,7 +69,7 @@ impl Building {
         }
     }
 
-    pub(super) fn get_scene_handle(&self, assets: &Res<AppAssets>) -> Handle<Scene> {
+    pub fn get_scene_handle(&self, assets: &Res<AppAssets>) -> Handle<Scene> {
         match self {
             _ => assets.mdl_petbed.clone(),
         }
