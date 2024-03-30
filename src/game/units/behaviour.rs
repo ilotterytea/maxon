@@ -8,7 +8,7 @@ use bevy_turborand::{DelegatedRng, GlobalRng};
 use crate::{
     assets::AppAssets,
     game::{
-        basement::building::{BuildingCharacter, Buildings},
+        basement::building::{Building, BuildingCharacter, Buildings},
         PlayerData,
     },
 };
@@ -49,46 +49,66 @@ pub fn spawn_units(
 
             commands.entity(parent).add_child(e);
 
-            for i in 0..*amount {
-                let x = rng.isize(UNIT_AREA_SPAWN.0);
-                let z = rng.isize(UNIT_AREA_SPAWN.1);
-
-                let transform = Transform::from_xyz(x as f32, 0.8, z as f32)
-                    .looking_at(camera_transform.translation, Vec3::Y);
-
-                let unit = Unit;
-
-                let name = Name::new(format!("{} #{}", b.building.to_string(), i + 1));
-
-                let id = match character {
-                    BuildingCharacter::Static(ref v) => commands.spawn((
-                        Sprite3d {
-                            image: v.clone(),
-                            transform,
-                            ..default()
-                        }
-                        .bundle(&mut sprite_params),
-                        unit,
-                        name,
-                    )),
-
-                    BuildingCharacter::Animated(ref v, ref a) => commands.spawn((
-                        AtlasSprite3d {
-                            atlas: v.clone(),
-                            index: 0,
-                            transform,
-                            ..default()
-                        }
-                        .bundle(&mut sprite_params),
-                        a.clone(),
-                        unit,
-                        name,
-                    )),
-                }
-                .id();
+            for _ in 0..*amount {
+                let id = generate_unit(
+                    &mut commands,
+                    b.building.clone(),
+                    &mut rng,
+                    camera_transform,
+                    &app_assets,
+                    &mut sprite_params,
+                );
 
                 commands.entity(e).add_child(id);
             }
         }
     }
+}
+
+fn generate_unit(
+    commands: &mut Commands,
+    building: Building,
+    rng: &mut ResMut<GlobalRng>,
+    camera_transform: &Transform,
+    app_assets: &Res<AppAssets>,
+    mut sprite_params: &mut Sprite3dParams,
+) -> Entity {
+    let (_, character) = building.get_image_handles(app_assets);
+
+    let x = rng.isize(UNIT_AREA_SPAWN.0);
+    let z = rng.isize(UNIT_AREA_SPAWN.1);
+
+    let transform = Transform::from_xyz(x as f32, 0.8, z as f32)
+        .looking_at(camera_transform.translation, Vec3::Y);
+
+    let unit = Unit;
+
+    let name = Name::new(building.to_string());
+
+    match character {
+        BuildingCharacter::Static(ref v) => commands.spawn((
+            Sprite3d {
+                image: v.clone(),
+                transform,
+                ..default()
+            }
+            .bundle(&mut sprite_params),
+            unit,
+            name,
+        )),
+
+        BuildingCharacter::Animated(ref v, ref a) => commands.spawn((
+            AtlasSprite3d {
+                atlas: v.clone(),
+                index: 0,
+                transform,
+                ..default()
+            }
+            .bundle(&mut sprite_params),
+            a.clone(),
+            unit,
+            name,
+        )),
+    }
+    .id()
 }
