@@ -74,6 +74,81 @@ pub fn spawn_units(
     }
 }
 
+pub fn update_unit_amount(
+    mut commands: Commands,
+    savegame: Res<Persistent<PlayerData>>,
+    mut rng: ResMut<GlobalRng>,
+    mut sprite_params: Sprite3dParams,
+    app_assets: Res<AppAssets>,
+    camera_query: Query<&Transform, With<Camera>>,
+    root_query: Query<Entity, (With<UnitRoot>, Without<UnitParent>, Without<Unit>)>,
+    parent_query: Query<
+        (&Building, &Children, Entity),
+        (With<Building>, With<UnitParent>, Without<Unit>),
+    >,
+) {
+    let camera_transform = camera_query.single();
+    let root = root_query.single();
+
+    for (building, amount) in savegame.buildings.iter() {
+        let (building, b_children, b_entity) = match parent_query.iter().find(|x| x.0.eq(building))
+        {
+            Some(v) => (v.0, Some(v.1), v.2),
+            None => {
+                let e = commands
+                    .spawn((
+                        SpatialBundle::default(),
+                        Name::new(building.to_string()),
+                        UnitParent,
+                        building.clone(),
+                    ))
+                    .id();
+
+                commands.entity(root).add_child(e);
+
+                (building, None, e)
+            }
+        };
+
+        let children_amount = match b_children {
+            Some(v) => v.len(),
+            None => 0,
+        };
+
+        let difference: isize = *amount as isize - children_amount as isize;
+
+        if difference == 0 {
+            continue;
+        }
+
+        if difference.is_positive() {
+            for _ in 0..difference {
+                let id = generate_unit(
+                    &mut commands,
+                    building.clone(),
+                    &mut rng,
+                    camera_transform,
+                    &app_assets,
+                    &mut sprite_params,
+                );
+
+                commands.entity(b_entity).add_child(id);
+            }
+        }
+
+        if let Some(b_children) = b_children {
+            if difference.is_negative() {
+                for _ in difference..0 {
+                    let u_entity = b_children[rng.usize(0..b_children.len())];
+
+                    commands.entity(b_entity).remove_children(&[u_entity]);
+                    commands.entity(u_entity).despawn_recursive();
+                }
+            }
+        }
+    }
+}
+
 fn generate_unit(
     commands: &mut Commands,
     building: Building,
