@@ -27,7 +27,12 @@ impl Plugin for GamePlugin {
             .add_systems(OnEnter(AppState::Game), set_default_room_state)
             .add_systems(
                 OnEnter(RoomState::LivingRoom),
-                (generate_player, generate_control_ui, generate_game_scene),
+                (
+                    generate_player,
+                    generate_control_ui,
+                    generate_savegame_ui,
+                    generate_game_scene,
+                ),
             )
             .add_systems(
                 Update,

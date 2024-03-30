@@ -1,10 +1,6 @@
 use crate::{
     assets::AppAssets,
-    localization::{LineId, Localization},
-    style::{
-        get_category_header_text_style, get_item_desc_text_style, get_item_header_text_style,
-        CONTROLPANEL_BG_COLOR, ITEM_BG_ACTIVE_COLOR, ITEM_BORDER_COLOR,
-    },
+    style::{get_savegame_ui_text_style, CONTROLPANEL_BG_COLOR},
 };
 use bevy::prelude::*;
 use bevy_persistent::Persistent;
@@ -128,12 +124,99 @@ pub fn generate_control_ui(mut commands: Commands, app_assets: Res<AppAssets>) {
         });
 }
 
+pub fn generate_savegame_ui(
+    mut commands: Commands,
+    app_assets: Res<AppAssets>,
+    savegame: Res<Persistent<PlayerData>>,
+) {
+    commands
+        .spawn((
+            NodeBundle {
+                style: Style {
+                    display: Display::Flex,
+                    flex_direction: FlexDirection::Column,
+                    margin: UiRect::all(Val::Percent(1.0)),
+                    ..default()
+                },
+                background_color: CONTROLPANEL_BG_COLOR.into(),
+                ..default()
+            },
+            Name::new("Savegame UI"),
+        ))
+        .with_children(|parent| {
+            let node_style = Style {
+                display: Display::Flex,
+                flex_direction: FlexDirection::Row,
+                align_items: AlignItems::Center,
+                max_height: Val::Px(64.0),
+                ..default()
+            };
+
+            let image_style = Style {
+                max_height: node_style.max_height,
+                aspect_ratio: Some(1.0),
+                ..default()
+            };
+
+            parent
+                .spawn((
+                    NodeBundle {
+                        style: node_style.clone(),
+                        ..default()
+                    },
+                    Name::new("Money node"),
+                ))
+                .with_children(|node| {
+                    node.spawn(ImageBundle {
+                        style: image_style.clone(),
+                        image: UiImage::new(app_assets.ui_points.clone()),
+                        ..default()
+                    });
+
+                    node.spawn((
+                        TextBundle {
+                            text: Text::from_section(
+                                savegame.money.trunc().to_string(),
+                                get_savegame_ui_text_style(app_assets.font_text.clone()),
+                            ),
+                            ..default()
+                        },
+                        UiTextMoneyComponent,
+                    ));
+                });
+
+            parent
+                .spawn((
+                    NodeBundle {
+                        style: node_style.clone(),
+                        ..default()
+                    },
+                    Name::new("Multiplier node"),
+                ))
+                .with_children(|node| {
+                    node.spawn(ImageBundle {
+                        style: image_style.clone(),
+                        image: UiImage::new(app_assets.ui_multiplier.clone()),
+                        ..default()
+                    });
+
+                    node.spawn(TextBundle {
+                        text: Text::from_section(
+                            savegame.multiplier.trunc().to_string(),
+                            get_savegame_ui_text_style(app_assets.font_text.clone()),
+                        ),
+                        ..default()
+                    });
+                });
+        });
+}
+
 pub fn update_ui(
     player_data: Res<Persistent<PlayerData>>,
     mut money_text_query: Query<&mut Text, With<UiTextMoneyComponent>>,
 ) {
     if let Ok(mut money_text) = money_text_query.get_single_mut() {
-        if let Some(mut text) = money_text.sections.get_mut(0) {
+        if let Some(text) = money_text.sections.get_mut(0) {
             text.value = player_data.money.to_string();
         }
     }
