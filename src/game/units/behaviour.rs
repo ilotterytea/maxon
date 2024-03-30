@@ -13,7 +13,7 @@ use crate::{
     },
 };
 
-const UNIT_AREA_SPAWN: (Range<isize>, Range<isize>) = (-8..0, -6..0);
+const UNIT_AREA_SPAWN: (Range<isize>, Range<isize>) = (-80..0, -60..0);
 
 #[derive(Component)]
 pub struct Unit;
@@ -75,11 +75,11 @@ fn generate_unit(
 ) -> Entity {
     let (_, character) = building.get_image_handles(app_assets);
 
-    let x = rng.isize(UNIT_AREA_SPAWN.0);
-    let z = rng.isize(UNIT_AREA_SPAWN.1);
+    let x = rng.isize(UNIT_AREA_SPAWN.0) as f32 / 10.0;
+    let z = rng.isize(UNIT_AREA_SPAWN.1) as f32 / 10.0;
 
-    let transform = Transform::from_xyz(x as f32, 0.8, z as f32)
-        .looking_at(camera_transform.translation, Vec3::Y);
+    let transform =
+        Transform::from_xyz(x, 0.8, z).looking_at(camera_transform.translation, Vec3::Y);
 
     let unit = Unit;
 
