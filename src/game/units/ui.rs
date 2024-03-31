@@ -123,45 +123,71 @@ pub fn generate_shop_ui(
                             display: Display::Flex,
                             justify_content: JustifyContent::Center,
                             align_items: AlignItems::Center,
-                            padding: UiRect::all(Val::Percent(0.5)),
+                            padding: UiRect::all(Val::Percent(2.0)),
                             flex_grow: 1.0,
                             ..default()
                         };
 
                         let text_style = TextStyle {
                             font: app_assets.font_text.clone(),
-                            font_size: 8.0,
+                            font_size: 12.0,
                             color: Color::BEIGE.into(),
+                        };
+
+                        let text_node_style = Style {
+                            width: Val::Percent(100.0),
+                            ..default()
                         };
 
                         // Buy 1x
                         ctrl.spawn(ButtonBundle {
-                            style: button_style.clone(),
+                            style: Style {
+                                margin: UiRect::right(Val::Percent(2.0)),
+                                ..button_style.clone()
+                            },
                             background_color: Color::GRAY.into(),
                             ..default()
                         })
                         .with_children(|btn| {
-                            btn.spawn(TextBundle::from_section("Buy 1x", text_style.clone()));
+                            btn.spawn(
+                                TextBundle::from_section("Buy 1x", text_style.clone())
+                                    .with_style(text_node_style.clone())
+                                    .with_text_alignment(TextAlignment::Center),
+                            );
                         });
 
                         // Buy 10x
                         ctrl.spawn(ButtonBundle {
-                            style: button_style.clone(),
+                            style: Style {
+                                margin: UiRect::right(Val::Percent(2.0)),
+                                ..button_style.clone()
+                            },
                             background_color: Color::GRAY.into(),
                             ..default()
                         })
                         .with_children(|btn| {
-                            btn.spawn(TextBundle::from_section("Buy 10x", text_style.clone()));
+                            btn.spawn(
+                                TextBundle::from_section("Buy 10x", text_style.clone())
+                                    .with_style(text_node_style.clone())
+                                    .with_text_alignment(TextAlignment::Center),
+                            );
                         });
 
                         // Sell 1x
                         ctrl.spawn(ButtonBundle {
-                            style: button_style.clone(),
+                            style: Style {
+                                margin: UiRect::right(Val::Percent(2.0)),
+                                ..button_style.clone()
+                            },
                             background_color: Color::GRAY.into(),
                             ..default()
                         })
                         .with_children(|btn| {
-                            btn.spawn(TextBundle::from_section("Sell 1x", text_style.clone()));
+                            btn.spawn(
+                                TextBundle::from_section("Sell 1x", text_style.clone())
+                                    .with_style(text_node_style.clone())
+                                    .with_text_alignment(TextAlignment::Center),
+                            );
                         });
 
                         // Sell 10x
@@ -171,7 +197,11 @@ pub fn generate_shop_ui(
                             ..default()
                         })
                         .with_children(|btn| {
-                            btn.spawn(TextBundle::from_section("Sell 10x", text_style.clone()));
+                            btn.spawn(
+                                TextBundle::from_section("Sell 10x", text_style.clone())
+                                    .with_style(text_node_style.clone())
+                                    .with_text_alignment(TextAlignment::Center),
+                            );
                         });
                     });
             })
