@@ -5,7 +5,7 @@ use crate::{animation::update_animations, constants::CAMERA_TRANSFORMS, AppState
 use self::{
     basement::GameBasementPlugin,
     player::*,
-    shop::ui::generate_shop_ui,
+    shop::{systems::set_availability_for_control_buttons, ui::generate_shop_ui},
     systems::{generate_game_scene, update_camera_transform},
     ui::*,
     units::GameUnitPlugin,
@@ -39,7 +39,12 @@ impl Plugin for GamePlugin {
             )
             .add_systems(
                 Update,
-                (update_ui, update_animations, tick_multiplier_timer)
+                (
+                    update_ui,
+                    update_animations,
+                    tick_multiplier_timer,
+                    set_availability_for_control_buttons,
+                )
                     .run_if(in_state(RoomState::LivingRoom).and_then(in_state(AppState::Game))),
             )
             .add_systems(
