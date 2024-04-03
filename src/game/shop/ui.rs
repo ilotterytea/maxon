@@ -3,6 +3,7 @@ use bevy_persistent::Persistent;
 
 use crate::{
     assets::AppAssets,
+    constants::ITEM_PRICE_MULTIPLIER,
     game::{
         basement::building::{BuildingCharacter, Buildings},
         PlayerData,
@@ -20,6 +21,11 @@ pub fn generate_shop_ui(
     let buildings = &buildings.0;
 
     for b in buildings.iter() {
+        let price = match savegame.buildings.get(&b.building) {
+            Some(x) => b.price * ITEM_PRICE_MULTIPLIER.powf(*x as f64) as f32,
+            None => b.price,
+        };
+
         let id = commands
             .spawn(NodeBundle {
                 style: Style {
@@ -96,7 +102,7 @@ pub fn generate_shop_ui(
 
                             // Item price
                             desc.spawn(TextBundle::from_section(
-                                b.price.to_string(),
+                                price.trunc().to_string(),
                                 TextStyle {
                                     font: app_assets.font_text.clone(),
                                     font_size: 20.0,
