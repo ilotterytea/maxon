@@ -5,6 +5,7 @@ use crate::{animation::update_animations, constants::CAMERA_TRANSFORMS, AppState
 use self::{
     basement::GameBasementPlugin,
     player::*,
+    shop::ui::generate_shop_ui,
     systems::{generate_game_scene, update_camera_transform},
     ui::*,
     units::GameUnitPlugin,
@@ -12,6 +13,7 @@ use self::{
 
 pub mod basement;
 mod player;
+mod shop;
 mod systems;
 mod ui;
 mod units;
@@ -32,6 +34,7 @@ impl Plugin for GamePlugin {
                     generate_control_ui,
                     generate_savegame_ui,
                     generate_game_scene,
+                    generate_shop_ui,
                 ),
             )
             .add_systems(
