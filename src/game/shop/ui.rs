@@ -11,6 +11,27 @@ use crate::{
     style::{DARKER_MAIN_COLOR, DARK_MAIN_COLOR, MAIN_COLOR},
 };
 
+#[derive(Component)]
+pub enum MultiplierButtonComponent {
+    X1,
+    X10,
+}
+
+impl MultiplierButtonComponent {
+    pub fn as_usize(&self) -> usize {
+        match &self {
+            MultiplierButtonComponent::X1 => 1,
+            MultiplierButtonComponent::X10 => 10,
+        }
+    }
+}
+
+#[derive(Component)]
+pub enum ControlButtonComponent {
+    Buy,
+    Sell,
+}
+
 pub fn generate_shop_ui(
     mut commands: Commands,
     savegame: Res<Persistent<PlayerData>>,
@@ -146,14 +167,19 @@ pub fn generate_shop_ui(
                         };
 
                         // Buy 1x
-                        ctrl.spawn(ButtonBundle {
-                            style: Style {
-                                margin: UiRect::right(Val::Percent(2.0)),
-                                ..button_style.clone()
+                        ctrl.spawn((
+                            ButtonBundle {
+                                style: Style {
+                                    margin: UiRect::right(Val::Percent(2.0)),
+                                    ..button_style.clone()
+                                },
+                                background_color: Color::GRAY.into(),
+                                ..default()
                             },
-                            background_color: Color::GRAY.into(),
-                            ..default()
-                        })
+                            ControlButtonComponent::Buy,
+                            MultiplierButtonComponent::X1,
+                            b.building.clone(),
+                        ))
                         .with_children(|btn| {
                             btn.spawn(
                                 TextBundle::from_section("Buy 1x", text_style.clone())
@@ -163,14 +189,19 @@ pub fn generate_shop_ui(
                         });
 
                         // Buy 10x
-                        ctrl.spawn(ButtonBundle {
-                            style: Style {
-                                margin: UiRect::right(Val::Percent(2.0)),
-                                ..button_style.clone()
+                        ctrl.spawn((
+                            ButtonBundle {
+                                style: Style {
+                                    margin: UiRect::right(Val::Percent(2.0)),
+                                    ..button_style.clone()
+                                },
+                                background_color: Color::GRAY.into(),
+                                ..default()
                             },
-                            background_color: Color::GRAY.into(),
-                            ..default()
-                        })
+                            ControlButtonComponent::Buy,
+                            MultiplierButtonComponent::X10,
+                            b.building.clone(),
+                        ))
                         .with_children(|btn| {
                             btn.spawn(
                                 TextBundle::from_section("Buy 10x", text_style.clone())
@@ -180,14 +211,19 @@ pub fn generate_shop_ui(
                         });
 
                         // Sell 1x
-                        ctrl.spawn(ButtonBundle {
-                            style: Style {
-                                margin: UiRect::right(Val::Percent(2.0)),
-                                ..button_style.clone()
+                        ctrl.spawn((
+                            ButtonBundle {
+                                style: Style {
+                                    margin: UiRect::right(Val::Percent(2.0)),
+                                    ..button_style.clone()
+                                },
+                                background_color: Color::GRAY.into(),
+                                ..default()
                             },
-                            background_color: Color::GRAY.into(),
-                            ..default()
-                        })
+                            ControlButtonComponent::Sell,
+                            MultiplierButtonComponent::X1,
+                            b.building.clone(),
+                        ))
                         .with_children(|btn| {
                             btn.spawn(
                                 TextBundle::from_section("Sell 1x", text_style.clone())
@@ -197,11 +233,16 @@ pub fn generate_shop_ui(
                         });
 
                         // Sell 10x
-                        ctrl.spawn(ButtonBundle {
-                            style: button_style.clone(),
-                            background_color: Color::GRAY.into(),
-                            ..default()
-                        })
+                        ctrl.spawn((
+                            ButtonBundle {
+                                style: button_style.clone(),
+                                background_color: Color::GRAY.into(),
+                                ..default()
+                            },
+                            ControlButtonComponent::Sell,
+                            MultiplierButtonComponent::X10,
+                            b.building.clone(),
+                        ))
                         .with_children(|btn| {
                             btn.spawn(
                                 TextBundle::from_section("Sell 10x", text_style.clone())
