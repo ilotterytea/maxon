@@ -5,7 +5,7 @@ use crate::{animation::update_animations, constants::CAMERA_TRANSFORMS, AppState
 use self::{
     basement::GameBasementPlugin,
     player::*,
-    shop::{systems::set_availability_for_control_buttons, ui::generate_shop_ui},
+    shop::{systems::set_availability_for_control_buttons, ui::generate_shop_ui, ShopSettings},
     systems::{generate_game_scene, update_camera_transform},
     ui::*,
     units::GameUnitPlugin,
@@ -22,7 +22,8 @@ pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.add_state::<RoomState>()
+        app.insert_resource(ShopSettings::default())
+            .add_state::<RoomState>()
             .add_systems(Startup, (init_player_data, generate_multiplier_timer))
             .add_plugins(GameBasementPlugin)
             .add_plugins(GameUnitPlugin)
