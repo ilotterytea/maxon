@@ -8,14 +8,14 @@ use super::RoomState;
 pub mod systems;
 pub mod ui;
 
-#[derive(Default)]
+#[derive(Component, Clone, PartialEq, Eq, Default)]
 pub enum ShopMultiplier {
     #[default]
     X1,
     X10,
 }
 
-#[derive(Default)]
+#[derive(Component, Clone, PartialEq, Eq, Default)]
 pub enum ShopMode {
     #[default]
     Buy,
