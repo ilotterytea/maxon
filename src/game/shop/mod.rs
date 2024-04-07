@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::AppState;
+
 use self::systems::*;
 use self::ui::*;
 
@@ -33,6 +35,11 @@ pub struct GameShopPlugin;
 impl Plugin for GameShopPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(ShopSettings::default())
-            .add_systems(OnEnter(RoomState::LivingRoom), generate_shop_ui);
+            .add_systems(OnEnter(RoomState::LivingRoom), generate_shop_ui)
+            .add_systems(
+                Update,
+                set_shop_mode
+                    .run_if(in_state(RoomState::LivingRoom).and_then(in_state(AppState::Game))),
+            );
     }
 }
