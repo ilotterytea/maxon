@@ -25,6 +25,9 @@ pub struct UiUnitItemDescComponent;
 #[derive(Component)]
 pub struct UiUnitPriceTextComponent;
 
+#[derive(Component)]
+pub struct UiUnitDisabledComponent;
+
 pub fn generate_shop_ui(
     mut commands: Commands,
     savegame: Res<Persistent<PlayerData>>,
@@ -403,5 +406,64 @@ pub fn update_price(
         .trunc();
 
         text.sections[0] = price.to_string().into();
+    }
+}
+
+pub fn set_availability_for_unit_items(
+    mut commands: Commands,
+    mut query: Query<
+        (
+            Entity,
+            &Building,
+            &mut BackgroundColor,
+            Option<&UiUnitDisabledComponent>,
+        ),
+        With<UiUnitComponent>,
+    >,
+    shop_settings: Res<ShopSettings>,
+    savegame: Res<Persistent<PlayerData>>,
+    buildings: Res<Buildings>,
+) {
+    let buildings = &buildings.0;
+    let unit_amount = shop_settings.multiplier.as_usize() as f64;
+
+    for (e, b, mut bg, d) in query.iter_mut() {
+        let building = match buildings.iter().find(|x| x.building.eq(b)) {
+            Some(v) => v,
+            None => continue,
+        };
+
+        let amount = *savegame.buildings.get(b).unwrap_or(&0) as f64;
+
+        let money = savegame.money.trunc();
+
+        match shop_settings.mode {
+            ShopMode::Buy => {
+                let price =
+                    building.price as f64 * ITEM_PRICE_MULTIPLIER.powf(amount + unit_amount);
+                let price = price.trunc();
+
+                if d.is_some() && price <= money {
+                    commands.entity(e).remove::<UiUnitDisabledComponent>();
+                    *bg = MAIN_COLOR.into();
+                }
+
+                if d.is_none() && price > money {
+                    commands.entity(e).insert(UiUnitDisabledComponent);
+                    *bg = DARKER_MAIN_COLOR.into();
+                }
+            }
+            ShopMode::Sell => {
+                if d.is_some() && unit_amount <= amount {
+                    commands.entity(e).remove::<UiUnitDisabledComponent>();
+                    *bg = MAIN_COLOR.into();
+                }
+
+                if d.is_none() && unit_amount > amount {
+                    commands.entity(e).insert(UiUnitDisabledComponent);
+                    *bg = DARKER_MAIN_COLOR.into();
+                }
+            }
+        }
     }
 }
