@@ -17,6 +17,15 @@ pub enum ShopMultiplier {
     X10,
 }
 
+impl ShopMultiplier {
+    pub fn as_usize(&self) -> usize {
+        match self {
+            ShopMultiplier::X1 => 1,
+            ShopMultiplier::X10 => 10,
+        }
+    }
+}
+
 #[derive(Component, Clone, PartialEq, Eq, Default)]
 pub enum ShopMode {
     #[default]
@@ -38,7 +47,7 @@ impl Plugin for GameShopPlugin {
             .add_systems(OnEnter(RoomState::LivingRoom), generate_shop_ui)
             .add_systems(
                 Update,
-                (set_shop_mode, set_shop_multiplier)
+                (set_shop_mode, set_shop_multiplier, update_price)
                     .run_if(in_state(RoomState::LivingRoom).and_then(in_state(AppState::Game))),
             );
     }

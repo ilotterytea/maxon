@@ -5,13 +5,25 @@ use crate::{
     assets::AppAssets,
     constants::ITEM_PRICE_MULTIPLIER,
     game::{
-        basement::building::{BuildingCharacter, Buildings},
+        basement::building::{Building, BuildingCharacter, Buildings},
         PlayerData,
     },
     style::{DARKER_MAIN_COLOR, DARK_MAIN_COLOR, MAIN_COLOR},
 };
 
-use super::{ShopMode, ShopMultiplier};
+use super::{ShopMode, ShopMultiplier, ShopSettings};
+
+#[derive(Component)]
+pub struct UiUnitComponent;
+
+#[derive(Component)]
+pub struct UiUnitItemInfoComponent;
+
+#[derive(Component)]
+pub struct UiUnitItemDescComponent;
+
+#[derive(Component)]
+pub struct UiUnitPriceTextComponent;
 
 pub fn generate_shop_ui(
     mut commands: Commands,
@@ -29,30 +41,37 @@ pub fn generate_shop_ui(
         };
 
         let id = commands
-            .spawn(NodeBundle {
-                style: Style {
-                    display: Display::Flex,
-                    flex_direction: FlexDirection::Column,
-                    width: Val::Percent(100.0),
-                    padding: UiRect::all(Val::Percent(1.0)),
-                    margin: UiRect::vertical(Val::Percent(1.0)),
+            .spawn((
+                NodeBundle {
+                    style: Style {
+                        display: Display::Flex,
+                        flex_direction: FlexDirection::Column,
+                        width: Val::Percent(100.0),
+                        padding: UiRect::all(Val::Percent(1.0)),
+                        margin: UiRect::vertical(Val::Percent(1.0)),
+                        ..default()
+                    },
+                    background_color: DARK_MAIN_COLOR.into(),
                     ..default()
                 },
-                background_color: DARK_MAIN_COLOR.into(),
-                ..default()
-            })
+                b.building.clone(),
+                UiUnitComponent,
+            ))
             .with_children(|parent| {
                 // Info
                 parent
-                    .spawn(NodeBundle {
-                        style: Style {
-                            display: Display::Flex,
-                            flex_direction: FlexDirection::Row,
-                            align_items: AlignItems::Center,
+                    .spawn((
+                        NodeBundle {
+                            style: Style {
+                                display: Display::Flex,
+                                flex_direction: FlexDirection::Row,
+                                align_items: AlignItems::Center,
+                                ..default()
+                            },
                             ..default()
                         },
-                        ..default()
-                    })
+                        UiUnitItemInfoComponent,
+                    ))
                     .with_children(|info| {
                         let icon_style = Style {
                             width: Val::Px(64.0),
@@ -82,15 +101,18 @@ pub fn generate_shop_ui(
                         }
 
                         // Item description
-                        info.spawn(NodeBundle {
-                            style: Style {
-                                display: Display::Flex,
-                                flex_direction: FlexDirection::Column,
-                                flex_grow: 1.0,
+                        info.spawn((
+                            NodeBundle {
+                                style: Style {
+                                    display: Display::Flex,
+                                    flex_direction: FlexDirection::Column,
+                                    flex_grow: 1.0,
+                                    ..default()
+                                },
                                 ..default()
                             },
-                            ..default()
-                        })
+                            UiUnitItemDescComponent,
+                        ))
                         .with_children(|desc| {
                             // Item name
                             desc.spawn(TextBundle::from_section(
@@ -103,13 +125,16 @@ pub fn generate_shop_ui(
                             ));
 
                             // Item price
-                            desc.spawn(TextBundle::from_section(
-                                price.trunc().to_string(),
-                                TextStyle {
-                                    font: app_assets.font_text.clone(),
-                                    font_size: 20.0,
-                                    color: Color::BEIGE.into(),
-                                },
+                            desc.spawn((
+                                TextBundle::from_section(
+                                    price.trunc().to_string(),
+                                    TextStyle {
+                                        font: app_assets.font_text.clone(),
+                                        font_size: 20.0,
+                                        color: Color::BEIGE.into(),
+                                    },
+                                ),
+                                UiUnitPriceTextComponent,
                             ));
                         });
                     });
@@ -306,4 +331,77 @@ pub fn generate_shop_ui(
                 shop_item_list.add_child(e);
             }
         });
+}
+
+pub fn update_price(
+    unit_query: Query<(&Building, &Children), With<UiUnitComponent>>,
+    info_query: Query<
+        (Entity, &Children),
+        (
+            With<UiUnitItemInfoComponent>,
+            Without<UiUnitPriceTextComponent>,
+            Without<UiUnitItemDescComponent>,
+            Without<UiUnitComponent>,
+        ),
+    >,
+    desc_query: Query<
+        (Entity, &Children),
+        (
+            With<UiUnitItemDescComponent>,
+            Without<UiUnitPriceTextComponent>,
+            Without<UiUnitItemInfoComponent>,
+            Without<UiUnitComponent>,
+        ),
+    >,
+    mut text_query: Query<
+        (Entity, &mut Text),
+        (
+            With<UiUnitPriceTextComponent>,
+            Without<UiUnitItemDescComponent>,
+            Without<UiUnitItemInfoComponent>,
+        ),
+    >,
+    savegame: Res<Persistent<PlayerData>>,
+    shop_settings: Res<ShopSettings>,
+    buildings: Res<Buildings>,
+) {
+    let unit_amount = shop_settings.multiplier.as_usize() as f64;
+
+    let buildings = &buildings.0;
+
+    for (unit_b, unit_c) in unit_query.iter() {
+        let building = match buildings.iter().find(|x| x.building.eq(unit_b)) {
+            Some(v) => v,
+            None => continue,
+        };
+
+        let (_, info_c) = info_query
+            .iter()
+            .find(|x| unit_c.iter().any(|y| y.eq(&x.0)))
+            .unwrap();
+
+        let (_, desc_c) = desc_query
+            .iter()
+            .find(|x| info_c.iter().any(|y| y.eq(&x.0)))
+            .unwrap();
+
+        let (_, mut text) = text_query
+            .iter_mut()
+            .find(|x| desc_c.iter().any(|y| y.eq(&x.0)))
+            .unwrap();
+
+        let amount = *savegame.buildings.get(unit_b).unwrap_or(&0) as f64;
+
+        let price = match shop_settings.mode {
+            ShopMode::Buy => {
+                building.price as f64 * ITEM_PRICE_MULTIPLIER.powf(amount + unit_amount)
+            }
+            ShopMode::Sell => {
+                building.price as f64 * ITEM_PRICE_MULTIPLIER.powf(amount + unit_amount - 1.0)
+            }
+        }
+        .trunc();
+
+        text.sections[0] = price.to_string().into();
+    }
 }
