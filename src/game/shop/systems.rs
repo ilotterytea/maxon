@@ -24,3 +24,23 @@ pub fn set_shop_mode(
         shop_settings.mode = m.clone();
     }
 }
+
+pub fn set_shop_multiplier(
+    mut query: Query<(&ShopMultiplier, &Interaction, &mut BackgroundColor), With<ShopMultiplier>>,
+    mut shop_settings: ResMut<ShopSettings>,
+) {
+    for (m, i, mut bg) in query.iter_mut() {
+        *bg = match (*i, shop_settings.multiplier.eq(m)) {
+            (Interaction::Hovered, _) => Color::SILVER,
+            (_, true) => Color::GRAY,
+            (_, false) => Color::DARK_GRAY,
+        }
+        .into();
+
+        if *i != Interaction::Pressed {
+            continue;
+        }
+
+        shop_settings.multiplier = m.clone();
+    }
+}

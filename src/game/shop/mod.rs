@@ -38,7 +38,7 @@ impl Plugin for GameShopPlugin {
             .add_systems(OnEnter(RoomState::LivingRoom), generate_shop_ui)
             .add_systems(
                 Update,
-                set_shop_mode
+                (set_shop_mode, set_shop_multiplier)
                     .run_if(in_state(RoomState::LivingRoom).and_then(in_state(AppState::Game))),
             );
     }
