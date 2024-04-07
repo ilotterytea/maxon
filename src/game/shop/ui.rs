@@ -45,7 +45,7 @@ pub fn generate_shop_ui(
 
         let id = commands
             .spawn((
-                NodeBundle {
+                ButtonBundle {
                     style: Style {
                         display: Display::Flex,
                         flex_direction: FlexDirection::Column,
