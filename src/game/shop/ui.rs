@@ -399,9 +399,7 @@ pub fn update_price(
             ShopMode::Buy => {
                 building.price as f64 * ITEM_PRICE_MULTIPLIER.powf(amount + unit_amount)
             }
-            ShopMode::Sell => {
-                building.price as f64 * ITEM_PRICE_MULTIPLIER.powf(amount + unit_amount - 1.0)
-            }
+            ShopMode::Sell => building.price as f64 / 4.0 * ITEM_PRICE_MULTIPLIER.powf(amount),
         }
         .trunc();
 
