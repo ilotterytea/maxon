@@ -1,4 +1,13 @@
 use bevy::prelude::*;
+use bevy_persistent::Persistent;
+
+use crate::{
+    constants::ITEM_PRICE_MULTIPLIER,
+    game::{
+        basement::building::{Building, Buildings},
+        PlayerData,
+    },
+};
 
 use super::*;
 
@@ -42,5 +51,61 @@ pub fn set_shop_multiplier(
         }
 
         shop_settings.multiplier = m.clone();
+    }
+}
+
+pub fn purchase_or_sell_item(
+    query: Query<
+        (&Building, &Interaction),
+        (
+            With<UiUnitComponent>,
+            Without<UiUnitDisabledComponent>,
+            Changed<Interaction>,
+        ),
+    >,
+    mut savegame: ResMut<Persistent<PlayerData>>,
+    shop_settings: Res<ShopSettings>,
+    buildings: Res<Buildings>,
+) {
+    let buildings = &buildings.0;
+    let unit_amount = shop_settings.multiplier.as_usize() as f64;
+
+    for (b, i) in query.iter() {
+        if *i != Interaction::Pressed {
+            continue;
+        }
+
+        let building = match buildings.iter().find(|x| x.building.eq(b)) {
+            Some(v) => v,
+            None => continue,
+        };
+
+        let amount = *savegame.buildings.get(b).unwrap_or(&0) as f64;
+
+        let price = match shop_settings.mode {
+            ShopMode::Buy => {
+                building.price as f64 * ITEM_PRICE_MULTIPLIER.powf(amount + unit_amount)
+            }
+            ShopMode::Sell => building.price as f64 / 4.0 * ITEM_PRICE_MULTIPLIER.powf(amount),
+        }
+        .trunc();
+
+        match shop_settings.mode {
+            ShopMode::Buy => {
+                savegame.money -= price;
+                savegame
+                    .buildings
+                    .entry(b.clone())
+                    .and_modify(|x| *x += unit_amount as usize)
+                    .or_insert(unit_amount as usize);
+            }
+            ShopMode::Sell => {
+                savegame.money += price;
+                savegame
+                    .buildings
+                    .entry(b.clone())
+                    .and_modify(|x| *x -= unit_amount as usize);
+            }
+        }
     }
 }

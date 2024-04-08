@@ -52,6 +52,7 @@ impl Plugin for GameShopPlugin {
                     set_shop_multiplier,
                     update_price,
                     set_availability_for_unit_items,
+                    purchase_or_sell_item,
                 )
                     .run_if(in_state(RoomState::LivingRoom).and_then(in_state(AppState::Game))),
             );
