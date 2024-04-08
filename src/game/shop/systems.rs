@@ -7,6 +7,7 @@ use crate::{
         basement::building::{Building, Buildings},
         PlayerData,
     },
+    style::{DARK_MAIN_COLOR, MAIN_COLOR},
 };
 
 use super::*;
@@ -55,8 +56,8 @@ pub fn set_shop_multiplier(
 }
 
 pub fn purchase_or_sell_item(
-    query: Query<
-        (&Building, &Interaction),
+    mut query: Query<
+        (&Building, &Interaction, &mut BackgroundColor),
         (
             With<UiUnitComponent>,
             Without<UiUnitDisabledComponent>,
@@ -70,7 +71,13 @@ pub fn purchase_or_sell_item(
     let buildings = &buildings.0;
     let unit_amount = shop_settings.multiplier.as_usize() as f64;
 
-    for (b, i) in query.iter() {
+    for (b, i, mut bg) in query.iter_mut() {
+        *bg = match *i {
+            Interaction::Hovered => DARK_MAIN_COLOR,
+            _ => MAIN_COLOR,
+        }
+        .into();
+
         if *i != Interaction::Pressed {
             continue;
         }
