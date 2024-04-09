@@ -50,7 +50,6 @@ pub fn generate_shop_ui(
                         display: Display::Flex,
                         flex_direction: FlexDirection::Column,
                         width: Val::Percent(100.0),
-                        padding: UiRect::all(Val::Percent(1.0)),
                         margin: UiRect::vertical(Val::Percent(1.0)),
                         ..default()
                     },
@@ -62,6 +61,20 @@ pub fn generate_shop_ui(
                 Name::new(format!("Shop slot: {}", b.building.to_string())),
             ))
             .with_children(|parent| {
+                parent.spawn((
+                    ImageBundle {
+                        style: Style {
+                            position_type: PositionType::Absolute,
+                            width: Val::Percent(100.0),
+                            height: Val::Percent(100.0),
+                            ..default()
+                        },
+                        background_color: DARK_MAIN_COLOR.into(),
+                        image: UiImage::new(app_assets.ui_radial_gradient.clone()),
+                        ..default()
+                    },
+                    Name::new(format!("Shop bg gradient: {}", b.building.to_string())),
+                ));
                 // Info
                 parent
                     .spawn((

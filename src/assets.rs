@@ -46,6 +46,9 @@ pub struct AppAssets {
     #[asset(path = "sprites/gui/gradient.png")]
     pub ui_gradient: Handle<TextureAtlas>,
 
+    #[asset(path = "sprites/gui/radial_gradient.png")]
+    pub ui_radial_gradient: Handle<Image>,
+
     #[asset(texture_atlas(tile_size_x = 256., tile_size_y = 256., columns = 2, rows = 2))]
     #[asset(path = "sprites/gui/btns_arrow.png")]
     pub ui_btns_arrow: Handle<TextureAtlas>,
