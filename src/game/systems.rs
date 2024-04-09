@@ -1,3 +1,5 @@
+use std::f32::consts::PI;
+
 use bevy::prelude::*;
 
 use crate::{assets::AppAssets, constants::ROOM_LIGHTS};
@@ -43,6 +45,6 @@ pub fn update_camera_transform(
         let rot = trs.1;
 
         t.translation = Vec3::from_array(pos);
-        t.rotation = Quat::from_axis_angle(Vec3::new(rot[0], rot[1], rot[2]), rot[3]);
+        t.rotation = Quat::from_rotation_y(rot * PI / 180.0 * 2.2);
     }
 }
