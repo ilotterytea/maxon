@@ -64,6 +64,9 @@ pub struct AppAssets {
     #[asset(path = "models/mdl_petbed.glb#Scene0")]
     pub mdl_petbed: Handle<Scene>,
 
+    #[asset(path = "models/furniture/mdl_bed.glb#Scene0")]
+    pub mdl_bed: Handle<Scene>,
+
     // - - - B U I L D I N G  M O D E L S - - -
     #[asset(path = "models/buildings/mdl_building_unknown.glb#Scene0")]
     pub mdl_building_unknown: Handle<Scene>,
