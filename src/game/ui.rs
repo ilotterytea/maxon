@@ -29,20 +29,29 @@ pub enum UiButtonControl {
     Fatigue,
 }
 
+#[derive(Component)]
+pub struct UiControlComponent;
+
+#[derive(Component)]
+pub struct UiSavegameComponent;
+
 pub fn generate_control_ui(mut commands: Commands, app_assets: Res<AppAssets>) {
     commands
-        .spawn(NodeBundle {
-            style: Style {
-                position_type: PositionType::Absolute,
-                bottom: Val::Px(0.0),
-                left: Val::Px(0.0),
-                width: Val::Percent(100.0),
-                max_height: Val::Percent(15.0),
+        .spawn((
+            NodeBundle {
+                style: Style {
+                    position_type: PositionType::Absolute,
+                    bottom: Val::Px(0.0),
+                    left: Val::Px(0.0),
+                    width: Val::Percent(100.0),
+                    max_height: Val::Percent(15.0),
+                    ..default()
+                },
+                background_color: Color::NONE.into(),
                 ..default()
             },
-            background_color: Color::NONE.into(),
-            ..default()
-        })
+            UiControlComponent,
+        ))
         .with_children(|parent| {
             // Control panel
             parent
@@ -124,6 +133,12 @@ pub fn generate_control_ui(mut commands: Commands, app_assets: Res<AppAssets>) {
         });
 }
 
+pub fn despawn_control_ui(mut commands: Commands, query: Query<Entity, With<UiControlComponent>>) {
+    for e in query.iter() {
+        commands.entity(e).despawn_recursive();
+    }
+}
+
 pub fn generate_savegame_ui(
     mut commands: Commands,
     app_assets: Res<AppAssets>,
@@ -141,6 +156,7 @@ pub fn generate_savegame_ui(
                 background_color: CONTROLPANEL_BG_COLOR.into(),
                 ..default()
             },
+            UiSavegameComponent,
             Name::new("Savegame UI"),
         ))
         .with_children(|parent| {
@@ -209,6 +225,15 @@ pub fn generate_savegame_ui(
                     });
                 });
         });
+}
+
+pub fn despawn_savegame_ui(
+    mut commands: Commands,
+    query: Query<Entity, With<UiSavegameComponent>>,
+) {
+    for e in query.iter() {
+        commands.entity(e).despawn_recursive();
+    }
 }
 
 pub fn update_ui(

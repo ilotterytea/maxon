@@ -27,15 +27,13 @@ impl Plugin for GamePlugin {
             .add_plugins(GameBasementPlugin)
             .add_plugins(GameUnitPlugin)
             .add_plugins(GameShopPlugin)
-            .add_systems(OnEnter(AppState::Game), set_default_room_state)
+            .add_systems(
+                OnEnter(AppState::Game),
+                (set_default_room_state, generate_game_scene),
+            )
             .add_systems(
                 OnEnter(RoomState::LivingRoom),
-                (
-                    generate_player,
-                    generate_control_ui,
-                    generate_savegame_ui,
-                    generate_game_scene,
-                ),
+                (generate_player, generate_control_ui, generate_savegame_ui),
             )
             .add_systems(
                 Update,
@@ -45,6 +43,10 @@ impl Plugin for GamePlugin {
             .add_systems(
                 Update,
                 (update_camera_transform, update_player_look).run_if(in_state(AppState::Game)),
+            )
+            .add_systems(
+                OnExit(RoomState::LivingRoom),
+                (despawn_player, despawn_control_ui, despawn_savegame_ui),
             );
     }
 }

@@ -56,6 +56,12 @@ pub fn generate_player(
     ));
 }
 
+pub fn despawn_player(mut commands: Commands, query: Query<Entity, With<PlayerComponent>>) {
+    for e in query.iter() {
+        commands.entity(e).despawn_recursive();
+    }
+}
+
 pub fn update_player_look(
     camera_query: Query<&mut Transform, (With<Camera>, Changed<Transform>)>,
     mut player_query: Query<&mut Transform, (With<PlayerComponent>, Without<Camera>)>,

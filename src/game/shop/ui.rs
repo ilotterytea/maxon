@@ -28,6 +28,9 @@ pub struct UiUnitPriceTextComponent;
 #[derive(Component)]
 pub struct UiUnitDisabledComponent;
 
+#[derive(Component)]
+pub struct UiShopComponent;
+
 pub fn generate_shop_ui(
     mut commands: Commands,
     savegame: Res<Persistent<PlayerData>>,
@@ -193,6 +196,7 @@ pub fn generate_shop_ui(
                 ..default()
             },
             Name::new("Shop UI"),
+            UiShopComponent,
         ))
         .with_children(|root| {
             root.spawn((
@@ -527,5 +531,11 @@ pub fn set_availability_for_unit_items(
                 }
             }
         }
+    }
+}
+
+pub fn despawn_shop_ui(mut commands: Commands, query: Query<Entity, With<UiShopComponent>>) {
+    for e in query.iter() {
+        commands.entity(e).despawn_recursive();
     }
 }

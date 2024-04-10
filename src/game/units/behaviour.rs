@@ -74,6 +74,12 @@ pub fn spawn_units(
     }
 }
 
+pub fn despawn_units(mut commands: Commands, query: Query<Entity, With<UnitRoot>>) {
+    for e in query.iter() {
+        commands.entity(e).despawn_recursive();
+    }
+}
+
 pub fn update_unit_amount(
     mut commands: Commands,
     savegame: Res<Persistent<PlayerData>>,

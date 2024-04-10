@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use self::behaviour::{spawn_units, update_unit_amount};
+use self::behaviour::*;
 
 use super::RoomState;
 
@@ -14,6 +14,7 @@ impl Plugin for GameUnitPlugin {
             .add_systems(
                 Update,
                 (update_unit_amount).run_if(in_state(RoomState::LivingRoom)),
-            );
+            )
+            .add_systems(OnExit(RoomState::LivingRoom), despawn_units);
     }
 }

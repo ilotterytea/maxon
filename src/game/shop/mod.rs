@@ -55,6 +55,7 @@ impl Plugin for GameShopPlugin {
                     purchase_or_sell_item,
                 )
                     .run_if(in_state(RoomState::LivingRoom).and_then(in_state(AppState::Game))),
-            );
+            )
+            .add_systems(OnExit(RoomState::LivingRoom), despawn_shop_ui);
     }
 }
