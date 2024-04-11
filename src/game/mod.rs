@@ -1,6 +1,10 @@
 use bevy::prelude::*;
 
-use crate::{animation::update_animations, constants::CAMERA_TRANSFORMS, AppState};
+use crate::{
+    animation::update_animations,
+    constants::{CAMERA_TRANSFORMS, PLAYER_POSITIONS, PLAYER_SCALES},
+    AppState,
+};
 
 use self::{
     basement::GameBasementPlugin, bedroom::GameBedroomPlugin, player::*, shop::GameShopPlugin,
@@ -74,6 +78,14 @@ impl RoomState {
 
     pub fn get_camera_transform(&self) -> ([f32; 3], f32) {
         CAMERA_TRANSFORMS[self.get_index()]
+    }
+
+    pub fn get_player_position(&self) -> [f32; 3] {
+        PLAYER_POSITIONS[self.get_index()]
+    }
+
+    pub fn get_player_scale(&self) -> [f32; 3] {
+        PLAYER_SCALES[self.get_index()]
     }
 }
 

@@ -17,3 +17,13 @@ pub const CAMERA_TRANSFORMS: [(
     ([4.0, 2.5, 4.0], 20.0), // Living room
     ([1.0, 4.0, 4.8], 40.0), // Bedroom
 ];
+
+pub const PLAYER_POSITIONS: [[f32; 3]; 2] = [
+    [-4.0, 2.2, -4.0], // Living room
+    [-6.0, 3.2, 4.5],  // Bedroom
+];
+
+pub const PLAYER_SCALES: [[f32; 3]; 2] = [
+    [3.0, 3.0, 3.0], // Living room
+    [2.0, 2.0, 2.0], // Bedroom
+];
