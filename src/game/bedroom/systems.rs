@@ -45,6 +45,16 @@ pub fn generate_bedroom(mut commands: Commands, app_assets: Res<AppAssets>) {
         GameBedroomFurnitureComponent,
         Name::new("Bedside table"),
     ));
+
+    commands.spawn((
+        SceneBundle {
+            scene: app_assets.mdl_lamp.clone(),
+            transform: Transform::from_xyz(-8.8, 2.6, 8.0),
+            ..default()
+        },
+        GameBedroomFurnitureComponent,
+        Name::new("Lamp"),
+    ));
 }
 
 pub fn despawn_bedroom(
