@@ -13,8 +13,7 @@ pub const ITEM_PRICE_MULTIPLIER: f64 = 1.15;
 pub const CAMERA_TRANSFORMS: [(
     [f32; 3], // position (x,y,z)
     f32,      // y rotation
-); 3] = [
+); 2] = [
     ([4.0, 2.5, 4.0], 20.0), // Living room
-    ([0.0, -8.5, 6.0], 0.0), // Basement
-    ([1.0, 4.0, 4.7], 40.0), // Bedroom
+    ([1.0, 4.0, 4.8], 40.0), // Bedroom
 ];

@@ -67,7 +67,7 @@ pub enum RoomState {
 impl RoomState {
     fn get_index(&self) -> usize {
         match self {
-            Self::Bedroom => 2,
+            Self::Bedroom => 1,
             _ => 0,
         }
     }
