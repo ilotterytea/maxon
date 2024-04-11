@@ -18,3 +18,6 @@ bevy_sprite3d = "2.7.0"
 bevy_turborand = "0.7.0"
 dirs = "5.0.1"
 serde = { version = "1.0.189", features = ["derive"] }
+
+[features]
+debug = []
