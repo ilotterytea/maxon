@@ -29,24 +29,29 @@ impl Plugin for GamePlugin {
             .add_plugins(GameShopPlugin)
             .add_systems(
                 OnEnter(AppState::Game),
-                (set_default_room_state, generate_game_scene),
+                (
+                    set_default_room_state,
+                    generate_game_scene,
+                    generate_control_ui,
+                    generate_savegame_ui,
+                ),
             )
-            .add_systems(
-                OnEnter(RoomState::LivingRoom),
-                (generate_player, generate_control_ui, generate_savegame_ui),
-            )
-            .add_systems(
-                Update,
-                (update_ui, update_animations, tick_multiplier_timer)
-                    .run_if(in_state(RoomState::LivingRoom).and_then(in_state(AppState::Game))),
-            )
+            .add_systems(OnEnter(RoomState::LivingRoom), generate_player)
             .add_systems(
                 Update,
-                (update_camera_transform, update_player_look).run_if(in_state(AppState::Game)),
+                (
+                    update_ui,
+                    update_animations,
+                    tick_multiplier_timer,
+                    update_camera_transform,
+                    update_player_look,
+                )
+                    .run_if(in_state(AppState::Game)),
             )
+            .add_systems(OnExit(RoomState::LivingRoom), despawn_player)
             .add_systems(
-                OnExit(RoomState::LivingRoom),
-                (despawn_player, despawn_control_ui, despawn_savegame_ui),
+                OnExit(AppState::Game),
+                (despawn_control_ui, despawn_savegame_ui),
             );
     }
 }
