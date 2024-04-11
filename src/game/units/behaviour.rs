@@ -202,3 +202,13 @@ fn generate_unit(
     }
     .id()
 }
+pub fn update_unit_look(
+    camera_query: Query<&Transform, (With<Camera>, Changed<Transform>, Without<Unit>)>,
+    mut unit_query: Query<&mut Transform, (With<Unit>, Without<Camera>)>,
+) {
+    if let Ok(camera) = camera_query.get_single() {
+        for mut t in unit_query.iter_mut() {
+            *t = t.looking_at(camera.translation, Vec3::Y);
+        }
+    }
+}

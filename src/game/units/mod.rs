@@ -13,7 +13,7 @@ impl Plugin for GameUnitPlugin {
         app.add_systems(OnEnter(RoomState::LivingRoom), spawn_units)
             .add_systems(
                 Update,
-                (update_unit_amount).run_if(in_state(RoomState::LivingRoom)),
+                (update_unit_amount, update_unit_look).run_if(in_state(RoomState::LivingRoom)),
             )
             .add_systems(OnExit(RoomState::LivingRoom), despawn_units);
     }
