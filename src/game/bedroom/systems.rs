@@ -139,3 +139,11 @@ pub(super) fn kill_the_lights(
         }
     }
 }
+
+pub(super) fn reset_player_component(
+    mut player_query: Query<&mut PlayerComponent, With<PlayerComponent>>,
+) {
+    for mut p in player_query.iter_mut() {
+        p.is_sleeping = false;
+    }
+}
