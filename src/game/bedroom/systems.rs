@@ -19,6 +19,18 @@ pub fn generate_bedroom(mut commands: Commands, app_assets: Res<AppAssets>) {
         GameBedroomFurnitureComponent,
         Name::new("Bed"),
     ));
+
+    commands.spawn((
+        SceneBundle {
+            scene: app_assets.mdl_shelf.clone(),
+            transform: Transform::from_xyz(-9.5, 4.5, 5.1)
+                .with_scale(Vec3::new(0.8, 0.8, 0.8))
+                .with_rotation(Quat::from_rotation_y(90.0 * PI / 180.0)),
+            ..default()
+        },
+        GameBedroomFurnitureComponent,
+        Name::new("Shelf"),
+    ));
 }
 
 pub fn despawn_bedroom(
