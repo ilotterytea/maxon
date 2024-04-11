@@ -36,9 +36,10 @@ pub fn update_camera_transform(
     state: Res<State<RoomState>>,
     mut camera_query: Query<&mut Transform, With<Camera>>,
 ) {
-    // maybe i could optimize it with state change detection
-    // but not right now
-    // so buy a $10k pc for this silly game
+    if !state.is_changed() {
+        return;
+    }
+
     for mut t in camera_query.iter_mut() {
         let trs = state.get_camera_transform();
         let pos = trs.0;
