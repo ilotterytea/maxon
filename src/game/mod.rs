@@ -66,12 +66,15 @@ pub enum RoomState {
 }
 
 impl RoomState {
-    pub fn get_camera_transform(&self) -> ([f32; 3], f32) {
+    fn get_index(&self) -> usize {
         match self {
-            Self::Basement => CAMERA_TRANSFORMS[1],
-            Self::Bedroom => CAMERA_TRANSFORMS[2],
-            _ => CAMERA_TRANSFORMS[0],
+            Self::Bedroom => 2,
+            _ => 0,
         }
+    }
+
+    pub fn get_camera_transform(&self) -> ([f32; 3], f32) {
+        CAMERA_TRANSFORMS[self.get_index()]
     }
 }
 
