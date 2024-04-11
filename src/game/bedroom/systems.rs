@@ -7,6 +7,12 @@ use crate::assets::AppAssets;
 #[derive(Component)]
 pub struct GameBedroomFurnitureComponent;
 
+#[derive(Component)]
+pub enum GameBedroomLightComponent {
+    Primary,
+    Secondary,
+}
+
 pub fn generate_bedroom(mut commands: Commands, app_assets: Res<AppAssets>) {
     let rot = Quat::from_rotation_y(90.0 * PI / 180.0);
 
@@ -54,6 +60,40 @@ pub fn generate_bedroom(mut commands: Commands, app_assets: Res<AppAssets>) {
         },
         GameBedroomFurnitureComponent,
         Name::new("Lamp"),
+    ));
+
+    commands.spawn((
+        PointLightBundle {
+            point_light: PointLight {
+                color: Color::ORANGE,
+                intensity: 1000.0,
+                range: 8.0,
+                shadows_enabled: true,
+                ..default()
+            },
+            transform: Transform::from_xyz(-6.6, 4.0, 6.6),
+            ..default()
+        },
+        GameBedroomFurnitureComponent,
+        GameBedroomLightComponent::Primary,
+        Name::new("Bedroom Light #1"),
+    ));
+
+    commands.spawn((
+        PointLightBundle {
+            point_light: PointLight {
+                color: Color::ORANGE,
+                intensity: 200.0,
+                range: 8.0,
+                shadows_enabled: false,
+                ..default()
+            },
+            transform: Transform::from_xyz(-3.7, 4.0, 3.0),
+            ..default()
+        },
+        GameBedroomFurnitureComponent,
+        GameBedroomLightComponent::Secondary,
+        Name::new("Bedroom Light #2"),
     ));
 }
 
