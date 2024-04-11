@@ -1,13 +1,8 @@
 use assets::AppAssets;
-use bevy::{
-    diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
-    prelude::*,
-    window::PresentMode,
-};
+use bevy::{prelude::*, window::PresentMode};
 use bevy_asset_loader::prelude::*;
 use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_easings::EasingsPlugin;
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_mod_billboard::prelude::BillboardPlugin;
 use bevy_mod_picking::{debug::DebugPickingMode, DefaultPickingPlugins};
 use bevy_sprite3d::Sprite3dPlugin;
@@ -66,9 +61,14 @@ fn main() {
     {
         app
             // Diagnostics
-            .add_plugins((LogDiagnosticsPlugin::default(), FrameTimeDiagnosticsPlugin))
+            .add_plugins((
+                bevy::diagnostic::LogDiagnosticsPlugin::default(),
+                bevy::diagnostic::FrameTimeDiagnosticsPlugin,
+            ))
             // World inspector
-            .add_plugins(WorldInspectorPlugin::new());
+            .add_plugins(bevy_inspector_egui::quick::WorldInspectorPlugin::new())
+            // Freecam
+            .add_plugins(bevy_flycam::NoCameraPlayerPlugin);
     }
 
     app.run();
