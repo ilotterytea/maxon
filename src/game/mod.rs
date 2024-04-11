@@ -32,9 +32,9 @@ impl Plugin for GamePlugin {
                     generate_game_scene,
                     generate_control_ui,
                     generate_savegame_ui,
+                    generate_player,
                 ),
             )
-            .add_systems(OnEnter(RoomState::LivingRoom), generate_player)
             .add_systems(
                 Update,
                 (
@@ -47,10 +47,9 @@ impl Plugin for GamePlugin {
                 )
                     .run_if(in_state(AppState::Game)),
             )
-            .add_systems(OnExit(RoomState::LivingRoom), despawn_player)
             .add_systems(
                 OnExit(AppState::Game),
-                (despawn_control_ui, despawn_savegame_ui),
+                (despawn_control_ui, despawn_savegame_ui, despawn_player),
             );
     }
 }
