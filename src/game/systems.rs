@@ -4,7 +4,7 @@ use bevy::prelude::*;
 
 use crate::{assets::AppAssets, constants::ROOM_LIGHTS};
 
-use super::RoomState;
+use super::{RoomState, UiButtonControl};
 
 pub fn generate_game_scene(mut commands: Commands, app_assets: Res<AppAssets>) {
     // Living room
@@ -46,5 +46,24 @@ pub fn update_camera_transform(
 
         t.translation = Vec3::from_array(pos);
         t.rotation = Quat::from_rotation_y(rot * PI / 180.0 * 2.2);
+    }
+}
+
+pub fn handle_control_buttons(
+    mut state: ResMut<NextState<RoomState>>,
+    query: Query<(&Interaction, &UiButtonControl), (With<UiButtonControl>, Changed<Interaction>)>,
+) {
+    for (i, b) in query.iter() {
+        if *i != Interaction::Pressed {
+            continue;
+        }
+
+        let s = match b {
+            UiButtonControl::Hunger => RoomState::Kitchen,
+            UiButtonControl::Happiness => RoomState::LivingRoom,
+            UiButtonControl::Fatigue => RoomState::Bedroom,
+        };
+
+        state.set(s);
     }
 }

@@ -3,11 +3,7 @@ use bevy::prelude::*;
 use crate::{animation::update_animations, constants::CAMERA_TRANSFORMS, AppState};
 
 use self::{
-    basement::GameBasementPlugin,
-    player::*,
-    shop::GameShopPlugin,
-    systems::{generate_game_scene, update_camera_transform},
-    ui::*,
+    basement::GameBasementPlugin, player::*, shop::GameShopPlugin, systems::*, ui::*,
     units::GameUnitPlugin,
 };
 
@@ -45,6 +41,7 @@ impl Plugin for GamePlugin {
                     tick_multiplier_timer,
                     update_camera_transform,
                     update_player_look,
+                    handle_control_buttons,
                 )
                     .run_if(in_state(AppState::Game)),
             )
