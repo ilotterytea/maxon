@@ -4,7 +4,10 @@ use bevy::prelude::*;
 
 use crate::{assets::AppAssets, constants::ROOM_LIGHTS};
 
-use super::{RoomState, UiButtonControl};
+use super::{bedroom::systems::GameBedroomLightComponent, RoomState, UiButtonControl};
+
+#[derive(Component)]
+pub struct GameLivingroomLightComponent;
 
 pub fn generate_game_scene(mut commands: Commands, app_assets: Res<AppAssets>) {
     // Living room
@@ -28,6 +31,7 @@ pub fn generate_game_scene(mut commands: Commands, app_assets: Res<AppAssets>) {
             transform: Transform::from_xyz(0.0, 7.2, 0.0),
             ..default()
         },
+        GameLivingroomLightComponent,
         Name::new("Living Room Light"),
     ));
 }
@@ -66,5 +70,43 @@ pub fn handle_control_buttons(
         };
 
         state.set(s);
+    }
+}
+
+pub fn update_light_intensity(
+    state: Res<State<RoomState>>,
+    mut living_room_lights: Query<
+        &mut PointLight,
+        (
+            With<GameLivingroomLightComponent>,
+            Without<GameBedroomLightComponent>,
+        ),
+    >,
+    mut bedroom_lights: Query<
+        (&mut PointLight, &GameBedroomLightComponent),
+        (
+            With<GameBedroomLightComponent>,
+            Without<GameLivingroomLightComponent>,
+        ),
+    >,
+) {
+    if !state.is_changed() {
+        return;
+    }
+
+    let (lr_intensity, (bd_intensity, bd_intensity_2)) = match **state {
+        RoomState::Bedroom => (0.0, (1000.0, 200.0)),
+        _ => (5000.0, (0.0, 0.0)),
+    };
+
+    for mut p in living_room_lights.iter_mut() {
+        p.intensity = lr_intensity;
+    }
+
+    for (mut p, l) in bedroom_lights.iter_mut() {
+        p.intensity = match *l {
+            GameBedroomLightComponent::Primary => bd_intensity,
+            GameBedroomLightComponent::Secondary => bd_intensity_2,
+        };
     }
 }

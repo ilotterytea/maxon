@@ -13,7 +13,7 @@ pub enum GameBedroomLightComponent {
     Secondary,
 }
 
-pub fn generate_bedroom(mut commands: Commands, app_assets: Res<AppAssets>) {
+pub(super) fn generate_bedroom(mut commands: Commands, app_assets: Res<AppAssets>) {
     let rot = Quat::from_rotation_y(90.0 * PI / 180.0);
 
     commands.spawn((

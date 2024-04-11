@@ -4,7 +4,7 @@ use self::systems::*;
 
 use super::RoomState;
 
-mod systems;
+pub mod systems;
 
 pub struct GameBedroomPlugin;
 
