@@ -67,6 +67,7 @@ impl RoomState {
     pub fn get_camera_transform(&self) -> ([f32; 3], f32) {
         match self {
             Self::Basement => CAMERA_TRANSFORMS[1],
+            Self::Bedroom => CAMERA_TRANSFORMS[2],
             _ => CAMERA_TRANSFORMS[0],
         }
     }

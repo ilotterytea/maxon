@@ -16,4 +16,5 @@ pub const CAMERA_TRANSFORMS: [(
 ); 3] = [
     ([4.0, 2.5, 4.0], 20.0), // Living room
     ([0.0, -8.5, 6.0], 0.0), // Basement
+    ([1.0, 4.0, 4.7], 40.0), // Bedroom
 ];
