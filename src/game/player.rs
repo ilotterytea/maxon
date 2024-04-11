@@ -46,7 +46,7 @@ pub fn generate_player(
         AtlasSprite3d {
             atlas: app_assets.cat_maxon.clone(),
             index: 0,
-            unlit: true,
+            unlit: false,
             transform: Transform::from_xyz(-4.0, 2.2, -4.0).with_scale(Vec3::new(3.0, 3.0, 3.0)),
             ..default()
         }
