@@ -34,8 +34,10 @@ pub fn init_player_data(mut commands: Commands) {
     );
 }
 
-#[derive(Component)]
-pub struct PlayerComponent;
+#[derive(Component, Default)]
+pub struct PlayerComponent {
+    pub is_sleeping: bool,
+}
 
 pub fn generate_player(
     mut commands: Commands,
@@ -51,7 +53,7 @@ pub fn generate_player(
             ..default()
         }
         .bundle(&mut sprite_params),
-        PlayerComponent,
+        PlayerComponent::default(),
         On::<Pointer<Click>>::run(click_on_player),
     ));
 }
