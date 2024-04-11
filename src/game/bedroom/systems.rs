@@ -1,8 +1,12 @@
 use std::f32::consts::PI;
 
 use bevy::prelude::*;
+use bevy_mod_picking::{
+    events::{Click, Pointer},
+    prelude::On,
+};
 
-use crate::assets::AppAssets;
+use crate::{assets::AppAssets, game::PlayerComponent};
 
 #[derive(Component)]
 pub struct GameBedroomFurnitureComponent;
@@ -59,6 +63,7 @@ pub(super) fn generate_bedroom(mut commands: Commands, app_assets: Res<AppAssets
             ..default()
         },
         GameBedroomFurnitureComponent,
+        On::<Pointer<Click>>::run(click_on_lamp),
         Name::new("Lamp"),
     ));
 
@@ -97,11 +102,40 @@ pub(super) fn generate_bedroom(mut commands: Commands, app_assets: Res<AppAssets
     ));
 }
 
-pub fn despawn_bedroom(
+pub(super) fn despawn_bedroom(
     mut commands: Commands,
     query: Query<Entity, With<GameBedroomFurnitureComponent>>,
 ) {
     for e in query.iter() {
         commands.entity(e).despawn_recursive();
+    }
+}
+
+pub(super) fn click_on_lamp(mut player_query: Query<&mut PlayerComponent, With<PlayerComponent>>) {
+    for mut p in player_query.iter_mut() {
+        p.is_sleeping = !p.is_sleeping;
+    }
+}
+
+pub(super) fn kill_the_lights(
+    player_query: Query<&PlayerComponent, (With<PlayerComponent>, Changed<PlayerComponent>)>,
+    mut query: Query<
+        (&mut PointLight, &GameBedroomLightComponent),
+        With<GameBedroomLightComponent>,
+    >,
+) {
+    for player in player_query.iter() {
+        let (i, i2) = if player.is_sleeping {
+            (0.0, 0.0)
+        } else {
+            (1000.0, 200.0)
+        };
+
+        for (mut p, b) in query.iter_mut() {
+            p.intensity = match *b {
+                GameBedroomLightComponent::Primary => i,
+                GameBedroomLightComponent::Secondary => i2,
+            };
+        }
     }
 }
