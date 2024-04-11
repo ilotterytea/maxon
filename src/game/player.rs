@@ -11,7 +11,7 @@ use crate::{
     constants::{APP_DEVELOPER, APP_NAME},
 };
 
-use super::basement::building::Building;
+use super::{basement::building::Building, RoomState};
 
 #[derive(Resource, Serialize, Deserialize, Default)]
 pub struct PlayerData {
@@ -115,5 +115,21 @@ pub fn tick_multiplier_timer(
 
     if timer.0.just_finished() {
         player_data.money += player_data.multiplier / 10.0;
+    }
+}
+
+pub fn update_player_position_and_scale(
+    state: Res<State<RoomState>>,
+    mut query: Query<&mut Transform, With<PlayerComponent>>,
+) {
+    if !state.is_changed() {
+        return;
+    }
+
+    let p = state.get_player_position();
+    let s = state.get_player_scale();
+
+    for mut t in query.iter_mut() {
+        *t = Transform::from_translation(Vec3::from_array(p)).with_scale(Vec3::from_array(s));
     }
 }

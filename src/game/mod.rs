@@ -48,6 +48,7 @@ impl Plugin for GamePlugin {
                     update_camera_transform,
                     update_player_look,
                     handle_control_buttons,
+                    update_player_position_and_scale,
                 )
                     .run_if(in_state(AppState::Game)),
             )
