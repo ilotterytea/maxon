@@ -3,11 +3,12 @@ use bevy::prelude::*;
 use crate::{animation::update_animations, constants::CAMERA_TRANSFORMS, AppState};
 
 use self::{
-    basement::GameBasementPlugin, player::*, shop::GameShopPlugin, systems::*, ui::*,
-    units::GameUnitPlugin,
+    basement::GameBasementPlugin, bedroom::GameBedroomPlugin, player::*, shop::GameShopPlugin,
+    systems::*, ui::*, units::GameUnitPlugin,
 };
 
 pub mod basement;
+mod bedroom;
 mod player;
 mod shop;
 mod systems;
@@ -23,6 +24,7 @@ impl Plugin for GamePlugin {
             .add_plugins(GameBasementPlugin)
             .add_plugins(GameUnitPlugin)
             .add_plugins(GameShopPlugin)
+            .add_plugins(GameBedroomPlugin)
             .add_systems(
                 OnEnter(AppState::Game),
                 (
