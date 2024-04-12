@@ -1,3 +1,5 @@
+use std::ops::RangeBounds;
+
 use crate::{
     assets::AppAssets,
     style::{get_savegame_ui_text_style, CONTROLPANEL_BG_COLOR},
@@ -244,5 +246,24 @@ pub fn update_ui(
         if let Some(text) = money_text.sections.get_mut(0) {
             text.value = player_data.money.to_string();
         }
+    }
+}
+
+pub fn update_control_ui(
+    savegame: Res<Persistent<PlayerData>>,
+    mut query: Query<(&mut BackgroundColor, &UiButtonControl), With<UiButtonControl>>,
+) {
+    for (mut bg, bt) in query.iter_mut() {
+        let value = match *bt {
+            UiButtonControl::Fatigue => savegame.fatigue,
+            _ => continue,
+        };
+
+        *bg = match value {
+            x if (0.0..0.3).contains(&x) => Color::RED,
+            x if (0.3..0.6).contains(&x) => Color::YELLOW,
+            _ => Color::YELLOW_GREEN,
+        }
+        .into();
     }
 }
