@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, time::Duration};
 
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::{Click, On, Pointer};
@@ -17,6 +17,7 @@ use super::{basement::building::Building, RoomState};
 pub struct PlayerData {
     pub money: f64,
     pub multiplier: f64,
+    pub fatigue: f32,
     pub buildings: HashMap<Building, usize>,
 }
 
@@ -37,6 +38,7 @@ pub fn init_player_data(mut commands: Commands) {
 #[derive(Component, Default)]
 pub struct PlayerComponent {
     pub is_sleeping: bool,
+    pub timer: Timer,
 }
 
 pub fn generate_player(
@@ -53,7 +55,10 @@ pub fn generate_player(
             ..default()
         }
         .bundle(&mut sprite_params),
-        PlayerComponent::default(),
+        PlayerComponent {
+            timer: Timer::new(Duration::from_secs(10), TimerMode::Repeating),
+            ..default()
+        },
         On::<Pointer<Click>>::run(click_on_player),
     ));
 }
@@ -133,5 +138,27 @@ pub fn update_player_position_and_scale(
 
     for mut t in query.iter_mut() {
         *t = Transform::from_translation(Vec3::from_array(p)).with_scale(Vec3::from_array(s));
+    }
+}
+
+pub fn control_player_needs(
+    mut savegame: ResMut<Persistent<PlayerData>>,
+    mut player_query: Query<&mut PlayerComponent, With<PlayerComponent>>,
+    time: Res<Time>,
+) {
+    let delta_time = time.delta_seconds();
+
+    if let Ok(mut player) = player_query.get_single_mut() {
+        player.timer.tick(Duration::from_secs_f32(delta_time));
+
+        if !player.timer.just_finished() {
+            return;
+        }
+
+        if savegame.fatigue + 0.4 <= 1.0 && player.is_sleeping {
+            savegame.fatigue += 0.4;
+        } else if savegame.fatigue - 0.1 > 0.0 && !player.is_sleeping {
+            savegame.fatigue -= 0.1;
+        }
     }
 }

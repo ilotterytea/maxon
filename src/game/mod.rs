@@ -50,6 +50,7 @@ impl Plugin for GamePlugin {
                     handle_control_buttons,
                     update_player_position_and_scale,
                     update_light_intensity,
+                    control_player_needs,
                 )
                     .run_if(in_state(AppState::Game)),
             )
