@@ -10,8 +10,14 @@ import com.ilotterytea.maxoning.anim.SpriteUtils;
 import com.ilotterytea.maxoning.player.MaxonItemEnum;
 import com.ilotterytea.maxoning.player.MaxonItemRegister;
 import com.ilotterytea.maxoning.ui.AnimatedImage;
+import net.mgsx.gltf.loaders.glb.GLBAssetLoader;
+import net.mgsx.gltf.scene3d.scene.SceneAsset;
 
 public class AssetLoading {
+    public static void setup(AssetManager am) {
+        am.setLoader(SceneAsset.class, ".glb", new GLBAssetLoader());
+    }
+
     public static void queue(AssetManager am) {
         // Texture atlases:
         am.load("sprites/env/environment.atlas", TextureAtlas.class);
@@ -23,6 +29,9 @@ public class AssetLoading {
 
         am.load("MainSpritesheet.atlas", TextureAtlas.class);
         am.load("MainSpritesheet.skin", Skin.class, new SkinLoader.SkinParameter("MainSpritesheet.atlas"));
+
+        // Models:
+        am.load("models/scenes/living_room.glb", SceneAsset.class);
 
         // Cat item textures:
         am.load("sprites/sheet/loadingCircle.png", Texture.class);
