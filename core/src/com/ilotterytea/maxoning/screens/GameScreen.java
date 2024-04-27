@@ -4,6 +4,10 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
+import com.badlogic.gdx.graphics.g3d.decals.Decal;
+import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -18,6 +22,7 @@ import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.anim.SpriteUtils;
 import com.ilotterytea.maxoning.audio.Playlist;
 import com.ilotterytea.maxoning.inputprocessors.CrossProcessor;
+import com.ilotterytea.maxoning.player.DecalPlayer;
 import com.ilotterytea.maxoning.player.MaxonItem;
 import com.ilotterytea.maxoning.player.MaxonItemRegister;
 import com.ilotterytea.maxoning.player.MaxonSavegame;
@@ -69,12 +74,23 @@ public class GameScreen implements Screen, InputProcessor {
     private SceneManager sceneManager;
     private PerspectiveCamera camera;
 
+    private DecalBatch decalBatch;
+    private ArrayList<Decal> decals;
+    private DecalPlayer decalPlayer;
+
     public GameScreen(MaxonGame game, MaxonSavegame sav, int slotId) throws IOException, ClassNotFoundException {
         this.game = game;
         this.slotId = slotId;
         this.playTimestamp = System.currentTimeMillis();
 
         create3D();
+
+        decalBatch = new DecalBatch(new CameraGroupStrategy(camera));
+        decals = new ArrayList<>();
+
+        TextureRegion[] playerTextureRegions = SpriteUtils.splitToTextureRegions(game.assetManager.get("sprites/sheet/loadingCircle.png", Texture.class), 112, 112, 10, 5);
+        decalPlayer = new DecalPlayer(playerTextureRegions);
+        decals.add(decalPlayer.getDecal());
 
         playlist = new Playlist(
                 game.assetManager.get("mus/game/onwards.wav", Music.class),
@@ -382,6 +398,15 @@ public class GameScreen implements Screen, InputProcessor {
         // Render 3D
         sceneManager.update(Gdx.graphics.getDeltaTime());
         sceneManager.render();
+
+        this.decalPlayer.render(this.camera);
+
+        for (Decal decal : this.decals) {
+            decal.lookAt(this.camera.position, this.camera.up);
+            this.decalBatch.add(decal);
+        }
+
+        this.decalBatch.flush();
     }
 
     @Override
