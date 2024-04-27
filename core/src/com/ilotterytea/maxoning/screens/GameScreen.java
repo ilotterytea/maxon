@@ -2,8 +2,7 @@ package com.ilotterytea.maxoning.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -26,6 +25,14 @@ import com.ilotterytea.maxoning.ui.*;
 import com.ilotterytea.maxoning.utils.math.Math;
 import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
+import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
+import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
+import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
+import net.mgsx.gltf.scene3d.scene.Scene;
+import net.mgsx.gltf.scene3d.scene.SceneAsset;
+import net.mgsx.gltf.scene3d.scene.SceneManager;
+import net.mgsx.gltf.scene3d.scene.SceneSkybox;
+import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,10 +66,15 @@ public class GameScreen implements Screen, InputProcessor {
     MovingChessBackground bg;
     Playlist playlist;
 
+    private SceneManager sceneManager;
+    private PerspectiveCamera camera;
+
     public GameScreen(MaxonGame game, MaxonSavegame sav, int slotId) throws IOException, ClassNotFoundException {
         this.game = game;
         this.slotId = slotId;
         this.playTimestamp = System.currentTimeMillis();
+
+        create3D();
 
         playlist = new Playlist(
                 game.assetManager.get("mus/game/onwards.wav", Music.class),
@@ -335,42 +347,48 @@ public class GameScreen implements Screen, InputProcessor {
             }
         }, 600, 600);
 
+        camera.update();
         render(Gdx.graphics.getDeltaTime());
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         if (game.prefs.getBoolean("music", true) && !playlist.getPlayingNow().isPlaying()) {
             playlist.next();
         }
 
-        game.batch.begin();
+        // i've temporarily commented it all out while i set up 3d
+        //game.batch.begin();
 
-        bg.draw(game.batch);
+        //bg.draw(game.batch);
 
-        game.batch.end();
+        //game.batch.end();
 
         // Update the points label:
-        pointsLabel.setText(game.locale.FormattedText("game.points",
-                MaxonConstants.DECIMAL_FORMAT.format(player.points)
-        ));
+        //pointsLabel.setText(game.locale.FormattedText("game.points",
+        //        MaxonConstants.DECIMAL_FORMAT.format(player.points)
+        //));
 
         // Update the multiplier label:
-        multiplierLabel.setText(game.locale.FormattedText("game.multiplier",
-                MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)
-        ));
+        //multiplierLabel.setText(game.locale.FormattedText("game.multiplier",
+        //        MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)
+        //));
 
-        stage.draw();
-        stage.act(delta);
+        //stage.draw();
+        //stage.act(delta);
+
+        // Render 3D
+        sceneManager.update(Gdx.graphics.getDeltaTime());
+        sceneManager.render();
     }
 
     @Override
     public void resize(int width, int height) {
         bg.update(width, height);
         stage.getViewport().update(width, height, true);
+        sceneManager.updateViewport(width, height);
     }
 
     private void showShop() {
@@ -530,9 +548,9 @@ public class GameScreen implements Screen, InputProcessor {
             game.setScreen(new MenuScreen(game));
             dispose();
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            displayPointIncrease();
-        }
+        //if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        //    displayPointIncrease();
+        //}
         return false;
     }
 
@@ -567,6 +585,46 @@ public class GameScreen implements Screen, InputProcessor {
         }, 10f);
 
         stage.addActor(label);
+    }
+
+    private void create3D() {
+        SceneAsset sceneAsset = game.assetManager.get("models/scenes/living_room.glb", SceneAsset.class);
+        Scene scene = new Scene(sceneAsset.scene);
+
+        sceneManager = new SceneManager();
+        sceneManager.addScene(scene);
+
+        camera = new PerspectiveCamera(60f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.near = 1f;
+        camera.far = 300f;
+        camera.position.set(0.3f, 2.7f, 0.3f);
+        camera.rotate(45f, 0f, 1f, 0f);
+
+        camera.update();
+
+        sceneManager.setCamera(camera);
+
+        DirectionalLightEx light = new DirectionalLightEx();
+        light.direction.set(0, 2, 0).nor();
+        light.color.set(Color.WHITE);
+        sceneManager.environment.add(light);
+
+        // setup quick IBL (image based lighting)
+        IBLBuilder iblBuilder = IBLBuilder.createOutdoor(light);
+        Cubemap environmentCubemap = iblBuilder.buildEnvMap(1024);
+        Cubemap diffuseCubemap = iblBuilder.buildIrradianceMap(256);
+        Cubemap specularCubemap = iblBuilder.buildRadianceMap(10);
+        iblBuilder.dispose();
+
+        Texture brdfLUT = new Texture(Gdx.files.classpath("net/mgsx/gltf/shaders/brdfLUT.png"));
+
+        sceneManager.setAmbientLight(1f);
+        sceneManager.environment.set(new PBRTextureAttribute(PBRTextureAttribute.BRDFLUTTexture, brdfLUT));
+        sceneManager.environment.set(PBRCubemapAttribute.createSpecularEnv(specularCubemap));
+        sceneManager.environment.set(PBRCubemapAttribute.createDiffuseEnv(diffuseCubemap));
+
+        SceneSkybox skybox = new SceneSkybox(environmentCubemap);
+        sceneManager.setSkyBox(skybox);
     }
 
     @Override
