@@ -48,6 +48,7 @@ public class SplashScreen implements Screen {
 
         stage.addActor(logoTable);
 
+        AssetLoading.setup(game.assetManager);
         AssetLoading.queue(game.assetManager);
     }
 
