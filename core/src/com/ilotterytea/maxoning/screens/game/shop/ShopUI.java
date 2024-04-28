@@ -7,13 +7,19 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.ilotterytea.maxoning.player.MaxonItem;
+import com.ilotterytea.maxoning.player.MaxonItemRegister;
 import com.ilotterytea.maxoning.player.MaxonSavegame;
+import com.ilotterytea.maxoning.ui.PurchaseItem;
 import com.ilotterytea.maxoning.utils.math.Math;
+
+import java.util.ArrayList;
 
 public class ShopUI {
     private final Stage stage;
     private final Skin skin;
     private final TextureAtlas atlas;
+    private final ArrayList<MaxonItem> items;
 
     private ShopMode mode;
     private ShopMultiplier multiplier;
@@ -24,6 +30,7 @@ public class ShopUI {
         this.atlas = atlas;
         this.mode = ShopMode.BUY;
         this.multiplier = ShopMultiplier.X1;
+        this.items = MaxonItemRegister.getItems();
     }
 
     public void createSavegameUI(final MaxonSavegame player) {
@@ -32,7 +39,6 @@ public class ShopUI {
 
         table.setWidth(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
         table.setHeight(Math.percentFromValue(15f, Gdx.graphics.getHeight()));
-        table.setX(Gdx.graphics.getWidth() - table.getWidth());
         table.align(Align.center | Align.left);
         table.pad(10f);
 
@@ -67,7 +73,6 @@ public class ShopUI {
 
         table.setWidth(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
         table.setHeight(Math.percentFromValue(5f, Gdx.graphics.getHeight()));
-        table.setX(Gdx.graphics.getWidth() - table.getWidth());
         table.setY(Gdx.graphics.getHeight() - table.getHeight());
         table.align(Align.center);
         table.pad(10f);
@@ -84,7 +89,6 @@ public class ShopUI {
 
         table.setWidth(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
         table.setHeight(Math.percentFromValue(10f, Gdx.graphics.getHeight()));
-        table.setX(Gdx.graphics.getWidth() - table.getWidth());
         table.setY(Gdx.graphics.getHeight() - table.getHeight() - Math.percentFromValue(5f, Gdx.graphics.getHeight()));
         table.align(Align.center);
         table.pad(10f);
@@ -140,5 +144,33 @@ public class ShopUI {
         table.add(multiplierTable).grow();
 
         this.stage.addActor(table);
+    }
+
+    public void createShopListUI() {
+        Table table = new Table();
+
+        table.setWidth(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
+        table.setHeight(Math.percentFromValue(70f, Gdx.graphics.getHeight()));
+        table.setY(Math.percentFromValue(15f, Gdx.graphics.getHeight()));
+        table.align(Align.center);
+        table.pad(10f);
+
+        for (MaxonItem item : this.items) {
+            PurchaseItem purchaseItem = new PurchaseItem(this.skin, item);
+
+            table.add(purchaseItem).width(table.getWidth()).padBottom(5f).row();
+        }
+
+        ScrollPane scrollPane = new ScrollPane(table);
+        scrollPane.setScrollingDisabled(true, false);
+
+        Table scrollPaneTable = new Table(this.skin);
+        scrollPaneTable.setBackground("shop_list");
+        scrollPaneTable.setPosition(table.getX(), table.getY());
+        scrollPaneTable.setSize(table.getWidth(), table.getHeight());
+        scrollPaneTable.pad(1f, 5f, 1f, 5f);
+        scrollPaneTable.add(scrollPane).grow();
+
+        this.stage.addActor(scrollPaneTable);
     }
 }
