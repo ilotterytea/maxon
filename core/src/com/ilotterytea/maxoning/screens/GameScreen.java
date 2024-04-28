@@ -534,6 +534,7 @@ public class GameScreen implements Screen, InputProcessor {
         this.mainAtlas = this.game.assetManager.get("MainSpritesheet.atlas", TextureAtlas.class);
 
         createSavegameUI();
+        createShopTitleUI();
     }
 
     private void createSavegameUI() {
@@ -567,6 +568,23 @@ public class GameScreen implements Screen, InputProcessor {
         multiplierTable.add(multiplierLabel).padLeft(15f);
 
         table.add(multiplierTable);
+
+        this.stage.addActor(table);
+    }
+
+    private void createShopTitleUI() {
+        Table table = new Table(this.skin);
+        table.setBackground("board");
+
+        table.setWidth(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
+        table.setHeight(Math.percentFromValue(5f, Gdx.graphics.getHeight()));
+        table.setX(Gdx.graphics.getWidth() - table.getWidth());
+        table.setY(Gdx.graphics.getHeight() - table.getHeight());
+        table.align(Align.center);
+        table.pad(10f);
+
+        Label label = new Label("Store", skin);
+        table.add(label);
 
         this.stage.addActor(table);
     }
