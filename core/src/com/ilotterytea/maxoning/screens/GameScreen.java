@@ -26,6 +26,7 @@ import com.ilotterytea.maxoning.player.DecalPlayer;
 import com.ilotterytea.maxoning.player.MaxonItem;
 import com.ilotterytea.maxoning.player.MaxonItemRegister;
 import com.ilotterytea.maxoning.player.MaxonSavegame;
+import com.ilotterytea.maxoning.screens.game.shop.ShopUI;
 import com.ilotterytea.maxoning.ui.*;
 import com.ilotterytea.maxoning.utils.math.Math;
 import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
@@ -533,60 +534,10 @@ public class GameScreen implements Screen, InputProcessor {
         this.skin = this.game.assetManager.get("MainSpritesheet.skin", Skin.class);
         this.mainAtlas = this.game.assetManager.get("MainSpritesheet.atlas", TextureAtlas.class);
 
-        createSavegameUI();
-        createShopTitleUI();
-    }
+        ShopUI shopUI = new ShopUI(this.stage, this.skin, this.mainAtlas);
 
-    private void createSavegameUI() {
-        Table table = new Table(this.skin);
-        table.setBackground("board");
-
-        table.setWidth(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
-        table.setHeight(Math.percentFromValue(15f, Gdx.graphics.getHeight()));
-        table.setX(Gdx.graphics.getWidth() - table.getWidth());
-        table.align(Align.center | Align.left);
-        table.pad(10f);
-
-        // Setting up the points
-        Table pointsTable = new Table();
-
-        Image pointsImage = new Image(this.mainAtlas.findRegion("points"));
-        Label pointsLabel = new Label(String.valueOf(this.player.points), this.skin);
-
-        pointsTable.add(pointsImage);
-        pointsTable.add(pointsLabel).padLeft(15f);
-
-        table.add(pointsTable).padBottom(10f).row();
-
-        // Setting up the multiplier
-        Table multiplierTable = new Table();
-
-        Image multiplierImage = new Image(this.mainAtlas.findRegion("multiplier"));
-        Label multiplierLabel = new Label(String.format("%s/s", this.player.multiplier), this.skin);
-
-        multiplierTable.add(multiplierImage);
-        multiplierTable.add(multiplierLabel).padLeft(15f);
-
-        table.add(multiplierTable);
-
-        this.stage.addActor(table);
-    }
-
-    private void createShopTitleUI() {
-        Table table = new Table(this.skin);
-        table.setBackground("board");
-
-        table.setWidth(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
-        table.setHeight(Math.percentFromValue(5f, Gdx.graphics.getHeight()));
-        table.setX(Gdx.graphics.getWidth() - table.getWidth());
-        table.setY(Gdx.graphics.getHeight() - table.getHeight());
-        table.align(Align.center);
-        table.pad(10f);
-
-        Label label = new Label("Store", skin);
-        table.add(label);
-
-        this.stage.addActor(table);
+        shopUI.createSavegameUI(this.player);
+        shopUI.createShopTitleUI();
     }
 
     @Override
