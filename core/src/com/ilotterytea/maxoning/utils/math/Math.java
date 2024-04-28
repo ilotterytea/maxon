@@ -10,4 +10,8 @@ public class Math {
     public static int getRandomNumber(int min, int max) {
         return (int) ((java.lang.Math.random() * (max - min)) + min);
     }
+
+    public static float percentFromValue(float percentage, int value) {
+        return percentage / 100f * value;
+    }
 }
