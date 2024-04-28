@@ -146,7 +146,7 @@ public class ShopUI {
         this.stage.addActor(table);
     }
 
-    public void createShopListUI() {
+    public void createShopListUI(final MaxonSavegame player) {
         Table table = new Table();
 
         table.setWidth(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
@@ -155,7 +155,11 @@ public class ShopUI {
         table.align(Align.center);
         table.pad(10f);
 
-        for (MaxonItem item : this.items) {
+        for (final MaxonItem item : this.items) {
+            int amount = (int) player.inv.stream().filter(c -> c == item.id).count();
+
+            double price = item.price * java.lang.Math.pow(1.15f, amount + this.multiplier.getMultiplier());
+            item.price = (float) price;
             PurchaseItem purchaseItem = new PurchaseItem(this.skin, item);
 
             table.add(purchaseItem).width(table.getWidth()).padBottom(5f).row();
