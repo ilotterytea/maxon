@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.MaxonGame;
 import com.ilotterytea.maxoning.anim.SpriteUtils;
@@ -102,132 +102,9 @@ public class GameScreen implements Screen, InputProcessor {
         if (game.prefs.getBoolean("music", true)) playlist.next();
 
         player = sav;
-
-        // Initializing the stage and skin:
-        stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-        skin = game.assetManager.get("MainSpritesheet.skin", Skin.class);
-        mainAtlas = game.assetManager.get("MainSpritesheet.atlas", TextureAtlas.class);
-
         items = new ArrayList<>();
 
-        for (int id : player.inv) {
-            items.add(MaxonItemRegister.get(id));
-        }
-
-        invItems = new HashMap<>();
-
-        for (Integer id : player.inv) {
-            if (invItems.containsKey(id)) {
-                invItems.put(id, invItems.get(id) + 1);
-            } else {
-                invItems.put(id, 1);
-            }
-        }
-
-        // - - - - - -  I N F O  B O A R D  - - - - - - :
-        boardTable = new Table(skin);
-        boardTable.setBackground("board");
-        boardTable.setSize(stage.getWidth(), 86f);
-        boardTable.setPosition(0, stage.getHeight() - boardTable.getHeight());
-        boardTable.align(Align.left | Align.center);
-
-        stage.addActor(boardTable);
-
-        // - - -  P O I N T S  - - - :
-        // Icon for points label:
-        Image pointsIcon = new Image(mainAtlas.findRegion("points"));
-        boardTable.add(pointsIcon).size(24f).padLeft(6f).padRight(6f);
-
-        // Label for points:
-        pointsLabel = new Label(MaxonConstants.DECIMAL_FORMAT.format(sav.points), skin);
-        pointsLabel.setAlignment(Align.left);
-        boardTable.add(pointsLabel).row();
-
-        // - - -  M U L T I P L I E R  - - - :
-        // Icon for multiplier label:
-        Image multiplierIcon = new Image(mainAtlas.findRegion("multiplier"));
-        boardTable.add(multiplierIcon).size(24f).padLeft(6f).padRight(6f);
-
-        // Label for multiplier:
-        multiplierLabel = new Label(MaxonConstants.DECIMAL_FORMAT.format(sav.multiplier), skin);
-        multiplierLabel.setAlignment(Align.left);
-        boardTable.add(multiplierLabel).row();
-
-        // - - - - - -  Q U I C K  A C T I O N S  B O A R D  - - - - - - :
-        quickTable = new Table(skin);
-        quickTable.setBackground("board");
-        quickTable.setSize(stage.getWidth(), 134f);
-        quickTable.setPosition(0, 0);
-        quickTable.align(Align.center);
-
-        // - - -  S H O P  B U T T O N  - - - :
-        ImageButton shopButton = new ImageButton(skin, "shop");
-
-        shopButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (!isShopping && !isInventoryEnabled) {
-                    showShop();
-                    isShopping = true;
-                }
-            }
-        });
-
-        quickTable.add(shopButton).size(128f).pad(6f);
-
-        // - - -  I N V E N T O R Y  B U T T O N  - - - :
-        ImageButton inventoryButton = new ImageButton(skin, "inventory");
-
-        inventoryButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (!isShopping && !isInventoryEnabled) {
-                    showInventory();
-                    isInventoryEnabled = true;
-                }
-            }
-        });
-
-        quickTable.add(inventoryButton).size(128f).pad(6f);
-
-        stage.addActor(quickTable);
-
-        // Generate the background:
-        bg = new MovingChessBackground(
-                1f, 0f, stage.getWidth(), stage.getHeight(),
-                skin.getDrawable("tile_01"),
-                skin.getDrawable("tile_02")
-        );
-
-        // Creating the Maxon cat:
-        cat = new AnimatedImage(
-                SpriteUtils.splitToTextureRegions(game.assetManager.get("sprites/sheet/loadingCircle.png", Texture.class),
-                        112, 112, 10, 5
-                )
-        );
-        cat.disableAnim(); // Disable the image animation.
-        maxon = new AnimatedImageButton(cat); // Make button with animated image.
-        maxon.setSize(cat.getWidth() * 2f, cat.getHeight() * 2f);
-        maxon.setPosition(
-                (stage.getWidth() / 2f) - (maxon.getWidth() / 2f),
-                (stage.getHeight() / 2f) - (maxon.getHeight() / 2f)
-        );
-
-        maxon.addListener(new ClickListener() {
-            @Override public void clicked(InputEvent event, float x, float y) {
-                displayPointIncrease();
-            }
-        });
-
-        stage.addActor(maxon);
-
-        DebugInfo debugInfo = new DebugInfo(skin, game.locale);
-
-        debugInfo.setPosition(4, (stage.getHeight() / 2f) + 128f);
-
-        if (game.prefs.getBoolean("debug")) stage.addActor(debugInfo);
-
-        notEnoughPointsDialog = new Dialog(game.locale.TranslatableText("dialogs.not_enough_points"), skin, "dialog");
+        createStageUI();
 
         Gdx.input.setInputProcessor(new InputMultiplexer(this, new CrossProcessor(), stage));
     }
@@ -392,9 +269,6 @@ public class GameScreen implements Screen, InputProcessor {
         //        MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)
         //));
 
-        //stage.draw();
-        //stage.act(delta);
-
         // Render 3D
         sceneManager.update(Gdx.graphics.getDeltaTime());
         sceneManager.render();
@@ -407,12 +281,14 @@ public class GameScreen implements Screen, InputProcessor {
         }
 
         this.decalBatch.flush();
+
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-        bg.update(width, height);
-        stage.getViewport().update(width, height, true);
+        this.stage.getViewport().update(width, height, true);
         sceneManager.updateViewport(width, height);
     }
 
@@ -650,6 +526,15 @@ public class GameScreen implements Screen, InputProcessor {
 
         SceneSkybox skybox = new SceneSkybox(environmentCubemap);
         sceneManager.setSkyBox(skybox);
+    }
+
+    private void createStageUI() {
+        this.stage = new Stage(new ScreenViewport());
+        this.skin = this.game.assetManager.get("MainSpritesheet.skin", Skin.class);
+        this.mainAtlas = this.game.assetManager.get("MainSpritesheet.atlas", TextureAtlas.class);
+
+        Image image = new Image(this.mainAtlas.findRegion("points"));
+        this.stage.addActor(image);
     }
 
     @Override
