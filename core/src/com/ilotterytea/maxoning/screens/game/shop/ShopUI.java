@@ -2,11 +2,10 @@ package com.ilotterytea.maxoning.screens.game.shop;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.ilotterytea.maxoning.player.MaxonSavegame;
 import com.ilotterytea.maxoning.utils.math.Math;
@@ -16,10 +15,15 @@ public class ShopUI {
     private final Skin skin;
     private final TextureAtlas atlas;
 
+    private ShopMode mode;
+    private ShopMultiplier multiplier;
+
     public ShopUI(Stage stage, Skin skin, TextureAtlas atlas) {
         this.stage = stage;
         this.skin = skin;
         this.atlas = atlas;
+        this.mode = ShopMode.BUY;
+        this.multiplier = ShopMultiplier.X1;
     }
 
     public void createSavegameUI(final MaxonSavegame player) {
@@ -70,6 +74,70 @@ public class ShopUI {
 
         Label label = new Label("Store", skin);
         table.add(label);
+
+        this.stage.addActor(table);
+    }
+
+    public void createShopControlUI() {
+        Table table = new Table(this.skin);
+        table.setBackground("board");
+
+        table.setWidth(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
+        table.setHeight(Math.percentFromValue(10f, Gdx.graphics.getHeight()));
+        table.setX(Gdx.graphics.getWidth() - table.getWidth());
+        table.setY(Gdx.graphics.getHeight() - table.getHeight() - Math.percentFromValue(5f, Gdx.graphics.getHeight()));
+        table.align(Align.center);
+        table.pad(10f);
+
+        // Mode changer
+        Table modeTable = new Table();
+
+        TextButton buyButton = new TextButton("Buy", this.skin);
+        buyButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                mode = ShopMode.BUY;
+            }
+        });
+        modeTable.add(buyButton).growX().row();
+
+        TextButton sellButton = new TextButton("Sell", this.skin);
+        buyButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                mode = ShopMode.SELL;
+            }
+        });
+        modeTable.add(sellButton).growX();
+
+        table.add(modeTable).grow();
+
+        // Multiplier changer
+        Table multiplierTable = new Table();
+
+        TextButton x1Button = new TextButton("1x", this.skin);
+        x1Button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                multiplier = ShopMultiplier.X1;
+            }
+        });
+        multiplierTable.add(x1Button).width(64f).height(64f).padRight(10f);
+
+        TextButton x10Button = new TextButton("10x", this.skin);
+        x10Button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                multiplier = ShopMultiplier.X10;
+            }
+        });
+        multiplierTable.add(x10Button).width(64f).height(64f);
+
+        table.add(multiplierTable).grow();
 
         this.stage.addActor(table);
     }
