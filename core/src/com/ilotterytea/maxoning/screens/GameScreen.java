@@ -538,6 +538,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         shopUI.createSavegameUI(this.player);
         shopUI.createShopTitleUI();
+        shopUI.createShopControlUI();
     }
 
     @Override
