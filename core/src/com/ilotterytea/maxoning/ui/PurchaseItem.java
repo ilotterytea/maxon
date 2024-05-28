@@ -25,9 +25,9 @@ public class PurchaseItem extends Table {
         Label desc = new Label(String.format("%s SQP (%s/click)", MaxonConstants.DECIMAL_FORMAT.format(item.price), MaxonConstants.DECIMAL_FORMAT.format(item.multiplier)), skin, "item_price");
         desc.setAlignment(Align.left);
 
-        summary.add(name).width(desc.getWidth()).row();
-        summary.add(desc);
+        summary.add(name).align(Align.left).row();
+        summary.add(desc).grow();
 
-        super.add(summary);
+        super.add(summary).grow();
     }
 }
