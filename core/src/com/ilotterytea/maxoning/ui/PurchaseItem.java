@@ -1,6 +1,9 @@
 package com.ilotterytea.maxoning.ui;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.player.MaxonItem;
@@ -29,5 +32,18 @@ public class PurchaseItem extends Table {
         summary.add(desc).grow();
 
         super.add(summary).grow();
+
+        super.addListener(new ClickListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                PurchaseItem.super.setBackground("shop_item_hover");
+                super.enter(event, x, y, pointer, fromActor);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                PurchaseItem.super.setBackground("shop_item");
+                super.exit(event, x, y, pointer, toActor);
+            }
+        });
     }
 }
