@@ -72,6 +72,8 @@ public class GameScreen implements Screen, InputProcessor {
     MovingChessBackground bg;
     Playlist playlist;
 
+    private ShopUI shopUI;
+
     private SceneManager sceneManager;
     private PerspectiveCamera camera;
 
@@ -291,6 +293,7 @@ public class GameScreen implements Screen, InputProcessor {
     public void resize(int width, int height) {
         this.stage.getViewport().update(width, height, true);
         sceneManager.updateViewport(width, height);
+        this.shopUI.update();
     }
 
     private void showShop() {
@@ -534,12 +537,12 @@ public class GameScreen implements Screen, InputProcessor {
         this.skin = this.game.assetManager.get("MainSpritesheet.skin", Skin.class);
         this.mainAtlas = this.game.assetManager.get("MainSpritesheet.atlas", TextureAtlas.class);
 
-        ShopUI shopUI = new ShopUI(this.stage, this.skin, this.mainAtlas);
+        this.shopUI = new ShopUI(this.stage, this.skin, this.mainAtlas);
 
-        shopUI.createSavegameUI(this.player);
         shopUI.createShopTitleUI();
         shopUI.createShopControlUI();
         shopUI.createShopListUI(this.player);
+        shopUI.createSavegameUI(this.player);
     }
 
     @Override

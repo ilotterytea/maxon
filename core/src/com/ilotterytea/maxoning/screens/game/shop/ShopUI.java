@@ -16,7 +16,7 @@ import com.ilotterytea.maxoning.utils.math.Math;
 import java.util.ArrayList;
 
 public class ShopUI {
-    private final Stage stage;
+    private final Table table, mainTable;
     private final Skin skin;
     private final TextureAtlas atlas;
     private final ArrayList<MaxonItem> items;
@@ -25,20 +25,26 @@ public class ShopUI {
     private ShopMultiplier multiplier;
 
     public ShopUI(Stage stage, Skin skin, TextureAtlas atlas) {
-        this.stage = stage;
         this.skin = skin;
         this.atlas = atlas;
         this.mode = ShopMode.BUY;
         this.multiplier = ShopMultiplier.X1;
         this.items = MaxonItemRegister.getItems();
+
+        this.table = new Table(skin);
+        this.table.setBackground("board");
+
+        this.mainTable = new Table(this.skin);
+        mainTable.setFillParent(true);
+        mainTable.align(Align.center | Align.left);
+
+        mainTable.add(this.table).growY().width(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
+        stage.addActor(mainTable);
     }
 
     public void createSavegameUI(final MaxonSavegame player) {
         Table table = new Table(this.skin);
-        table.setBackground("board");
 
-        table.setWidth(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
-        table.setHeight(Math.percentFromValue(15f, Gdx.graphics.getHeight()));
         table.align(Align.center | Align.left);
         table.pad(10f);
 
@@ -64,32 +70,24 @@ public class ShopUI {
 
         table.add(multiplierTable);
 
-        this.stage.addActor(table);
+        this.table.add(table).grow();
     }
 
     public void createShopTitleUI() {
         Table table = new Table(this.skin);
-        table.setBackground("board");
 
-        table.setWidth(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
-        table.setHeight(Math.percentFromValue(5f, Gdx.graphics.getHeight()));
-        table.setY(Gdx.graphics.getHeight() - table.getHeight());
         table.align(Align.center);
         table.pad(10f);
 
         Label label = new Label("Store", skin);
         table.add(label);
 
-        this.stage.addActor(table);
+        this.table.add(table).grow().row();
     }
 
     public void createShopControlUI() {
         Table table = new Table(this.skin);
-        table.setBackground("board");
 
-        table.setWidth(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
-        table.setHeight(Math.percentFromValue(10f, Gdx.graphics.getHeight()));
-        table.setY(Gdx.graphics.getHeight() - table.getHeight() - Math.percentFromValue(5f, Gdx.graphics.getHeight()));
         table.align(Align.center);
         table.pad(10f);
 
@@ -143,17 +141,11 @@ public class ShopUI {
 
         table.add(multiplierTable).grow();
 
-        this.stage.addActor(table);
+        this.table.add(table).grow().row();
     }
 
     public void createShopListUI(final MaxonSavegame player) {
         Table table = new Table();
-
-        table.setWidth(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
-        table.setHeight(Math.percentFromValue(70f, Gdx.graphics.getHeight()));
-        table.setY(Math.percentFromValue(15f, Gdx.graphics.getHeight()));
-        table.align(Align.center);
-        table.pad(10f);
 
         for (final MaxonItem item : this.items) {
             int amount = (int) player.inv.stream().filter(c -> c == item.id).count();
@@ -162,19 +154,21 @@ public class ShopUI {
             item.price = (float) price;
             PurchaseItem purchaseItem = new PurchaseItem(this.skin, item);
 
-            table.add(purchaseItem).width(table.getWidth()).padBottom(5f).row();
+            table.add(purchaseItem).growX().padBottom(5f).row();
         }
 
         ScrollPane scrollPane = new ScrollPane(table);
         scrollPane.setScrollingDisabled(true, false);
 
         Table scrollPaneTable = new Table(this.skin);
-        scrollPaneTable.setBackground("shop_list");
-        scrollPaneTable.setPosition(table.getX(), table.getY());
-        scrollPaneTable.setSize(table.getWidth(), table.getHeight());
         scrollPaneTable.pad(1f, 5f, 1f, 5f);
         scrollPaneTable.add(scrollPane).grow();
 
-        this.stage.addActor(scrollPaneTable);
+        this.table.add(scrollPaneTable).grow().row();
+    }
+
+    public void update() {
+        this.mainTable.clear();
+        this.mainTable.add(this.table).growY().width(Math.percentFromValue(30f, Gdx.graphics.getWidth()));
     }
 }
