@@ -14,15 +14,15 @@ public class PurchaseItem extends Table {
         super.setBackground("shop_item");
         super.align(Align.left | Align.center);
 
-        super.add(item.icon).size(81f).pad(6f);
+        super.add(item.icon).size(64f).pad(6f);
 
         Table summary = new Table();
         summary.align(Align.topLeft);
 
-        Label name = new Label(item.name, skin, "subheader");
+        Label name = new Label(item.name, skin, "item_title");
         name.setAlignment(Align.left);
 
-        Label desc = new Label(String.format("%s SQP (%s/click)", MaxonConstants.DECIMAL_FORMAT.format(item.price), MaxonConstants.DECIMAL_FORMAT.format(item.multiplier)), skin);
+        Label desc = new Label(String.format("%s SQP (%s/click)", MaxonConstants.DECIMAL_FORMAT.format(item.price), MaxonConstants.DECIMAL_FORMAT.format(item.multiplier)), skin, "item_price");
         desc.setAlignment(Align.left);
 
         summary.add(name).width(desc.getWidth()).row();
