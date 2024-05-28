@@ -62,7 +62,9 @@
     header: { font: default, fontColor: yellow },
     header_with_bg: { font: default, fontColor: yellow, background: fg }
     subheader: { font: default, fontColor: white },
-    subheader_with_bg: { font: default, fontColor: white, background: fg }
+    subheader_with_bg: { font: default, fontColor: white, background: fg },
+    item_title: { font: small, fontColor: yellow },
+    item_price: { font: small, fontColor: white }
   },
 
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
