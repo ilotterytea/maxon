@@ -24,8 +24,9 @@
     tile_04: { color: { hex: "#00ff00ff" }, name: tile },
     tile_05: { color: { hex: "#222222ff" }, name: tile },
 
-    board: { color: { hex: "#00000055" }, name: tile },
-    shop_list: { color: {hex: "#dda300ff" }, name: tile },
+    board: { color: { hex: "#ffa61bff" }, name: tile },
+    shop_list: { color: {hex: "#e98e42ff" }, name: tile },
+    shop_item: { color: {hex: "#ffa61bff" }, name: tile },
     window: { color: { hex: "#00000055" }, name: bg },
 
     fill_circle: { color: { hex: "#00ff00ff" }, name: circle }

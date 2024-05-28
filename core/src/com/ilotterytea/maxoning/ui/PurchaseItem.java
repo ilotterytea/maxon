@@ -11,7 +11,7 @@ public class PurchaseItem extends Table {
             MaxonItem item
     ) {
         super(skin);
-        super.setBackground("up");
+        super.setBackground("shop_item");
         super.align(Align.left | Align.center);
 
         super.add(item.icon).size(81f).pad(6f);

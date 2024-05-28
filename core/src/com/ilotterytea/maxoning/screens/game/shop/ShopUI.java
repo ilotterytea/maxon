@@ -145,7 +145,8 @@ public class ShopUI {
     }
 
     public void createShopListUI(final MaxonSavegame player) {
-        Table table = new Table();
+        Table table = new Table(this.skin);
+        table.setBackground("shop_list");
 
         for (final MaxonItem item : this.items) {
             int amount = (int) player.inv.stream().filter(c -> c == item.id).count();
@@ -161,6 +162,7 @@ public class ShopUI {
         scrollPane.setScrollingDisabled(true, false);
 
         Table scrollPaneTable = new Table(this.skin);
+        scrollPaneTable.setBackground("shop_list");
         scrollPaneTable.pad(1f, 5f, 1f, 5f);
         scrollPaneTable.add(scrollPane).grow();
 
