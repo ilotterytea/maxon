@@ -27,6 +27,8 @@ public class ShopUI {
     private final MaxonSavegame savegame;
     private Label pointsLabel, multiplierLabel;
 
+    private final ArrayList<PurchaseItem> purchaseItems = new ArrayList<>();
+
     public ShopUI(final MaxonSavegame savegame, Stage stage, Skin skin, TextureAtlas atlas) {
         this.savegame = savegame;
 
@@ -168,12 +170,31 @@ public class ShopUI {
         table.setBackground("shop_list");
 
         for (final MaxonItem item : this.items) {
-            int amount = (int) savegame.inv.stream().filter(c -> c == item.id).count();
-
-            double price = item.price * java.lang.Math.pow(1.15f, amount + this.multiplier.getMultiplier());
-            item.price = (float) price;
             PurchaseItem purchaseItem = new PurchaseItem(this.skin, item);
+            purchaseItem.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
 
+                    if (purchaseItem.isDisabled()) {
+                        return;
+                    }
+
+                    if (mode == ShopMode.BUY) {
+                        savegame.points -= (long) purchaseItem.getPrice();
+                        for (int i = 0; i < multiplier.getMultiplier(); i++) {
+                            savegame.inv.add(purchaseItem.getItem().id);
+                        }
+                    } else {
+                        savegame.points += (long) purchaseItem.getPrice();
+                        for (int i = 0; i < multiplier.getMultiplier(); i++) {
+                            savegame.inv.remove(Integer.valueOf(purchaseItem.getItem().id));
+                        }
+                    }
+                }
+            });
+
+            purchaseItems.add(purchaseItem);
             table.add(purchaseItem).growX().padBottom(5f).row();
         }
 
@@ -188,9 +209,37 @@ public class ShopUI {
         this.table.add(scrollPaneTable).grow().row();
     }
 
+    private void updatePurchaseItems() {
+        for (final PurchaseItem item : this.purchaseItems) {
+            int amount = (int) savegame.inv.stream().filter(c -> c == item.getItem().id).count();
+            double price = item.getItem().price * java.lang.Math.pow(1.15f, amount + multiplier.getMultiplier());
+
+            if (mode == ShopMode.SELL) {
+                price /= 4;
+            }
+
+            item.setPrice(price);
+
+            if (mode == ShopMode.BUY) {
+                if (price > savegame.points || savegame.points - price < 0) {
+                    item.setDisabled(true);
+                } else if (item.isDisabled()) {
+                    item.setDisabled(false);
+                }
+            } else {
+                if (amount - multiplier.getMultiplier() < 0) {
+                    item.setDisabled(true);
+                } else if (item.isDisabled()) {
+                    item.setDisabled(false);
+                }
+            }
+        }
+    }
+
     public void render() {
         this.pointsLabel.setText(String.valueOf(savegame.points));
         this.multiplierLabel.setText(String.format("%s/s", savegame.multiplier));
+        updatePurchaseItems();
     }
 
     public void update() {
