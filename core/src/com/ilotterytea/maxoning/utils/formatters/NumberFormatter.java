@@ -29,4 +29,8 @@ public class NumberFormatter {
         boolean hasDecimal = truncated < 100 && (truncated / 10d) != (truncated / 10);
         return hasDecimal ? (truncated / 10d) + suffix : (truncated / 10) + suffix;
     }
+
+    public static String pad(long value) {
+        return value <= 9 && value >= 0 ? "0" + value : String.valueOf(value);
+    }
 }
