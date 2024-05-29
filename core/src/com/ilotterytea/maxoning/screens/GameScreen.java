@@ -96,7 +96,7 @@ public class GameScreen implements Screen, InputProcessor {
         decals = new ArrayList<>();
 
         TextureRegion[] playerTextureRegions = SpriteUtils.splitToTextureRegions(game.assetManager.get("sprites/sheet/loadingCircle.png", Texture.class), 112, 112, 10, 5);
-        decalPlayer = new DecalPlayer(playerTextureRegions);
+        decalPlayer = new DecalPlayer(sav, playerTextureRegions);
         decals.add(decalPlayer.getDecal());
 
         playlist = new Playlist(
