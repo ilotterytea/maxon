@@ -12,6 +12,7 @@
   "menu.options": "НАСТРОЙКИ...",
   "menu.quit": "ВЫЙТИ НА РАБОЧИЙ СТОЛ",
   "menu.continue": "ПРОДОЛЖИТЬ",
+  "menu.reset": "СБРОСИТЬ",
 
   "savegame.title": "Сохранение %s (%s)",
   "savegame.new": "Новое сохранение...",
