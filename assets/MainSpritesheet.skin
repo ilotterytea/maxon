@@ -29,7 +29,9 @@
     shop_item: { color: {hex: "#ffa61bff" }, name: tile },
     window: { color: { hex: "#00000055" }, name: bg },
 
-    fill_circle: { color: { hex: "#00ff00ff" }, name: circle }
+    fill_circle: { color: { hex: "#00ff00ff" }, name: circle },
+
+    tint: { color: { hex: "#00000055" }, name: tile }
   }
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
     default: {

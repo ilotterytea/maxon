@@ -61,6 +61,11 @@ public class MenuScreen implements Screen {
         this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
         menuMusic.setLooping(true);
 
+        // Tint the background
+        Image tintImage = new Image(skin, "tint");
+        tintImage.setFillParent(true);
+        this.stage.addActor(tintImage);
+
         // - - - - - -  U I  - - - - - -
         Table menuTable = new Table();
         menuTable.setFillParent(true);
