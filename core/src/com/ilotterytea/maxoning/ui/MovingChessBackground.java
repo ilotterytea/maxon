@@ -62,8 +62,8 @@ public class MovingChessBackground {
         float totalDWidth = 0, totalDHeight = 0;
 
         for (Drawable drawable : drawables) {
-            totalDWidth += drawable.getMinWidth();
-            totalDHeight += drawable.getMinHeight();
+            totalDWidth += 64;
+            totalDHeight += 64;
         }
 
         totalDWidth = totalDWidth / drawables.size();
@@ -81,6 +81,7 @@ public class MovingChessBackground {
             for (int w = -1; w < width / totalDWidth; w++) {
                 if (DIndex + 1 > drawables.size()) DIndex = 0;
                 Image tile = new Image(drawables.get(DIndex++));
+                tile.setSize(64f, 64f);
 
                 tile.setPosition(tile.getWidth() * w, tile.getHeight() * h);
 
