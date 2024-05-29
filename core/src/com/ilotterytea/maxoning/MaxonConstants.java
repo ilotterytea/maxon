@@ -12,6 +12,14 @@ public class MaxonConstants {
     public static final String GAME_VERSION = "Alpha 1.2";
     public static final String GAME_GHTAG = "alpha-1.2";
     public static final String GAME_PUBLISHER = "iLotterytea";
+    public static final String[][] GAME_DEVELOPERS = {
+            {"ilotterytea", "https://ilotterytea.kz"},
+            {"greddyss", "https://twitch.tv/greddyss"},
+            {"enotegg", "https://twitch.tv/enotegg"},
+            {"namesake", "https://twitter.com/nameisnamesake"},
+            {"saopin", "https://twitch.tv/saopin_"},
+            {"gvardovskiy", "https://twitch.tv/gvardovskiy"}
+    };
 
     public static final String GAME_MAIN_FOLDER = OsUtils.getUserDataDirectory(".Maxoning");
     public static final String GAME_SCREENSHOT_FOLDER = GAME_MAIN_FOLDER + "/screenshots";

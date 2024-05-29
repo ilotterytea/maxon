@@ -28,6 +28,8 @@ public class AssetLoading {
         am.load("sprites/gui/widgets.skin", Skin.class, new SkinLoader.SkinParameter("sprites/gui/widgets.atlas"));
 
         am.load("sprites/gui/widgeticons.atlas", TextureAtlas.class);
+        am.load("sprites/gui/friends.atlas", TextureAtlas.class);
+        am.load("sprites/gui/friends.skin", Skin.class, new SkinLoader.SkinParameter("sprites/gui/friends.atlas"));
 
         am.load("MainSpritesheet.atlas", TextureAtlas.class);
         am.load("MainSpritesheet.skin", Skin.class, new SkinLoader.SkinParameter("MainSpritesheet.atlas"));

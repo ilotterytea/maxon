@@ -6,6 +6,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ilotterytea.maxoning.MaxonConstants;
 import com.ilotterytea.maxoning.MaxonGame;
@@ -54,6 +56,8 @@ public class MenuScreen implements Screen {
         Skin widgetSkin = game.assetManager.get("sprites/gui/widgets.skin", Skin.class);
         TextureAtlas brandAtlas = game.assetManager.get("sprites/gui/brand.atlas", TextureAtlas.class);
         TextureAtlas widgetAtlas = game.assetManager.get("sprites/gui/widgets.atlas", TextureAtlas.class);
+
+        Skin friendsSkin = game.assetManager.get("sprites/gui/friends.skin", Skin.class);
 
         sav = GameDataSystem.load("00.maxon");
 
@@ -122,6 +126,50 @@ public class MenuScreen implements Screen {
         // Right part of menu control
         Table rightGameControlTable = new Table();
         rightGameControlTable.align(Align.right);
+
+        // - - -  D E V E L O P E R  S H O W C A S E  - - -
+        Image developerImage = new Image();
+        final int[] developerIndex = {MaxonConstants.GAME_DEVELOPERS.length};
+        developerImage.setSize(64, 64);
+
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                developerIndex[0]++;
+
+                if (developerIndex[0] >= MaxonConstants.GAME_DEVELOPERS.length) {
+                    developerIndex[0] = 0;
+                }
+
+                String[] dev = MaxonConstants.GAME_DEVELOPERS[developerIndex[0]];
+
+                developerImage.clearActions();
+                developerImage.addAction(
+                        Actions.sequence(
+                                Actions.alpha(0.0f, 1f),
+                                new Action() {
+                                    @Override
+                                    public boolean act(float delta) {
+                                        developerImage.setDrawable(friendsSkin, dev[0]);
+                                        return true;
+                                    }
+                                },
+                                Actions.alpha(1.0f, 1f)
+                        )
+                );
+
+                developerImage.clearListeners();
+                developerImage.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
+                        Gdx.net.openURI(dev[1]);
+                    }
+                });
+            }
+        }, 0, 5);
+
+        rightGameControlTable.add(developerImage).padRight(16f);
 
         // Localization
         String[] fh4Locale = game.locale.getFileHandle().nameWithoutExtension().split("_");
