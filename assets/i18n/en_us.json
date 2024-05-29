@@ -12,6 +12,7 @@
   "menu.options": "OPTIONS",
   "menu.quit": "QUIT TO DESKTOP",
   "menu.continue": "CONTINUE",
+  "menu.reset": "RESET",
 
   "savegame.title": "Save %s (%s)",
   "savegame.new": "New savegame...",
