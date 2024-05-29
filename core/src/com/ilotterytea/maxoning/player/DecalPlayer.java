@@ -14,8 +14,11 @@ public class DecalPlayer {
     private int regionIndex;
     private final Decal decal;
     private final BoundingBox box;
+    private final MaxonSavegame savegame;
 
-    public DecalPlayer(TextureRegion[] regions) {
+    public DecalPlayer(MaxonSavegame savegame, TextureRegion[] regions) {
+        this.savegame = savegame;
+
         this.regions = regions;
         this.regionIndex = 0;
 
@@ -52,6 +55,7 @@ public class DecalPlayer {
 
         if (Intersector.intersectRayBounds(ray, box, intersection)) {
             updateTextureRegion();
+            savegame.points++;
         }
     }
 
