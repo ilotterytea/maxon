@@ -1,98 +1,17 @@
-
 widgets.png
-size: 256, 128
-format: RGBA8888
-filter: Nearest, Nearest
-repeat: none
-coin
-  rotate: false
-  xy: 124, 96
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-down
-  rotate: false
-  xy: 140, 112
-  size: 16, 16
-  split: 2, 2, 2, 2
-  pad: 2, 2, 2, 2
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-frame
-  rotate: false
-  xy: 124, 80
-  size: 16, 16
-  split: 1, 1, 1, 1
-  pad: 1, 1, 1, 1
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-gradient
-  rotate: false
-  xy: 124, 112
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-lvlup
-  rotate: false
-  xy: 172, 112
-  size: 14, 16
-  orig: 14, 16
-  offset: 0, 0
-  index: -1
-multiplier
-  rotate: false
-  xy: 156, 112
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-over
-  rotate: false
-  xy: 124, 64
-  size: 16, 16
-  split: 2, 2, 2, 2
-  pad: 2, 2, 2, 2
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-package
-  rotate: false
-  xy: 0, 0
-  size: 124, 128
-  orig: 124, 128
-  offset: 0, 0
-  index: -1
-settings
-  rotate: false
-  xy: 124, 50
-  size: 14, 14
-  orig: 14, 14
-  offset: 0, 0
-  index: -1
-shop
-  rotate: false
-  xy: 140, 96
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-tile
-  rotate: false
-  xy: 156, 96
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-up
-  rotate: false
-  xy: 140, 80
-  size: 16, 16
-  split: 2, 2, 2, 2
-  pad: 2, 2, 2, 2
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
+size:256,256
+repeat:none
+exit
+bounds:68,2,64,64
+fullscreen
+bounds:83,68,64,64
+music_off
+bounds:2,134,87,64
+music_on
+bounds:2,68,79,64
+russia
+bounds:91,134,64,64
+usa
+bounds:2,2,64,64
+windowed
+bounds:157,134,64,64
