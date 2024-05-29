@@ -95,24 +95,31 @@ public class ShopUI {
         Table modeTable = new Table();
 
         TextButton buyButton = new TextButton("Buy", this.skin);
+        buyButton.setDisabled(true);
+        modeTable.add(buyButton).growX().row();
+
+        TextButton sellButton = new TextButton("Sell", this.skin);
+        modeTable.add(sellButton).growX();
+
+        sellButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                mode = ShopMode.SELL;
+                sellButton.setDisabled(true);
+                buyButton.setDisabled(false);
+            }
+        });
+
         buyButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 mode = ShopMode.BUY;
+                sellButton.setDisabled(false);
+                buyButton.setDisabled(true);
             }
         });
-        modeTable.add(buyButton).growX().row();
-
-        TextButton sellButton = new TextButton("Sell", this.skin);
-        buyButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                mode = ShopMode.SELL;
-            }
-        });
-        modeTable.add(sellButton).growX();
 
         table.add(modeTable).grow();
 
@@ -120,24 +127,31 @@ public class ShopUI {
         Table multiplierTable = new Table();
 
         TextButton x1Button = new TextButton("1x", this.skin);
+        x1Button.setDisabled(true);
+        multiplierTable.add(x1Button).width(64f).height(64f).padRight(10f);
+
+        TextButton x10Button = new TextButton("10x", this.skin);
+        multiplierTable.add(x10Button).width(64f).height(64f);
+
         x1Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 multiplier = ShopMultiplier.X1;
+                x1Button.setDisabled(true);
+                x10Button.setDisabled(false);
             }
         });
-        multiplierTable.add(x1Button).width(64f).height(64f).padRight(10f);
 
-        TextButton x10Button = new TextButton("10x", this.skin);
         x10Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 multiplier = ShopMultiplier.X10;
+                x1Button.setDisabled(false);
+                x10Button.setDisabled(true);
             }
         });
-        multiplierTable.add(x10Button).width(64f).height(64f);
 
         table.add(multiplierTable).grow();
 
