@@ -24,7 +24,12 @@ public class ShopUI {
     private ShopMode mode;
     private ShopMultiplier multiplier;
 
-    public ShopUI(Stage stage, Skin skin, TextureAtlas atlas) {
+    private final MaxonSavegame savegame;
+    private Label pointsLabel, multiplierLabel;
+
+    public ShopUI(final MaxonSavegame savegame, Stage stage, Skin skin, TextureAtlas atlas) {
+        this.savegame = savegame;
+
         this.skin = skin;
         this.atlas = atlas;
         this.mode = ShopMode.BUY;
@@ -42,7 +47,7 @@ public class ShopUI {
         stage.addActor(mainTable);
     }
 
-    public void createSavegameUI(final MaxonSavegame player) {
+    public void createSavegameUI() {
         Table table = new Table(this.skin);
 
         table.align(Align.center | Align.left);
@@ -52,7 +57,7 @@ public class ShopUI {
         Table pointsTable = new Table();
 
         Image pointsImage = new Image(this.atlas.findRegion("points"));
-        Label pointsLabel = new Label(String.valueOf(player.points), this.skin);
+        this.pointsLabel = new Label(String.valueOf(savegame.points), this.skin);
 
         pointsTable.add(pointsImage);
         pointsTable.add(pointsLabel).padLeft(15f);
@@ -63,7 +68,7 @@ public class ShopUI {
         Table multiplierTable = new Table();
 
         Image multiplierImage = new Image(this.atlas.findRegion("multiplier"));
-        Label multiplierLabel = new Label(String.format("%s/s", player.multiplier), this.skin);
+        this.multiplierLabel = new Label(String.format("%s/s", savegame.multiplier), this.skin);
 
         multiplierTable.add(multiplierImage);
         multiplierTable.add(multiplierLabel).padLeft(15f);
@@ -158,12 +163,12 @@ public class ShopUI {
         this.table.add(table).grow().row();
     }
 
-    public void createShopListUI(final MaxonSavegame player) {
+    public void createShopListUI() {
         Table table = new Table(this.skin);
         table.setBackground("shop_list");
 
         for (final MaxonItem item : this.items) {
-            int amount = (int) player.inv.stream().filter(c -> c == item.id).count();
+            int amount = (int) savegame.inv.stream().filter(c -> c == item.id).count();
 
             double price = item.price * java.lang.Math.pow(1.15f, amount + this.multiplier.getMultiplier());
             item.price = (float) price;
@@ -181,6 +186,11 @@ public class ShopUI {
         scrollPaneTable.add(scrollPane).grow();
 
         this.table.add(scrollPaneTable).grow().row();
+    }
+
+    public void render() {
+        this.pointsLabel.setText(String.valueOf(savegame.points));
+        this.multiplierLabel.setText(String.format("%s/s", savegame.multiplier));
     }
 
     public void update() {

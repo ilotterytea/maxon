@@ -81,7 +81,11 @@ public class GameScreen implements Screen, InputProcessor {
     private ArrayList<Decal> decals;
     private DecalPlayer decalPlayer;
 
+    private final MaxonSavegame savegame;
+
     public GameScreen(MaxonGame game, MaxonSavegame sav, int slotId) throws IOException, ClassNotFoundException {
+        this.savegame = sav;
+
         this.game = game;
         this.slotId = slotId;
         this.playTimestamp = System.currentTimeMillis();
@@ -287,6 +291,8 @@ public class GameScreen implements Screen, InputProcessor {
 
         stage.act(delta);
         stage.draw();
+
+        shopUI.render();
     }
 
     @Override
@@ -537,12 +543,12 @@ public class GameScreen implements Screen, InputProcessor {
         this.skin = this.game.assetManager.get("MainSpritesheet.skin", Skin.class);
         this.mainAtlas = this.game.assetManager.get("MainSpritesheet.atlas", TextureAtlas.class);
 
-        this.shopUI = new ShopUI(this.stage, this.skin, this.mainAtlas);
+        this.shopUI = new ShopUI(savegame, this.stage, this.skin, this.mainAtlas);
 
         shopUI.createShopTitleUI();
         shopUI.createShopControlUI();
-        shopUI.createShopListUI(this.player);
-        shopUI.createSavegameUI(this.player);
+        shopUI.createShopListUI();
+        shopUI.createSavegameUI();
     }
 
     @Override
