@@ -73,6 +73,8 @@ public class MenuScreen implements Screen {
 
         // Stage and skin:
         this.stage = new Stage(new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        this.stage.addAction(Actions.sequence(Actions.alpha(0.0f), Actions.alpha(1.0f, 1f)));
+
         this.skin = game.assetManager.get("MainSpritesheet.skin", Skin.class);
         brandAtlas = game.assetManager.get("sprites/gui/brand.atlas", TextureAtlas.class);
         mainAtlas = game.assetManager.get("MainSpritesheet.atlas", TextureAtlas.class);
@@ -209,7 +211,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1f);
+        Gdx.gl.glClearColor(1, 1, 1, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         game.batch.begin();
@@ -218,8 +220,8 @@ public class MenuScreen implements Screen {
 
         game.batch.end();
 
-        stage.draw();
         stage.act(delta);
+        stage.draw();
     }
 
     @Override
