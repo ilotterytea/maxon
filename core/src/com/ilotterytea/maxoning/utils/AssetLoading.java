@@ -25,6 +25,8 @@ public class AssetLoading {
         am.load("sprites/gui/icons.atlas", TextureAtlas.class);
         am.load("sprites/gui/ilotterytea.atlas", TextureAtlas.class);
         am.load("sprites/gui/widgets.atlas", TextureAtlas.class);
+        am.load("sprites/gui/widgets.skin", Skin.class, new SkinLoader.SkinParameter("sprites/gui/widgets.atlas"));
+
         am.load("sprites/gui/widgeticons.atlas", TextureAtlas.class);
 
         am.load("MainSpritesheet.atlas", TextureAtlas.class);
