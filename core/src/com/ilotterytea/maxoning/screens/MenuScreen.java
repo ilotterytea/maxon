@@ -22,6 +22,13 @@ import com.ilotterytea.maxoning.player.MaxonSavegame;
 import com.ilotterytea.maxoning.ui.*;
 import com.ilotterytea.maxoning.utils.I18N;
 import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
+import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
+import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
+import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
+import net.mgsx.gltf.scene3d.scene.Scene;
+import net.mgsx.gltf.scene3d.scene.SceneAsset;
+import net.mgsx.gltf.scene3d.scene.SceneManager;
+import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 
 import java.util.ArrayList;
 
@@ -32,6 +39,9 @@ public class MenuScreen implements Screen {
     private final Music menuMusic;
 
     MaxonSavegame sav;
+
+    private SceneManager sceneManager;
+    private PerspectiveCamera camera;
 
     public MenuScreen(final MaxonGame game) {
         this.game = game;
@@ -224,6 +234,7 @@ public class MenuScreen implements Screen {
 
         this.stage.addActor(menuTable);
 
+        create3D();
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -236,8 +247,14 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+        float deltaTime = Gdx.graphics.getDeltaTime();
+        sceneManager.update(deltaTime);
+        sceneManager.render();
+
+        camera.rotate(2 * deltaTime, 0, 1, 0);
+        camera.update();
 
         stage.act(delta);
         stage.draw();
@@ -246,6 +263,7 @@ public class MenuScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+        sceneManager.updateViewport(width, height);
     }
 
     @Override public void pause() {}
@@ -256,5 +274,43 @@ public class MenuScreen implements Screen {
     }
     @Override public void dispose() {
         stage.dispose();
+    }
+
+    private void create3D() {
+        SceneAsset sceneAsset = game.assetManager.get("models/scenes/living_room.glb", SceneAsset.class);
+        Scene scene = new Scene(sceneAsset.scene);
+
+        sceneManager = new SceneManager();
+        sceneManager.addScene(scene);
+
+        camera = new PerspectiveCamera(60f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.near = 1f;
+        camera.far = 300f;
+        camera.position.set(0f, 5f, 0f);
+        camera.rotate(45f, 0f, 1f, 0f);
+
+        camera.update();
+
+        sceneManager.setCamera(camera);
+
+        DirectionalShadowLight light = new DirectionalShadowLight(1024, 1024, 60f, 60f, 1f, 300f);
+        light.set(new Color(0xdcccffff), -1f, -0.8f, -0.2f);
+        light.intensity = 5f;
+        sceneManager.environment.add(light);
+        sceneManager.environment.shadowMap = light;
+
+        // setup quick IBL (image based lighting)
+        IBLBuilder iblBuilder = IBLBuilder.createOutdoor(light);
+        Cubemap environmentCubemap = iblBuilder.buildEnvMap(1024);
+        Cubemap diffuseCubemap = iblBuilder.buildIrradianceMap(256);
+        Cubemap specularCubemap = iblBuilder.buildRadianceMap(10);
+        iblBuilder.dispose();
+
+        Texture brdfLUT = new Texture(Gdx.files.classpath("net/mgsx/gltf/shaders/brdfLUT.png"));
+
+        sceneManager.setAmbientLight(1f);
+        sceneManager.environment.set(new PBRTextureAttribute(PBRTextureAttribute.BRDFLUTTexture, brdfLUT));
+        sceneManager.environment.set(PBRCubemapAttribute.createSpecularEnv(specularCubemap));
+        sceneManager.environment.set(PBRCubemapAttribute.createDiffuseEnv(diffuseCubemap));
     }
 }
