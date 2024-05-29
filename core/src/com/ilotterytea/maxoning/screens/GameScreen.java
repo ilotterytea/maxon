@@ -33,7 +33,7 @@ import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
-import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
+import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
@@ -508,17 +508,17 @@ public class GameScreen implements Screen, InputProcessor {
         camera = new PerspectiveCamera(60f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.near = 1f;
         camera.far = 300f;
-        camera.position.set(0.3f, 2.7f, 0.3f);
-        camera.rotate(45f, 0f, 1f, 0f);
+        camera.position.set(-5f, 2.0f, 1.5f);
 
         camera.update();
 
         sceneManager.setCamera(camera);
 
-        DirectionalLightEx light = new DirectionalLightEx();
-        light.direction.set(0, 2, 0).nor();
-        light.color.set(Color.WHITE);
+        DirectionalShadowLight light = new DirectionalShadowLight();
+        light.set(new Color(0xdcccffff), -1f, -0.8f, -0.2f);
+        light.intensity = 5f;
         sceneManager.environment.add(light);
+        sceneManager.environment.shadowMap = light;
 
         // setup quick IBL (image based lighting)
         IBLBuilder iblBuilder = IBLBuilder.createOutdoor(light);
