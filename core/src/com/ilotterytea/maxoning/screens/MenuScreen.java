@@ -278,7 +278,7 @@ public class MenuScreen implements Screen {
 
         // - - -  Savegame  - - -
         Table savegameTable = new Table();
-        SavegameWidget info = new SavegameWidget(this.game, skin, sav);
+        SavegameWidget info = new SavegameWidget(this.game, skin, stage, sav);
 
         savegameTable.add(info).minSize(640f, 240f);
 
