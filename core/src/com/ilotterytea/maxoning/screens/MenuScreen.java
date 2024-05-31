@@ -6,6 +6,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -27,6 +28,7 @@ import com.ilotterytea.maxoning.utils.serialization.GameDataSystem;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
+import net.mgsx.gltf.scene3d.lights.PointLightEx;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
@@ -302,11 +304,10 @@ public class MenuScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        float deltaTime = Gdx.graphics.getDeltaTime();
-        sceneManager.update(deltaTime);
+        sceneManager.update(delta);
         sceneManager.render();
 
-        camera.rotate(2 * deltaTime, 0, 1, 0);
+        camera.rotate(2 * delta, 0, 1, 0);
         camera.update();
 
         stage.act(delta);
@@ -340,7 +341,6 @@ public class MenuScreen implements Screen {
         camera.near = 1f;
         camera.far = 300f;
         camera.position.set(0f, 5f, 0f);
-        camera.rotate(45f, 0f, 1f, 0f);
 
         camera.update();
 
@@ -351,6 +351,17 @@ public class MenuScreen implements Screen {
         light.intensity = 5f;
         sceneManager.environment.add(light);
         sceneManager.environment.shadowMap = light;
+
+        PointLightEx signLight = new PointLightEx();
+
+        if (sav != null) {
+            signLight.set(Color.PINK, new Vector3(2f, 6f, 2f), 80f, 100f);
+        }
+
+        PointLightEx windowLight = new PointLightEx();
+        windowLight.set(Color.BLUE, new Vector3(-1.1f, 7.3f, 0.5f), 80f, 100f);
+
+        sceneManager.environment.add(windowLight, signLight);
 
         // setup quick IBL (image based lighting)
         IBLBuilder iblBuilder = IBLBuilder.createOutdoor(light);
