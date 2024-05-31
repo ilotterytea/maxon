@@ -1,7 +1,10 @@
 package com.ilotterytea.maxoning.ui;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
@@ -15,14 +18,16 @@ import java.io.IOException;
 
 public class SavegameWidget extends Table implements Disposable {
     private final Skin skin;
-    private final MaxonSavegame savegame;
+    private MaxonSavegame savegame;
     private final Table dataTable, controlTable;
     private final TextureAtlas atlas;
     private final MaxonGame game;
+    private final Stage stage;
 
-    public SavegameWidget(final MaxonGame game, Skin skin, final MaxonSavegame savegame) {
+    public SavegameWidget(final MaxonGame game, Skin skin, final Stage stage, final MaxonSavegame savegame) {
         super();
         this.game = game;
+        this.stage = stage;
         this.atlas = game.assetManager.get("MainSpritesheet.atlas", TextureAtlas.class);
 
         this.skin = skin;
@@ -82,14 +87,12 @@ public class SavegameWidget extends Table implements Disposable {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
 
-                MaxonSavegame sav = new MaxonSavegame();
-                sav.name = field.getText();
-
-                try {
-                    game.setScreen(new GameScreen(game, sav, 0));
-                } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                if (savegame == null) {
+                    savegame = new MaxonSavegame();
+                    savegame.name = field.getText();
                 }
+
+                moveToNextScreen();
             }
         });
     }
@@ -148,12 +151,7 @@ public class SavegameWidget extends Table implements Disposable {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-
-                try {
-                    game.setScreen(new GameScreen(game, savegame, 0));
-                } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
+                moveToNextScreen();
             }
         });
 
@@ -170,6 +168,31 @@ public class SavegameWidget extends Table implements Disposable {
                 createEmpty();
             }
         });
+    }
+
+    private void moveToNextScreen() {
+        Image bg = new Image(skin, "white_tile");
+        bg.setFillParent(true);
+
+        bg.addAction(
+                Actions.sequence(
+                        Actions.alpha(0.0f),
+                        Actions.alpha(1.0f, 1.5f),
+                        Actions.delay(0.5f),
+                        new Action() {
+                            @Override
+                            public boolean act(float delta) {
+                                try {
+                                    game.setScreen(new GameScreen(game, savegame, 0));
+                                } catch (IOException | ClassNotFoundException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                return true;
+                            }
+                        }
+                )
+        );
+        stage.addActor(bg);
     }
 
     @Override
