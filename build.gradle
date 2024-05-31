@@ -19,7 +19,7 @@ allprojects {
 
     version = '1.2'
     ext {
-        appName = "Maxoning"
+        appName = "maxon"
         gdxVersion = '1.12.1'
         roboVMVersion = '2.3.16'
         box2DLightsVersion = '1.5'
