@@ -36,12 +36,12 @@
   }
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
     default: {
-      file: fnt/MaxonGogono.fnt,
+      file: fnt/FontText.fnt,
       scaledSize: 24
     },
 
     small: {
-      file: fnt/MaxonGogono.fnt,
+      file: fnt/FontText.fnt,
       scaledSize: 16
     },
 
