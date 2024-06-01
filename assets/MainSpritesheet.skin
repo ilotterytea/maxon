@@ -45,6 +45,11 @@
       scaledSize: 16
     },
 
+    store_title: {
+      file: fnt/FontText.fnt,
+      scaledSize: 24
+    },
+
     pixeled: {
       file: fnt/MaxonMercutio.fnt,
       scaledSize: 23
@@ -67,7 +72,12 @@
     subheader: { font: default, fontColor: white },
     subheader_with_bg: { font: default, fontColor: white, background: fg },
     item_title: { font: small, fontColor: yellow },
-    item_price: { font: small, fontColor: white }
+    item_price: { font: small, fontColor: white },
+
+    store_title: {
+      font: store_title,
+      fontColor: white
+    }
   },
 
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
