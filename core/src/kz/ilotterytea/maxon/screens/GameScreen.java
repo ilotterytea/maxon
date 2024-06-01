@@ -55,7 +55,7 @@ public class GameScreen implements Screen, InputProcessor {
     MaxonSavegame player;
 
     Stage stage;
-    Skin skin;
+    private Skin skin, uiSkin;
 
     TextureAtlas mainAtlas;
 
@@ -341,7 +341,8 @@ public class GameScreen implements Screen, InputProcessor {
         for (final MaxonItem item : MaxonItemRegister.getItems()) {
             PurchaseItem p_item = new PurchaseItem(
                     skin,
-                    item
+                    item,
+                    mainAtlas
             );
 
             p_item.addListener(new ClickListener() {
@@ -553,7 +554,9 @@ public class GameScreen implements Screen, InputProcessor {
         this.skin = this.game.assetManager.get("MainSpritesheet.skin", Skin.class);
         this.mainAtlas = this.game.assetManager.get("MainSpritesheet.atlas", TextureAtlas.class);
 
-        this.shopUI = new ShopUI(savegame, this.stage, this.skin, this.mainAtlas);
+        this.uiSkin = this.game.assetManager.get("sprites/gui/ui.skin", Skin.class);
+
+        this.shopUI = new ShopUI(savegame, this.stage, this.uiSkin, this.mainAtlas);
 
         shopUI.createShopTitleUI();
         shopUI.createShopControlUI();

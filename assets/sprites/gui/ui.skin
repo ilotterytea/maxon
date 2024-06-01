@@ -1,6 +1,11 @@
 {
   Color: {
-    white: { hex: "#ffffffff" }
+    white: { hex: "#ffffffff" },
+    store_item: { hex: "#bbbbbbff" },
+    store_item_hover: { hex: "#ffffffff" },
+    store_item_disabled: { hex: "#888888ff" },
+    store_item_price_available: { hex: "#00ff00ff" },
+    store_item_price_disabled: { hex: "#ff0000ff" }
   },
   TintedDrawable: {
     button_pressed: { color: { hex: "#ad6235ff" }, name: pressed },
@@ -9,29 +14,73 @@
     button_disabled: { color: { hex: "#1f1f1fff" }, name: pressed },
     bg: { color: { hex: "#1f1f1fff" }, name: pressed },
 
-    white_tile: { color: white, name: tile }
+    white_tile: { color: white, name: tile },
+
+    // Store
+    store: { color: { hex: "#59413aff" }, name: square },
+    store_control: { color: { hex: "#47312cff" }, name: tile },
+    store_list: { color: { hex: "#30221eff" }, name: tile },
+    store_item: { color: { hex: "#402d28ff" }, name: tile },
+    store_item_hover: { color: { hex: "#4b352fff" }, name: tile },
+    store_item_disabled: { color: { hex: "#30221eff" }, name: tile }
   },
   // TODO: Test this file path on Android platform
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
     default: {
       file: ../../fnt/FontText.fnt,
       scaledSize: 24
+    },
+    store_item_name: {
+      file: ../../fnt/FontText.fnt,
+      scaledSize: 19
+    },
+    store_item_price: {
+      file: ../../fnt/FontText.fnt,
+      scaledSize: 18
+    },
+    store_control: {
+      file: ../../fnt/FontText.fnt,
+      scaledSize: 18
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
     default: {
       font: default,
-      fontColor: white,
+      fontColor: { hex: "#763b29ff" },
       up: button_idle,
       down: button_pressed,
       over: button_hover,
-      disabled: button_disabled
+      disabled: button_disabled,
+    },
+    store_control: {
+      parent: default,
+      font: store_control
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
     default: {
       font: default,
-      fontColor: { hex: "#ffffffff" }
+      fontColor: white
+    },
+    store_item: {
+      font: store_item_name,
+      fontColor: store_item
+    },
+    store_item_hover: {
+      font: store_item_name,
+      fontColor: store_item_hover
+    },
+    store_item_disabled: {
+      font: store_item_name,
+      fontColor: store_item_disabled
+    },
+    store_item_price: {
+      font: store_item_price,
+      fontColor: store_item_price_available
+    },
+    store_item_price_disabled: {
+      font: store_item_price,
+      fontColor: store_item_price_disabled
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
