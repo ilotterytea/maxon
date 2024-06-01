@@ -28,7 +28,7 @@ public class SavegameWidget extends Table implements Disposable {
         super();
         this.game = game;
         this.stage = stage;
-        this.atlas = game.assetManager.get("MainSpritesheet.atlas", TextureAtlas.class);
+        this.atlas = game.assetManager.get("sprites/gui/player_icons.atlas", TextureAtlas.class);
 
         this.skin = skin;
         this.savegame = savegame;
@@ -128,7 +128,7 @@ public class SavegameWidget extends Table implements Disposable {
         // Unit
         long amount = savegame.inv.size();
 
-        Image unitIcon = new Image(atlas.findRegion("points"));
+        Image unitIcon = new Image(atlas.findRegion("pets"));
         data.add(unitIcon).size(32f, 32f).padRight(8f);
 
         Label unit = new Label(NumberFormatter.format(amount), skin);
