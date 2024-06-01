@@ -54,6 +54,7 @@ public class MenuScreen implements Screen {
         this.stage = new Stage(new ScreenViewport());
         this.stage.addAction(Actions.sequence(Actions.alpha(0.0f), Actions.alpha(1.0f, 1f)));
 
+        Skin uiSkin = game.assetManager.get("sprites/gui/ui.skin", Skin.class);
         Skin skin = game.assetManager.get("MainSpritesheet.skin", Skin.class);
         Skin widgetSkin = game.assetManager.get("sprites/gui/widgets.skin", Skin.class);
         TextureAtlas brandAtlas = game.assetManager.get("sprites/gui/brand.atlas", TextureAtlas.class);
@@ -278,7 +279,7 @@ public class MenuScreen implements Screen {
 
         // - - -  Savegame  - - -
         Table savegameTable = new Table();
-        SavegameWidget info = new SavegameWidget(this.game, skin, stage, sav);
+        SavegameWidget info = new SavegameWidget(this.game, uiSkin, stage, sav);
 
         savegameTable.add(info).minSize(640f, 240f);
 
