@@ -1,0 +1,44 @@
+{
+  Color: {
+    white: { hex: "#ffffffff" }
+  },
+  TintedDrawable: {
+    button_pressed: { color: { hex: "#ad6235ff" }, name: pressed },
+    button_idle: { color: { hex: "#cb7e39ff" }, name: idle },
+    button_hover: { color: { hex: "#e58b41ff" }, name: idle },
+    button_disabled: { color: { hex: "#1f1f1fff" }, name: pressed },
+    bg: { color: { hex: "#1f1f1fff" }, name: pressed },
+
+    white_tile: { color: white, name: tile }
+  },
+  // TODO: Test this file path on Android platform
+  com.badlogic.gdx.graphics.g2d.BitmapFont: {
+    default: {
+      file: ../../fnt/FontText.fnt,
+      scaledSize: 24
+    }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+    default: {
+      font: default,
+      fontColor: white,
+      up: button_idle,
+      down: button_pressed,
+      over: button_hover,
+      disabled: button_disabled
+    }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+    default: {
+      font: default,
+      fontColor: { hex: "#ffffffff" }
+    }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
+    default: {
+      font: default,
+      fontColor: white,
+      background: button_disabled
+    }
+  }
+}
