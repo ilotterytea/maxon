@@ -34,6 +34,9 @@ public class AssetLoading {
         am.load("MainSpritesheet.atlas", TextureAtlas.class);
         am.load("MainSpritesheet.skin", Skin.class, new SkinLoader.SkinParameter("MainSpritesheet.atlas"));
 
+        am.load("sprites/gui/ui.atlas", TextureAtlas.class);
+        am.load("sprites/gui/ui.skin", Skin.class, new SkinLoader.SkinParameter("sprites/gui/ui.atlas"));
+
         // Models:
         am.load("models/scenes/living_room.glb", SceneAsset.class);
 

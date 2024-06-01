@@ -1,0 +1,13 @@
+ui.png
+size:64,64
+repeat:none
+idle
+bounds:0,1,32,36
+split:7,7,7,11
+pad:7,7,7,11
+pressed
+bounds:32,5,32,32
+split:7,7,7,7
+pad:7,7,7,7
+tile
+bounds:0,0,1,1
