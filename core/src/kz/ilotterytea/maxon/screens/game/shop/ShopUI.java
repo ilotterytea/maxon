@@ -11,6 +11,7 @@ import kz.ilotterytea.maxon.player.MaxonItem;
 import kz.ilotterytea.maxon.player.MaxonItemRegister;
 import kz.ilotterytea.maxon.player.MaxonSavegame;
 import kz.ilotterytea.maxon.ui.PurchaseItem;
+import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 import kz.ilotterytea.maxon.utils.math.Math;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class ShopUI {
         this.items = MaxonItemRegister.getItems();
 
         this.table = new Table(skin);
-        this.table.setBackground("board");
+        this.table.setBackground("store");
 
         this.mainTable = new Table(this.skin);
         mainTable.setFillParent(true);
@@ -57,25 +58,29 @@ public class ShopUI {
 
         // Setting up the points
         Table pointsTable = new Table();
+        pointsTable.align(Align.left);
 
         Image pointsImage = new Image(this.atlas.findRegion("points"));
         this.pointsLabel = new Label(String.valueOf(savegame.points), this.skin);
+        pointsLabel.setAlignment(Align.left);
 
-        pointsTable.add(pointsImage);
-        pointsTable.add(pointsLabel).padLeft(15f);
+        pointsTable.add(pointsImage).size(64f, 64f).padRight(15f);
+        pointsTable.add(pointsLabel).grow();
 
-        table.add(pointsTable).padBottom(10f).row();
+        table.add(pointsTable).grow().padBottom(5f).row();
 
         // Setting up the multiplier
         Table multiplierTable = new Table();
+        multiplierTable.align(Align.left);
 
         Image multiplierImage = new Image(this.atlas.findRegion("multiplier"));
         this.multiplierLabel = new Label(String.format("%s/s", savegame.multiplier), this.skin);
+        multiplierLabel.setAlignment(Align.left);
 
-        multiplierTable.add(multiplierImage);
-        multiplierTable.add(multiplierLabel).padLeft(15f);
+        multiplierTable.add(multiplierImage).size(64f, 64f).padRight(15f);
+        multiplierTable.add(multiplierLabel).grow();
 
-        table.add(multiplierTable);
+        table.add(multiplierTable).grow();
 
         this.table.add(table).grow();
     }
@@ -83,15 +88,16 @@ public class ShopUI {
     public void createShopTitleUI() {
         Table table = new Table();
 
-        Label label = new Label("Store", skin, "store_title");
+        Label label = new Label("Store", skin);
         label.setAlignment(Align.center);
-        table.add(label).padTop(10f).grow();
+        table.add(label).pad(10f).grow();
 
         this.table.add(table).growX().row();
     }
 
     public void createShopControlUI() {
         Table table = new Table(this.skin);
+        table.setBackground("store_control");
 
         table.align(Align.center);
         table.pad(10f);
@@ -99,11 +105,11 @@ public class ShopUI {
         // Mode changer
         Table modeTable = new Table();
 
-        TextButton buyButton = new TextButton("Buy", this.skin);
+        TextButton buyButton = new TextButton("Buy", this.skin, "store_control");
         buyButton.setDisabled(true);
-        modeTable.add(buyButton).growX().row();
+        modeTable.add(buyButton).padBottom(5f).growX().row();
 
-        TextButton sellButton = new TextButton("Sell", this.skin);
+        TextButton sellButton = new TextButton("Sell", this.skin, "store_control");
         modeTable.add(sellButton).growX();
 
         sellButton.addListener(new ClickListener() {
@@ -126,16 +132,17 @@ public class ShopUI {
             }
         });
 
-        table.add(modeTable).grow();
+        table.add(modeTable).padRight(5f).grow();
 
         // Multiplier changer
         Table multiplierTable = new Table();
+        multiplierTable.align(Align.left);
 
-        TextButton x1Button = new TextButton("1x", this.skin);
+        TextButton x1Button = new TextButton("1x", this.skin, "store_control");
         x1Button.setDisabled(true);
         multiplierTable.add(x1Button).width(64f).height(64f).padRight(10f);
 
-        TextButton x10Button = new TextButton("10x", this.skin);
+        TextButton x10Button = new TextButton("10x", this.skin, "store_control");
         multiplierTable.add(x10Button).width(64f).height(64f);
 
         x1Button.addListener(new ClickListener() {
@@ -165,10 +172,9 @@ public class ShopUI {
 
     public void createShopListUI() {
         Table table = new Table(this.skin);
-        table.setBackground("shop_list");
 
         for (final MaxonItem item : this.items) {
-            PurchaseItem purchaseItem = new PurchaseItem(this.skin, item);
+            PurchaseItem purchaseItem = new PurchaseItem(this.skin, item, this.atlas);
             purchaseItem.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -200,8 +206,8 @@ public class ShopUI {
         scrollPane.setScrollingDisabled(true, false);
 
         Table scrollPaneTable = new Table(this.skin);
-        scrollPaneTable.setBackground("shop_list");
-        scrollPaneTable.pad(1f, 5f, 1f, 5f);
+        scrollPaneTable.setBackground("store_list");
+        scrollPaneTable.pad(4f, 0f, 4f, 0f);
         scrollPaneTable.add(scrollPane).grow();
 
         this.table.add(scrollPaneTable).grow().row();
@@ -235,8 +241,8 @@ public class ShopUI {
     }
 
     public void render() {
-        this.pointsLabel.setText(String.valueOf(savegame.points));
-        this.multiplierLabel.setText(String.format("%s/s", savegame.multiplier));
+        this.pointsLabel.setText(NumberFormatter.format(savegame.points));
+        this.multiplierLabel.setText(String.format("%s/s", NumberFormatter.format(savegame.multiplier)));
         updatePurchaseItems();
     }
 
