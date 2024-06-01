@@ -81,15 +81,13 @@ public class ShopUI {
     }
 
     public void createShopTitleUI() {
-        Table table = new Table(this.skin);
+        Table table = new Table();
 
-        table.align(Align.center);
-        table.pad(10f);
+        Label label = new Label("Store", skin, "store_title");
+        label.setAlignment(Align.center);
+        table.add(label).padTop(10f).grow();
 
-        Label label = new Label("Store", skin);
-        table.add(label);
-
-        this.table.add(table).grow().row();
+        this.table.add(table).growX().row();
     }
 
     public void createShopControlUI() {
