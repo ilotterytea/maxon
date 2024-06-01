@@ -57,7 +57,7 @@ public class GameScreen implements Screen, InputProcessor {
     Stage stage;
     private Skin skin, uiSkin;
 
-    TextureAtlas mainAtlas;
+    TextureAtlas mainAtlas, playerIconAtlas;
 
     Label pointsLabel, multiplierLabel;
     AnimatedImage cat;
@@ -553,10 +553,11 @@ public class GameScreen implements Screen, InputProcessor {
         this.stage = new Stage(new ScreenViewport());
         this.skin = this.game.assetManager.get("MainSpritesheet.skin", Skin.class);
         this.mainAtlas = this.game.assetManager.get("MainSpritesheet.atlas", TextureAtlas.class);
+        this.playerIconAtlas = this.game.assetManager.get("sprites/gui/player_icons.atlas", TextureAtlas.class);
 
         this.uiSkin = this.game.assetManager.get("sprites/gui/ui.skin", Skin.class);
 
-        this.shopUI = new ShopUI(savegame, this.stage, this.uiSkin, this.mainAtlas);
+        this.shopUI = new ShopUI(savegame, this.stage, this.uiSkin, this.playerIconAtlas);
 
         shopUI.createShopTitleUI();
         shopUI.createShopControlUI();

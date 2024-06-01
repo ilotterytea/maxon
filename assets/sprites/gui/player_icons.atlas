@@ -1,0 +1,9 @@
+player_icons.png
+size:256,64
+repeat:none
+multiplier
+bounds:0,0,64,64
+pets
+bounds:64,0,64,64
+points
+bounds:128,0,64,64
