@@ -15,9 +15,7 @@ public class DesktopLauncher {
 		config.setTitle(String.format("%s %s: %s", MaxonConstants.GAME_NAME, MaxonConstants.GAME_VERSION, getRandomLine()));
 		config.setWindowIcon("icon_chest.png");
 
-		config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
-
-		new Lwjgl3Application(new MaxonGame(), config);
+		new Lwjgl3Application(MaxonGame.getInstance(), config);
 	}
 
 	private static String getRandomLine() {
