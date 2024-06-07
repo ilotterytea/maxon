@@ -11,10 +11,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.player.MaxonSavegame;
-import kz.ilotterytea.maxon.screens.GameScreen;
+import kz.ilotterytea.maxon.screens.WelcomeScreen;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
-
-import java.io.IOException;
 
 public class SavegameWidget extends Table implements Disposable {
     private final Skin skin;
@@ -182,11 +180,7 @@ public class SavegameWidget extends Table implements Disposable {
                         new Action() {
                             @Override
                             public boolean act(float delta) {
-                                try {
-                                    game.setScreen(new GameScreen(game, savegame, 0));
-                                } catch (IOException | ClassNotFoundException e) {
-                                    throw new RuntimeException(e);
-                                }
+                                game.setScreen(new WelcomeScreen());
                                 return true;
                             }
                         }
