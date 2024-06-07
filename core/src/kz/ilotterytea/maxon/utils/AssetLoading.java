@@ -41,6 +41,7 @@ public class AssetLoading {
 
         // Models:
         am.load("models/scenes/living_room.glb", SceneAsset.class);
+        am.load("models/props/box.glb", SceneAsset.class);
 
         // Cat item textures:
         am.load("sprites/sheet/loadingCircle.png", Texture.class);
