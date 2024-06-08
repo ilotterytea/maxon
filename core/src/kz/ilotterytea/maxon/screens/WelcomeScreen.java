@@ -19,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import kz.ilotterytea.maxon.MaxonGame;
-import kz.ilotterytea.maxon.player.MaxonSavegame;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
@@ -28,8 +27,6 @@ import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.utils.IBLBuilder;
-
-import java.io.IOException;
 
 public class WelcomeScreen implements Screen {
     private final MaxonGame game = MaxonGame.getInstance();
@@ -176,11 +173,7 @@ public class WelcomeScreen implements Screen {
                             new Action() {
                                 @Override
                                 public boolean act(float delta) {
-                                    try {
-                                        game.setScreen(new GameScreen(game, new MaxonSavegame(), 0));
-                                    } catch (IOException | ClassNotFoundException e) {
-                                        throw new RuntimeException(e);
-                                    }
+                                    game.setScreen(new GameScreen());
                                     return true;
                                 }
                             }

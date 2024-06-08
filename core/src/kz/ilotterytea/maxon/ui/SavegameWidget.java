@@ -10,19 +10,19 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import kz.ilotterytea.maxon.MaxonGame;
-import kz.ilotterytea.maxon.player.MaxonSavegame;
+import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.screens.WelcomeScreen;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 
 public class SavegameWidget extends Table implements Disposable {
     private final Skin skin;
-    private MaxonSavegame savegame;
+    private final Savegame savegame;
     private final Table dataTable, controlTable;
     private final TextureAtlas atlas;
     private final MaxonGame game;
     private final Stage stage;
 
-    public SavegameWidget(final MaxonGame game, Skin skin, final Stage stage, final MaxonSavegame savegame) {
+    public SavegameWidget(final MaxonGame game, Skin skin, final Stage stage, Savegame savegame) {
         super();
         this.game = game;
         this.stage = stage;
@@ -41,7 +41,7 @@ public class SavegameWidget extends Table implements Disposable {
         this.controlTable.align(Align.left);
         super.add(this.controlTable).growX();
 
-        if (savegame == null) {
+        if (savegame.isNewlyCreated()) {
             createEmpty();
         } else {
             createWithSavegame();
@@ -85,9 +85,9 @@ public class SavegameWidget extends Table implements Disposable {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
 
-                if (savegame == null) {
-                    savegame = new MaxonSavegame();
-                    savegame.name = field.getText();
+                if (savegame.isNewlyCreated()) {
+                    savegame.setName(field.getText());
+                    savegame.save();
                 }
 
                 moveToNextScreen();
@@ -100,11 +100,11 @@ public class SavegameWidget extends Table implements Disposable {
         // Header
         Table header = new Table();
 
-        Label name = new Label(savegame.name, skin);
+        Label name = new Label(savegame.getName(), skin);
         header.add(name).grow();
 
-        long minutes = savegame.elapsedTime / 1000 / 60;
-        long seconds = savegame.elapsedTime / 1000 % 60;
+        long minutes = savegame.getElapsedTime() / 1000 / 60;
+        long seconds = savegame.getElapsedTime() / 1000 % 60;
 
         Label time = new Label(String.format("%s:%s", NumberFormatter.pad(minutes), NumberFormatter.pad(seconds)), skin);
         time.setAlignment(Align.right);
@@ -120,11 +120,11 @@ public class SavegameWidget extends Table implements Disposable {
         Image pointsIcon = new Image(atlas.findRegion("points"));
         data.add(pointsIcon).size(32f, 32f).padRight(8f);
 
-        Label points = new Label(NumberFormatter.format(savegame.points), skin);
+        Label points = new Label(NumberFormatter.format((long) savegame.getMoney()), skin);
         data.add(points).padRight(32f);
 
         // Unit
-        long amount = savegame.inv.size();
+        long amount = savegame.getPurchasedPets().size();
 
         Image unitIcon = new Image(atlas.findRegion("pets"));
         data.add(unitIcon).size(32f, 32f).padRight(8f);
@@ -136,7 +136,7 @@ public class SavegameWidget extends Table implements Disposable {
         Image multiplierIcon = new Image(atlas.findRegion("multiplier"));
         data.add(multiplierIcon).size(32f, 32f).padRight(8f);
 
-        Label multiplier = new Label(NumberFormatter.format(savegame.multiplier), skin);
+        Label multiplier = new Label(NumberFormatter.format((long) savegame.getMultiplier()), skin);
         data.add(multiplier);
 
         this.dataTable.add(data).grow();

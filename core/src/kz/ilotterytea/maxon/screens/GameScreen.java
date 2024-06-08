@@ -26,11 +26,10 @@ import kz.ilotterytea.maxon.inputprocessors.CrossProcessor;
 import kz.ilotterytea.maxon.player.DecalPlayer;
 import kz.ilotterytea.maxon.player.MaxonItem;
 import kz.ilotterytea.maxon.player.MaxonItemRegister;
-import kz.ilotterytea.maxon.player.MaxonSavegame;
+import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.screens.game.shop.ShopUI;
 import kz.ilotterytea.maxon.ui.*;
 import kz.ilotterytea.maxon.utils.math.Math;
-import kz.ilotterytea.maxon.utils.serialization.GameDataSystem;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
@@ -48,11 +47,10 @@ import java.util.Map;
 
 public class GameScreen implements Screen, InputProcessor {
     final MaxonGame game;
-    final int slotId;
     final long playTimestamp;
     boolean isShopping = false, isInventoryEnabled = false;
 
-    MaxonSavegame player;
+    private Savegame savegame;
 
     Stage stage;
     private Skin skin, uiSkin;
@@ -82,13 +80,10 @@ public class GameScreen implements Screen, InputProcessor {
     private ArrayList<Decal> decals;
     private DecalPlayer decalPlayer;
 
-    private final MaxonSavegame savegame;
+    public GameScreen() {
+        this.savegame = Savegame.load();
 
-    public GameScreen(MaxonGame game, MaxonSavegame sav, int slotId) throws IOException, ClassNotFoundException {
-        this.savegame = sav;
-
-        this.game = game;
-        this.slotId = slotId;
+        this.game = MaxonGame.getInstance();
         this.playTimestamp = System.currentTimeMillis();
 
         create3D();
@@ -97,7 +92,7 @@ public class GameScreen implements Screen, InputProcessor {
         decals = new ArrayList<>();
 
         TextureRegion[] playerTextureRegions = SpriteUtils.splitToTextureRegions(game.assetManager.get("sprites/sheet/loadingCircle.png", Texture.class), 112, 112, 10, 5);
-        decalPlayer = new DecalPlayer(sav, playerTextureRegions);
+        decalPlayer = new DecalPlayer(savegame, playerTextureRegions);
         decals.add(decalPlayer.getDecal());
 
         playlist = new Playlist(
@@ -109,7 +104,6 @@ public class GameScreen implements Screen, InputProcessor {
         playlist.setShuffleMode(true);
         if (game.prefs.getBoolean("music", true)) playlist.next();
 
-        player = sav;
         items = new ArrayList<>();
 
         createStageUI();
@@ -122,7 +116,7 @@ public class GameScreen implements Screen, InputProcessor {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                GameDataSystem.save(player, "latest.sav");
+                savegame.save();
             }
         }, 10, 10);
 
@@ -135,9 +129,9 @@ public class GameScreen implements Screen, InputProcessor {
                     multiplier += item.multiplier;
                 }
 
-                player.points += multiplier;
+                savegame.increaseMoney(multiplier);
 
-                final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)), skin, "default");
+                final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(savegame.getMultiplier())), skin, "default");
 
                 label.setPosition(
                         maxon.getX(),
@@ -193,14 +187,14 @@ public class GameScreen implements Screen, InputProcessor {
                             case 0:
                                 int randPoints = Math.getRandomNumber(150, 3000);
                                 label.setText(game.locale.FormattedText("gifts.points", String.valueOf(randPoints)));
-                                player.points += randPoints;
+                                savegame.increaseMoney(randPoints);
                                 break;
 
                             // Multiplier
                             case 1:
                                 int randMp = Math.getRandomNumber(1, 10);
                                 label.setText(game.locale.FormattedText("gifts.multiplier", String.valueOf(randMp)));
-                                player.multiplier += randMp;
+                                savegame.increaseMoney(randMp);
                                 break;
 
 
@@ -210,7 +204,7 @@ public class GameScreen implements Screen, InputProcessor {
                                 assert MaxonItemRegister.get(randPet) != null;
                                 String name = MaxonItemRegister.get(randPet).name;
                                 label.setText(game.locale.FormattedText("gifts.new_pet", name));
-                                player.inv.add(randPet);
+                                savegame.getPurchasedPets().add(randPet);
                                 if (invItems.containsKey(randPet)) {
                                     invItems.put(randPet, invItems.get(randPet) + 1);
                                 } else {
@@ -348,7 +342,7 @@ public class GameScreen implements Screen, InputProcessor {
             p_item.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (player.points < item.price) {
+                    if (savegame.getMoney() < item.price) {
                         notEnoughPointsDialog.show(stage);
 
                         Timer.schedule(new Timer.Task() {
@@ -361,9 +355,9 @@ public class GameScreen implements Screen, InputProcessor {
                         return;
                     }
 
-                    player.points -= item.price;
-                    player.multiplier += item.multiplier;
-                    player.inv.add(item.id);
+                    savegame.decreaseMoney(item.price);
+                    savegame.increaseMultiplier(item.multiplier);
+                    savegame.getPurchasedPets().add(item.id);
 
                     if (invItems.containsKey(item.id)) {
                         invItems.put(item.id, invItems.get(item.id) + 1);
@@ -454,11 +448,10 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            player.lastTimestamp = System.currentTimeMillis();
-            player.elapsedTime = (System.currentTimeMillis() - playTimestamp) + player.elapsedTime;
-            GameDataSystem.save(player, String.format("0%s.maxon", (slotId >= 0) ? slotId : "latest"));
+            savegame.setElapsedTime((System.currentTimeMillis() - playTimestamp) + savegame.getElapsedTime());
+            savegame.save();
 
-            game.setScreen(new MenuScreen(game));
+            game.setScreen(new MenuScreen());
             dispose();
         }
         //if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
@@ -471,9 +464,9 @@ public class GameScreen implements Screen, InputProcessor {
         cat.nextFrame();
         maxon.setDrawable(cat.getDrawable());
 
-        player.points += player.multiplier;
+        savegame.increaseMoney(savegame.getMultiplier());
 
-        final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)), skin, "default");
+        final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(savegame.getMultiplier())), skin, "default");
 
         label.setPosition(
                 maxon.getX(),

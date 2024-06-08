@@ -27,8 +27,8 @@ public class SplashScreen implements Screen {
 
     private boolean assetsLoaded = false;
 
-    public SplashScreen(MaxonGame game) {
-        this.game = game;
+    public SplashScreen() {
+        this.game = MaxonGame.getInstance();
 
         this.stage = new Stage(new ScreenViewport());
         this.skin = new Skin(Gdx.files.internal("MainSpritesheet.skin"));
@@ -65,7 +65,7 @@ public class SplashScreen implements Screen {
                                 @Override
                                 public boolean act(float v) {
                                     AssetLoading.registerItems(game.assetManager, game.locale);
-                                    game.setScreen(new MenuScreen(game));
+                                    game.setScreen(new MenuScreen());
                                     dispose();
                                     return false;
                                 }

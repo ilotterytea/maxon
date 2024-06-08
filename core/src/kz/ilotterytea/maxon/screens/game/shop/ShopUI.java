@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import kz.ilotterytea.maxon.player.MaxonItem;
 import kz.ilotterytea.maxon.player.MaxonItemRegister;
-import kz.ilotterytea.maxon.player.MaxonSavegame;
+import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.ui.PurchaseItem;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 import kz.ilotterytea.maxon.utils.math.Math;
@@ -25,12 +25,12 @@ public class ShopUI {
     private ShopMode mode;
     private ShopMultiplier multiplier;
 
-    private final MaxonSavegame savegame;
+    private final Savegame savegame;
     private Label pointsLabel, multiplierLabel;
 
     private final ArrayList<PurchaseItem> purchaseItems = new ArrayList<>();
 
-    public ShopUI(final MaxonSavegame savegame, Stage stage, Skin skin, TextureAtlas atlas) {
+    public ShopUI(final Savegame savegame, Stage stage, Skin skin, TextureAtlas atlas) {
         this.savegame = savegame;
 
         this.skin = skin;
@@ -61,7 +61,7 @@ public class ShopUI {
         pointsTable.align(Align.left);
 
         Image pointsImage = new Image(this.atlas.findRegion("points"));
-        this.pointsLabel = new Label(String.valueOf(savegame.points), this.skin);
+        this.pointsLabel = new Label(String.valueOf(savegame.getMoney()), this.skin);
         pointsLabel.setAlignment(Align.left);
 
         pointsTable.add(pointsImage).size(64f, 64f).padRight(15f);
@@ -74,7 +74,7 @@ public class ShopUI {
         multiplierTable.align(Align.left);
 
         Image multiplierImage = new Image(this.atlas.findRegion("multiplier"));
-        this.multiplierLabel = new Label(String.format("%s/s", savegame.multiplier), this.skin);
+        this.multiplierLabel = new Label(String.format("%s/s", savegame.getMultiplier()), this.skin);
         multiplierLabel.setAlignment(Align.left);
 
         multiplierTable.add(multiplierImage).size(64f, 64f).padRight(15f);
@@ -185,14 +185,14 @@ public class ShopUI {
                     }
 
                     if (mode == ShopMode.BUY) {
-                        savegame.points -= (long) purchaseItem.getPrice();
+                        savegame.decreaseMoney(purchaseItem.getPrice());
                         for (int i = 0; i < multiplier.getMultiplier(); i++) {
-                            savegame.inv.add(purchaseItem.getItem().id);
+                            savegame.getPurchasedPets().add(purchaseItem.getItem().id);
                         }
                     } else {
-                        savegame.points += (long) purchaseItem.getPrice();
+                        savegame.increaseMoney(purchaseItem.getPrice());
                         for (int i = 0; i < multiplier.getMultiplier(); i++) {
-                            savegame.inv.remove(Integer.valueOf(purchaseItem.getItem().id));
+                            savegame.getPurchasedPets().remove(Integer.valueOf(purchaseItem.getItem().id));
                         }
                     }
                 }
@@ -215,7 +215,7 @@ public class ShopUI {
 
     private void updatePurchaseItems() {
         for (final PurchaseItem item : this.purchaseItems) {
-            int amount = (int) savegame.inv.stream().filter(c -> c == item.getItem().id).count();
+            int amount = (int) savegame.getPurchasedPets().stream().filter(c -> c == item.getItem().id).count();
             double price = item.getItem().price * java.lang.Math.pow(1.15f, amount + multiplier.getMultiplier());
 
             if (mode == ShopMode.SELL) {
@@ -225,7 +225,7 @@ public class ShopUI {
             item.setPrice(price);
 
             if (mode == ShopMode.BUY) {
-                if (price > savegame.points || savegame.points - price < 0) {
+                if (price > savegame.getMoney() || savegame.getMoney() - price < 0) {
                     item.setDisabled(true);
                 } else if (item.isDisabled()) {
                     item.setDisabled(false);
@@ -241,8 +241,8 @@ public class ShopUI {
     }
 
     public void render() {
-        this.pointsLabel.setText(NumberFormatter.format(savegame.points));
-        this.multiplierLabel.setText(String.format("%s/s", NumberFormatter.format(savegame.multiplier)));
+        this.pointsLabel.setText(NumberFormatter.format((long) savegame.getMoney()));
+        this.multiplierLabel.setText(String.format("%s/s", NumberFormatter.format((long) savegame.getMultiplier())));
         updatePurchaseItems();
     }
 

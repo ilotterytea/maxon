@@ -24,7 +24,7 @@ public class MaxonGame extends Game {
 		}
 		return instance;
 	}
-	
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -41,14 +41,14 @@ public class MaxonGame extends Game {
 
 		assetManager = new AssetManager();
 
-		this.setScreen(new SplashScreen(this));
+		this.setScreen(new SplashScreen());
 	}
 
 	@Override
 	public void render () {
 		super.render();
 	}
-	
+
 	@Override
 	public void dispose () {
 		batch.dispose();

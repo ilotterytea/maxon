@@ -28,7 +28,7 @@ public class OptionsTable extends Table {
             final Image brandLogo
             ) {
         super();
-        
+
         Label optionsLabel = new Label(game.locale.TranslatableText("options.title"), skin);
         optionsLabel.setAlignment(Align.center);
         super.add(optionsLabel).fillX().pad(81f).row();
@@ -141,7 +141,7 @@ public class OptionsTable extends Table {
                 Locale locale = new Locale(fh4Locale[0], fh4Locale[1]);
 
                 switchLangButton.setText(game.locale.FormattedText("options.language", locale.getDisplayLanguage(), locale.getDisplayCountry()));
-                game.setScreen(new SplashScreen(game));
+                game.setScreen(new SplashScreen());
                 music.stop();
             }
         });
