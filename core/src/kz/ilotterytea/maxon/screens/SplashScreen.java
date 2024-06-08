@@ -64,7 +64,7 @@ public class SplashScreen implements Screen {
                             new Action() {
                                 @Override
                                 public boolean act(float v) {
-                                    AssetLoading.registerItems(game.assetManager, game.locale);
+                                    game.getPetManager().load();
                                     game.setScreen(new MenuScreen());
                                     dispose();
                                     return false;

@@ -7,20 +7,20 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import kz.ilotterytea.maxon.player.MaxonItem;
-import kz.ilotterytea.maxon.player.MaxonItemRegister;
+import kz.ilotterytea.maxon.MaxonGame;
+import kz.ilotterytea.maxon.pets.Pet;
+import kz.ilotterytea.maxon.pets.PetWidget;
 import kz.ilotterytea.maxon.player.Savegame;
-import kz.ilotterytea.maxon.ui.PurchaseItem;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 import kz.ilotterytea.maxon.utils.math.Math;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class ShopUI {
     private final Table table, mainTable;
     private final Skin skin;
     private final TextureAtlas atlas;
-    private final ArrayList<MaxonItem> items;
 
     private ShopMode mode;
     private ShopMultiplier multiplier;
@@ -28,7 +28,7 @@ public class ShopUI {
     private final Savegame savegame;
     private Label pointsLabel, multiplierLabel;
 
-    private final ArrayList<PurchaseItem> purchaseItems = new ArrayList<>();
+    private final ArrayList<PetWidget> petWidgets = new ArrayList<>();
 
     public ShopUI(final Savegame savegame, Stage stage, Skin skin, TextureAtlas atlas) {
         this.savegame = savegame;
@@ -37,7 +37,6 @@ public class ShopUI {
         this.atlas = atlas;
         this.mode = ShopMode.BUY;
         this.multiplier = ShopMultiplier.X1;
-        this.items = MaxonItemRegister.getItems();
 
         this.table = new Table(skin);
         this.table.setBackground("store");
@@ -172,34 +171,37 @@ public class ShopUI {
 
     public void createShopListUI() {
         Table table = new Table(this.skin);
+        HashSet<Pet> pets = MaxonGame.getInstance().getPetManager().getPets();
 
-        for (final MaxonItem item : this.items) {
-            PurchaseItem purchaseItem = new PurchaseItem(this.skin, item, this.atlas);
-            purchaseItem.addListener(new ClickListener() {
+        for (Pet pet : pets) {
+            PetWidget widget = new PetWidget(this.skin, pet, this.atlas);
+            widget.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
 
-                    if (purchaseItem.isDisabled()) {
+                    if (widget.isDisabled()) {
                         return;
                     }
 
                     if (mode == ShopMode.BUY) {
-                        savegame.decreaseMoney(purchaseItem.getPrice());
+                        savegame.decreaseMoney(pet.getPrice());
                         for (int i = 0; i < multiplier.getMultiplier(); i++) {
-                            savegame.getPurchasedPets().add(purchaseItem.getItem().id);
+                            // TODO: fix this
+                            savegame.getPurchasedPets().add(0);
                         }
                     } else {
-                        savegame.increaseMoney(purchaseItem.getPrice());
+                        savegame.increaseMoney(pet.getPrice());
                         for (int i = 0; i < multiplier.getMultiplier(); i++) {
-                            savegame.getPurchasedPets().remove(Integer.valueOf(purchaseItem.getItem().id));
+                            // TODO: fix thisss
+                            savegame.getPurchasedPets().remove(Integer.valueOf(0));
                         }
                     }
                 }
             });
 
-            purchaseItems.add(purchaseItem);
-            table.add(purchaseItem).growX().padBottom(5f).row();
+            petWidgets.add(widget);
+            table.add(widget).growX().padBottom(5f).row();
         }
 
         ScrollPane scrollPane = new ScrollPane(table);
@@ -214,27 +216,28 @@ public class ShopUI {
     }
 
     private void updatePurchaseItems() {
-        for (final PurchaseItem item : this.purchaseItems) {
-            int amount = (int) savegame.getPurchasedPets().stream().filter(c -> c == item.getItem().id).count();
-            double price = item.getItem().price * java.lang.Math.pow(1.15f, amount + multiplier.getMultiplier());
+        for (final PetWidget widget : this.petWidgets) {
+            // TODO: asdkjoiwe (fix this)
+            int amount = (int) savegame.getPurchasedPets().stream().filter(c -> c == 0).count();
+            double price = widget.getPet().getPrice() * java.lang.Math.pow(1.15f, amount + multiplier.getMultiplier());
 
             if (mode == ShopMode.SELL) {
                 price /= 4;
             }
 
-            item.setPrice(price);
+            widget.setPrice(price);
 
             if (mode == ShopMode.BUY) {
                 if (price > savegame.getMoney() || savegame.getMoney() - price < 0) {
-                    item.setDisabled(true);
-                } else if (item.isDisabled()) {
-                    item.setDisabled(false);
+                    widget.setDisabled(true);
+                } else if (widget.isDisabled()) {
+                    widget.setDisabled(false);
                 }
             } else {
                 if (amount - multiplier.getMultiplier() < 0) {
-                    item.setDisabled(true);
-                } else if (item.isDisabled()) {
-                    item.setDisabled(false);
+                    widget.setDisabled(true);
+                } else if (widget.isDisabled()) {
+                    widget.setDisabled(false);
                 }
             }
         }

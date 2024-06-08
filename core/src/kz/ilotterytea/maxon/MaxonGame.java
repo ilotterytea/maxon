@@ -6,6 +6,7 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import kz.ilotterytea.maxon.pets.PetManager;
 import kz.ilotterytea.maxon.screens.SplashScreen;
 import kz.ilotterytea.maxon.utils.I18N;
 
@@ -16,6 +17,8 @@ public class MaxonGame extends Game {
 	public Preferences prefs;
 	public I18N locale;
 
+	private PetManager petManager;
+
 	private static MaxonGame instance;
 
 	public static MaxonGame getInstance() {
@@ -23,6 +26,10 @@ public class MaxonGame extends Game {
 			instance = new MaxonGame();
 		}
 		return instance;
+	}
+
+	public PetManager getPetManager() {
+		return petManager;
 	}
 
 	@Override
@@ -40,6 +47,7 @@ public class MaxonGame extends Game {
 		if (prefs.getBoolean("fullscreen", false)) { Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode()); }
 
 		assetManager = new AssetManager();
+		petManager = new PetManager(assetManager);
 
 		this.setScreen(new SplashScreen());
 	}
