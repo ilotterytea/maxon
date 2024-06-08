@@ -1,4 +1,4 @@
-package kz.ilotterytea.maxon.ui;
+package kz.ilotterytea.maxon.pets;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -6,28 +6,28 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import kz.ilotterytea.maxon.player.MaxonItem;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 
-public class PurchaseItem extends Table {
+public class PetWidget extends Table {
     private double price;
     private final Label priceLabel, nameLabel;
-    private final MaxonItem item;
+    private final Pet pet;
 
     private boolean isDisabled = false;
 
     private final Label.LabelStyle idleStyle, hoverStyle, disabledStyle, availablePriceStyle, disabledPriceStyle;
 
-    public PurchaseItem(
+    public PetWidget(
             Skin skin,
-            MaxonItem item,
+            Pet pet,
             TextureAtlas atlas
     ) {
         super(skin);
         super.setBackground("store_item");
         super.align(Align.left | Align.center);
+        this.pet = pet;
 
-        super.add(item.icon).size(64f).pad(6f);
+        super.add(pet.getIcon()).size(64f).pad(6f);
 
         this.idleStyle = skin.get("store_item", Label.LabelStyle.class);
         this.hoverStyle = skin.get("store_item_hover", Label.LabelStyle.class);
@@ -35,13 +35,12 @@ public class PurchaseItem extends Table {
         this.availablePriceStyle = skin.get("store_item_price", Label.LabelStyle.class);
         this.disabledPriceStyle = skin.get("store_item_price_disabled", Label.LabelStyle.class);
 
-        this.price = item.price;
-        this.item = item;
+        this.price = pet.getPrice();
 
         Table summary = new Table(skin);
         summary.align(Align.left);
 
-        this.nameLabel = new Label(item.name, skin, "store_item");
+        this.nameLabel = new Label(pet.getName(), skin, "store_item");
         nameLabel.setAlignment(Align.left);
 
         Image priceIcon = new Image(atlas.findRegion("points"));
@@ -65,7 +64,7 @@ public class PurchaseItem extends Table {
                 super.enter(event, x, y, pointer, fromActor);
                 if (!isDisabled) {
                     nameLabel.setStyle(hoverStyle);
-                    PurchaseItem.super.setBackground("store_item_hover");
+                    PetWidget.super.setBackground("store_item_hover");
                 }
             }
             @Override
@@ -73,7 +72,7 @@ public class PurchaseItem extends Table {
                 super.exit(event, x, y, pointer, toActor);
                 if (!isDisabled) {
                     nameLabel.setStyle(idleStyle);
-                    PurchaseItem.super.setBackground("store_item");
+                    PetWidget.super.setBackground("store_item");
                 }
             }
         });
@@ -100,7 +99,7 @@ public class PurchaseItem extends Table {
         super.setBackground(isDisabled ? "store_item_disabled" : "store_item");
     }
 
-    public MaxonItem getItem() {
-        return item;
+    public Pet getPet() {
+        return pet;
     }
 }
