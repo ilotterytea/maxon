@@ -2,6 +2,9 @@ package kz.ilotterytea.maxon;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import kz.ilotterytea.maxon.utils.OsUtils;
 
 import java.text.DecimalFormat;
@@ -36,4 +39,27 @@ public class MaxonConstants {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
     public static final long startTime = System.currentTimeMillis();
 
+    public static final Texture MISSING_TEXTURE;
+
+    static {
+        Pixmap pixmap = new Pixmap(4, 4, Pixmap.Format.RGBA8888);
+
+        int checkers = 2;
+        int tileSize = pixmap.getWidth() / checkers;
+
+        for (int y = 0; y < checkers; y++) {
+            for (int x = 0; x < checkers; x++) {
+                if ((x + y) % 2 == 0){
+                    pixmap.setColor(Color.MAGENTA);
+                } else {
+                    pixmap.setColor(Color.BLACK);
+                }
+
+                pixmap.fillRectangle(x * tileSize, y * tileSize, tileSize, tileSize);
+            }
+        }
+
+        MISSING_TEXTURE = new Texture(pixmap);
+        pixmap.dispose();
+    }
 }
