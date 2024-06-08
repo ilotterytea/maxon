@@ -2,11 +2,14 @@ package kz.ilotterytea.maxon.utils;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import kz.ilotterytea.maxon.anim.SpriteUtils;
+import kz.ilotterytea.maxon.assets.loaders.Text;
+import kz.ilotterytea.maxon.assets.loaders.TextLoader;
 import kz.ilotterytea.maxon.player.MaxonItemEnum;
 import kz.ilotterytea.maxon.player.MaxonItemRegister;
 import kz.ilotterytea.maxon.ui.AnimatedImage;
@@ -16,6 +19,7 @@ import net.mgsx.gltf.scene3d.scene.SceneAsset;
 public class AssetLoading {
     public static void setup(AssetManager am) {
         am.setLoader(SceneAsset.class, ".glb", new GLBAssetLoader());
+        am.setLoader(Text.class, new TextLoader(new InternalFileHandleResolver()));
     }
 
     public static void queue(AssetManager am) {
