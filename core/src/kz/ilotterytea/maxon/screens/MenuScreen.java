@@ -21,10 +21,9 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import kz.ilotterytea.maxon.MaxonConstants;
 import kz.ilotterytea.maxon.MaxonGame;
-import kz.ilotterytea.maxon.player.MaxonSavegame;
+import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.ui.*;
 import kz.ilotterytea.maxon.utils.I18N;
-import kz.ilotterytea.maxon.utils.serialization.GameDataSystem;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
@@ -42,13 +41,14 @@ public class MenuScreen implements Screen {
     private final Stage stage;
     private final Music menuMusic;
 
-    MaxonSavegame sav;
+    private final Savegame savegame;
 
     private SceneManager sceneManager;
     private PerspectiveCamera camera;
 
-    public MenuScreen(final MaxonGame game) {
-        this.game = game;
+    public MenuScreen() {
+        this.game = MaxonGame.getInstance();
+        this.savegame = Savegame.load();
 
         // Stage and skin:
         this.stage = new Stage(new ScreenViewport());
@@ -61,8 +61,6 @@ public class MenuScreen implements Screen {
         TextureAtlas widgetAtlas = game.assetManager.get("sprites/gui/widgets.atlas", TextureAtlas.class);
 
         Skin friendsSkin = game.assetManager.get("sprites/gui/friends.skin", Skin.class);
-
-        sav = GameDataSystem.load("00.maxon");
 
         // Main Menu music:
         this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
@@ -199,7 +197,7 @@ public class MenuScreen implements Screen {
                 game.prefs.putString("lang", fhNext.nameWithoutExtension());
                 game.prefs.flush();
 
-                game.setScreen(new SplashScreen(game));
+                game.setScreen(new SplashScreen());
                 menuMusic.stop();
             }
         });
@@ -279,7 +277,7 @@ public class MenuScreen implements Screen {
 
         // - - -  Savegame  - - -
         Table savegameTable = new Table();
-        SavegameWidget info = new SavegameWidget(this.game, uiSkin, stage, sav);
+        SavegameWidget info = new SavegameWidget(this.game, uiSkin, stage, savegame);
 
         savegameTable.add(info).minSize(640f, 240f);
 
@@ -355,7 +353,7 @@ public class MenuScreen implements Screen {
 
         PointLightEx signLight = new PointLightEx();
 
-        if (sav != null) {
+        if (!savegame.isNewlyCreated()) {
             signLight.set(Color.PINK, new Vector3(2f, 6f, 2f), 80f, 100f);
         }
 
