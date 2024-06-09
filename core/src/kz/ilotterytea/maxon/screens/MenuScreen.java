@@ -24,6 +24,7 @@ import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.ui.*;
 import kz.ilotterytea.maxon.utils.I18N;
+import kz.ilotterytea.maxon.utils.OsUtils;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
@@ -87,23 +88,40 @@ public class MenuScreen implements Screen {
                 logo.getHeight() / 2f
         );
 
-        logo.addAction(
-                Actions.repeat(
-                        RepeatAction.FOREVER,
-                        Actions.sequence(
-                                Actions.parallel(
-                                        Actions.rotateTo(-5f, 5f, Interpolation.smoother),
-                                        Actions.scaleTo(0.9f, 0.9f, 5f, Interpolation.smoother)
-                                ),
-                                Actions.parallel(
-                                        Actions.rotateTo(5f, 5f, Interpolation.smoother),
-                                        Actions.scaleTo(1.1f, 1.1f, 5f, Interpolation.smoother)
-                                )
-                        )
-                )
-        );
+        if (OsUtils.isMobile) {
+            logo.addAction(
+                    Actions.repeat(
+                            RepeatAction.FOREVER,
+                            Actions.sequence(
+                                    Actions.scaleTo(0.9f, 0.9f, 5f, Interpolation.smoother),
+                                    Actions.scaleTo(1.0f, 1.0f, 5f, Interpolation.smoother)
+                            )
+                    )
+            );
 
-        brandTable.add(logo);
+            float stageWidth = this.stage.getWidth() - 10f;
+            float difference = stageWidth / logo.getWidth();
+
+            brandTable.add(logo).size(stageWidth, logo.getHeight() * difference);
+        } else {
+            logo.addAction(
+                    Actions.repeat(
+                            RepeatAction.FOREVER,
+                            Actions.sequence(
+                                    Actions.parallel(
+                                            Actions.rotateTo(-5f, 5f, Interpolation.smoother),
+                                            Actions.scaleTo(0.9f, 0.9f, 5f, Interpolation.smoother)
+                                    ),
+                                    Actions.parallel(
+                                            Actions.rotateTo(5f, 5f, Interpolation.smoother),
+                                            Actions.scaleTo(1.1f, 1.1f, 5f, Interpolation.smoother)
+                                    )
+                            )
+                    )
+            );
+
+            brandTable.add(logo);
+        }
 
         // - - -  Menu control (quit, options, etc.) - - -
         Table controlTable = new Table(skin);
@@ -128,7 +146,11 @@ public class MenuScreen implements Screen {
 
         // Right part of menu control
         Table rightGameControlTable = new Table();
-        rightGameControlTable.align(Align.right);
+        if (OsUtils.isMobile) {
+            rightGameControlTable.align(Align.center);
+        } else {
+            rightGameControlTable.align(Align.right);
+        }
 
         // - - -  D E V E L O P E R  S H O W C A S E  - - -
         Image developerImage = new Image();
@@ -172,8 +194,6 @@ public class MenuScreen implements Screen {
             }
         }, 0, 5));
 
-        rightGameControlTable.add(developerImage).padRight(16f);
-
         // Localization
         String[] fh4Locale = game.locale.getFileHandle().nameWithoutExtension().split("_");
         String localeButtonStyleName = "locale_" + fh4Locale[0];
@@ -203,9 +223,6 @@ public class MenuScreen implements Screen {
                 menuMusic.stop();
             }
         });
-
-
-        rightGameControlTable.add(localeButton).padRight(16f);
 
         // Music button
         String musicButtonStyleName;
@@ -239,49 +256,63 @@ public class MenuScreen implements Screen {
                 musicButton.setStyle(style);
             }
         });
-        rightGameControlTable.add(musicButton).padRight(16f);
 
-        // Resolution button
-        String resolutionButtonStyleName;
+        if (!OsUtils.isMobile) {
+            rightGameControlTable.add(developerImage).padRight(16f);
+            rightGameControlTable.add(localeButton).padRight(16f);
+            rightGameControlTable.add(musicButton).padRight(16f);
 
-        if (game.prefs.getBoolean("fullscreen")) {
-            resolutionButtonStyleName = "windowed";
+            // Resolution button
+            String resolutionButtonStyleName;
+
+            if (game.prefs.getBoolean("fullscreen")) {
+                resolutionButtonStyleName = "windowed";
+            } else {
+                resolutionButtonStyleName = "fullscreen";
+            }
+
+            ImageButton resolutionButton = new ImageButton(widgetSkin, resolutionButtonStyleName);
+            resolutionButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+
+                    Button.ButtonStyle style;
+
+                    if (game.prefs.getBoolean("fullscreen")) {
+                        style = widgetSkin.get("fullscreen", ImageButton.ImageButtonStyle.class);
+                        Gdx.graphics.setWindowedMode(game.prefs.getInteger("width", 800), game.prefs.getInteger("height", 600));
+                    } else {
+                        style = widgetSkin.get("windowed", ImageButton.ImageButtonStyle.class);
+                        Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+                    }
+
+                    game.prefs.putBoolean("fullscreen", !game.prefs.getBoolean("fullscreen"));
+                    game.prefs.flush();
+
+                    resolutionButton.setStyle(style);
+                }
+            });
+            rightGameControlTable.add(resolutionButton);
+
+            controlTable.add(leftGameControlTable).grow();
         } else {
-            resolutionButtonStyleName = "fullscreen";
+            rightGameControlTable.add(developerImage).expand();
+            rightGameControlTable.add(localeButton).expand();
+            rightGameControlTable.add(musicButton).expand();
         }
 
-        ImageButton resolutionButton = new ImageButton(widgetSkin, resolutionButtonStyleName);
-        resolutionButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-
-                Button.ButtonStyle style;
-
-                if (game.prefs.getBoolean("fullscreen")) {
-                    style = widgetSkin.get("fullscreen", ImageButton.ImageButtonStyle.class);
-                    Gdx.graphics.setWindowedMode(game.prefs.getInteger("width", 800), game.prefs.getInteger("height", 600));
-                } else {
-                    style = widgetSkin.get("windowed", ImageButton.ImageButtonStyle.class);
-                    Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
-                }
-
-                game.prefs.putBoolean("fullscreen", !game.prefs.getBoolean("fullscreen"));
-                game.prefs.flush();
-
-                resolutionButton.setStyle(style);
-            }
-        });
-        rightGameControlTable.add(resolutionButton);
-
-        controlTable.add(leftGameControlTable).grow();
         controlTable.add(rightGameControlTable).grow();
 
         // - - -  Savegame  - - -
         Table savegameTable = new Table();
         SavegameWidget info = new SavegameWidget(this.game, uiSkin, stage, savegame);
 
-        savegameTable.add(info).minSize(640f, 240f);
+        if (OsUtils.isMobile) {
+            savegameTable.add(info).growX().minHeight(240f).pad(16f);
+        } else {
+            savegameTable.add(info).minSize(640f, 240f);
+        }
 
         // Adding tables into the main UI table
         menuTable.add(brandTable).grow().row();
