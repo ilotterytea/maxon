@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -24,6 +25,7 @@ import kz.ilotterytea.maxon.anim.SpriteUtils;
 import kz.ilotterytea.maxon.audio.Playlist;
 import kz.ilotterytea.maxon.inputprocessors.CrossProcessor;
 import kz.ilotterytea.maxon.pets.Pet;
+import kz.ilotterytea.maxon.pets.PetManager;
 import kz.ilotterytea.maxon.player.DecalPlayer;
 import kz.ilotterytea.maxon.player.MaxonItem;
 import kz.ilotterytea.maxon.player.MaxonItemRegister;
@@ -82,6 +84,8 @@ public class GameScreen implements Screen, InputProcessor {
     private DecalBatch decalBatch;
     private ArrayList<Decal> decals;
     private DecalPlayer decalPlayer;
+
+    private float elapsedTime = 0.0f;
 
     private final ArrayList<Timer.Task> tasks = new ArrayList<>();
 
@@ -186,6 +190,42 @@ public class GameScreen implements Screen, InputProcessor {
         this.decalPlayer.render(this.camera);
 
         for (Decal decal : this.decals) {
+            decal.lookAt(this.camera.position, this.camera.up);
+            this.decalBatch.add(decal);
+        }
+
+        // - - -  R E N D E R I N G  P E T S  - - -
+        ArrayList<Decal> petDecals = new ArrayList<>();
+
+        // Getting the pet decals
+        for (String id : savegame.getPurchasedPets().keySet()) {
+            PetManager petManager = game.getPetManager();
+            Optional<Pet> pet = petManager.getPet(id);
+
+            if (pet.isEmpty()) {
+                continue;
+            }
+
+            int amount = savegame.getPurchasedPets().get(id);
+
+            for (int i = 0; i < amount; i++) {
+                Decal decal = pet.get().getDecal();
+                petDecals.add(Decal.newDecal(decal.getWidth(), decal.getHeight(), decal.getTextureRegion()));
+            }
+        }
+
+        elapsedTime += delta;
+
+        // Rendering the pet decals
+        for (int i = 0; i < petDecals.size(); i++) {
+            Decal decal = petDecals.get(i);
+
+            float angle = elapsedTime + (i * MathUtils.PI2 / petDecals.size());
+            float radius = 2.0f;
+            float x = MathUtils.cos(angle) * radius;
+            float z = MathUtils.sin(angle) * radius;
+
+            decal.setPosition(decalPlayer.getDecal().getX() + x, 0.5f, decalPlayer.getDecal().getZ() + z);
             decal.lookAt(this.camera.position, this.camera.up);
             this.decalBatch.add(decal);
         }

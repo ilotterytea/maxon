@@ -2,6 +2,7 @@ package kz.ilotterytea.maxon.pets;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import kz.ilotterytea.maxon.MaxonConstants;
 import kz.ilotterytea.maxon.MaxonGame;
@@ -14,15 +15,17 @@ public class Pet {
     private final String id, name, description;
     private final double price, multiplier;
     private final AnimatedImage icon;
+    private final Decal decal;
     private static final Logger logger = LoggerFactory.getLogger(Pet.class);
 
-    private Pet(String id, String name, String description, double price, double multiplier, AnimatedImage icon) {
+    private Pet(String id, String name, String description, double price, double multiplier, AnimatedImage icon, Decal decal) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.multiplier = multiplier;
         this.icon = icon;
+        this.decal = decal;
     }
 
     public static Pet create(String id, double price, double multiplier, int iconColumns, int iconRows) {
@@ -56,7 +59,9 @@ public class Pet {
             description = "pet." + id + ".desc";
         }
 
-        return new Pet(id, name, description, price, multiplier, icon);
+        Decal decal = Decal.newDecal(0.5f, 0.5f, regions[0], true);
+
+        return new Pet(id, name, description, price, multiplier, icon, decal);
     }
 
     public String getId() {
@@ -81,5 +86,9 @@ public class Pet {
 
     public AnimatedImage getIcon() {
         return icon;
+    }
+
+    public Decal getDecal() {
+        return decal;
     }
 }
