@@ -23,6 +23,7 @@ import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.anim.SpriteUtils;
 import kz.ilotterytea.maxon.audio.Playlist;
 import kz.ilotterytea.maxon.inputprocessors.CrossProcessor;
+import kz.ilotterytea.maxon.pets.Pet;
 import kz.ilotterytea.maxon.player.DecalPlayer;
 import kz.ilotterytea.maxon.player.MaxonItem;
 import kz.ilotterytea.maxon.player.MaxonItemRegister;
@@ -43,6 +44,7 @@ import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 
 public class GameScreen implements Screen, InputProcessor {
     final MaxonGame game;
@@ -120,6 +122,31 @@ public class GameScreen implements Screen, InputProcessor {
                 savegame.save();
             }
         }, 10, 10));
+
+        // Add a 1/10th multiplier to the money every 1/10th of a second.
+        tasks.add(Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                double multiplier = 0.0f;
+
+                for (String id : savegame.getPurchasedPets().keySet()) {
+                    Optional<Pet> pet = game.getPetManager().getPet(id);
+
+                    if (pet.isEmpty()) {
+                        continue;
+                    }
+
+                    int amount = savegame.getPurchasedPets().get(id);
+
+                    double m = pet.get().getMultiplier() * amount;
+                    multiplier += m;
+                }
+
+                multiplier /= 10f;
+
+                savegame.increaseMoney(multiplier);
+            }
+        }, 0.1f, 0.1f));
 
         camera.update();
         render(Gdx.graphics.getDeltaTime());
