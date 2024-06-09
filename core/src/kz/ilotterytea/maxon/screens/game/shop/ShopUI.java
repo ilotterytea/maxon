@@ -1,6 +1,7 @@
 package kz.ilotterytea.maxon.screens.game.shop;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -34,8 +35,12 @@ public class ShopUI {
 
     private final ArrayList<PetWidget> petWidgets = new ArrayList<>();
 
+    private final Sound clickSound;
+
     public ShopUI(final Savegame savegame, Stage stage, Skin skin, TextureAtlas atlas) {
         this.savegame = savegame;
+        MaxonGame game = MaxonGame.getInstance();
+        this.clickSound = game.assetManager.get("sfx/ui/click.ogg", Sound.class);
 
         this.skin = skin;
         this.atlas = atlas;
@@ -155,6 +160,10 @@ public class ShopUI {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                if (!sellButton.isDisabled()) {
+                    clickSound.play();
+                }
+
                 mode = ShopMode.SELL;
                 sellButton.setDisabled(true);
                 buyButton.setDisabled(false);
@@ -165,6 +174,10 @@ public class ShopUI {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                if (!buyButton.isDisabled()) {
+                    clickSound.play();
+                }
+
                 mode = ShopMode.BUY;
                 sellButton.setDisabled(false);
                 buyButton.setDisabled(true);
@@ -188,6 +201,10 @@ public class ShopUI {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                if (!x1Button.isDisabled()) {
+                    clickSound.play();
+                }
+
                 multiplier = ShopMultiplier.X1;
                 x1Button.setDisabled(true);
                 x10Button.setDisabled(false);
@@ -198,6 +215,10 @@ public class ShopUI {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                if (!x10Button.isDisabled()) {
+                    clickSound.play();
+                }
+
                 multiplier = ShopMultiplier.X10;
                 x1Button.setDisabled(false);
                 x10Button.setDisabled(true);
