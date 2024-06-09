@@ -15,7 +15,6 @@ import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 import kz.ilotterytea.maxon.utils.math.Math;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class ShopUI {
     private final Table table, mainTable;
@@ -185,17 +184,19 @@ public class ShopUI {
                     }
 
                     if (mode == ShopMode.BUY) {
-                        savegame.decreaseMoney(pet.getPrice());
-                        for (int i = 0; i < multiplier.getMultiplier(); i++) {
-                            // TODO: fix this
-                            savegame.getPurchasedPets().add(0);
-                        }
+                        savegame.decreaseMoney(widget.getPrice());
+                        savegame.getPurchasedPets().put(
+                                pet.getId(),
+                                savegame.getPurchasedPets().getOrDefault(pet.getId(), 0)
+                                        + multiplier.getMultiplier()
+                        );
                     } else {
-                        savegame.increaseMoney(pet.getPrice());
-                        for (int i = 0; i < multiplier.getMultiplier(); i++) {
-                            // TODO: fix thisss
-                            savegame.getPurchasedPets().remove(Integer.valueOf(0));
-                        }
+                        savegame.increaseMoney(widget.getPrice());
+                        savegame.getPurchasedPets().put(
+                                pet.getId(),
+                                savegame.getPurchasedPets().get(pet.getId())
+                                        - multiplier.getMultiplier()
+                        );
                     }
                 }
             });
@@ -217,8 +218,7 @@ public class ShopUI {
 
     private void updatePurchaseItems() {
         for (final PetWidget widget : this.petWidgets) {
-            // TODO: asdkjoiwe (fix this)
-            int amount = (int) savegame.getPurchasedPets().stream().filter(c -> c == 0).count();
+            int amount = savegame.getPurchasedPets().getOrDefault(widget.getPet().getId(), 0);
             double price = widget.getPet().getPrice() * java.lang.Math.pow(1.15f, amount + multiplier.getMultiplier());
 
             if (mode == ShopMode.SELL) {

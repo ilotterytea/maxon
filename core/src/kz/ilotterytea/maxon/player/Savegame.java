@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Savegame implements Serializable {
     private static final File directory = new File(MaxonConstants.GAME_SAVEGAME_FOLDER);
@@ -25,7 +25,7 @@ public class Savegame implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(Savegame.class);
 
     private double money = 0.0f, multiplier = 0.0f;
-    private final ArrayList<Integer> purchasedPets = new ArrayList<>();
+    private final HashMap<String, Integer> purchasedPets = new HashMap<>();
     private String name = System.getProperty("user.name", "Maxon");
     private long elapsedTime = 0;
     private boolean isNewlyCreated = true;
@@ -104,7 +104,7 @@ public class Savegame implements Serializable {
         this.multiplier -= multiplier;
     }
 
-    public ArrayList<Integer> getPurchasedPets() {
+    public HashMap<String, Integer> getPurchasedPets() {
         return purchasedPets;
     }
 

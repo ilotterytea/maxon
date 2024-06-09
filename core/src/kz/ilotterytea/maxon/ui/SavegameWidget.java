@@ -124,7 +124,11 @@ public class SavegameWidget extends Table implements Disposable {
         data.add(points).padRight(32f);
 
         // Unit
-        long amount = savegame.getPurchasedPets().size();
+        int amount = 0;
+
+        for (int a : savegame.getPurchasedPets().values()) {
+            amount += a;
+        }
 
         Image unitIcon = new Image(atlas.findRegion("pets"));
         data.add(unitIcon).size(32f, 32f).padRight(8f);
