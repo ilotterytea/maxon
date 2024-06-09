@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -32,6 +33,8 @@ public class WelcomeScreen implements Screen {
     private final MaxonGame game = MaxonGame.getInstance();
 
     private Stage stage;
+    private Skin skin;
+    private Table table;
 
     private PerspectiveCamera camera;
     private SceneManager sceneManager;
@@ -39,8 +42,10 @@ public class WelcomeScreen implements Screen {
     private Image tintImage;
 
     private BoundingBox collisionBox;
+    private Scene box;
 
-    private boolean boxOpened = false;
+    private boolean boxOpened = false, boxCollision = false;
+    private double velocity = 0.0f;
 
     @Override
     public void show() {
@@ -52,8 +57,8 @@ public class WelcomeScreen implements Screen {
         sceneManager.addScene(scene);
 
         SceneAsset boxAsset = game.assetManager.get("models/props/box.glb", SceneAsset.class);
-        Scene box = new Scene(boxAsset.scene);
-        box.modelInstance.transform.setTranslation(new Vector3(2.0f, 0.25f, 1.0f));
+        box = new Scene(boxAsset.scene);
+        box.modelInstance.transform.setTranslation(new Vector3(2.0f, 10f, 1.0f));
         box.modelInstance.transform.rotate(Vector3.Y, 45);
         box.modelInstance.transform.scale(2.0f, 2.0f, 2.0f);
         sceneManager.addScene(box);
@@ -103,32 +108,11 @@ public class WelcomeScreen implements Screen {
 
         // Setting up 2D UI
         stage = new Stage(new ScreenViewport());
-        Skin skin = game.assetManager.get("sprites/gui/ui.skin", Skin.class);
+        skin = game.assetManager.get("sprites/gui/ui.skin", Skin.class);
 
-        Table table = new Table();
+        table = new Table();
         table.setFillParent(true);
         table.align(Align.center | Align.bottom);
-
-        Table labelTable = new Table(skin);
-        labelTable.setBackground("bg");
-
-        Label label = new Label("Press the box to unpack...", skin);
-        labelTable.add(label).pad(25f, 35f, 25f, 35f);
-
-        labelTable.addAction(Actions.alpha(0.5f));
-        label.addAction(
-                Actions.repeat(
-                        RepeatAction.FOREVER,
-                        Actions.sequence(
-                                Actions.alpha(0.0f, 0.5f),
-                                Actions.delay(0.2f),
-                                Actions.alpha(1.0f, 0.5f),
-                                Actions.delay(0.2f)
-                        )
-                )
-        );
-
-        table.add(labelTable).padBottom(25f);
 
         stage.addActor(table);
 
@@ -152,6 +136,37 @@ public class WelcomeScreen implements Screen {
         stage.act(delta);
         stage.draw();
 
+        final float delta2 = Math.min(1f/30f, Gdx.graphics.getDeltaTime());
+        velocity += 0.1f;
+
+        if (!boxCollision) {
+            box.modelInstance.transform.translate(0f, (float) (-delta2 * velocity), 0f);
+            boxCollision = checkCollision();
+
+            if (boxCollision) {
+                Table labelTable = new Table(skin);
+                labelTable.setBackground("bg");
+
+                Label label = new Label("Press the box to unpack...", skin);
+                labelTable.add(label).pad(25f, 35f, 25f, 35f);
+
+                labelTable.addAction(Actions.alpha(0.5f));
+                label.addAction(
+                        Actions.repeat(
+                                RepeatAction.FOREVER,
+                                Actions.sequence(
+                                        Actions.alpha(0.0f, 0.5f),
+                                        Actions.delay(0.2f),
+                                        Actions.alpha(1.0f, 0.5f),
+                                        Actions.delay(0.2f)
+                                )
+                        )
+                );
+
+                table.add(labelTable).padBottom(25f);
+            }
+        }
+
         Ray ray = null;
 
         if (Gdx.input.justTouched()) {
@@ -164,7 +179,7 @@ public class WelcomeScreen implements Screen {
 
         Vector3 intersection = new Vector3();
 
-        if (Intersector.intersectRayBounds(ray, collisionBox, intersection) && !boxOpened) {
+        if (Intersector.intersectRayBounds(ray, collisionBox, intersection) && !boxOpened && boxCollision) {
             boxOpened = true;
             tintImage.addAction(
                     Actions.sequence(
@@ -207,5 +222,12 @@ public class WelcomeScreen implements Screen {
     public void dispose() {
         sceneManager.dispose();
         stage.dispose();
+    }
+
+    private boolean checkCollision() {
+        ModelInstance instance = box.modelInstance;
+        Vector3 position = instance.transform.getTranslation(new Vector3());
+
+        return position.y < 0.4f;
     }
 }
