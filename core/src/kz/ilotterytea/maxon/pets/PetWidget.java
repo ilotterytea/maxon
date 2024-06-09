@@ -6,11 +6,14 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import kz.ilotterytea.maxon.MaxonConstants;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 
 public class PetWidget extends Table {
     private double price;
+    private final Skin skin;
     private final Label priceLabel, nameLabel;
+    private TextTooltip priceTooltip, nameTooltip;
     private final Pet pet;
 
     private boolean isDisabled = false;
@@ -26,6 +29,7 @@ public class PetWidget extends Table {
         super.setBackground("store_item");
         super.align(Align.left | Align.center);
         this.pet = pet;
+        this.skin = skin;
 
         super.add(pet.getIcon()).size(64f).pad(6f);
 
@@ -43,10 +47,18 @@ public class PetWidget extends Table {
         this.nameLabel = new Label(pet.getName(), skin, "store_item");
         nameLabel.setAlignment(Align.left);
 
+        this.nameTooltip = new TextTooltip(pet.getDescription(), skin);
+        nameTooltip.setInstant(true);
+        nameLabel.addListener(nameTooltip);
+
         Image priceIcon = new Image(atlas.findRegion("points"));
 
         this.priceLabel = new Label(NumberFormatter.format((long) price), skin, "store_item_price");
         priceLabel.setAlignment(Align.left);
+
+        priceTooltip = new TextTooltip(MaxonConstants.DECIMAL_FORMAT.format(pet.getPrice()), skin);
+        priceTooltip.setInstant(true);
+        priceLabel.addListener(priceTooltip);
 
         summary.add(nameLabel).align(Align.left).grow().row();
 
@@ -79,8 +91,19 @@ public class PetWidget extends Table {
     }
 
     public void setPrice(double price) {
+        if (price == this.price) {
+            return;
+        }
+
         this.price = price;
         this.priceLabel.setText(NumberFormatter.format((long) price));
+
+        priceTooltip.hide();
+        this.priceTooltip = new TextTooltip(MaxonConstants.DECIMAL_FORMAT.format(price), skin);
+        priceTooltip.setInstant(true);
+
+        priceLabel.clearListeners();
+        priceLabel.addListener(priceTooltip);
     }
 
     public double getPrice() {
