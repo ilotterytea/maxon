@@ -1,6 +1,7 @@
 package kz.ilotterytea.maxon.player;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
+import kz.ilotterytea.maxon.MaxonGame;
 
 public class DecalPlayer {
     private final TextureRegion[] regions;
@@ -56,6 +58,9 @@ public class DecalPlayer {
         if (Intersector.intersectRayBounds(ray, box, intersection)) {
             updateTextureRegion();
             savegame.increaseMoney(1);
+
+            Sound sound = MaxonGame.getInstance().assetManager.get("sfx/player/purr.ogg", Sound.class);
+            sound.play();
         }
     }
 
