@@ -1,4 +1,4 @@
-package kz.ilotterytea.maxon.screens;
+package kz.ilotterytea.maxon.screens.game;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
@@ -28,6 +28,7 @@ import kz.ilotterytea.maxon.player.DecalPlayer;
 import kz.ilotterytea.maxon.player.MaxonItem;
 import kz.ilotterytea.maxon.player.MaxonItemRegister;
 import kz.ilotterytea.maxon.player.Savegame;
+import kz.ilotterytea.maxon.screens.MenuScreen;
 import kz.ilotterytea.maxon.screens.game.shop.ShopUI;
 import kz.ilotterytea.maxon.ui.*;
 import kz.ilotterytea.maxon.utils.math.Math;
