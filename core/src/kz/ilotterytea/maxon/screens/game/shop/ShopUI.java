@@ -35,12 +35,15 @@ public class ShopUI {
 
     private final ArrayList<PetWidget> petWidgets = new ArrayList<>();
 
-    private final Sound clickSound;
+    private final Sound clickSound, notEnoughMoneySound, purchaseSound, sellSound;
 
     public ShopUI(final Savegame savegame, Stage stage, Skin skin, TextureAtlas atlas) {
         this.savegame = savegame;
         MaxonGame game = MaxonGame.getInstance();
         this.clickSound = game.assetManager.get("sfx/ui/click.ogg", Sound.class);
+        this.notEnoughMoneySound = game.assetManager.get("sfx/shop/not_enough_money.ogg", Sound.class);
+        this.purchaseSound = game.assetManager.get("sfx/shop/purchase.ogg", Sound.class);
+        this.sellSound = game.assetManager.get("sfx/shop/sell.ogg", Sound.class);
 
         this.skin = skin;
         this.atlas = atlas;
@@ -244,6 +247,7 @@ public class ShopUI {
                     super.clicked(event, x, y);
 
                     if (widget.isDisabled()) {
+                        notEnoughMoneySound.play();
                         return;
                     }
 
@@ -255,6 +259,7 @@ public class ShopUI {
                                 savegame.getPurchasedPets().getOrDefault(pet.getId(), 0)
                                         + multiplier.getMultiplier()
                         );
+                        purchaseSound.play();
                     } else {
                         savegame.increaseMoney(widget.getPrice());
                         savegame.decreaseMultiplier(pet.getMultiplier() * multiplier.getMultiplier());
@@ -263,6 +268,7 @@ public class ShopUI {
                                 savegame.getPurchasedPets().get(pet.getId())
                                         - multiplier.getMultiplier()
                         );
+                        sellSound.play();
                     }
                 }
             });
