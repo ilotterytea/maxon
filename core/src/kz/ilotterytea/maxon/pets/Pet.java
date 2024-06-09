@@ -44,7 +44,7 @@ public class Pet {
             regions = new TextureRegion[]{new TextureRegion(MaxonConstants.MISSING_TEXTURE)};
         }
 
-        AnimatedImage icon = new AnimatedImage(regions);
+        AnimatedImage icon = new AnimatedImage(regions, 5);
 
         String name = game.locale.TranslatableText("pet." + id + ".name");
         if (name == null) {

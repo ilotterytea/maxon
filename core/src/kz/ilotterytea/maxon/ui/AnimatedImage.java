@@ -8,17 +8,25 @@ import com.badlogic.gdx.utils.Disposable;
 
 public class AnimatedImage extends Image implements Disposable {
     private final TextureRegion[] regions;
-    private int index = 0;
+    private final int fps;
+    private int index = 0, seconds = 0;
 
     private boolean stopAnim = false;
 
     public AnimatedImage(TextureRegion[] regions) {
         super(regions[0]);
         this.regions = regions;
+        this.fps = 0;
+    }
+
+    public AnimatedImage(TextureRegion[] regions, int fps) {
+        super(regions[0]);
+        this.regions = regions;
+        this.fps = fps;
     }
 
     @Override public void act(float delta) {
-        if (!stopAnim) {
+        if (!stopAnim && seconds >= fps) {
             if (index > regions.length - 1) {
                 index = 0;
             }
@@ -30,7 +38,10 @@ public class AnimatedImage extends Image implements Disposable {
 
             super.setDrawable(new TextureRegionDrawable(regions[index]));
             index++;
+            seconds = 0;
         }
+
+        seconds++;
         super.act(delta);
     }
 
