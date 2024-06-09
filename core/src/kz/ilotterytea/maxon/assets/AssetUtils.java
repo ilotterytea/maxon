@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -54,8 +55,10 @@ public class AssetUtils {
                     break;
                 case "wav":
                 case "mp3":
-                case "ogg":
                     type = Music.class;
+                    break;
+                case "ogg":
+                    type = Sound.class;
                     break;
                 default:
                     break;
