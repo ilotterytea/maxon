@@ -1,6 +1,7 @@
 package kz.ilotterytea.maxon.ui;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -25,11 +26,14 @@ public class SavegameWidget extends Table implements Disposable {
     private final MaxonGame game;
     private final Stage stage;
 
+    private final Sound clickSound;
+
     public SavegameWidget(final MaxonGame game, Skin skin, final Stage stage, Savegame savegame) {
         super();
         this.game = game;
         this.stage = stage;
         this.atlas = game.assetManager.get("sprites/gui/player_icons.atlas", TextureAtlas.class);
+        this.clickSound = game.assetManager.get("sfx/ui/click.ogg", Sound.class);
 
         this.skin = skin;
         this.savegame = savegame;
@@ -65,6 +69,7 @@ public class SavegameWidget extends Table implements Disposable {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 moveToNextScreen();
+                clickSound.play();
             }
         });
     }
@@ -127,6 +132,7 @@ public class SavegameWidget extends Table implements Disposable {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 moveToNextScreen();
+                clickSound.play();
             }
         });
 
@@ -141,6 +147,7 @@ public class SavegameWidget extends Table implements Disposable {
                 dataTable.clear();
                 savegame.delete();
                 createEmpty();
+                clickSound.play();
             }
         });
 
