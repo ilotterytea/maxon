@@ -185,6 +185,7 @@ public class ShopUI {
 
                     if (mode == ShopMode.BUY) {
                         savegame.decreaseMoney(widget.getPrice());
+                        savegame.increaseMultiplier(pet.getMultiplier() * multiplier.getMultiplier());
                         savegame.getPurchasedPets().put(
                                 pet.getId(),
                                 savegame.getPurchasedPets().getOrDefault(pet.getId(), 0)
@@ -192,6 +193,7 @@ public class ShopUI {
                         );
                     } else {
                         savegame.increaseMoney(widget.getPrice());
+                        savegame.decreaseMultiplier(pet.getMultiplier() * multiplier.getMultiplier());
                         savegame.getPurchasedPets().put(
                                 pet.getId(),
                                 savegame.getPurchasedPets().get(pet.getId())
