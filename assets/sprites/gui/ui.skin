@@ -41,6 +41,10 @@
     store_control: {
       file: ../../fnt/FontText.fnt,
       scaledSize: 18
+    },
+    tooltip: {
+      file: ../../fnt/FontText.fnt,
+      scaledSize: 19
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
@@ -87,6 +91,14 @@
     default: {
       font: default,
       fontColor: white,
+      background: button_disabled
+    }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+    default: {
+      label: {
+        font: tooltip
+      },
       background: button_disabled
     }
   }
