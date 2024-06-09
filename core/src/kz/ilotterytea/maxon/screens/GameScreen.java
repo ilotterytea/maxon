@@ -41,7 +41,6 @@ import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.scene.SceneSkybox;
 import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -80,6 +79,8 @@ public class GameScreen implements Screen, InputProcessor {
     private ArrayList<Decal> decals;
     private DecalPlayer decalPlayer;
 
+    private final ArrayList<Timer.Task> tasks = new ArrayList<>();
+
     public GameScreen() {
         this.savegame = Savegame.load();
 
@@ -113,134 +114,12 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public void show() {
-        Timer.schedule(new Timer.Task() {
+        tasks.add(Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 savegame.save();
             }
-        }, 10, 10);
-
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                float multiplier = 0;
-
-                for (MaxonItem item : items) {
-                    multiplier += item.multiplier;
-                }
-
-                savegame.increaseMoney(multiplier);
-
-                final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(savegame.getMultiplier())), skin, "default");
-
-                label.setPosition(
-                        maxon.getX(),
-                        maxon.getY() + maxon.getHeight()
-                );
-
-                label.setWidth(maxon.getWidth());
-
-                label.setAlignment(Align.center);
-
-                label.addAction(Actions.parallel(
-                        Actions.fadeOut(5f),
-                        Actions.moveTo(
-                                label.getX(), label.getY() + Math.getRandomNumber(10, 156), 5f, Interpolation.exp5Out)
-                ));
-
-                Timer.schedule(new Timer.Task() {
-                    @Override
-                    public void run() {
-                        label.remove();
-                    }
-                }, 10f);
-
-                stage.addActor(label);
-            }
-        }, 5, 5);
-
-        // Random gifts:
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                final ImageButton gift = new ImageButton(skin, "gift");
-                gift.setPosition(stage.getWidth() + gift.getWidth(), Math.getRandomNumber((int) gift.getHeight(), (int) stage.getHeight() - (int) gift.getHeight()));
-                gift.addAction(
-                        Actions.repeat(
-                                3,
-                                Actions.sequence(
-                                        Actions.moveTo(-gift.getWidth(), gift.getY(), 15f, Interpolation.linear),
-                                        Actions.moveTo(stage.getWidth() + gift.getWidth(), Math.getRandomNumber((int) gift.getHeight(), (int) stage.getHeight() - (int) gift.getHeight()), 15f, Interpolation.linear)
-                                )
-                        )
-                );
-
-
-                gift.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        int giftId = Math.getRandomNumber(0, 25);
-                        final TypingLabel label = new TypingLabel(game.locale.TranslatableText("gifts.empty"), skin);
-
-                        switch (giftId) {
-                            // Points
-                            case 0:
-                                int randPoints = Math.getRandomNumber(150, 3000);
-                                label.setText(game.locale.FormattedText("gifts.points", String.valueOf(randPoints)));
-                                savegame.increaseMoney(randPoints);
-                                break;
-
-                            // Multiplier
-                            case 1:
-                                int randMp = Math.getRandomNumber(1, 10);
-                                label.setText(game.locale.FormattedText("gifts.multiplier", String.valueOf(randMp)));
-                                savegame.increaseMoney(randMp);
-                                break;
-
-
-                            // Random pet
-                            case 2:
-                                int randPet = Math.getRandomNumber(0, 1);
-                                assert MaxonItemRegister.get(randPet) != null;
-                                String name = MaxonItemRegister.get(randPet).name;
-                                label.setText(game.locale.FormattedText("gifts.new_pet", name));
-                                savegame.getPurchasedPets().add(randPet);
-                                if (invItems.containsKey(randPet)) {
-                                    invItems.put(randPet, invItems.get(randPet) + 1);
-                                } else {
-                                    invItems.put(randPet, 1);
-                                }
-                                break;
-                            // Default
-                            default:
-                                break;
-                        }
-
-                        label.setPosition(
-                                gift.getX(),
-                                gift.getY()
-                        );
-
-                        label.addAction(Actions.sequence(
-                                Actions.delay(3f),
-                                Actions.fadeOut(2f)
-                        ));
-
-                        stage.addActor(label);
-                        gift.remove();
-
-                        Timer.schedule(new Timer.Task() {
-                            @Override
-                            public void run() {
-                                label.remove();
-                            }
-                        }, 5f);
-                    }
-                });
-
-                stage.addActor(gift);
-            }
-        }, 600, 600);
+        }, 10, 10));
 
         camera.update();
         render(Gdx.graphics.getDeltaTime());
@@ -357,6 +236,11 @@ public class GameScreen implements Screen, InputProcessor {
     @Override public void resume() {}
 
     @Override public void hide() {
+        for (Timer.Task task : tasks) {
+            task.cancel();
+        }
+        tasks.clear();
+
         playlist.getPlayingNow().stop();
         dispose();
     }
@@ -404,12 +288,12 @@ public class GameScreen implements Screen, InputProcessor {
                         label.getX(), label.getY() + Math.getRandomNumber(10, 156), 5f, Interpolation.exp5Out)
         ));
 
-        Timer.schedule(new Timer.Task() {
+        tasks.add(Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 label.remove();
             }
-        }, 10f);
+        }, 10f));
 
         stage.addActor(label);
     }
