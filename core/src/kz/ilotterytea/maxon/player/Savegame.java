@@ -24,13 +24,15 @@ public class Savegame implements Serializable {
     private static final Gson gson = new Gson();
     private static final Logger logger = LoggerFactory.getLogger(Savegame.class);
 
-    private double money = 0.0f, multiplier = 0.0f;
+    private double money, multiplier;
     private final HashMap<String, Integer> purchasedPets = new HashMap<>();
-    private String name = System.getProperty("user.name", "Maxon");
-    private long elapsedTime = 0;
-    private boolean isNewlyCreated = true;
+    private String name;
+    private long elapsedTime;
+    private boolean isNewlyCreated;
 
-    private Savegame() {}
+    private Savegame() {
+        setDefaultValues();
+    }
 
     public static Savegame load() {
         if (!file.exists()) {
@@ -70,6 +72,21 @@ public class Savegame implements Serializable {
         } catch (IOException e) {
             throw new RuntimeException("Failed to save the game", e);
         }
+    }
+
+    public void delete() {
+        if (file.delete()) {
+            setDefaultValues();
+        }
+    }
+
+    private void setDefaultValues() {
+        money = 0.0f;
+        multiplier = 0.0f;
+        purchasedPets.clear();
+        name = System.getProperty("user.name", "Maxon");
+        elapsedTime = 0;
+        isNewlyCreated = true;
     }
 
     public double getMoney() {
