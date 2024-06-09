@@ -328,6 +328,9 @@ public class MenuScreen implements Screen {
 
         this.stage.addActor(menuTable);
 
+        DebugWidget debugWidget = new DebugWidget(uiSkin);
+        this.stage.addActor(debugWidget);
+
         create3D();
         Gdx.input.setInputProcessor(stage);
     }

@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.screens.game.GameScreen;
+import kz.ilotterytea.maxon.ui.DebugWidget;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
@@ -125,6 +126,9 @@ public class WelcomeScreen implements Screen {
         tintImage.addAction(Actions.alpha(0.0f, 1.0f));
 
         stage.addActor(tintImage);
+
+        DebugWidget debugWidget = new DebugWidget(skin);
+        this.stage.addActor(debugWidget);
     }
 
     @Override
