@@ -14,6 +14,7 @@ import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.screens.game.GameScreen;
 import kz.ilotterytea.maxon.screens.WelcomeScreen;
+import kz.ilotterytea.maxon.utils.OsUtils;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 
 public class SavegameWidget extends Table implements Disposable {
@@ -120,7 +121,6 @@ public class SavegameWidget extends Table implements Disposable {
 
         // - - -  C O N T R O L  - - -
         TextButton playButton = new TextButton(game.locale.TranslatableText("menu.continue"), skin);
-        controlTable.add(playButton).padRight(16f).growX();
 
         playButton.addListener(new ClickListener() {
             @Override
@@ -131,7 +131,6 @@ public class SavegameWidget extends Table implements Disposable {
         });
 
         TextButton resetButton = new TextButton(game.locale.TranslatableText("menu.reset"), skin);
-        controlTable.add(resetButton);
 
         resetButton.addListener(new ClickListener() {
             @Override
@@ -144,6 +143,16 @@ public class SavegameWidget extends Table implements Disposable {
                 createEmpty();
             }
         });
+
+        if (OsUtils.isMobile) {
+            header.pad(32f);
+            data.pad(32f);
+            controlTable.add(playButton).growX().minHeight(86f).padBottom(16f).row();
+            controlTable.add(resetButton).growX();
+        } else {
+            controlTable.add(playButton).padRight(16f).growX();
+            controlTable.add(resetButton);
+        }
     }
 
     private void moveToNextScreen() {
