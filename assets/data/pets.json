@@ -1,0 +1,137 @@
+[
+  {
+    "id": "bror",
+    "price": 15.0,
+    "multiplier": 0.1,
+    "icon_data": {
+      "columns": 11,
+      "rows": 7
+    }
+  },
+  {
+    "id": "sandwich",
+    "price": 100.0,
+    "multiplier": 1.0,
+    "icon_data": {
+      "columns": 4,
+      "rows": 7
+    }
+  },
+  {
+    "id": "manlooshka",
+    "price": 1100.0,
+    "multiplier": 8.0,
+    "icon_data": {
+      "columns": 10,
+      "rows": 4
+    }
+  },
+  {
+    "id": "thirsty",
+    "price": 12000.0,
+    "multiplier": 47.0,
+    "icon_data": {
+      "columns": 6,
+      "rows": 3
+    }
+  },
+  {
+    "id": "furios",
+    "price": 130000.0,
+    "multiplier": 260.0,
+    "icon_data": {
+      "columns": 7,
+      "rows": 4
+    }
+  },
+  {
+    "id": "tvcat",
+    "price": 1400000.0,
+    "multiplier": 1400.0,
+    "icon_data": {
+      "columns": 5,
+      "rows": 5
+    }
+  },
+  {
+    "id": "progcat",
+    "price": 2e7,
+    "multiplier": 7800.0,
+    "icon_data": {
+      "columns": 7,
+      "rows": 6
+    }
+  },
+  {
+    "id": "screamcat",
+    "price": 3.3e8,
+    "multiplier": 44000.0,
+    "icon_data": {
+      "columns": 10,
+      "rows": 10
+    }
+  },
+  {
+    "id": "hellcat",
+    "price": 5.1e9,
+    "multiplier": 260000.0,
+    "icon_data": {
+      "columns": 10,
+      "rows": 8
+    }
+  },
+  {
+    "id": "lurker",
+    "price": 7.5e10,
+    "multiplier": 1.6e6,
+    "icon_data": {
+      "columns": 10,
+      "rows": 7
+    }
+  },
+  {
+    "id": "piano",
+    "price": 1e12,
+    "multiplier": 1e7,
+    "icon_data": {
+      "columns": 5,
+      "rows": 3
+    }
+  },
+  {
+    "id": "bee",
+    "price": 1.4e13,
+    "multiplier": 6.5e7,
+    "icon_data": {
+      "columns": 10,
+      "rows": 10
+    }
+  },
+  {
+    "id": "busy",
+    "price": 1.7e14,
+    "multiplier": 4.3e8,
+    "icon_data": {
+      "columns": 5,
+      "rows": 5
+    }
+  },
+  {
+    "id": "aeae",
+    "price": 2.1e15,
+    "multiplier": 2.9e9,
+    "icon_data": {
+      "columns": 11,
+      "rows": 10
+    }
+  },
+  {
+    "id": "succat",
+    "price": 2.6e16,
+    "multiplier": 2.1e10,
+    "icon_data": {
+      "columns": 13,
+      "rows": 10
+    }
+  }
+]
