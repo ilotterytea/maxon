@@ -46,6 +46,8 @@ public class MenuScreen implements Screen {
     private SceneManager sceneManager;
     private PerspectiveCamera camera;
 
+    private final ArrayList<Timer.Task> tasks = new ArrayList<>();
+
     public MenuScreen() {
         this.game = MaxonGame.getInstance();
         this.savegame = Savegame.load();
@@ -133,7 +135,7 @@ public class MenuScreen implements Screen {
         final int[] developerIndex = {MaxonConstants.GAME_DEVELOPERS.length};
         developerImage.setSize(64, 64);
 
-        Timer.schedule(new Timer.Task() {
+        tasks.add(Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 developerIndex[0]++;
@@ -168,7 +170,7 @@ public class MenuScreen implements Screen {
                     }
                 });
             }
-        }, 0, 5);
+        }, 0, 5));
 
         rightGameControlTable.add(developerImage).padRight(16f);
 
@@ -322,6 +324,11 @@ public class MenuScreen implements Screen {
     @Override public void pause() {}
     @Override public void resume() {}
     @Override public void hide() {
+        for (Timer.Task task : tasks) {
+            task.cancel();
+        }
+        tasks.clear();
+
         menuMusic.stop();
         dispose();
     }
