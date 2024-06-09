@@ -66,7 +66,7 @@ public class MenuScreen implements Screen {
         Skin friendsSkin = game.assetManager.get("sprites/gui/friends.skin", Skin.class);
 
         // Main Menu music:
-        this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.ogg", Music.class);
+        this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.mp3", Music.class);
         menuMusic.setLooping(true);
 
         // Tint the background
