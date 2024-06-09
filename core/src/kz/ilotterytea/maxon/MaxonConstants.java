@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 public class MaxonConstants {
     public static final String GAME_NAME = "Maxon Petting Simulator";
     public static final String GAME_APP_ID = "maxon";
+    public static final String GAME_APP_PACKAGE = "kz.ilotterytea." + GAME_APP_ID;
     public static final String GAME_VERSION = "Alpha 1.2";
     public static final String GAME_GHTAG = "alpha-1.2";
     public static final String GAME_MAIN_DEVELOPER = "ilotterytea";
