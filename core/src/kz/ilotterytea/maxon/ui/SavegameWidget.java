@@ -1,5 +1,6 @@
 package kz.ilotterytea.maxon.ui;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.player.Savegame;
+import kz.ilotterytea.maxon.screens.GameScreen;
 import kz.ilotterytea.maxon.screens.WelcomeScreen;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 
@@ -49,47 +51,18 @@ public class SavegameWidget extends Table implements Disposable {
     }
 
     private void createEmpty() {
-        final boolean[] gameCreation = {false};
-
-        // Body
         Table body = new Table();
 
-        Label name = new Label("New Game", skin);
-        name.setAlignment(Align.center);
-        body.add(name).grow().row();
+        Label label = new Label("New Game", skin);
+        label.setAlignment(Align.center);
+        body.add(label).grow().row();
 
         this.dataTable.add(body).grow().row();
-
-        // - - -  C O N T R O L  - - -
-        TextButton playButton = new TextButton("play", skin);
-        TextField field = new TextField(System.getProperty("user.name", "Maxon"), skin);
 
         body.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-
-                if (!gameCreation[0]) {
-                    name.setText("What is your name?");
-
-                    body.add(field).growX();
-
-                    controlTable.add(playButton).growX();
-                    gameCreation[0] = true;
-                }
-            }
-        });
-
-        playButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-
-                if (savegame.isNewlyCreated()) {
-                    savegame.setName(field.getText());
-                    savegame.save();
-                }
-
                 moveToNextScreen();
             }
         });
@@ -167,6 +140,7 @@ public class SavegameWidget extends Table implements Disposable {
 
                 controlTable.clear();
                 dataTable.clear();
+                savegame.delete();
                 createEmpty();
             }
         });
@@ -184,7 +158,15 @@ public class SavegameWidget extends Table implements Disposable {
                         new Action() {
                             @Override
                             public boolean act(float delta) {
-                                game.setScreen(new WelcomeScreen());
+                                Screen screen;
+
+                                if (savegame.isNewlyCreated()) {
+                                    screen = new WelcomeScreen();
+                                } else {
+                                    screen = new GameScreen();
+                                }
+
+                                game.setScreen(screen);
                                 return true;
                             }
                         }
