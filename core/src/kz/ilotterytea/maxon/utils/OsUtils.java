@@ -14,6 +14,8 @@ public class OsUtils {
 
     public static boolean isGwt = false;
 
+    public static boolean isMobile = isIos || isAndroid;
+
     static {
         try {
             Class.forName("com.google.gwt.core.client.GWT");
@@ -29,6 +31,7 @@ public class OsUtils {
             isLinux = false;
             isMac = false;
             is64Bit = false;
+            isMobile = true;
         }
     }
 

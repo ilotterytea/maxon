@@ -31,6 +31,7 @@ import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.screens.MenuScreen;
 import kz.ilotterytea.maxon.screens.game.shop.ShopUI;
 import kz.ilotterytea.maxon.ui.*;
+import kz.ilotterytea.maxon.utils.OsUtils;
 import kz.ilotterytea.maxon.utils.math.Math;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
@@ -337,7 +338,14 @@ public class GameScreen implements Screen, InputProcessor {
         camera.near = 1f;
         camera.far = 300f;
         camera.position.set(-3f, 2f, -0.3f);
-        camera.rotate(256f, 0f, 1f, 0f);
+
+        float angle = 256f;
+
+        if (OsUtils.isMobile) {
+            angle = 245f;
+        }
+
+        camera.rotate(angle, 0f, 1f, 0f);
 
         camera.update();
 
@@ -385,10 +393,17 @@ public class GameScreen implements Screen, InputProcessor {
 
         this.shopUI = new ShopUI(savegame, this.stage, this.uiSkin, this.playerIconAtlas);
 
+        if (OsUtils.isMobile) {
+            shopUI.createSavegameUI();
+        }
+
         shopUI.createShopTitleUI();
         shopUI.createShopControlUI();
         shopUI.createShopListUI();
-        shopUI.createSavegameUI();
+
+        if (!OsUtils.isMobile) {
+            shopUI.createSavegameUI();
+        }
     }
 
     @Override

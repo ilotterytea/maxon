@@ -11,6 +11,7 @@ import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.pets.Pet;
 import kz.ilotterytea.maxon.pets.PetWidget;
 import kz.ilotterytea.maxon.player.Savegame;
+import kz.ilotterytea.maxon.utils.OsUtils;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 import kz.ilotterytea.maxon.utils.math.Math;
 
@@ -18,11 +19,15 @@ import java.util.ArrayList;
 
 public class ShopUI {
     private final Table table, mainTable;
+    private Table controlTable, shopListTable;
+
     private final Skin skin;
     private final TextureAtlas atlas;
 
     private ShopMode mode;
     private ShopMultiplier multiplier;
+
+    private boolean isShopListOpened = false;
 
     private final Savegame savegame;
     private Label pointsLabel, multiplierLabel;
@@ -42,9 +47,15 @@ public class ShopUI {
 
         this.mainTable = new Table(this.skin);
         mainTable.setFillParent(true);
-        mainTable.align(Align.center | Align.left);
 
-        mainTable.add(this.table).growY().width(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
+        if (OsUtils.isMobile) {
+            mainTable.align(Align.center | Align.top);
+            mainTable.add(this.table).growX();
+        } else {
+            mainTable.align(Align.center | Align.left);
+            mainTable.add(this.table).growY().width(Math.percentFromValue(25f, Gdx.graphics.getWidth()));
+        }
+
         stage.addActor(mainTable);
     }
 
@@ -62,7 +73,12 @@ public class ShopUI {
         this.pointsLabel = new Label(String.valueOf(savegame.getMoney()), this.skin);
         pointsLabel.setAlignment(Align.left);
 
-        pointsTable.add(pointsImage).size(64f, 64f).padRight(15f);
+        if (OsUtils.isMobile) {
+            pointsTable.add(pointsImage).size(38f, 38f).padRight(15f);
+        } else {
+            pointsTable.add(pointsImage).size(64f, 64f).padRight(15f);
+        }
+
         pointsTable.add(pointsLabel).grow();
 
         table.add(pointsTable).grow().padBottom(5f).row();
@@ -75,30 +91,55 @@ public class ShopUI {
         this.multiplierLabel = new Label(String.format("%s/s", savegame.getMultiplier()), this.skin);
         multiplierLabel.setAlignment(Align.left);
 
-        multiplierTable.add(multiplierImage).size(64f, 64f).padRight(15f);
+        if (OsUtils.isMobile) {
+            multiplierTable.add(multiplierImage).size(38f, 38f).padRight(15f);
+        } else {
+            multiplierTable.add(multiplierImage).size(64f, 64f).padRight(15f);
+        }
+
         multiplierTable.add(multiplierLabel).grow();
 
         table.add(multiplierTable).grow();
 
-        this.table.add(table).grow();
+        this.table.add(table).grow().row();
     }
 
     public void createShopTitleUI() {
-        Table table = new Table();
+        Table titleTable = new Table(skin);
+        titleTable.setBackground("store_control");
 
         Label label = new Label("Store", skin);
         label.setAlignment(Align.center);
-        table.add(label).pad(10f).grow();
+        titleTable.add(label).pad(10f).grow();
 
-        this.table.add(table).growX().row();
+        this.table.add(titleTable).growX().row();
+
+        if (OsUtils.isMobile) {
+            titleTable.addCaptureListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+
+                    isShopListOpened = !isShopListOpened;
+
+                    if (isShopListOpened) {
+                        table.add(controlTable).grow().row();
+                        table.add(shopListTable).grow().row();
+                    } else {
+                        table.removeActor(controlTable);
+                        table.removeActor(shopListTable);
+                    }
+                }
+            });
+        }
     }
 
     public void createShopControlUI() {
-        Table table = new Table(this.skin);
-        table.setBackground("store_control");
+        controlTable = new Table(this.skin);
+        controlTable.setBackground("store_control");
 
-        table.align(Align.center);
-        table.pad(10f);
+        controlTable.align(Align.center);
+        controlTable.pad(10f);
 
         // Mode changer
         Table modeTable = new Table();
@@ -130,7 +171,7 @@ public class ShopUI {
             }
         });
 
-        table.add(modeTable).padRight(5f).grow();
+        controlTable.add(modeTable).padRight(5f).grow();
 
         // Multiplier changer
         Table multiplierTable = new Table();
@@ -163,9 +204,11 @@ public class ShopUI {
             }
         });
 
-        table.add(multiplierTable).grow();
+        controlTable.add(multiplierTable).grow();
 
-        this.table.add(table).grow().row();
+        if (!OsUtils.isMobile) {
+            this.table.add(controlTable).grow().row();
+        }
     }
 
     public void createShopListUI() {
@@ -210,12 +253,14 @@ public class ShopUI {
         ScrollPane scrollPane = new ScrollPane(table);
         scrollPane.setScrollingDisabled(true, false);
 
-        Table scrollPaneTable = new Table(this.skin);
-        scrollPaneTable.setBackground("store_list");
-        scrollPaneTable.pad(4f, 0f, 4f, 0f);
-        scrollPaneTable.add(scrollPane).grow();
+        shopListTable = new Table(this.skin);
+        shopListTable.setBackground("store_list");
+        shopListTable.pad(4f, 0f, 4f, 0f);
+        shopListTable.add(scrollPane).grow();
 
-        this.table.add(scrollPaneTable).grow().row();
+        if (!OsUtils.isMobile) {
+            this.table.add(shopListTable).grow().row();
+        }
     }
 
     private void updatePurchaseItems() {
@@ -252,6 +297,10 @@ public class ShopUI {
     }
 
     public void update() {
+        if (OsUtils.isMobile) {
+            return;
+        }
+
         this.mainTable.clear();
         this.mainTable.add(this.table).growY().width(Math.percentFromValue(30f, Gdx.graphics.getWidth()));
     }
