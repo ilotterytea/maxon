@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import kz.ilotterytea.maxon.assets.AssetUtils;
 import kz.ilotterytea.maxon.MaxonGame;
+import kz.ilotterytea.maxon.utils.OsUtils;
 
 public class SplashScreen implements Screen {
     final MaxonGame game;
@@ -40,7 +41,16 @@ public class SplashScreen implements Screen {
         brandAtlas = new TextureAtlas(Gdx.files.internal("sprites/gui/ilotterytea.atlas"));
 
         dev = new Image(brandAtlas.findRegion("devOld"));
-        dev.setSize(dev.getWidth() * 5f, dev.getHeight() * 5f);
+
+        if (OsUtils.isMobile) {
+            float stageWidth = this.stage.getWidth() - 20f;
+            float difference = stageWidth / dev.getWidth();
+
+            dev.setSize(stageWidth, dev.getHeight() * difference);
+        } else {
+            dev.setSize(dev.getWidth() * 5f, dev.getHeight() * 5f);
+        }
+
         logoTable.add(dev).size(dev.getWidth(), dev.getHeight()).padBottom(60f).row();
 
         bar = new ProgressBar(0f, 100f, 1f, false, skin);
