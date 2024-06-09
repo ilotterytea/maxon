@@ -52,6 +52,8 @@ public class AssetUtils {
                 case "glb":
                     type = SceneAsset.class;
                     break;
+                case "wav":
+                case "mp3":
                 case "ogg":
                     type = Music.class;
                     break;
