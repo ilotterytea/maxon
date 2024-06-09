@@ -171,7 +171,7 @@ public class ShopUI {
 
     public void createShopListUI() {
         Table table = new Table(this.skin);
-        HashSet<Pet> pets = MaxonGame.getInstance().getPetManager().getPets();
+        ArrayList<Pet> pets = MaxonGame.getInstance().getPetManager().getPets();
 
         for (Pet pet : pets) {
             PetWidget widget = new PetWidget(this.skin, pet, this.atlas);
