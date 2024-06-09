@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.player.Savegame;
-import kz.ilotterytea.maxon.screens.GameScreen;
+import kz.ilotterytea.maxon.screens.game.GameScreen;
 import kz.ilotterytea.maxon.screens.WelcomeScreen;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 
