@@ -2,6 +2,7 @@ package kz.ilotterytea.maxon.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -48,6 +49,7 @@ public class MenuScreen implements Screen {
     private PerspectiveCamera camera;
 
     private final ArrayList<Timer.Task> tasks = new ArrayList<>();
+    private Sound clickSound;
 
     public MenuScreen() {
         this.game = MaxonGame.getInstance();
@@ -68,6 +70,8 @@ public class MenuScreen implements Screen {
         // Main Menu music:
         this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.mp3", Music.class);
         menuMusic.setLooping(true);
+
+        clickSound = game.assetManager.get("sfx/ui/click.ogg", Sound.class);
 
         // Tint the background
         Image tintImage = new Image(skin, "tint");
@@ -138,6 +142,7 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                clickSound.play();
                 Gdx.app.exit();
             }
         });
@@ -160,6 +165,7 @@ public class MenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 Gdx.net.openURI(MaxonConstants.GAME_DEVELOPERS[developerIndex[0]][1]);
+                clickSound.play();
             }
         });
         developerImage.setSize(64, 64);
@@ -196,6 +202,7 @@ public class MenuScreen implements Screen {
                     public void clicked(InputEvent event, float x, float y) {
                         super.clicked(event, x, y);
                         Gdx.net.openURI(dev[1]);
+                        clickSound.play();
                     }
                 });
             }
@@ -228,6 +235,7 @@ public class MenuScreen implements Screen {
 
                 game.setScreen(new SplashScreen());
                 menuMusic.stop();
+                clickSound.play();
             }
         });
 
@@ -261,6 +269,7 @@ public class MenuScreen implements Screen {
                 game.prefs.flush();
 
                 musicButton.setStyle(style);
+                clickSound.play();
             }
         });
 
@@ -298,6 +307,7 @@ public class MenuScreen implements Screen {
                     game.prefs.flush();
 
                     resolutionButton.setStyle(style);
+                    clickSound.play();
                 }
             });
             rightGameControlTable.add(resolutionButton);
