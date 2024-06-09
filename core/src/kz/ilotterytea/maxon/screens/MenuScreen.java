@@ -153,8 +153,15 @@ public class MenuScreen implements Screen {
         }
 
         // - - -  D E V E L O P E R  S H O W C A S E  - - -
-        Image developerImage = new Image();
-        final int[] developerIndex = {MaxonConstants.GAME_DEVELOPERS.length};
+        final int[] developerIndex = {0};
+        Image developerImage = new Image(friendsSkin.getDrawable(MaxonConstants.GAME_DEVELOPERS[developerIndex[0]][0]));
+        developerImage.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Gdx.net.openURI(MaxonConstants.GAME_DEVELOPERS[developerIndex[0]][1]);
+            }
+        });
         developerImage.setSize(64, 64);
 
         tasks.add(Timer.schedule(new Timer.Task() {
@@ -192,7 +199,7 @@ public class MenuScreen implements Screen {
                     }
                 });
             }
-        }, 0, 5));
+        }, 5, 5));
 
         // Localization
         String[] fh4Locale = game.locale.getFileHandle().nameWithoutExtension().split("_");
