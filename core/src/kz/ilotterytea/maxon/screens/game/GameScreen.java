@@ -105,10 +105,10 @@ public class GameScreen implements Screen, InputProcessor {
         decals.add(decalPlayer.getDecal());
 
         playlist = new Playlist(
-                game.assetManager.get("mus/game/onwards.wav", Music.class),
-                game.assetManager.get("mus/game/paris.wav", Music.class),
-                game.assetManager.get("mus/game/adieu.wav", Music.class),
-                game.assetManager.get("mus/game/shopping_spree.wav", Music.class)
+                game.assetManager.get("mus/game/onwards.mp3", Music.class),
+                game.assetManager.get("mus/game/paris.mp3", Music.class),
+                game.assetManager.get("mus/game/adieu.mp3", Music.class),
+                game.assetManager.get("mus/game/shopping_spree.mp3", Music.class)
         );
         playlist.setShuffleMode(true);
         if (game.prefs.getBoolean("music", true)) playlist.next();
