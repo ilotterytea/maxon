@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import kz.ilotterytea.maxon.utils.AssetLoading;
+import kz.ilotterytea.maxon.assets.AssetUtils;
 import kz.ilotterytea.maxon.MaxonGame;
 
 public class SplashScreen implements Screen {
@@ -48,8 +48,8 @@ public class SplashScreen implements Screen {
 
         stage.addActor(logoTable);
 
-        AssetLoading.setup(game.assetManager);
-        AssetLoading.queue(game.assetManager);
+        AssetUtils.setup(game.assetManager);
+        AssetUtils.queue(game.assetManager);
     }
 
     @Override public void show() {
