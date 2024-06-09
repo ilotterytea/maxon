@@ -444,6 +444,9 @@ public class GameScreen implements Screen, InputProcessor {
         if (!OsUtils.isMobile) {
             shopUI.createSavegameUI();
         }
+
+        DebugWidget debugWidget = new DebugWidget(uiSkin);
+        this.stage.addActor(debugWidget);
     }
 
     @Override
