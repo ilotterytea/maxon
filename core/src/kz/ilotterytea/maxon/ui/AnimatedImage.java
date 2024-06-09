@@ -22,9 +22,12 @@ public class AnimatedImage extends Image implements Disposable {
             if (index > regions.length - 1) {
                 index = 0;
             }
-            if (regions[index + 1] == null) {
-                index = 0;
-            }
+            try {
+                if (regions[index + 1] == null) {
+                    index = 0;
+                }
+            } catch (ArrayIndexOutOfBoundsException ignored) {}
+
             super.setDrawable(new TextureRegionDrawable(regions[index]));
             index++;
         }
