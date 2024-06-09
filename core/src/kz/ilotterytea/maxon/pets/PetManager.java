@@ -7,16 +7,16 @@ import kz.ilotterytea.maxon.assets.loaders.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class PetManager {
-    private final HashSet<Pet> pets;
+    private final ArrayList<Pet> pets;
     private final AssetManager assetManager;
     private final Logger logger = LoggerFactory.getLogger(PetManager.class);
 
     public PetManager(final AssetManager assetManager) {
-        this.pets = new HashSet<>();
+        this.pets = new ArrayList<>();
         this.assetManager = assetManager;
     }
 
@@ -25,6 +25,8 @@ public class PetManager {
 
         String data = assetManager.get("data/pets.json", Text.class).getString();
         JsonValue root = new JsonReader().parse(data);
+
+        List<Pet> pets = new ArrayList<>();
 
         for (JsonValue child : root.iterator()) {
             String id = child.getString("id");
@@ -39,6 +41,16 @@ public class PetManager {
             pets.add(pet);
         }
 
+        pets = pets.stream().sorted((pet, t1) -> {
+            if (pet.getPrice() > t1.getPrice()) {
+                return 1;
+            } else if (pet.getPrice() < t1.getPrice()) {
+                return -1;
+            }
+            return 0;
+        }).collect(Collectors.toList());
+
+        this.pets.addAll(pets);
         logger.info("Loaded {} pets", pets.size());
     }
 
@@ -46,7 +58,7 @@ public class PetManager {
         return pets.stream().filter(x -> x.getId().equals(id)).findFirst();
     }
 
-    public HashSet<Pet> getPets() {
+    public ArrayList<Pet> getPets() {
         return pets;
     }
 }
