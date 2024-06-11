@@ -1,8 +1,10 @@
 package kz.ilotterytea.maxon.pets;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
@@ -16,7 +18,7 @@ public class PetWidget extends Table {
     private TextTooltip priceTooltip, nameTooltip;
     private final Pet pet;
 
-    private boolean isDisabled = false;
+    private boolean isDisabled = false, isLocked = false;
 
     private final Label.LabelStyle idleStyle, hoverStyle, disabledStyle, availablePriceStyle, disabledPriceStyle;
 
@@ -91,7 +93,7 @@ public class PetWidget extends Table {
     }
 
     public void setPrice(double price) {
-        if (price == this.price) {
+        if (price == this.price || isLocked) {
             return;
         }
 
@@ -120,6 +122,47 @@ public class PetWidget extends Table {
         priceLabel.setStyle(isDisabled ? disabledPriceStyle : availablePriceStyle);
         nameLabel.setStyle(isDisabled ? disabledStyle : idleStyle);
         super.setBackground(isDisabled ? "store_item_disabled" : "store_item");
+    }
+
+    public void setLocked(boolean locked) {
+        isLocked = locked;
+
+        Color color;
+        String name, nameTooltipText;
+
+        if (isLocked) {
+            color = Color.BLACK;
+            name = "???";
+            nameTooltipText = "Pet Maxon more to unlock it...";
+
+            this.priceLabel.setText("???");
+            this.priceLabel.clearListeners();
+        } else {
+            color = Color.WHITE;
+            name = pet.getName();
+            nameTooltipText = pet.getDescription();
+
+            double price = this.price;
+            this.price = 0;
+
+            this.setPrice(price);
+        }
+
+        if (color != this.pet.getIcon().getColor()) {
+            this.pet.getIcon().addAction(Actions.color(color, 0.5f));
+        }
+
+        this.nameLabel.setText(name);
+
+        TextTooltip tooltip = new TextTooltip(nameTooltipText, skin);
+        tooltip.setInstant(true);
+
+        this.nameLabel.clearListeners();
+        this.nameLabel.addListener(tooltip);
+    }
+
+    public boolean isLocked() {
+        return isLocked;
     }
 
     public Pet getPet() {
