@@ -292,6 +292,29 @@ public class ShopUI {
 
     private void updatePurchaseItems() {
         for (final PetWidget widget : this.petWidgets) {
+            if (!savegame.getUnlockedPets().contains(widget.getPet().getId())) {
+                double price = widget.getPrice() / 4.0f;
+                double price2 = widget.getPrice() / 1.5f;
+
+                if (!widget.isLocked()) {
+                    widget.setLocked(true);
+                }
+
+                widget.setDisabled(true);
+
+                if (price > savegame.getMoney()) {
+                    widget.setVisible(false);
+                } else if (price < savegame.getMoney() && price2 > savegame.getMoney()){
+                    widget.setVisible(true);
+                } else {
+                    widget.setVisible(true);
+                    widget.setLocked(false);
+                    savegame.getUnlockedPets().add(widget.getPet().getId());
+                }
+
+                continue;
+            }
+
             int amount = savegame.getPurchasedPets().getOrDefault(widget.getPet().getId(), 0);
             double price = widget.getPet().getPrice() * java.lang.Math.pow(1.15f, amount + multiplier.getMultiplier());
 

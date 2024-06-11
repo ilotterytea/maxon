@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Savegame implements Serializable {
@@ -26,6 +27,7 @@ public class Savegame implements Serializable {
 
     private double money, multiplier;
     private final HashMap<String, Integer> purchasedPets = new HashMap<>();
+    private final ArrayList<String> unlockedPets = new ArrayList<>();
     private String name;
     private long elapsedTime;
     private boolean isNewlyCreated;
@@ -84,6 +86,7 @@ public class Savegame implements Serializable {
         money = 0.0f;
         multiplier = 0.0f;
         purchasedPets.clear();
+        unlockedPets.clear();
         name = System.getProperty("user.name", "Maxon");
         elapsedTime = 0;
         isNewlyCreated = true;
@@ -123,6 +126,10 @@ public class Savegame implements Serializable {
 
     public HashMap<String, Integer> getPurchasedPets() {
         return purchasedPets;
+    }
+
+    public ArrayList<String> getUnlockedPets() {
+        return unlockedPets;
     }
 
     public String getName() {
