@@ -6,7 +6,7 @@ use crate::{
     GUIAssets,
 };
 
-use super::{ShopMode, ShopMultiplier};
+use super::{ShopMode, ShopMultiplier, ShopSettings};
 
 pub fn setup_ui(
     mut commands: Commands,
@@ -274,4 +274,46 @@ pub fn setup_ui(
                     });
             });
         });
+}
+
+pub fn listen_shop_control_changes(
+    mut mode_button_query: Query<
+        (&ShopMode, &mut BackgroundColor, &Interaction),
+        (
+            With<ShopMode>,
+            Without<ShopMultiplier>,
+            Changed<Interaction>,
+        ),
+    >,
+    mut mp_button_query: Query<
+        (&ShopMultiplier, &mut BackgroundColor, &Interaction),
+        (
+            Without<ShopMode>,
+            With<ShopMultiplier>,
+            Changed<Interaction>,
+        ),
+    >,
+    mut settings: ResMut<ShopSettings>,
+) {
+    for (mode, mut bg, i) in mode_button_query.iter_mut() {
+        match *i {
+            Interaction::None => *bg = color::PERU.into(),
+            Interaction::Hovered => *bg = color::PERU.lighter(0.1).into(),
+            Interaction::Pressed => {
+                *bg = color::PERU.darker(0.1).into();
+                settings.mode = *mode;
+            }
+        }
+    }
+
+    for (multiplier, mut bg, i) in mp_button_query.iter_mut() {
+        match *i {
+            Interaction::None => *bg = color::PERU.into(),
+            Interaction::Hovered => *bg = color::PERU.lighter(0.1).into(),
+            Interaction::Pressed => {
+                *bg = color::PERU.darker(0.1).into();
+                settings.multiplier = *multiplier;
+            }
+        }
+    }
 }
