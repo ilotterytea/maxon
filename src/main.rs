@@ -8,7 +8,9 @@ use bevy_sprite3d::Sprite3dPlugin;
 use game::GamePlugin;
 
 mod assets;
+mod constants;
 mod game;
+mod persistent;
 mod systems;
 
 fn main() {
@@ -37,7 +39,13 @@ fn main() {
     );
 
     // Startup systems
-    app.add_systems(Startup, systems::setup_camera);
+    app.add_systems(
+        Startup,
+        (
+            systems::setup_camera,
+            persistent::setup_persistent_resources,
+        ),
+    );
 
     // Billboard
     app.add_plugins(Sprite3dPlugin);
