@@ -12,6 +12,8 @@ fn main() {
         ..default()
     }));
 
+    app.init_state::<AppState>();
+
     #[cfg(feature = "debug")]
     {
         // Diagnostics
@@ -22,4 +24,11 @@ fn main() {
     }
 
     app.run();
+}
+
+#[derive(Clone, PartialEq, Eq, Hash, Debug, Default, States)]
+pub enum AppState {
+    #[default]
+    Boot,
+    Game,
 }
