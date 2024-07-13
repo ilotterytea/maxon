@@ -14,6 +14,10 @@ impl Plugin for GamePlugin {
             OnEnter(AppState::Game),
             (systems::setup_scene, player::setup_player),
         )
+        .add_systems(
+            Update,
+            systems::sprites_looking_at_camera.run_if(in_state(AppState::Game)),
+        )
         .add_systems(OnExit(AppState::Game), systems::despawn_game_objects);
     }
 }

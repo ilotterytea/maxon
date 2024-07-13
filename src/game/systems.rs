@@ -1,6 +1,7 @@
 use std::f32::consts::PI;
 
 use bevy::prelude::*;
+use bevy_sprite3d::Sprite3dComponent;
 
 use crate::{assets::ModelAssets, systems::CameraComponent};
 
@@ -68,5 +69,23 @@ pub fn despawn_game_objects(
 ) {
     for o in objects.iter() {
         commands.entity(o).despawn_recursive();
+    }
+}
+
+pub fn sprites_looking_at_camera(
+    mut query: Query<&mut Transform, (With<Sprite3dComponent>, Without<CameraComponent>)>,
+    camera_query: Query<
+        &Transform,
+        (
+            With<CameraComponent>,
+            Changed<Transform>,
+            Without<Sprite3dComponent>,
+        ),
+    >,
+) {
+    if let Ok(camera_transform) = camera_query.get_single() {
+        for mut t in query.iter_mut() {
+            t.look_at(camera_transform.translation, Vec3::Y);
+        }
     }
 }
