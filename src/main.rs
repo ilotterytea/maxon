@@ -1,4 +1,4 @@
-use assets::{ModelAssets, TextureAtlasAssets};
+use assets::*;
 use bevy::prelude::*;
 use bevy_asset_loader::loading_state::{
     config::ConfigureLoadingState, LoadingState, LoadingStateAppExt,
@@ -35,7 +35,8 @@ fn main() {
         LoadingState::new(AppState::Boot)
             .continue_to_state(AppState::Game)
             .load_collection::<ModelAssets>()
-            .load_collection::<TextureAtlasAssets>(),
+            .load_collection::<TextureAtlasAssets>()
+            .load_collection::<FontAssets>(),
     );
 
     // Startup systems

@@ -15,3 +15,9 @@ pub struct TextureAtlasAssets {
     #[asset(path = "sprites/sheet/loadingCircle.png")]
     pub player_texture: Handle<Image>,
 }
+
+#[derive(AssetCollection, Resource)]
+pub struct FontAssets {
+    #[asset(path = "fonts/text.ttf")]
+    pub text: Handle<Font>,
+}
