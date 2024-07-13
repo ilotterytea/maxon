@@ -38,10 +38,14 @@ fn main() {
 
     #[cfg(feature = "debug")]
     {
-        // Diagnostics
         app.add_plugins((
+            // Diagnostics
             bevy::diagnostic::FrameTimeDiagnosticsPlugin,
             bevy::diagnostic::LogDiagnosticsPlugin::default(),
+            // World inspector
+            bevy_inspector_egui::quick::WorldInspectorPlugin::default(),
+            // Flycam
+            bevy_flycam::NoCameraPlayerPlugin,
         ));
     }
 

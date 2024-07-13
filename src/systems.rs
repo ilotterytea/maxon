@@ -4,5 +4,10 @@ use bevy::prelude::*;
 pub struct CameraComponent;
 
 pub fn setup_camera(mut commands: Commands) {
-    commands.spawn((Camera3dBundle::default(), CameraComponent));
+    let mut e = commands.spawn((Camera3dBundle::default(), CameraComponent));
+
+    #[cfg(feature = "debug")]
+    {
+        e.insert(bevy_flycam::FlyCam);
+    }
 }
