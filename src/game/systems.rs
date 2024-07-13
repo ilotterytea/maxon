@@ -61,3 +61,12 @@ pub fn setup_scene(
         GameObjectComponent,
     ));
 }
+
+pub fn despawn_game_objects(
+    mut commands: Commands,
+    objects: Query<Entity, With<GameObjectComponent>>,
+) {
+    for o in objects.iter() {
+        commands.entity(o).despawn_recursive();
+    }
+}
