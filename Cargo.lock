@@ -1045,6 +1045,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_sprite3d"
+version = "3.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "43db9607a6419cd8930155f9d40d1784bdf31eab28a536a10bc97d0ea94662e1"
+dependencies = [
+ "bevy",
+]
+
+[[package]]
 name = "bevy_state"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2597,6 +2606,7 @@ dependencies = [
  "bevy-inspector-egui",
  "bevy_asset_loader",
  "bevy_flycam",
+ "bevy_sprite3d",
 ]
 
 [[package]]

@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use bevy_asset_loader::loading_state::{
     config::ConfigureLoadingState, LoadingState, LoadingStateAppExt,
 };
+use bevy_sprite3d::Sprite3dPlugin;
 use game::GamePlugin;
 
 mod assets;
@@ -36,6 +37,9 @@ fn main() {
 
     // Startup systems
     app.add_systems(Startup, systems::setup_camera);
+
+    // Billboard
+    app.add_plugins(Sprite3dPlugin);
 
     #[cfg(feature = "debug")]
     {
