@@ -7,6 +7,7 @@ use game::GamePlugin;
 
 mod assets;
 mod game;
+mod systems;
 
 fn main() {
     let mut app = App::new();
@@ -31,6 +32,9 @@ fn main() {
             .continue_to_state(AppState::Game)
             .load_collection::<ModelAssets>(),
     );
+
+    // Startup systems
+    app.add_systems(Startup, systems::setup_camera);
 
     #[cfg(feature = "debug")]
     {
