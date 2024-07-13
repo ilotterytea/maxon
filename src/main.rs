@@ -1,6 +1,11 @@
+use assets::ModelAssets;
 use bevy::prelude::*;
+use bevy_asset_loader::loading_state::{
+    config::ConfigureLoadingState, LoadingState, LoadingStateAppExt,
+};
 use game::GamePlugin;
 
+mod assets;
 mod game;
 
 fn main() {
@@ -20,13 +25,20 @@ fn main() {
     // Game plugins
     app.add_plugins(GamePlugin);
 
+    // Asset loading
+    app.add_loading_state(
+        LoadingState::new(AppState::Boot)
+            .continue_to_state(AppState::Game)
+            .load_collection::<ModelAssets>(),
+    );
+
     #[cfg(feature = "debug")]
     {
         // Diagnostics
         app.add_plugins((
             bevy::diagnostic::FrameTimeDiagnosticsPlugin,
             bevy::diagnostic::LogDiagnosticsPlugin::default(),
-        ))
+        ));
     }
 
     app.run();
