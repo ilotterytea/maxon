@@ -6,17 +6,7 @@ use crate::{
     GUIAssets,
 };
 
-#[derive(Component)]
-pub enum ShopModeButtonComponent {
-    Buy,
-    Sell,
-}
-
-#[derive(Component)]
-pub enum ShopMultiplierButtonComponent {
-    X1,
-    X10,
-}
+use super::{ShopMode, ShopMultiplier};
 
 pub fn setup_ui(
     mut commands: Commands,
@@ -110,11 +100,7 @@ pub fn setup_ui(
 
                         // Buy button
                         mode_root
-                            .spawn((
-                                button.clone(),
-                                ShopModeButtonComponent::Buy,
-                                Name::new("Buy button"),
-                            ))
+                            .spawn((button.clone(), ShopMode::Buy, Name::new("Buy button")))
                             .with_children(|btn| {
                                 btn.spawn(TextBundle::from_section(
                                     "Buy",
@@ -130,7 +116,7 @@ pub fn setup_ui(
                                     b.style.margin.bottom = Val::ZERO;
                                     b
                                 },
-                                ShopModeButtonComponent::Sell,
+                                ShopMode::Sell,
                                 Name::new("Sell button"),
                             ))
                             .with_children(|btn| {
@@ -171,11 +157,7 @@ pub fn setup_ui(
 
                         // 1x button
                         mp_root
-                            .spawn((
-                                button.clone(),
-                                ShopMultiplierButtonComponent::X1,
-                                Name::new("1x button"),
-                            ))
+                            .spawn((button.clone(), ShopMultiplier::X1, Name::new("1x button")))
                             .with_children(|btn| {
                                 btn.spawn(TextBundle::from_section(
                                     "1X",
@@ -185,11 +167,7 @@ pub fn setup_ui(
 
                         // 10x button
                         mp_root
-                            .spawn((
-                                button.clone(),
-                                ShopMultiplierButtonComponent::X10,
-                                Name::new("10x button"),
-                            ))
+                            .spawn((button.clone(), ShopMultiplier::X10, Name::new("10x button")))
                             .with_children(|btn| {
                                 btn.spawn(TextBundle::from_section(
                                     "10X",
