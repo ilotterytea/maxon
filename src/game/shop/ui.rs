@@ -8,6 +8,12 @@ use crate::{
 
 use super::{ShopMode, ShopMultiplier, ShopSettings};
 
+#[derive(Component, PartialEq, Eq, Clone, Copy)]
+pub enum PlayerStatsTextComponent {
+    Money,
+    Multiplier,
+}
+
 pub fn setup_ui(
     mut commands: Commands,
     font_assets: Res<FontAssets>,
@@ -245,6 +251,7 @@ pub fn setup_ui(
                                 format!("{:.0}", savegame.money),
                                 get_text_style_default(&font_assets),
                             ),
+                            PlayerStatsTextComponent::Money,
                             Name::new("Money text"),
                         ));
                     });
@@ -269,6 +276,7 @@ pub fn setup_ui(
                                 format!("{:.1}", savegame.multiplier),
                                 get_text_style_default(&font_assets),
                             ),
+                            PlayerStatsTextComponent::Multiplier,
                             Name::new("Multiplier text"),
                         ));
                     });
@@ -313,6 +321,26 @@ pub fn listen_shop_control_changes(
             Interaction::Pressed => {
                 *bg = color::PERU.darker(0.1).into();
                 settings.multiplier = *multiplier;
+            }
+        }
+    }
+}
+
+pub fn update_player_stats(
+    mut money_query: Query<(&mut Text, &PlayerStatsTextComponent), With<PlayerStatsTextComponent>>,
+    savegame: Res<Persistent<Savegame>>,
+) {
+    if !savegame.is_changed() {
+        return;
+    }
+
+    for (mut t, c) in money_query.iter_mut() {
+        // ome
+        if let Some(&mut ref mut section) = t.sections.first_mut() {
+            section.value = if *c == PlayerStatsTextComponent::Money {
+                format!("{:.0}", savegame.money)
+            } else {
+                format!("{:.1}", savegame.multiplier)
             }
         }
     }

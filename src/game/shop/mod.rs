@@ -12,7 +12,8 @@ impl Plugin for ShopPlugin {
             .add_systems(OnEnter(AppState::Game), ui::setup_ui)
             .add_systems(
                 Update,
-                ui::listen_shop_control_changes.run_if(in_state(AppState::Game)),
+                (ui::listen_shop_control_changes, ui::update_player_stats)
+                    .run_if(in_state(AppState::Game)),
             );
     }
 }
