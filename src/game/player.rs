@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
+use bevy_persistent::Persistent;
 use bevy_sprite3d::{Sprite3d, Sprite3dParams};
 
-use crate::assets::TextureAtlasAssets;
+use crate::{assets::TextureAtlasAssets, persistent::Savegame};
 
 use super::components::GameObjectComponent;
 
@@ -37,10 +38,13 @@ pub fn click_on_player(
     mut player_query: Query<&mut TextureAtlas, With<PlayerComponent>>,
     texture_atlas_assets: Res<TextureAtlasAssets>,
     texture_atlas_layouts: Res<Assets<TextureAtlasLayout>>,
+    mut savegame: ResMut<Persistent<Savegame>>,
 ) {
     if let Ok(mut player_atlas) = player_query.get_single_mut() {
         if let Some(layout) = texture_atlas_layouts.get(&texture_atlas_assets.player_layout) {
             player_atlas.index = (player_atlas.index + 1) % layout.textures.len();
         }
     }
+
+    savegame.money += 1.0;
 }
