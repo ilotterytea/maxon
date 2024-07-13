@@ -21,3 +21,15 @@ pub struct FontAssets {
     #[asset(path = "fonts/text.ttf")]
     pub text: Handle<Font>,
 }
+
+#[derive(AssetCollection, Resource)]
+pub struct GUIAssets {
+    #[asset(path = "sprites/gui/money.png")]
+    pub money: Handle<Image>,
+
+    #[asset(path = "sprites/gui/multiplier.png")]
+    pub multiplier: Handle<Image>,
+
+    #[asset(path = "sprites/gui/pets.png")]
+    pub pets: Handle<Image>,
+}

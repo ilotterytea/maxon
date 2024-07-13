@@ -36,7 +36,8 @@ fn main() {
             .continue_to_state(AppState::Game)
             .load_collection::<ModelAssets>()
             .load_collection::<TextureAtlasAssets>()
-            .load_collection::<FontAssets>(),
+            .load_collection::<FontAssets>()
+            .load_collection::<GUIAssets>(),
     );
 
     // Startup systems
