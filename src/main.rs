@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use bevy_asset_loader::loading_state::{
     config::ConfigureLoadingState, LoadingState, LoadingStateAppExt,
 };
+use bevy_mod_picking::DefaultPickingPlugins;
 use bevy_sprite3d::Sprite3dPlugin;
 use game::GamePlugin;
 
@@ -40,6 +41,9 @@ fn main() {
 
     // Billboard
     app.add_plugins(Sprite3dPlugin);
+
+    // 3D picking
+    app.add_plugins(DefaultPickingPlugins);
 
     #[cfg(feature = "debug")]
     {

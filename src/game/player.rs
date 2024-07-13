@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_mod_picking::prelude::*;
 use bevy_sprite3d::{Sprite3d, Sprite3dParams};
 
 use crate::assets::TextureAtlasAssets;
@@ -27,6 +28,19 @@ pub fn setup_player(
         ),
         PlayerComponent,
         GameObjectComponent,
+        On::<Pointer<Click>>::run(click_on_player),
         Name::new("Player"),
     ));
+}
+
+pub fn click_on_player(
+    mut player_query: Query<&mut TextureAtlas, With<PlayerComponent>>,
+    texture_atlas_assets: Res<TextureAtlasAssets>,
+    texture_atlas_layouts: Res<Assets<TextureAtlasLayout>>,
+) {
+    if let Ok(mut player_atlas) = player_query.get_single_mut() {
+        if let Some(layout) = texture_atlas_layouts.get(&texture_atlas_assets.player_layout) {
+            player_atlas.index = (player_atlas.index + 1) % layout.textures.len();
+        }
+    }
 }
