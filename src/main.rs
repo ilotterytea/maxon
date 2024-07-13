@@ -11,6 +11,7 @@ mod assets;
 mod constants;
 mod game;
 mod persistent;
+mod style;
 mod systems;
 
 fn main() {
