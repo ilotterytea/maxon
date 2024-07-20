@@ -18,13 +18,16 @@ pub enum PlayerStatsTextComponent {
     Multiplier,
 }
 
-#[derive(Component)]
+#[derive(Component, PartialEq, Eq)]
 pub enum PetComponent {
     Base,
     Icon,
     Name,
     Price,
 }
+
+#[derive(Component)]
+pub struct PetDisabledComponent;
 
 pub fn setup_ui(
     mut commands: Commands,
@@ -511,6 +514,53 @@ pub fn update_player_stats(
             } else {
                 format!("{:.1}", savegame.multiplier)
             }
+        }
+    }
+}
+
+pub fn toggle_pet_nodes(
+    mut commands: Commands,
+    savegame: Res<Persistent<Savegame>>,
+    mut query: Query<
+        (
+            Entity,
+            &mut BackgroundColor,
+            Option<&PetDisabledComponent>,
+            &PetIdComponent,
+            &PetComponent,
+        ),
+        (With<PetIdComponent>, With<PetComponent>),
+    >,
+    data_assets: Res<DataAssets>,
+    pets_assets: Res<Assets<Pets>>,
+) {
+    let pets = pets_assets.get(data_assets.pets.id()).unwrap();
+
+    for (e, mut bg, d, id, part) in query.iter_mut() {
+        if part != &PetComponent::Base {
+            continue;
+        }
+
+        let pet = pets.0.iter().find(|x| x.id.eq(&id.0));
+
+        if pet.is_none() {
+            *bg = color::DIM_GRAY.into();
+            commands.entity(e).insert(PetDisabledComponent);
+            continue;
+        }
+
+        let pet = pet.unwrap();
+
+        if pet.price > savegame.money && d.is_none() {
+            *bg = color::DIM_GRAY.into();
+            commands.entity(e).insert(PetDisabledComponent);
+            continue;
+        }
+
+        if pet.price < savegame.money && d.is_some() {
+            *bg = color::PERU.into();
+            commands.entity(e).remove::<PetDisabledComponent>();
+            continue;
         }
     }
 }

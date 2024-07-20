@@ -13,7 +13,11 @@ impl Plugin for ShopPlugin {
             .add_systems(OnEnter(AppState::Game), ui::setup_ui)
             .add_systems(
                 Update,
-                (ui::listen_shop_control_changes, ui::update_player_stats)
+                (
+                    ui::listen_shop_control_changes,
+                    ui::update_player_stats,
+                    ui::toggle_pet_nodes,
+                )
                     .run_if(in_state(AppState::Game)),
             );
     }
