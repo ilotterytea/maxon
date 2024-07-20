@@ -34,6 +34,12 @@ pub struct GUIAssets {
 
     #[asset(path = "sprites/gui/pets.png")]
     pub pets: Handle<Image>,
+
+    #[asset(path = "sprites/pets", collection(typed))]
+    pub pet_icons: Vec<Handle<Image>>,
+
+    #[asset(texture_atlas_layout(tile_size_x = 64, tile_size_y = 64, columns = 4, rows = 4))]
+    pub pet_icon_layout: Handle<TextureAtlasLayout>,
 }
 
 #[derive(AssetCollection, Resource)]
