@@ -1,3 +1,4 @@
+use animation::TextureAtlasAnimationPlugin;
 use assets::*;
 use bevy::prelude::*;
 use bevy_asset_loader::loading_state::{
@@ -8,6 +9,7 @@ use bevy_mod_picking::DefaultPickingPlugins;
 use bevy_sprite3d::Sprite3dPlugin;
 use game::{shop::pets::Pets, GamePlugin};
 
+mod animation;
 mod assets;
 mod constants;
 mod game;
@@ -60,6 +62,9 @@ fn main() {
 
     // 3D picking
     app.add_plugins(DefaultPickingPlugins);
+
+    // Animation for sprite sheets
+    app.add_plugins(TextureAtlasAnimationPlugin);
 
     #[cfg(feature = "debug")]
     {
