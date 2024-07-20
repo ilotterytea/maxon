@@ -2,9 +2,10 @@ use bevy::prelude::*;
 
 use crate::AppState;
 
+pub mod pets;
 mod ui;
 
-pub struct ShopPlugin;
+pub(super) struct ShopPlugin;
 
 impl Plugin for ShopPlugin {
     fn build(&self, app: &mut App) {
@@ -19,21 +20,21 @@ impl Plugin for ShopPlugin {
 }
 
 #[derive(Component, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default)]
-pub enum ShopMode {
+pub(super) enum ShopMode {
     #[default]
     Buy,
     Sell,
 }
 
 #[derive(Component, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default)]
-pub enum ShopMultiplier {
+pub(super) enum ShopMultiplier {
     #[default]
     X1,
     X10,
 }
 
 #[derive(Resource, Default)]
-pub struct ShopSettings {
+pub(super) struct ShopSettings {
     pub mode: ShopMode,
     pub multiplier: ShopMultiplier,
 }

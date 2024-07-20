@@ -3,9 +3,10 @@ use bevy::prelude::*;
 use bevy_asset_loader::loading_state::{
     config::ConfigureLoadingState, LoadingState, LoadingStateAppExt,
 };
+use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_mod_picking::DefaultPickingPlugins;
 use bevy_sprite3d::Sprite3dPlugin;
-use game::GamePlugin;
+use game::{shop::pets::Pets, GamePlugin};
 
 mod assets;
 mod constants;
@@ -31,6 +32,9 @@ fn main() {
     // Game plugins
     app.add_plugins(GamePlugin);
 
+    // JSON loading
+    app.add_plugins(JsonAssetPlugin::<Pets>::new(&["pets.json"]));
+
     // Asset loading
     app.add_loading_state(
         LoadingState::new(AppState::Boot)
@@ -38,7 +42,8 @@ fn main() {
             .load_collection::<ModelAssets>()
             .load_collection::<TextureAtlasAssets>()
             .load_collection::<FontAssets>()
-            .load_collection::<GUIAssets>(),
+            .load_collection::<GUIAssets>()
+            .load_collection::<DataAssets>(),
     );
 
     // Startup systems

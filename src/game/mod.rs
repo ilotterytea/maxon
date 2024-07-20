@@ -4,7 +4,7 @@ use crate::AppState;
 
 mod components;
 mod player;
-mod shop;
+pub mod shop;
 mod systems;
 
 pub struct GamePlugin;

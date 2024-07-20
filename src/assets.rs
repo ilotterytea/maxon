@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
+use crate::game::shop::pets::Pets;
+
 #[derive(AssetCollection, Resource)]
 pub struct ModelAssets {
     #[asset(path = "models/scenes/living_room.glb#Scene0")]
@@ -32,4 +34,10 @@ pub struct GUIAssets {
 
     #[asset(path = "sprites/gui/pets.png")]
     pub pets: Handle<Image>,
+}
+
+#[derive(AssetCollection, Resource)]
+pub struct DataAssets {
+    #[asset(path = "data/common.pets.json")]
+    pub pets: Handle<Pets>,
 }
