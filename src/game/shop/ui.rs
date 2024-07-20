@@ -1,12 +1,16 @@
 use bevy::{color::palettes::css as color, prelude::*};
 use bevy_persistent::Persistent;
+use bevy_simple_scroll_view::{ScrollView, ScrollableContent};
 
 use crate::{
-    assets::FontAssets, game::components::GameObjectComponent, persistent::Savegame, style::*,
-    GUIAssets,
+    animation::AnimationTimer, assets::FontAssets, game::components::GameObjectComponent,
+    persistent::Savegame, style::*, DataAssets, GUIAssets,
 };
 
-use super::{ShopMode, ShopMultiplier, ShopSettings};
+use super::{
+    pets::{PetIdComponent, Pets},
+    ShopMode, ShopMultiplier, ShopSettings,
+};
 
 #[derive(Component, PartialEq, Eq, Clone, Copy)]
 pub enum PlayerStatsTextComponent {
@@ -14,12 +18,157 @@ pub enum PlayerStatsTextComponent {
     Multiplier,
 }
 
+#[derive(Component)]
+pub enum PetComponent {
+    Base,
+    Icon,
+    Name,
+    Price,
+}
+
 pub fn setup_ui(
     mut commands: Commands,
     font_assets: Res<FontAssets>,
     gui_assets: Res<GUIAssets>,
+    data_assets: Res<DataAssets>,
+    pets_assets: Res<Assets<Pets>>,
     savegame: Res<Persistent<Savegame>>,
 ) {
+    let pets = pets_assets
+        .get(data_assets.pets.id())
+        .expect("Failed to get pets");
+
+    let pets = &pets.0;
+
+    // Creating pet buttons
+    let mut pet_ids: Vec<Entity> = Vec::new();
+
+    for pet in pets {
+        let mut icon: Option<Handle<Image>> = None;
+
+        for icon_handle in &gui_assets.pet_icons {
+            if let Some(path) = icon_handle.path() {
+                if let Some(name) = path.path().file_name() {
+                    let n = format!("{}.png", pet.id);
+                    if name.to_str().unwrap().eq(&n) {
+                        icon = Some(icon_handle.clone());
+                        break;
+                    }
+                }
+            }
+        }
+
+        if icon.is_none() {
+            icon = Some(gui_assets.pets.clone());
+        }
+
+        let id = commands
+            .spawn((
+                ButtonBundle {
+                    style: Style {
+                        display: Display::Flex,
+                        flex_direction: FlexDirection::Row,
+                        margin: UiRect::bottom(Val::Percent(1.0)),
+                        padding: UiRect::all(Val::Percent(1.5)),
+                        ..default()
+                    },
+                    background_color: color::PERU.into(),
+                    ..default()
+                },
+                Name::new(pet.id.clone()),
+                PetIdComponent(pet.id.clone()),
+                PetComponent::Base,
+            ))
+            .with_children(|parent| {
+                // Icon
+                parent.spawn((
+                    ImageBundle {
+                        style: Style {
+                            width: Val::Px(48.0),
+                            height: Val::Px(48.0),
+                            ..default()
+                        },
+                        image: UiImage::new(icon.unwrap()),
+                        ..default()
+                    },
+                    TextureAtlas::from(gui_assets.pet_icon_layout.clone()),
+                    Name::new(format!("{} pet icon", pet.id)),
+                    AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
+                    PetIdComponent(pet.id.clone()),
+                    PetComponent::Icon,
+                ));
+
+                // Summary
+                parent
+                    .spawn((
+                        NodeBundle {
+                            style: Style {
+                                flex_grow: 1.0,
+                                display: Display::Flex,
+                                flex_direction: FlexDirection::Column,
+                                margin: UiRect::left(Val::Percent(2.0)),
+                                ..default()
+                            },
+                            ..default()
+                        },
+                        Name::new(format!("{} summary", pet.id)),
+                    ))
+                    .with_children(|sum| {
+                        // Name
+                        sum.spawn((
+                            TextBundle::from_section(
+                                pet.id.clone(),
+                                get_text_style_default(&font_assets),
+                            ),
+                            Name::new(format!("{} text name", pet.id)),
+                            PetIdComponent(pet.id.clone()),
+                            PetComponent::Name,
+                        ));
+
+                        // Price
+                        sum.spawn((
+                            NodeBundle {
+                                style: Style {
+                                    width: Val::Percent(100.0),
+                                    display: Display::Flex,
+                                    flex_direction: FlexDirection::Row,
+                                    ..default()
+                                },
+                                ..default()
+                            },
+                            Name::new(format!("{} price", pet.id)),
+                        ))
+                        .with_children(|price_node| {
+                            let text_style = get_text_style_default(&font_assets);
+
+                            price_node.spawn((
+                                ImageBundle {
+                                    image: UiImage::new(gui_assets.money.clone()),
+                                    style: Style {
+                                        margin: UiRect::right(Val::Percent(1.0)),
+                                        width: Val::Px(text_style.font_size),
+                                        height: Val::Px(text_style.font_size),
+                                        ..default()
+                                    },
+                                    ..default()
+                                },
+                                Name::new(format!("{} price icon", pet.id)),
+                            ));
+
+                            price_node.spawn((
+                                TextBundle::from_section(pet.price.to_string(), text_style),
+                                Name::new(format!("{} price text", pet.id)),
+                                PetIdComponent(pet.id.clone()),
+                                PetComponent::Price,
+                            ));
+                        });
+                    });
+            })
+            .id();
+
+        pet_ids.push(id);
+    }
+
     commands
         .spawn((
             NodeBundle {
@@ -188,16 +337,36 @@ pub fn setup_ui(
                 NodeBundle {
                     style: Style {
                         width: Val::Percent(100.0),
+                        min_height: Val::Vh(0.0),
+                        padding: UiRect::all(Val::Percent(2.0)),
                         display: Display::Flex,
-                        flex_direction: FlexDirection::Column,
-                        flex_grow: 1.0,
+                        flex_direction: FlexDirection::Row,
                         ..default()
                     },
                     background_color: STORE_LIST_BG_COLOR.into(),
                     ..default()
                 },
+                ScrollView::default(),
                 Name::new("Shop list"),
-            ));
+            ))
+            .with_children(|list| {
+                // Pet list
+                list.spawn((
+                    NodeBundle {
+                        style: Style {
+                            width: Val::Percent(100.0),
+                            display: Display::Flex,
+                            flex_direction: FlexDirection::Column,
+                            flex_grow: 1.0,
+                            ..default()
+                        },
+                        ..default()
+                    },
+                    Name::new("Content"),
+                    ScrollableContent::default(),
+                ))
+                .push_children(pet_ids.as_slice());
+            });
 
             // Player stats
             root.spawn((

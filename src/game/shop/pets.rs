@@ -17,3 +17,6 @@ pub struct PetIconData {
 
 #[derive(Resource, Deserialize, TypePath, Clone, Asset)]
 pub struct Pets(pub Vec<Pet>);
+
+#[derive(Component)]
+pub struct PetIdComponent(pub String);
