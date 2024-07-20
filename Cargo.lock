@@ -1242,6 +1242,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_simple_scroll_view"
+version = "0.2.0"
+source = "git+https://github.com/ProjectKML/bevy_simple_scroll_view.git?rev=6d6f9c907e412953f694aa3a22949abd8759897c#6d6f9c907e412953f694aa3a22949abd8759897c"
+dependencies = [
+ "bevy",
+]
+
+[[package]]
 name = "bevy_sprite"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2900,6 +2908,7 @@ dependencies = [
  "bevy_common_assets",
  "bevy_flycam",
  "bevy_mod_picking",
+ "bevy_simple_scroll_view",
  "bevy_sprite3d",
  "dirs",
  "serde",

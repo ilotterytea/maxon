@@ -15,6 +15,8 @@ bevy_sprite3d = "3.0.0"
 dirs = "5.0.1"
 serde = { version = "1.0.204", features = ["derive"] }
 whoami = "1.5.1"
+# TODO: change to the original package after it merges the pull request
+bevy_simple_scroll_view = { git = "https://github.com/ProjectKML/bevy_simple_scroll_view.git", rev = "6d6f9c907e412953f694aa3a22949abd8759897c" }
 
 [features]
 debug = []

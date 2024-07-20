@@ -6,6 +6,7 @@ use bevy_asset_loader::loading_state::{
 };
 use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_mod_picking::DefaultPickingPlugins;
+use bevy_simple_scroll_view::ScrollViewPlugin;
 use bevy_sprite3d::Sprite3dPlugin;
 use game::{shop::pets::Pets, GamePlugin};
 
@@ -62,6 +63,9 @@ fn main() {
 
     // 3D picking
     app.add_plugins(DefaultPickingPlugins);
+
+    // Scrolling content
+    app.add_plugins(ScrollViewPlugin);
 
     // Animation for sprite sheets
     app.add_plugins(TextureAtlasAnimationPlugin);
