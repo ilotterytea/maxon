@@ -17,6 +17,8 @@ impl Plugin for ShopPlugin {
                     ui::listen_shop_control_changes,
                     ui::update_player_stats,
                     ui::toggle_pet_nodes,
+                    ui::pet_node_interaction,
+                    ui::update_pet_nodes,
                 )
                     .run_if(in_state(AppState::Game)),
             );
@@ -35,6 +37,15 @@ pub(super) enum ShopMultiplier {
     #[default]
     X1,
     X10,
+}
+
+impl ShopMultiplier {
+    pub fn as_i32(&self) -> i32 {
+        match self {
+            Self::X1 => 1,
+            Self::X10 => 10,
+        }
+    }
 }
 
 #[derive(Resource, Default)]

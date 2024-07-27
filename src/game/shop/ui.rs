@@ -546,6 +546,7 @@ pub fn toggle_pet_nodes(
     >,
     data_assets: Res<DataAssets>,
     pets_assets: Res<Assets<Pets>>,
+    shop_settings: Res<ShopSettings>,
 ) {
     let pets = pets_assets.get(data_assets.pets.id()).unwrap();
 
@@ -562,7 +563,17 @@ pub fn toggle_pet_nodes(
 
         let pet = pet.unwrap();
 
-        if pet.price > savegame.money {
+        let multiplier = shop_settings.multiplier.as_i32();
+        let amount = *savegame.pets.get(&pet.id).unwrap_or(&0);
+        let mut price = pet.price * 1.15_f64.powi(amount as i32 + multiplier);
+
+        if shop_settings.mode == ShopMode::Sell {
+            price /= 4.0;
+        }
+
+        price = price.trunc();
+
+        if price > savegame.money.trunc() {
             match (part, text) {
                 (PetComponent::Base, _) => {
                     *bg = STORE_ITEM_DISABLED_BG_COLOR.into();
@@ -580,7 +591,7 @@ pub fn toggle_pet_nodes(
             continue;
         }
 
-        if pet.price <= savegame.money {
+        if price <= savegame.money.trunc() {
             match (part, text) {
                 (PetComponent::Base, _) => {
                     *bg = STORE_ITEM_BG_COLOR.into();
@@ -597,5 +608,93 @@ pub fn toggle_pet_nodes(
 
             continue;
         }
+    }
+}
+
+pub fn pet_node_interaction(
+    mut query: Query<
+        (&Interaction, &PetIdComponent),
+        (
+            With<PetComponent>,
+            With<PetIdComponent>,
+            Without<PetDisabledComponent>,
+            Changed<Interaction>,
+        ),
+    >,
+    mut savegame: ResMut<Persistent<Savegame>>,
+    shop_settings: Res<ShopSettings>,
+    data_assets: Res<DataAssets>,
+    pets_assets: Res<Assets<Pets>>,
+) {
+    let pets = pets_assets.get(data_assets.pets.id()).unwrap();
+
+    for (i, id) in query.iter() {
+        let id = &id.0;
+        let pet = pets.0.iter().find(|x| x.id.eq(id)).unwrap();
+
+        let multiplier = shop_settings.multiplier.as_i32();
+        let amount = *savegame.pets.get(id).unwrap_or(&0);
+        let mut price = pet.price * 1.15_f64.powi(amount as i32 + multiplier);
+
+        if shop_settings.mode == ShopMode::Sell {
+            price /= 4.0;
+        }
+
+        price = price.trunc();
+
+        match *i {
+            Interaction::Pressed => {
+                if shop_settings.mode == ShopMode::Buy {
+                    savegame.money -= price;
+                    savegame.multiplier += pet.multiplier * multiplier as f64;
+                    savegame
+                        .pets
+                        .entry(id.clone())
+                        .and_modify(|x| *x += multiplier as u32)
+                        .or_insert(multiplier as u32);
+                } else {
+                    savegame.money += price;
+                    savegame.multiplier -= pet.multiplier * multiplier as f64;
+                    savegame
+                        .pets
+                        .entry(id.clone())
+                        .and_modify(|x| *x -= multiplier as u32);
+                }
+            }
+            _ => {}
+        }
+    }
+}
+
+pub fn update_pet_nodes(
+    mut query: Query<
+        (&mut Text, &PetIdComponent, &PetComponent),
+        (With<PetComponent>, With<PetIdComponent>, With<Text>),
+    >,
+    savegame: Res<Persistent<Savegame>>,
+    shop_settings: Res<ShopSettings>,
+    data_assets: Res<DataAssets>,
+    pets_assets: Res<Assets<Pets>>,
+) {
+    let pets = pets_assets.get(data_assets.pets.id()).unwrap();
+
+    for (mut text, id, comp) in query.iter_mut() {
+        if (comp != &PetComponent::Price) {
+            continue;
+        }
+
+        let id = &id.0;
+
+        let pet = pets.0.iter().find(|x| x.id.eq(id)).unwrap();
+
+        let multiplier = shop_settings.multiplier.as_i32();
+        let amount = *savegame.pets.get(id).unwrap_or(&0);
+        let mut price = pet.price * 1.15_f64.powi(amount as i32 + multiplier);
+
+        if shop_settings.mode == ShopMode::Sell {
+            price /= 4.0;
+        }
+
+        text.sections[0].value = price.trunc().to_string();
     }
 }
