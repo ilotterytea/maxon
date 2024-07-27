@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use bevy::prelude::*;
 use bevy_persistent::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -7,6 +9,7 @@ pub struct Savegame {
     pub money: f64,
     pub multiplier: f64,
     pub name: String,
+    pub pets: HashMap<String, u32>,
 }
 
 impl Default for Savegame {
@@ -15,6 +18,7 @@ impl Default for Savegame {
             money: 0.0,
             multiplier: 0.0,
             name: whoami::username(),
+            pets: HashMap::new(),
         }
     }
 }
