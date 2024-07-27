@@ -8,17 +8,19 @@ use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_mod_picking::DefaultPickingPlugins;
 use bevy_simple_scroll_view::ScrollViewPlugin;
 use bevy_sprite3d::Sprite3dPlugin;
+use boot::BootPlugin;
 use game::{shop::pets::Pets, GamePlugin};
 use localization::Localization;
 
 mod animation;
 mod assets;
+mod boot;
 mod constants;
 mod game;
+mod localization;
 mod persistent;
 mod style;
 mod systems;
-mod localization;
 
 fn main() {
     let mut app = App::new();
@@ -35,16 +37,16 @@ fn main() {
     app.init_state::<AppState>();
 
     // Game plugins
-    app.add_plugins(GamePlugin);
+    app.add_plugins((BootPlugin, GamePlugin));
 
     // JSON loading
     app.add_plugins(JsonAssetPlugin::<Pets>::new(&["pets.json"]))
-    .add_plugins(JsonAssetPlugin::<Localization>::new(&["locale.json"]));
+        .add_plugins(JsonAssetPlugin::<Localization>::new(&["locale.json"]));
 
     // Asset loading
     app.add_loading_state(
-        LoadingState::new(AppState::Boot)
-            .continue_to_state(AppState::Game)
+        LoadingState::new(AppState::AssetLoading)
+            .continue_to_state(AppState::Boot)
             .load_collection::<ModelAssets>()
             .load_collection::<TextureAtlasAssets>()
             .load_collection::<FontAssets>()
@@ -92,6 +94,7 @@ fn main() {
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Default, States)]
 pub enum AppState {
     #[default]
+    AssetLoading,
     Boot,
     Game,
 }

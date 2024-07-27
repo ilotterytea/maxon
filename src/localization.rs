@@ -1,7 +1,10 @@
 use std::collections::HashMap;
 
 use bevy::prelude::*;
+use bevy_persistent::Persistent;
 use serde::{de::Visitor, Deserialize};
+
+use crate::{persistent::Settings, DataAssets};
 
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub enum LineId {
@@ -181,3 +184,39 @@ impl<'de> Visitor<'de> for LineIdVisitor {
 
 #[derive(Resource, Deserialize, TypePath, Clone, Asset)]
 pub struct Localization(pub HashMap<LineId, String>);
+
+pub fn setup_localization(
+    mut commands: Commands,
+    savegame: Res<Persistent<Settings>>,
+    data_assets: Res<DataAssets>,
+    localization_assets: Res<Assets<Localization>>,
+) {
+    let localizations = &data_assets.localizations;
+
+    let mut locale: Option<Localization> = None;
+    let mut default_locale: Option<Localization> = None;
+
+    for localization in localizations {
+        if let (Some(path), Some(locale_2)) = (
+            localization.path(),
+            localization_assets.get(localization.id()),
+        ) {
+            if let Some(name) = path.path().file_name() {
+                let name = name.to_str().unwrap().strip_suffix(".locale.json").unwrap();
+                if name.eq("en_us") {
+                    default_locale = Some(locale_2.clone());
+                }
+                if name.eq(savegame.language.as_str()) {
+                    locale = Some(locale_2.clone());
+                    break;
+                }
+            }
+        }
+    }
+
+    if locale.is_none() {
+        locale = Some(default_locale.unwrap());
+    }
+
+    commands.insert_resource(locale.unwrap());
+}

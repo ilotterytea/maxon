@@ -23,6 +23,7 @@ impl Default for Savegame {
 pub struct Settings {
     pub music: bool,
     pub is_fullscreen: bool,
+    pub language: String,
 }
 
 impl Default for Settings {
@@ -30,6 +31,7 @@ impl Default for Settings {
         Self {
             music: true,
             is_fullscreen: false,
+            language: "en_us".into(),
         }
     }
 }
