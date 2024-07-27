@@ -3,25 +3,30 @@ use bevy::prelude::*;
 use crate::AppState;
 
 pub mod pets;
+mod systems;
 mod ui;
 
 pub(super) struct ShopPlugin;
 
 impl Plugin for ShopPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, setup_shop_settings)
-            .add_systems(OnEnter(AppState::Game), ui::setup_ui)
-            .add_systems(
-                Update,
-                (
-                    ui::listen_shop_control_changes,
-                    ui::update_player_stats,
-                    ui::toggle_pet_nodes,
-                    ui::pet_node_interaction,
-                    ui::update_pet_nodes,
-                )
-                    .run_if(in_state(AppState::Game)),
-            );
+        app.add_systems(
+            Startup,
+            (setup_shop_settings, systems::setup_multiplier_tick),
+        )
+        .add_systems(OnEnter(AppState::Game), ui::setup_ui)
+        .add_systems(
+            Update,
+            (
+                ui::listen_shop_control_changes,
+                ui::update_player_stats,
+                ui::toggle_pet_nodes,
+                ui::pet_node_interaction,
+                ui::update_pet_nodes,
+                systems::tick_multiplier,
+            )
+                .run_if(in_state(AppState::Game)),
+        );
     }
 }
 
