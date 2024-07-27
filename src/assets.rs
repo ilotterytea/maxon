@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
-use crate::game::shop::pets::Pets;
+use crate::{game::shop::pets::Pets, localization::Localization};
 
 #[derive(AssetCollection, Resource)]
 pub struct ModelAssets {
@@ -46,4 +46,7 @@ pub struct GUIAssets {
 pub struct DataAssets {
     #[asset(path = "data/common.pets.json")]
     pub pets: Handle<Pets>,
+
+    #[asset(path = "i18n", collection(typed))]
+    pub localizations: Vec<Handle<Localization>>
 }

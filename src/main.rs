@@ -9,6 +9,7 @@ use bevy_mod_picking::DefaultPickingPlugins;
 use bevy_simple_scroll_view::ScrollViewPlugin;
 use bevy_sprite3d::Sprite3dPlugin;
 use game::{shop::pets::Pets, GamePlugin};
+use localization::Localization;
 
 mod animation;
 mod assets;
@@ -17,6 +18,7 @@ mod game;
 mod persistent;
 mod style;
 mod systems;
+mod localization;
 
 fn main() {
     let mut app = App::new();
@@ -36,7 +38,8 @@ fn main() {
     app.add_plugins(GamePlugin);
 
     // JSON loading
-    app.add_plugins(JsonAssetPlugin::<Pets>::new(&["pets.json"]));
+    app.add_plugins(JsonAssetPlugin::<Pets>::new(&["pets.json"]))
+    .add_plugins(JsonAssetPlugin::<Localization>::new(&["locale.json"]));
 
     // Asset loading
     app.add_loading_state(
