@@ -218,5 +218,23 @@ pub fn setup_localization(
         locale = Some(default_locale.unwrap());
     }
 
-    commands.insert_resource(locale.unwrap());
+    commands.insert_resource(LocalizationManager::new(locale.unwrap()));
+}
+
+#[derive(Resource)]
+pub struct LocalizationManager {
+    locale: Localization,
+}
+
+impl LocalizationManager {
+    pub fn new(locale: Localization) -> Self {
+        Self { locale }
+    }
+
+    pub fn get(&self, line_id: LineId) -> String {
+        match self.locale.0.get(&line_id) {
+            Some(x) => x.clone(),
+            None => "missingno".into(),
+        }
+    }
 }
