@@ -573,7 +573,9 @@ pub fn toggle_pet_nodes(
 
         price = price.trunc();
 
-        if price > savegame.money.trunc() {
+        if (shop_settings.mode == ShopMode::Buy && price > savegame.money.trunc())
+            || (shop_settings.mode == ShopMode::Sell && amount as i32 - multiplier < 0)
+        {
             match (part, text) {
                 (PetComponent::Base, _) => {
                     *bg = STORE_ITEM_DISABLED_BG_COLOR.into();
@@ -591,7 +593,9 @@ pub fn toggle_pet_nodes(
             continue;
         }
 
-        if price <= savegame.money.trunc() {
+        if (shop_settings.mode == ShopMode::Buy && price <= savegame.money.trunc())
+            || (shop_settings.mode == ShopMode::Sell && amount as i32 - multiplier >= 0)
+        {
             match (part, text) {
                 (PetComponent::Base, _) => {
                     *bg = STORE_ITEM_BG_COLOR.into();
