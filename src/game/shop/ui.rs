@@ -537,6 +537,7 @@ pub fn toggle_pet_nodes(
         (
             Entity,
             &mut BackgroundColor,
+            Option<&mut Text>,
             Option<&PetDisabledComponent>,
             &PetIdComponent,
             &PetComponent,
@@ -548,30 +549,52 @@ pub fn toggle_pet_nodes(
 ) {
     let pets = pets_assets.get(data_assets.pets.id()).unwrap();
 
-    for (e, mut bg, d, id, part) in query.iter_mut() {
-        if part != &PetComponent::Base {
-            continue;
-        }
-
+    for (e, mut bg, mut text, d, id, part) in query.iter_mut() {
         let pet = pets.0.iter().find(|x| x.id.eq(&id.0));
 
         if pet.is_none() {
-            *bg = color::DIM_GRAY.into();
-            commands.entity(e).insert(PetDisabledComponent);
+            *bg = color::PURPLE.into();
+            if *part == PetComponent::Base {
+                commands.entity(e).insert(PetDisabledComponent);
+            }
             continue;
         }
 
         let pet = pet.unwrap();
 
-        if pet.price > savegame.money && d.is_none() {
-            *bg = color::DIM_GRAY.into();
-            commands.entity(e).insert(PetDisabledComponent);
+        if pet.price > savegame.money {
+            match (part, text) {
+                (PetComponent::Base, _) => {
+                    *bg = STORE_ITEM_DISABLED_BG_COLOR.into();
+                    commands.entity(e).insert(PetDisabledComponent);
+                }
+                (PetComponent::Name, Some(mut text)) => {
+                    text.sections[0].style.color = color::GRAY.into();
+                }
+                (PetComponent::Price, Some(mut text)) => {
+                    text.sections[0].style.color = color::RED.into();
+                }
+                _ => {}
+            }
+
             continue;
         }
 
-        if pet.price < savegame.money && d.is_some() {
-            *bg = color::PERU.into();
-            commands.entity(e).remove::<PetDisabledComponent>();
+        if pet.price <= savegame.money {
+            match (part, text) {
+                (PetComponent::Base, _) => {
+                    *bg = STORE_ITEM_BG_COLOR.into();
+                    commands.entity(e).remove::<PetDisabledComponent>();
+                }
+                (PetComponent::Name, Some(mut text)) => {
+                    text.sections[0].style.color = color::WHITE.into();
+                }
+                (PetComponent::Price, Some(mut text)) => {
+                    text.sections[0].style.color = color::LIME.into();
+                }
+                _ => {}
+            }
+
             continue;
         }
     }
