@@ -3,8 +3,13 @@ use bevy_persistent::Persistent;
 use bevy_simple_scroll_view::{ScrollView, ScrollableContent};
 
 use crate::{
-    animation::AnimationTimer, assets::FontAssets, game::components::GameObjectComponent,
-    persistent::Savegame, style::*, DataAssets, GUIAssets,
+    animation::AnimationTimer,
+    assets::FontAssets,
+    game::components::GameObjectComponent,
+    localization::{LineId, LocalizationManager},
+    persistent::Savegame,
+    style::*,
+    DataAssets, GUIAssets,
 };
 
 use super::{
@@ -36,6 +41,7 @@ pub fn setup_ui(
     data_assets: Res<DataAssets>,
     pets_assets: Res<Assets<Pets>>,
     savegame: Res<Persistent<Savegame>>,
+    localization: Res<LocalizationManager>,
 ) {
     let pets = pets_assets
         .get(data_assets.pets.id())
@@ -117,10 +123,13 @@ pub fn setup_ui(
                         Name::new(format!("{} summary", pet.id)),
                     ))
                     .with_children(|sum| {
+                        let pet_name_id = format!("\"pet.{}.name\"", pet.id);
+                        let pet_name_id: LineId =
+                            serde_json::from_str::<LineId>(pet_name_id.as_str()).unwrap();
                         // Name
                         sum.spawn((
                             TextBundle::from_section(
-                                pet.id.clone(),
+                                localization.get(pet_name_id),
                                 get_text_style_default(&font_assets),
                             ),
                             Name::new(format!("{} text name", pet.id)),
@@ -205,7 +214,10 @@ pub fn setup_ui(
             ))
             .with_children(|title_root| {
                 title_root.spawn((
-                    TextBundle::from_section("Store", get_text_style_header(&font_assets)),
+                    TextBundle::from_section(
+                        localization.get(LineId::StoreTitle),
+                        get_text_style_header(&font_assets),
+                    ),
                     Name::new("Title"),
                 ));
             });
@@ -261,7 +273,7 @@ pub fn setup_ui(
                             .spawn((button.clone(), ShopMode::Buy, Name::new("Buy button")))
                             .with_children(|btn| {
                                 btn.spawn(TextBundle::from_section(
-                                    "Buy",
+                                    localization.get(LineId::StoreModeBuy),
                                     get_text_style_default(&font_assets),
                                 ));
                             });
@@ -279,7 +291,7 @@ pub fn setup_ui(
                             ))
                             .with_children(|btn| {
                                 btn.spawn(TextBundle::from_section(
-                                    "Sell",
+                                    localization.get(LineId::StoreModeSell),
                                     get_text_style_default(&font_assets),
                                 ));
                             });
@@ -318,7 +330,7 @@ pub fn setup_ui(
                             .spawn((button.clone(), ShopMultiplier::X1, Name::new("1x button")))
                             .with_children(|btn| {
                                 btn.spawn(TextBundle::from_section(
-                                    "1X",
+                                    localization.get(LineId::StoreMultiplier1x),
                                     get_text_style_default(&font_assets),
                                 ));
                             });
@@ -328,7 +340,7 @@ pub fn setup_ui(
                             .spawn((button.clone(), ShopMultiplier::X10, Name::new("10x button")))
                             .with_children(|btn| {
                                 btn.spawn(TextBundle::from_section(
-                                    "10X",
+                                    localization.get(LineId::StoreMultiplier10x),
                                     get_text_style_default(&font_assets),
                                 ));
                             });

@@ -2912,6 +2912,7 @@ dependencies = [
  "bevy_sprite3d",
  "dirs",
  "serde",
+ "serde_json",
  "whoami",
 ]
 
