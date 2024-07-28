@@ -35,6 +35,27 @@ pub struct GUIAssets {
     #[asset(path = "sprites/gui/pets.png")]
     pub pets: Handle<Image>,
 
+    #[asset(path = "sprites/gui/logo.png")]
+    pub logo: Handle<Image>,
+
+    #[asset(path = "sprites/gui/exit.png")]
+    pub exit: Handle<Image>,
+
+    #[asset(path = "sprites/gui/music_on.png")]
+    pub music_on: Handle<Image>,
+
+    #[asset(path = "sprites/gui/music_off.png")]
+    pub music_off: Handle<Image>,
+
+    #[asset(path = "sprites/gui/fullscreen.png")]
+    pub fullscreen: Handle<Image>,
+
+    #[asset(path = "sprites/gui/windowed.png")]
+    pub windowed: Handle<Image>,
+
+    #[asset(path = "sprites/gui/languages", collection(typed))]
+    pub languages: Vec<Handle<Image>>,
+
     #[asset(path = "sprites/pets", collection(typed))]
     pub pet_icons: Vec<Handle<Image>>,
 
@@ -48,5 +69,5 @@ pub struct DataAssets {
     pub pets: Handle<Pets>,
 
     #[asset(path = "i18n", collection(typed))]
-    pub localizations: Vec<Handle<Localization>>
+    pub localizations: Vec<Handle<Localization>>,
 }
