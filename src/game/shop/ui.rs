@@ -472,39 +472,44 @@ pub fn setup_ui(
 pub fn listen_shop_control_changes(
     mut mode_button_query: Query<
         (&ShopMode, &mut BackgroundColor, &Interaction),
-        (
-            With<ShopMode>,
-            Without<ShopMultiplier>,
-            Changed<Interaction>,
-        ),
+        (With<ShopMode>, Without<ShopMultiplier>),
     >,
     mut mp_button_query: Query<
         (&ShopMultiplier, &mut BackgroundColor, &Interaction),
-        (
-            Without<ShopMode>,
-            With<ShopMultiplier>,
-            Changed<Interaction>,
-        ),
+        (Without<ShopMode>, With<ShopMultiplier>),
     >,
     mut settings: ResMut<ShopSettings>,
 ) {
     for (mode, mut bg, i) in mode_button_query.iter_mut() {
+        let color = match (*mode, *mode == settings.mode) {
+            (ShopMode::Buy, false) => color::LIMEGREEN,
+            (ShopMode::Buy, true) => color::DARK_GREEN,
+            (ShopMode::Sell, false) => color::CRIMSON,
+            (ShopMode::Sell, true) => color::DARK_RED,
+        };
+
         match *i {
-            Interaction::None => *bg = color::PERU.into(),
-            Interaction::Hovered => *bg = color::PERU.lighter(0.1).into(),
+            Interaction::None => *bg = color.into(),
+            Interaction::Hovered => *bg = color.lighter(0.1).into(),
             Interaction::Pressed => {
-                *bg = color::PERU.darker(0.1).into();
+                *bg = color.darker(0.1).into();
                 settings.mode = *mode;
             }
         }
     }
 
     for (multiplier, mut bg, i) in mp_button_query.iter_mut() {
+        let color = if *multiplier == settings.multiplier {
+            color::PERU.darker(0.2)
+        } else {
+            color::PERU
+        };
+
         match *i {
-            Interaction::None => *bg = color::PERU.into(),
-            Interaction::Hovered => *bg = color::PERU.lighter(0.1).into(),
+            Interaction::None => *bg = color.into(),
+            Interaction::Hovered => *bg = color.lighter(0.1).into(),
             Interaction::Pressed => {
-                *bg = color::PERU.darker(0.1).into();
+                *bg = color.darker(0.1).into();
                 settings.multiplier = *multiplier;
             }
         }
