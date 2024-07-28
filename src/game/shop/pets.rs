@@ -1,12 +1,19 @@
+use std::f32::consts::PI;
+
 use bevy::prelude::*;
 use bevy_persistent::Persistent;
 use bevy_sprite3d::{Sprite3d, Sprite3dParams};
 use serde::Deserialize;
 
 use crate::{
-    animation::AnimationTimer, constants::PET_ENTITY_SPEED, persistent::Savegame, DataAssets,
-    GUIAssets,
+    animation::AnimationTimer,
+    constants::{PET_ENTITY_SPAWN_RADIUS, PET_ENTITY_SPEED},
+    game::player::PlayerComponent,
+    persistent::Savegame,
+    DataAssets, GUIAssets,
 };
+
+use super::systems::PurchaseEvent;
 
 #[derive(Deserialize, Clone)]
 pub struct Pet {
@@ -34,12 +41,17 @@ pub struct PetEntityComponent(pub String);
 pub fn pet_generation(
     mut commands: Commands,
     savegame: Res<Persistent<Savegame>>,
+    mut purchase_events: EventReader<PurchaseEvent>,
     query: Query<(Entity, &PetEntityComponent), With<PetEntityComponent>>,
     data_assets: Res<DataAssets>,
     pets_assets: Res<Assets<Pets>>,
     gui_assets: Res<GUIAssets>,
     mut sprite_params: Sprite3dParams,
 ) {
+    if purchase_events.read().next().is_none() {
+        return;
+    }
+
     let pets = pets_assets
         .get(data_assets.pets.id())
         .expect("Failed to get pets");
@@ -53,9 +65,7 @@ pub fn pet_generation(
             let len = entities.len() as u32;
             let amount = *amount;
 
-            if amount == len {
-                continue;
-            } else if amount > len {
+            if amount > len {
                 let mut icon: Option<Handle<Image>> = None;
 
                 for icon_handle in &gui_assets.pet_icons {
@@ -103,12 +113,44 @@ pub fn pet_generation(
     }
 }
 
-pub fn pet_revolution(time: Res<Time>, mut query: Query<&mut Transform, With<PetEntityComponent>>) {
-    for (i, mut t) in query.iter_mut().enumerate() {
-        let angle = PET_ENTITY_SPEED * time.delta_seconds();
-        let (x, z) = (t.translation.x, t.translation.z);
+pub fn update_pet_position(
+    mut purchase_events: EventReader<PurchaseEvent>,
+    mut query: Query<&mut Transform, (With<PetEntityComponent>)>,
+    player_query: Query<&Transform, (With<PlayerComponent>, Without<PetEntityComponent>)>,
+) {
+    if purchase_events.read().next().is_none() {
+        return;
+    }
 
-        t.translation.x = x * angle.cos() - z * angle.sin();
-        t.translation.z = x * angle.sin() + z * angle.cos();
+    let num_entities = query.iter().len();
+    let player_transform = player_query.single().translation;
+
+    for (i, mut t) in query.iter_mut().enumerate() {
+        let i = i + 1;
+        let angle = 2.0 * PI * i as f32 / num_entities as f32;
+
+        let x = PET_ENTITY_SPAWN_RADIUS * angle.cos();
+        let z = PET_ENTITY_SPAWN_RADIUS * angle.sin();
+
+        t.translation.x = player_transform.x + x;
+        t.translation.z = player_transform.z + z;
+    }
+}
+
+pub fn pet_revolution(
+    time: Res<Time>,
+    mut query: Query<&mut Transform, (With<PetEntityComponent>, Without<PlayerComponent>)>,
+    player_query: Query<&Transform, (With<PlayerComponent>, Without<PetEntityComponent>)>,
+) {
+    let player_transform = player_query.single().translation;
+
+    for mut t in query.iter_mut() {
+        let t_relative = t.translation - player_transform;
+
+        let angle = PET_ENTITY_SPEED * time.delta_seconds();
+        let (x, z) = (t_relative.x, t_relative.z);
+
+        t.translation.x = player_transform.x + x * angle.cos() - z * angle.sin();
+        t.translation.z = player_transform.z + x * angle.sin() + z * angle.cos();
     }
 }

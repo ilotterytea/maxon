@@ -26,8 +26,10 @@ impl Plugin for ShopPlugin {
                 ui::update_pet_nodes,
                 systems::tick_multiplier,
                 pets::pet_generation,
+                pets::update_pet_position,
                 pets::pet_revolution,
             )
+                .chain()
                 .run_if(in_state(AppState::Game)),
         )
         .add_event::<PurchaseEvent>();

@@ -14,6 +14,7 @@ use crate::{
 
 use super::{
     pets::{PetIdComponent, Pets},
+    systems::PurchaseEvent,
     ShopMode, ShopMultiplier, ShopSettings,
 };
 
@@ -629,6 +630,7 @@ pub fn pet_node_interaction(
     shop_settings: Res<ShopSettings>,
     data_assets: Res<DataAssets>,
     pets_assets: Res<Assets<Pets>>,
+    mut purchase_event_writer: EventWriter<PurchaseEvent>,
 ) {
     let pets = pets_assets.get(data_assets.pets.id()).unwrap();
 
@@ -664,6 +666,7 @@ pub fn pet_node_interaction(
                         .entry(id.clone())
                         .and_modify(|x| *x -= multiplier as u32);
                 }
+                purchase_event_writer.send(PurchaseEvent);
             }
             _ => {}
         }
