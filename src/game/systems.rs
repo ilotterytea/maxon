@@ -43,22 +43,20 @@ pub fn setup_scene(
     ));
 
     commands.spawn((
-        SpotLightBundle {
-            spot_light: SpotLight {
-                color: Color::WHITE,
-                intensity: 1000000.0,
-                range: 2000.0,
-                radius: 100.0,
+        PointLightBundle {
+            point_light: PointLight {
+                color: bevy::color::palettes::css::WHEAT.into(),
+                intensity: 350000.0,
+                radius: 200.0,
+                range: 100.0,
                 shadows_enabled: true,
-                inner_angle: PI / 4.0 * 1.2,
-                outer_angle: PI / 4.0 * 1.8,
                 ..default()
             },
-            transform: Transform::from_xyz(0.0, 12.0, 0.0)
+            transform: Transform::from_xyz(0.0, 4.0, 1.2)
                 .with_rotation(Quat::from_rotation_x(-90.0 * PI / 180.0)),
             ..default()
         },
-        Name::new("Main spotlight"),
+        Name::new("Main point light"),
         GameObjectComponent,
     ));
 }
