@@ -10,6 +10,7 @@ pub struct Savegame {
     pub multiplier: f64,
     pub name: String,
     pub pets: HashMap<String, u32>,
+    pub played_time: u32,
 }
 
 impl Default for Savegame {
@@ -19,6 +20,7 @@ impl Default for Savegame {
             multiplier: 0.0,
             name: whoami::username(),
             pets: HashMap::new(),
+            played_time: 0,
         }
     }
 }

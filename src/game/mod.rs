@@ -14,12 +14,19 @@ impl Plugin for GamePlugin {
         app.add_plugins(shop::ShopPlugin)
             .add_systems(
                 OnEnter(AppState::Game),
-                (systems::setup_scene, player::setup_player),
+                (
+                    systems::setup_scene,
+                    player::setup_player,
+                    player::setup_play_timestamp,
+                ),
             )
             .add_systems(
                 Update,
                 systems::sprites_looking_at_camera.run_if(in_state(AppState::Game)),
             )
-            .add_systems(OnExit(AppState::Game), systems::despawn_game_objects);
+            .add_systems(
+                OnExit(AppState::Game),
+                (systems::despawn_game_objects, player::set_played_time),
+            );
     }
 }

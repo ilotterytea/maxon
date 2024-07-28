@@ -1,3 +1,5 @@
+use std::time::SystemTime;
+
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 use bevy_persistent::Persistent;
@@ -47,4 +49,20 @@ pub fn click_on_player(
     }
 
     savegame.money += 1.0;
+}
+
+#[derive(Resource)]
+pub struct PlayTimestamp(pub SystemTime);
+
+pub fn setup_play_timestamp(mut commands: Commands) {
+    commands.insert_resource(PlayTimestamp(SystemTime::now()));
+}
+
+pub fn set_played_time(
+    mut commands: Commands,
+    mut savegame: ResMut<Persistent<Savegame>>,
+    played_time: Res<PlayTimestamp>,
+) {
+    savegame.played_time += played_time.0.elapsed().unwrap().as_secs() as u32;
+    commands.remove_resource::<PlayTimestamp>();
 }
