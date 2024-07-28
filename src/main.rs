@@ -11,6 +11,7 @@ use bevy_sprite3d::Sprite3dPlugin;
 use boot::BootPlugin;
 use game::{shop::pets::Pets, GamePlugin};
 use localization::Localization;
+use menu::MenuPlugin;
 
 mod animation;
 mod assets;
@@ -18,6 +19,7 @@ mod boot;
 mod constants;
 mod game;
 mod localization;
+mod menu;
 mod persistent;
 mod style;
 mod systems;
@@ -37,7 +39,7 @@ fn main() {
     app.init_state::<AppState>();
 
     // Game plugins
-    app.add_plugins((BootPlugin, GamePlugin));
+    app.add_plugins((BootPlugin, MenuPlugin, GamePlugin));
 
     // JSON loading
     app.add_plugins(JsonAssetPlugin::<Pets>::new(&["pets.json"]))
@@ -96,5 +98,6 @@ pub enum AppState {
     #[default]
     AssetLoading,
     Boot,
+    Menu,
     Game,
 }
