@@ -28,3 +28,6 @@ pub fn tick_multiplier(
         savegame.money += savegame.multiplier / 10.0;
     }
 }
+
+#[derive(Event)]
+pub struct PurchaseEvent;

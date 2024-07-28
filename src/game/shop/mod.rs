@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use systems::PurchaseEvent;
 
 use crate::AppState;
 
@@ -28,7 +29,8 @@ impl Plugin for ShopPlugin {
                 pets::pet_revolution,
             )
                 .run_if(in_state(AppState::Game)),
-        );
+        )
+        .add_event::<PurchaseEvent>();
     }
 }
 
