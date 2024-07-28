@@ -8,8 +8,7 @@ use crate::{
     FontAssets, GUIAssets,
 };
 
-#[derive(Component)]
-pub struct MenuObjectComponent;
+use super::systems::MenuObjectComponent;
 
 #[derive(Component)]
 pub enum MenuControlComponent {
