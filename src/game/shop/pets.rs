@@ -3,7 +3,10 @@ use bevy_persistent::Persistent;
 use bevy_sprite3d::{Sprite3d, Sprite3dParams};
 use serde::Deserialize;
 
-use crate::{animation::AnimationTimer, persistent::Savegame, DataAssets, GUIAssets};
+use crate::{
+    animation::AnimationTimer, constants::PET_ENTITY_SPEED, persistent::Savegame, DataAssets,
+    GUIAssets,
+};
 
 #[derive(Deserialize, Clone)]
 pub struct Pet {
@@ -97,5 +100,15 @@ pub fn pet_generation(
                 }
             }
         }
+    }
+}
+
+pub fn pet_revolution(time: Res<Time>, mut query: Query<&mut Transform, With<PetEntityComponent>>) {
+    for (i, mut t) in query.iter_mut().enumerate() {
+        let angle = PET_ENTITY_SPEED * time.delta_seconds();
+        let (x, z) = (t.translation.x, t.translation.z);
+
+        t.translation.x = x * angle.cos() - z * angle.sin();
+        t.translation.z = x * angle.sin() + z * angle.cos();
     }
 }
