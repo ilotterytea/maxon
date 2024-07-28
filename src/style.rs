@@ -26,3 +26,11 @@ pub fn get_text_style_default(font_assets: &Res<FontAssets>) -> TextStyle {
         color: color::WHITE.into(),
     }
 }
+
+pub fn get_text_style_pet_amount(font_assets: &Res<FontAssets>) -> TextStyle {
+    TextStyle {
+        font: font_assets.text.clone(),
+        font_size: 64.0,
+        color: Srgba::new(38.0 / 255.0, 28.0 / 255.0, 17.0 / 255.0, 1.0).into(),
+    }
+}

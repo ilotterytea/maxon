@@ -30,6 +30,7 @@ pub enum PetComponent {
     Icon,
     Name,
     Price,
+    Amount,
 }
 
 #[derive(Component)]
@@ -176,6 +177,25 @@ pub fn setup_ui(
                             ));
                         });
                     });
+
+                // Amount
+                parent.spawn((
+                    {
+                        let mut b =
+                            TextBundle::from_section("0", get_text_style_pet_amount(&font_assets))
+                                .with_style(Style {
+                                    position_type: PositionType::Absolute,
+                                    right: Val::Percent(1.0),
+                                    bottom: Val::Percent(0.0),
+                                    display: Display::None,
+                                    ..default()
+                                });
+                        b.z_index = ZIndex::Local(-1);
+                        b
+                    },
+                    PetComponent::Amount,
+                    PetIdComponent(pet.id.clone()),
+                ));
             })
             .id();
 
@@ -708,5 +728,36 @@ pub fn update_pet_nodes(
         }
 
         text.sections[0].value = price.trunc().to_string();
+    }
+}
+
+pub fn update_pet_amount(
+    mut purchase_events: EventReader<PurchaseEvent>,
+    savegame: Res<Persistent<Savegame>>,
+    mut text_query: Query<
+        (&mut Text, &mut Style, &PetIdComponent, &PetComponent),
+        (With<PetComponent>, With<PetIdComponent>, With<Text>),
+    >,
+) {
+    if purchase_events.read().next().is_none() {
+        return;
+    }
+
+    for (mut text, mut style, id, comp) in text_query.iter_mut() {
+        if comp != &PetComponent::Amount {
+            continue;
+        }
+
+        let id = &id.0;
+
+        if let Some(amount) = savegame.pets.get(id) {
+            if *amount == 0 {
+                style.display = Display::None;
+                continue;
+            }
+
+            style.display = Display::Block;
+            text.sections[0].value = amount.to_string();
+        }
     }
 }

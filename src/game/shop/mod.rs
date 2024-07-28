@@ -24,6 +24,7 @@ impl Plugin for ShopPlugin {
                 ui::toggle_pet_nodes,
                 ui::pet_node_interaction,
                 ui::update_pet_nodes,
+                ui::update_pet_amount,
                 systems::tick_multiplier,
                 pets::pet_generation,
                 pets::update_pet_position,
