@@ -24,6 +24,7 @@ impl Plugin for ShopPlugin {
                 ui::pet_node_interaction,
                 ui::update_pet_nodes,
                 systems::tick_multiplier,
+                pets::pet_generation,
             )
                 .run_if(in_state(AppState::Game)),
         );
