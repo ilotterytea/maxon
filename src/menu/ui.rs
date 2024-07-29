@@ -2,15 +2,15 @@ use bevy::{color::palettes::css as color, prelude::*};
 use bevy_persistent::Persistent;
 
 use crate::{
-    localization::{LineId, LocalizationManager},
+    localization::{LineId, Localization, LocalizationManager},
     persistent::{Savegame, Settings},
     style::{get_text_style_default, STORE_ITEM_BG_COLOR, STORE_LIST_BG_COLOR},
-    FontAssets, GUIAssets,
+    AppState, DataAssets, FontAssets, GUIAssets,
 };
 
 use super::systems::MenuObjectComponent;
 
-#[derive(Component)]
+#[derive(Component, PartialEq, Eq)]
 pub enum MenuControlComponent {
     Exit,
     Music,
@@ -377,24 +377,18 @@ pub fn setup_ui(
                     .with_children(|left| {
                         // Exit button
                         left.spawn((
-                            ButtonBundle { ..default() },
-                            MenuControlComponent::Exit,
-                            Name::new("Exit button"),
-                        ))
-                        .with_children(|btn| {
-                            btn.spawn((
-                                ImageBundle {
-                                    image: UiImage::new(gui_assets.exit.clone()),
-                                    style: Style {
-                                        width: Val::Percent(100.0),
-                                        height: Val::Percent(100.0),
-                                        ..default()
-                                    },
+                            ButtonBundle {
+                                image: UiImage::new(gui_assets.exit.clone()),
+                                style: Style {
+                                    width: Val::Px(57.0),
+                                    height: Val::Px(64.0),
                                     ..default()
                                 },
-                                Name::new("Exit icon"),
-                            ));
-                        });
+                                ..default()
+                            },
+                            MenuControlComponent::Exit,
+                            Name::new("Exit button"),
+                        ));
                     });
 
                 // Right side
@@ -413,98 +407,182 @@ pub fn setup_ui(
                     ))
                     .with_children(|right| {
                         // Music button
-                        right
-                            .spawn((
-                                ButtonBundle { ..default() },
-                                MenuControlComponent::Music,
-                                Name::new("Music button"),
-                            ))
-                            .with_children(|btn| {
-                                btn.spawn((
-                                    ImageBundle {
-                                        image: UiImage::new(if settings.music {
-                                            gui_assets.music_on.clone()
-                                        } else {
-                                            gui_assets.music_off.clone()
-                                        }),
-                                        style: Style {
-                                            width: Val::Percent(100.0),
-                                            height: Val::Percent(100.0),
-                                            ..default()
-                                        },
-                                        ..default()
-                                    },
-                                    Name::new("Music icon"),
-                                ));
-                            });
+                        right.spawn((
+                            ButtonBundle {
+                                image: UiImage::new(if settings.music {
+                                    gui_assets.music_on.clone()
+                                } else {
+                                    gui_assets.music_off.clone()
+                                }),
+                                style: Style {
+                                    width: Val::Px(79.0),
+                                    height: Val::Px(64.0),
+                                    ..default()
+                                },
+                                ..default()
+                            },
+                            MenuControlComponent::Music,
+                            Name::new("Music button"),
+                        ));
 
                         // Fullscreen button
-                        right
-                            .spawn((
-                                ButtonBundle { ..default() },
-                                MenuControlComponent::Fullscreen,
-                                Name::new("Fullscreen button"),
-                            ))
-                            .with_children(|btn| {
-                                btn.spawn((
-                                    ImageBundle {
-                                        image: UiImage::new(if settings.is_fullscreen {
-                                            gui_assets.windowed.clone()
-                                        } else {
-                                            gui_assets.fullscreen.clone()
-                                        }),
-                                        style: Style {
-                                            width: Val::Percent(100.0),
-                                            height: Val::Percent(100.0),
-                                            ..default()
-                                        },
-                                        ..default()
-                                    },
-                                    Name::new("Fullscreen icon"),
-                                ));
-                            });
+                        right.spawn((
+                            ButtonBundle {
+                                image: UiImage::new(if settings.is_fullscreen {
+                                    gui_assets.windowed.clone()
+                                } else {
+                                    gui_assets.fullscreen.clone()
+                                }),
+                                style: Style {
+                                    width: Val::Px(64.0),
+                                    height: Val::Px(64.0),
+                                    ..default()
+                                },
+                                ..default()
+                            },
+                            MenuControlComponent::Fullscreen,
+                            Name::new("Fullscreen button"),
+                        ));
 
                         // Language button
-                        right
-                            .spawn((
-                                ButtonBundle { ..default() },
-                                MenuControlComponent::Language,
-                                Name::new("Language button"),
-                            ))
-                            .with_children(|btn| {
-                                let mut handle: &Handle<Image> = &gui_assets.languages[0];
+                        right.spawn((
+                            ButtonBundle {
+                                image: {
+                                    let mut handle: &Handle<Image> = &gui_assets.languages[0];
 
-                                for lang in &gui_assets.languages {
-                                    if let Some(path) = lang.path() {
-                                        if let Some(name) = path.path().file_name() {
-                                            let name = name
-                                                .to_str()
-                                                .unwrap()
-                                                .strip_suffix(".png")
-                                                .unwrap();
+                                    for lang in &gui_assets.languages {
+                                        if let Some(path) = lang.path() {
+                                            if let Some(name) = path.path().file_name() {
+                                                let name = name
+                                                    .to_str()
+                                                    .unwrap()
+                                                    .strip_suffix(".png")
+                                                    .unwrap();
 
-                                            if name.eq(settings.language.as_str()) {
-                                                handle = lang;
-                                                break;
+                                                if name.eq(settings.language.as_str()) {
+                                                    handle = lang;
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
-                                }
-
-                                btn.spawn((
-                                    ImageBundle {
-                                        image: UiImage::new(handle.clone()),
-                                        style: Style {
-                                            width: Val::Percent(100.0),
-                                            height: Val::Percent(100.0),
-                                            ..default()
-                                        },
-                                        ..default()
-                                    },
-                                    Name::new("Language icon"),
-                                ));
-                            });
+                                    UiImage::new(handle.clone())
+                                },
+                                style: Style {
+                                    width: Val::Px(64.0),
+                                    height: Val::Px(64.0),
+                                    ..default()
+                                },
+                                ..default()
+                            },
+                            MenuControlComponent::Language,
+                            Name::new("Language button"),
+                        ));
                     });
             });
         });
+}
+
+pub fn ui_interaction(
+    mut commands: Commands,
+    mut query: Query<
+        (
+            &Interaction,
+            &MenuControlComponent,
+            &mut UiImage,
+            &mut Style,
+        ),
+        (With<MenuControlComponent>, Changed<Interaction>),
+    >,
+    gui_assets: Res<GUIAssets>,
+    data_assets: Res<DataAssets>,
+    localization_assets: Res<Assets<Localization>>,
+    localization_manager: Res<LocalizationManager>,
+    mut app_exit_writer: EventWriter<AppExit>,
+    mut settings: ResMut<Persistent<Settings>>,
+    mut state: ResMut<NextState<AppState>>,
+) {
+    for (i, comp, mut image, mut style) in query.iter_mut() {
+        if *i == Interaction::Pressed && comp == &MenuControlComponent::Exit {
+            app_exit_writer.send(AppExit::Success);
+        }
+        match (*i, comp) {
+            (Interaction::Pressed, MenuControlComponent::Exit) => {
+                app_exit_writer.send(AppExit::Success);
+            }
+            (Interaction::Pressed, MenuControlComponent::Music) => {
+                settings.music = !settings.music;
+                *image = UiImage::new(if settings.music {
+                    gui_assets.music_on.clone()
+                } else {
+                    gui_assets.music_off.clone()
+                });
+            }
+            (Interaction::Pressed, MenuControlComponent::Fullscreen) => {
+                settings.is_fullscreen = !settings.is_fullscreen;
+                *image = UiImage::new(if settings.is_fullscreen {
+                    gui_assets.windowed.clone()
+                } else {
+                    gui_assets.fullscreen.clone()
+                });
+            }
+            (Interaction::Pressed, MenuControlComponent::Language) => {
+                let localizations = &data_assets.localizations;
+                let mut index = 0;
+
+                for (i, localization) in localizations.iter().enumerate() {
+                    let l = localization_assets.get(localization.id()).unwrap();
+
+                    if l.eq(localization_manager.get_locale()) {
+                        index = i;
+                    }
+                }
+
+                index += 1;
+
+                if index > localizations.len() - 1 {
+                    index = 0;
+                }
+
+                let next = &localizations[index];
+                let mut name2: String = "en_us".into();
+
+                if let Some(path) = next.path() {
+                    if let Some(name) = path.path().file_name() {
+                        name2 = name
+                            .to_str()
+                            .unwrap()
+                            .strip_suffix(".locale.json")
+                            .unwrap()
+                            .to_string();
+                    }
+                }
+
+                commands.remove_resource::<LocalizationManager>();
+
+                let mut icon_real: Option<Handle<Image>> = None;
+
+                for icon in &gui_assets.languages {
+                    if let Some(path) = icon.path() {
+                        if let Some(name) = path.path().file_name() {
+                            let name = name.to_str().unwrap().strip_suffix(".png").unwrap();
+                            if name.eq("en_us") && icon_real.is_none() {
+                                icon_real = Some(icon.clone());
+                            }
+                            if name.eq(name2.as_str()) {
+                                icon_real = Some(icon.clone());
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                *image = UiImage::new(icon_real.unwrap());
+                style.width = Val::Px(87.0);
+                settings.language = name2;
+                state.set(AppState::Boot);
+            }
+            _ => {}
+        }
+    }
 }
