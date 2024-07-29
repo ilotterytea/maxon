@@ -182,7 +182,7 @@ impl<'de> Visitor<'de> for LineIdVisitor {
     }
 }
 
-#[derive(Resource, Deserialize, TypePath, Clone, Asset)]
+#[derive(Resource, Deserialize, TypePath, Clone, Asset, PartialEq, Eq)]
 pub struct Localization(pub HashMap<LineId, String>);
 
 pub fn setup_localization(
@@ -236,5 +236,9 @@ impl LocalizationManager {
             Some(x) => x.clone(),
             None => "missingno".into(),
         }
+    }
+
+    pub fn get_locale(&self) -> &Localization {
+        &self.locale
     }
 }
