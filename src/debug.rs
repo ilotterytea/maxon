@@ -1,5 +1,5 @@
 #[cfg(feature = "debug")]
-use bevy::prelude::*;
+use bevy::{diagnostic::SystemInfo, prelude::*};
 
 #[cfg(feature = "debug")]
 use bevy_persistent::Persistent;
@@ -40,6 +40,7 @@ pub struct DebugBaseComponent;
 #[derive(Component, PartialEq, Eq)]
 pub enum DebugComponent {
     GameInfo,
+    PcInfo,
     Fps,
     FrameTime,
     Entities,
@@ -52,6 +53,7 @@ fn setup_debug_info(
     query: Query<&DebugComponent>,
     settings: Res<Persistent<Settings>>,
     camera_query: Query<Entity, With<CameraComponent>>,
+    system_info: Res<SystemInfo>,
 ) {
     if !query.is_empty() {
         return;
@@ -95,6 +97,19 @@ fn setup_debug_info(
                 ),
                 DebugComponent::GameInfo,
                 Name::new("Debug game info"),
+            ));
+
+            // PC info
+            root.spawn((
+                TextBundle::from_section(
+                    format!(
+                        "{} on {} with {}",
+                        system_info.os, system_info.cpu, system_info.memory
+                    ),
+                    get_text_style_debug(&font_assets),
+                ),
+                DebugComponent::PcInfo,
+                Name::new("Debug PC info"),
             ));
 
             // FPS
@@ -144,7 +159,7 @@ fn update_debug_info(
         let frame_time = metrics.elapsed_time / metrics.frame_count as f64 * 1000.0;
 
         for (mut text, comp) in query.iter_mut() {
-            if comp == &DebugComponent::GameInfo {
+            if comp == &DebugComponent::GameInfo || comp == &DebugComponent::PcInfo {
                 continue;
             }
 
