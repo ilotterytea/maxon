@@ -1,8 +1,12 @@
 use std::f32::consts::PI;
 
 use bevy::prelude::*;
+use bevy_persistent::Persistent;
 
-use crate::{systems::CameraComponent, ModelAssets};
+use crate::{
+    boot::MusicSourceComponent, persistent::Settings, systems::CameraComponent, ModelAssets,
+    MusicAssets,
+};
 
 #[derive(Component)]
 pub struct MenuObjectComponent;
@@ -76,4 +80,25 @@ pub fn rotate_camera(
 
     camera_transform.rotation =
         Quat::from_rotation_y(time.delta_seconds() * PI / 64.0) * camera_transform.rotation;
+}
+
+pub fn set_music_source(
+    mut commands: Commands,
+    sink_query: Query<Entity, (With<MusicSourceComponent>, With<AudioSink>)>,
+    music_assets: Res<MusicAssets>,
+    settings: Res<Persistent<Settings>>,
+) {
+    for e in sink_query.iter() {
+        let source = &music_assets.menu;
+
+        commands.entity(e).remove::<AudioSink>();
+        commands.entity(e).insert(AudioBundle {
+            source: source.clone(),
+            settings: PlaybackSettings {
+                mode: bevy::audio::PlaybackMode::Loop,
+                paused: !settings.music,
+                ..default()
+            },
+        });
+    }
 }

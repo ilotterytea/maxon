@@ -1,9 +1,14 @@
 use std::f32::consts::PI;
 
 use bevy::prelude::*;
+use bevy_persistent::Persistent;
 use bevy_sprite3d::Sprite3dComponent;
+use rand::Rng;
 
-use crate::{assets::ModelAssets, systems::CameraComponent};
+use crate::{
+    assets::ModelAssets, boot::MusicSourceComponent, persistent::Settings,
+    systems::CameraComponent, AppState, MusicAssets,
+};
 
 use super::components::GameObjectComponent;
 
@@ -85,5 +90,48 @@ pub fn sprites_looking_at_camera(
         for mut t in query.iter_mut() {
             t.look_at(camera_transform.translation, Vec3::Y);
         }
+    }
+}
+
+pub fn update_music_source(
+    mut commands: Commands,
+    sink_query: Query<Entity, (With<MusicSourceComponent>, Without<AudioSink>)>,
+    music_assets: Res<MusicAssets>,
+    settings: Res<Persistent<Settings>>,
+) {
+    for e in sink_query.iter() {
+        let mut rng = rand::thread_rng();
+        let source = &music_assets.game[rng.gen::<usize>() % music_assets.game.len()];
+
+        commands.entity(e).insert(AudioBundle {
+            source: source.clone(),
+            settings: PlaybackSettings {
+                mode: bevy::audio::PlaybackMode::Remove,
+                paused: !settings.music,
+                ..default()
+            },
+        });
+    }
+}
+
+pub fn set_music_source(
+    mut commands: Commands,
+    sink_query: Query<Entity, (With<MusicSourceComponent>, With<AudioSink>)>,
+    music_assets: Res<MusicAssets>,
+    settings: Res<Persistent<Settings>>,
+) {
+    for e in sink_query.iter() {
+        let mut rng = rand::thread_rng();
+        let source = &music_assets.game[rng.gen::<usize>() % music_assets.game.len()];
+
+        commands.entity(e).remove::<AudioSink>();
+        commands.entity(e).insert(AudioBundle {
+            source: source.clone(),
+            settings: PlaybackSettings {
+                mode: bevy::audio::PlaybackMode::Remove,
+                paused: !settings.music,
+                ..default()
+            },
+        });
     }
 }
