@@ -6,6 +6,7 @@ mod components;
 mod player;
 pub mod shop;
 mod systems;
+mod ui;
 
 pub struct GamePlugin;
 
@@ -18,6 +19,7 @@ impl Plugin for GamePlugin {
                     systems::setup_scene,
                     player::setup_player,
                     player::setup_play_timestamp,
+                    ui::setup_ui,
                 ),
             )
             .add_systems(

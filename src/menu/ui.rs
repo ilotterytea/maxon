@@ -22,9 +22,10 @@ pub enum MenuControlComponent {
     Language,
     GameContinue,
     GameReset,
+    GameBack,
 }
 
-pub fn setup_ui(
+pub(super) fn setup_ui(
     mut commands: Commands,
     savegame: Res<Persistent<Savegame>>,
     settings: Res<Persistent<Settings>>,
@@ -491,7 +492,7 @@ pub fn setup_ui(
         });
 }
 
-pub fn ui_interaction(
+pub(super) fn ui_interaction(
     mut commands: Commands,
     mut query: Query<
         (
@@ -613,6 +614,10 @@ pub fn ui_interaction(
                     .expect("Failed to revert the savegame to default");
                 savegame.reload().expect("Failed to reload the savegame");
                 state.set(AppState::Boot);
+            }
+            (Interaction::Pressed, MenuControlComponent::GameBack) => {
+                savegame.persist().expect("Failed to save the game");
+                state.set(AppState::Menu);
             }
             _ => {}
         }
