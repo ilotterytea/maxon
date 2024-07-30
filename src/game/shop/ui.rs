@@ -251,6 +251,7 @@ pub fn setup_ui(
                         display: Display::Flex,
                         flex_direction: FlexDirection::Row,
                         padding: UiRect::all(Val::Percent(2.0)),
+                        overflow: Overflow::clip(),
                         ..default()
                     },
                     background_color: STORE_CONTROL_BG_COLOR.into(),
