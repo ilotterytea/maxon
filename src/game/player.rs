@@ -5,7 +5,7 @@ use bevy_mod_picking::prelude::*;
 use bevy_persistent::Persistent;
 use bevy_sprite3d::{Sprite3d, Sprite3dParams};
 
-use crate::{assets::TextureAtlasAssets, persistent::Savegame};
+use crate::{assets::TextureAtlasAssets, persistent::Savegame, SFXAssets};
 
 use super::components::GameObjectComponent;
 
@@ -37,9 +37,11 @@ pub fn setup_player(
 }
 
 pub fn click_on_player(
+    mut commands: Commands,
     mut player_query: Query<&mut TextureAtlas, With<PlayerComponent>>,
     texture_atlas_assets: Res<TextureAtlasAssets>,
     texture_atlas_layouts: Res<Assets<TextureAtlasLayout>>,
+    sfx_assets: Res<SFXAssets>,
     mut savegame: ResMut<Persistent<Savegame>>,
 ) {
     if let Ok(mut player_atlas) = player_query.get_single_mut() {
@@ -49,6 +51,14 @@ pub fn click_on_player(
     }
 
     savegame.money += 1.0;
+
+    commands.spawn(AudioBundle {
+        source: sfx_assets.purr.clone(),
+        settings: PlaybackSettings {
+            mode: bevy::audio::PlaybackMode::Despawn,
+            ..default()
+        },
+    });
 }
 
 #[derive(Resource)]

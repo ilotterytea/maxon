@@ -16,7 +16,7 @@ use crate::{
     localization::{LineId, Localization, LocalizationManager},
     persistent::{Savegame, Settings},
     style::{get_text_style_default, STORE_ITEM_BG_COLOR, STORE_LIST_BG_COLOR},
-    AppState, DataAssets, FontAssets, GUIAssets,
+    AppState, DataAssets, FontAssets, GUIAssets, SFXAssets,
 };
 
 use super::systems::MenuObjectComponent;
@@ -542,6 +542,7 @@ pub(super) fn ui_interaction(
     >,
     gui_assets: Res<GUIAssets>,
     data_assets: Res<DataAssets>,
+    sfx_assets: Res<SFXAssets>,
     localization_assets: Res<Assets<Localization>>,
     localization_manager: Res<LocalizationManager>,
     mut app_exit_writer: EventWriter<AppExit>,
@@ -553,9 +554,16 @@ pub(super) fn ui_interaction(
 ) {
     let mut window = window.single_mut();
     for (e, i, comp, mut image, mut style, mut transform, anim) in query.iter_mut() {
-        if *i == Interaction::Pressed && comp == &MenuControlComponent::Exit {
-            app_exit_writer.send(AppExit::Success);
+        if *i == Interaction::Pressed {
+            commands.spawn(AudioBundle {
+                source: sfx_assets.click.clone(),
+                settings: PlaybackSettings {
+                    mode: bevy::audio::PlaybackMode::Despawn,
+                    ..default()
+                },
+            });
         }
+
         match (*i, comp) {
             (Interaction::Pressed, MenuControlComponent::Exit) => {
                 app_exit_writer.send(AppExit::Success);

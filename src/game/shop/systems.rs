@@ -1,7 +1,9 @@
 use bevy::prelude::*;
 use bevy_persistent::Persistent;
 
-use crate::persistent::Savegame;
+use crate::{persistent::Savegame, SFXAssets};
+
+use super::ui::PetDisabledComponent;
 
 #[derive(Resource)]
 pub struct MultiplierTickTimer(pub Timer);
@@ -31,3 +33,21 @@ pub fn tick_multiplier(
 
 #[derive(Event)]
 pub struct PurchaseEvent;
+
+pub fn play_sound_for_disabled_pets(
+    mut commands: Commands,
+    query: Query<&Interaction, (With<PetDisabledComponent>, Changed<Interaction>)>,
+    sfx_assets: Res<SFXAssets>,
+) {
+    for i in query.iter() {
+        if *i == Interaction::Pressed {
+            commands.spawn(AudioBundle {
+                source: sfx_assets.not_enough_money.clone(),
+                settings: PlaybackSettings {
+                    mode: bevy::audio::PlaybackMode::Despawn,
+                    ..default()
+                },
+            });
+        }
+    }
+}

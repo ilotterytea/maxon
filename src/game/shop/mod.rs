@@ -23,6 +23,7 @@ impl Plugin for ShopPlugin {
                 ui::update_player_stats,
                 ui::toggle_pet_nodes,
                 ui::pet_node_interaction,
+                systems::play_sound_for_disabled_pets,
                 ui::update_pet_nodes,
                 ui::update_pet_amount,
                 systems::tick_multiplier,

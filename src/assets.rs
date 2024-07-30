@@ -83,3 +83,21 @@ pub struct MusicAssets {
     #[asset(path = "mus/menu/mus_menu_loop.ogg")]
     pub menu: Handle<AudioSource>,
 }
+
+#[derive(AssetCollection, Resource)]
+pub struct SFXAssets {
+    #[asset(path = "sfx/player/purr.ogg")]
+    pub purr: Handle<AudioSource>,
+
+    #[asset(path = "sfx/shop/not_enough_money.ogg")]
+    pub not_enough_money: Handle<AudioSource>,
+
+    #[asset(path = "sfx/shop/purchase.ogg")]
+    pub purchase: Handle<AudioSource>,
+
+    #[asset(path = "sfx/shop/sell.ogg")]
+    pub sell: Handle<AudioSource>,
+
+    #[asset(path = "sfx/ui/click.ogg")]
+    pub click: Handle<AudioSource>,
+}

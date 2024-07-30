@@ -9,7 +9,7 @@ use crate::{
     localization::{LineId, LocalizationManager},
     persistent::Savegame,
     style::*,
-    DataAssets, GUIAssets,
+    DataAssets, GUIAssets, SFXAssets,
 };
 
 use super::{
@@ -643,6 +643,7 @@ pub fn toggle_pet_nodes(
 }
 
 pub fn pet_node_interaction(
+    mut commands: Commands,
     mut query: Query<
         (&Interaction, &PetIdComponent),
         (
@@ -656,6 +657,7 @@ pub fn pet_node_interaction(
     shop_settings: Res<ShopSettings>,
     data_assets: Res<DataAssets>,
     pets_assets: Res<Assets<Pets>>,
+    sfx_assets: Res<SFXAssets>,
     mut purchase_event_writer: EventWriter<PurchaseEvent>,
 ) {
     let pets = pets_assets.get(data_assets.pets.id()).unwrap();
@@ -676,6 +678,8 @@ pub fn pet_node_interaction(
 
         match *i {
             Interaction::Pressed => {
+                let source: &Handle<AudioSource>;
+
                 if shop_settings.mode == ShopMode::Buy {
                     savegame.money -= price;
                     savegame.multiplier += pet.multiplier * multiplier as f64;
@@ -684,6 +688,7 @@ pub fn pet_node_interaction(
                         .entry(id.clone())
                         .and_modify(|x| *x += multiplier as u32)
                         .or_insert(multiplier as u32);
+                    source = &sfx_assets.purchase;
                 } else {
                     savegame.money += price;
                     savegame.multiplier -= pet.multiplier * multiplier as f64;
@@ -691,8 +696,17 @@ pub fn pet_node_interaction(
                         .pets
                         .entry(id.clone())
                         .and_modify(|x| *x -= multiplier as u32);
+                    source = &sfx_assets.sell;
                 }
+
                 purchase_event_writer.send(PurchaseEvent);
+                commands.spawn(AudioBundle {
+                    source: source.clone(),
+                    settings: PlaybackSettings {
+                        mode: bevy::audio::PlaybackMode::Despawn,
+                        ..default()
+                    },
+                });
             }
             _ => {}
         }
