@@ -511,10 +511,13 @@ pub fn setup_ui(
                 width: Val::Percent(100.0),
                 #[cfg(not(any(target_os = "android", target_os = "ios")))]
                 height: Val::Percent(100.0),
+                #[cfg(not(any(target_os = "android", target_os = "ios")))]
+                border: UiRect::right(Val::Percent(0.2)),
                 display: Display::Flex,
                 flex_direction: FlexDirection::Column,
                 ..default()
             },
+            border_color: Srgba::new(54.0 / 255.0, 42.0 / 255.0, 42.0 / 255.0, 1.0).into(),
             background_color: STORE_BG_COLOR.into(),
             ..default()
         },
