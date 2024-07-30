@@ -8,9 +8,9 @@ use serde::Deserialize;
 use crate::{
     animation::AnimationTimer,
     constants::{PET_ENTITY_SPAWN_RADIUS, PET_ENTITY_SPEED},
-    game::player::PlayerComponent,
+    game::{components::GameObjectComponent, player::PlayerComponent},
     persistent::Savegame,
-    DataAssets, GUIAssets,
+    AppState, DataAssets, GUIAssets,
 };
 
 use super::systems::PurchaseEvent;
@@ -42,13 +42,14 @@ pub fn pet_generation(
     mut commands: Commands,
     savegame: Res<Persistent<Savegame>>,
     mut purchase_events: EventReader<PurchaseEvent>,
+    mut state_transition_events: EventReader<StateTransitionEvent<AppState>>,
     query: Query<(Entity, &PetEntityComponent), With<PetEntityComponent>>,
     data_assets: Res<DataAssets>,
     pets_assets: Res<Assets<Pets>>,
     gui_assets: Res<GUIAssets>,
     mut sprite_params: Sprite3dParams,
 ) {
-    if purchase_events.read().next().is_none() {
+    if purchase_events.read().next().is_none() && state_transition_events.read().next().is_none() {
         return;
     }
 
@@ -99,6 +100,7 @@ pub fn pet_generation(
                         ),
                         AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
                         PetEntityComponent(pet.id.clone()),
+                        GameObjectComponent,
                     ));
                 }
             } else {
@@ -115,10 +117,11 @@ pub fn pet_generation(
 
 pub fn update_pet_position(
     mut purchase_events: EventReader<PurchaseEvent>,
+    mut state_transition_events: EventReader<StateTransitionEvent<AppState>>,
     mut query: Query<&mut Transform, (With<PetEntityComponent>)>,
     player_query: Query<&Transform, (With<PlayerComponent>, Without<PetEntityComponent>)>,
 ) {
-    if purchase_events.read().next().is_none() {
+    if purchase_events.read().next().is_none() && state_transition_events.read().next().is_none() {
         return;
     }
 
