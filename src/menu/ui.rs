@@ -1,4 +1,8 @@
-use bevy::{color::palettes::css as color, prelude::*};
+use bevy::{
+    color::palettes::css as color,
+    prelude::*,
+    window::{PrimaryWindow, WindowMode},
+};
 use bevy_persistent::Persistent;
 
 use crate::{
@@ -501,7 +505,9 @@ pub fn ui_interaction(
     mut app_exit_writer: EventWriter<AppExit>,
     mut settings: ResMut<Persistent<Settings>>,
     mut state: ResMut<NextState<AppState>>,
+    mut window: Query<&mut Window, With<PrimaryWindow>>,
 ) {
+    let mut window = window.single_mut();
     for (i, comp, mut image, mut style) in query.iter_mut() {
         if *i == Interaction::Pressed && comp == &MenuControlComponent::Exit {
             app_exit_writer.send(AppExit::Success);
@@ -525,6 +531,12 @@ pub fn ui_interaction(
                 } else {
                     gui_assets.fullscreen.clone()
                 });
+
+                if settings.is_fullscreen {
+                    window.mode = WindowMode::BorderlessFullscreen;
+                } else {
+                    window.mode = WindowMode::Windowed;
+                }
             }
             (Interaction::Pressed, MenuControlComponent::Language) => {
                 let localizations = &data_assets.localizations;
