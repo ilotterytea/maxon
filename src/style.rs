@@ -22,7 +22,10 @@ pub fn get_text_style_header(font_assets: &Res<FontAssets>) -> TextStyle {
 pub fn get_text_style_default(font_assets: &Res<FontAssets>) -> TextStyle {
     TextStyle {
         font: font_assets.text.clone(),
+        #[cfg(not(any(target_os = "android", target_os = "ios")))]
         font_size: 24.0,
+        #[cfg(any(target_os = "android", target_os = "ios"))]
+        font_size: 32.0,
         color: color::WHITE.into(),
     }
 }

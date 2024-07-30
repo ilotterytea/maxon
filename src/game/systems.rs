@@ -7,7 +7,7 @@ use rand::Rng;
 
 use crate::{
     assets::ModelAssets, boot::MusicSourceComponent, persistent::Settings,
-    systems::CameraComponent, AppState, MusicAssets,
+    systems::CameraComponent, MusicAssets,
 };
 
 use super::components::GameObjectComponent;
@@ -18,8 +18,16 @@ pub fn setup_scene(
     model_assets: Res<ModelAssets>,
 ) {
     let mut camera_transform = camera_query.single_mut();
-    *camera_transform = Transform::from_xyz(-2.8, 1.7, -0.7)
-        .with_rotation(Quat::from_rotation_y(245.0 * PI / 180.0));
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+    {
+        *camera_transform = Transform::from_xyz(-2.8, 1.7, -0.7)
+            .with_rotation(Quat::from_rotation_y(245.0 * PI / 180.0));
+    }
+    #[cfg(any(target_os = "android", target_os = "ios"))]
+    {
+        *camera_transform = Transform::from_xyz(-5.8, 1.7, -0.5)
+            .with_rotation(Quat::from_rotation_y(253.0 * PI / 180.0));
+    }
 
     commands.spawn((
         SceneBundle {

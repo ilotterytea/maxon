@@ -8,7 +8,7 @@ use bevy::{
 use bevy_persistent::Persistent;
 use bevy_tweening::{
     lens::{TransformRotationLens, TransformScaleLens},
-    Animator, EaseFunction, RepeatCount, RepeatStrategy, Sequence, Tracks, Tween,
+    Animator, EaseFunction, RepeatCount, RepeatStrategy, Tracks, Tween,
 };
 
 use crate::{
@@ -94,9 +94,15 @@ pub(super) fn setup_ui(
                         let scale = Tween::new(
                             EaseFunction::SineInOut,
                             Duration::from_secs(10),
+                            #[cfg(not(any(target_os = "android", target_os = "ios")))]
                             TransformScaleLens {
                                 start: Vec3::new(0.9, 0.9, 0.0),
                                 end: Vec3::new(1.0, 1.0, 0.0),
+                            },
+                            #[cfg(any(target_os = "android", target_os = "ios"))]
+                            TransformScaleLens {
+                                start: Vec3::new(0.6, 0.6, 0.0),
+                                end: Vec3::new(0.7, 0.7, 0.0),
                             },
                         )
                         .with_repeat_count(RepeatCount::Infinite)
@@ -130,7 +136,10 @@ pub(super) fn setup_ui(
                         style: Style {
                             display: Display::Flex,
                             flex_direction: FlexDirection::Column,
+                            #[cfg(not(any(target_os = "android", target_os = "ios")))]
                             min_width: Val::Percent(50.0),
+                            #[cfg(any(target_os = "android", target_os = "ios"))]
+                            min_width: Val::Percent(100.0),
                             row_gap: Val::Percent(5.0),
                             ..default()
                         },
@@ -408,6 +417,7 @@ pub(super) fn setup_ui(
                 Name::new("Menu control"),
             ))
             .with_children(|control| {
+                #[cfg(not(any(target_os = "android", target_os = "ios")))]
                 // Left side
                 control
                     .spawn((
@@ -441,6 +451,8 @@ pub(super) fn setup_ui(
                             style: Style {
                                 flex_grow: 1.0,
                                 flex_direction: FlexDirection::RowReverse,
+                                #[cfg(any(target_os = "android", target_os = "ios"))]
+                                justify_content: JustifyContent::SpaceAround,
                                 column_gap: Val::Percent(1.0),
                                 ..style.clone()
                             },

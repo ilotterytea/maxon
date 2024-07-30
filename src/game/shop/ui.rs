@@ -24,6 +24,15 @@ pub enum PlayerStatsTextComponent {
     Multiplier,
 }
 
+#[derive(Component)]
+pub struct ShopUIListComponent;
+
+#[derive(Component)]
+pub struct ShopUIControlComponent;
+
+#[derive(Component)]
+pub struct ShopUIListToggleComponent;
+
 #[derive(Component, PartialEq, Eq)]
 pub enum PetComponent {
     Base,
@@ -202,292 +211,321 @@ pub fn setup_ui(
         pet_ids.push(id);
     }
 
-    commands
+    // Player stats
+    let stats = commands
         .spawn((
             NodeBundle {
                 style: Style {
-                    width: Val::Percent(25.0),
-                    height: Val::Percent(100.0),
+                    width: Val::Percent(100.0),
                     display: Display::Flex,
-                    flex_direction: FlexDirection::Column,
+                    flex_direction: FlexDirection::Row,
+                    padding: UiRect::all(Val::Percent(2.0)),
                     ..default()
                 },
-                background_color: STORE_BG_COLOR.into(),
                 ..default()
             },
-            GameObjectComponent,
-            Name::new("Shop UI"),
+            Name::new("Player stats"),
         ))
-        .with_children(|root| {
-            // Shop title
-            root.spawn((
-                NodeBundle {
-                    style: Style {
-                        width: Val::Percent(100.0),
-                        display: Display::Flex,
-                        justify_content: JustifyContent::Center,
-                        align_items: AlignItems::Center,
-                        ..default()
-                    },
+        .with_children(|stats_root| {
+            let node = NodeBundle {
+                style: Style {
+                    flex_grow: 1.0,
+                    display: Display::Flex,
+                    align_items: AlignItems::Center,
+                    flex_direction: FlexDirection::Row,
                     ..default()
                 },
-                Name::new("Shop title"),
-            ))
-            .with_children(|title_root| {
-                title_root.spawn((
-                    TextBundle::from_section(
-                        localization.get(LineId::StoreTitle),
-                        get_text_style_header(&font_assets),
-                    ),
-                    Name::new("Title"),
-                ));
-            });
+                ..default()
+            };
 
-            // Shop control
-            root.spawn((
-                NodeBundle {
-                    style: Style {
-                        width: Val::Percent(100.0),
-                        display: Display::Flex,
-                        flex_direction: FlexDirection::Row,
-                        padding: UiRect::all(Val::Percent(2.0)),
-                        overflow: Overflow::clip(),
-                        ..default()
-                    },
-                    background_color: STORE_CONTROL_BG_COLOR.into(),
-                    ..default()
-                },
-                Name::new("Shop control"),
-            ))
-            .with_children(|control_root| {
-                // Mode control
-                control_root
-                    .spawn((
-                        NodeBundle {
-                            style: Style {
-                                min_width: Val::Percent(50.0),
-                                display: Display::Flex,
-                                flex_direction: FlexDirection::Column,
-                                margin: UiRect::right(Val::Percent(2.0)),
-                                ..default()
-                            },
+            let icon_style = Style {
+                width: Val::Percent(25.0),
+                margin: UiRect::right(Val::Percent(5.0)),
+                ..default()
+            };
+
+            // Money
+            stats_root
+                .spawn((node.clone(), Name::new("Money")))
+                .with_children(|money_root| {
+                    // Money icon
+                    money_root.spawn((
+                        ImageBundle {
+                            style: icon_style.clone(),
+                            image: UiImage::new(gui_assets.money.clone()),
                             ..default()
                         },
-                        Name::new("Mode control"),
-                    ))
-                    .with_children(|mode_root| {
-                        let button = ButtonBundle {
-                            style: Style {
-                                display: Display::Flex,
-                                justify_content: JustifyContent::Center,
-                                align_items: AlignItems::Center,
-                                flex_grow: 1.0,
-                                padding: UiRect::all(Val::Percent(2.0)),
-                                margin: UiRect::bottom(Val::Percent(4.0)),
-                                ..default()
-                            },
-                            background_color: color::PERU.into(),
-                            ..default()
-                        };
+                        Name::new("Money icon"),
+                    ));
 
-                        // Buy button
-                        mode_root
-                            .spawn((button.clone(), ShopMode::Buy, Name::new("Buy button")))
-                            .with_children(|btn| {
-                                btn.spawn(TextBundle::from_section(
-                                    localization.get(LineId::StoreModeBuy),
-                                    get_text_style_default(&font_assets),
-                                ));
-                            });
+                    // Money text
+                    money_root.spawn((
+                        TextBundle::from_section(
+                            format!("{:.0}", savegame.money),
+                            get_text_style_default(&font_assets),
+                        ),
+                        PlayerStatsTextComponent::Money,
+                        Name::new("Money text"),
+                    ));
+                });
 
-                        // Sell button
-                        mode_root
-                            .spawn((
-                                {
-                                    let mut b = button.clone();
-                                    b.style.margin.bottom = Val::ZERO;
-                                    b
-                                },
-                                ShopMode::Sell,
-                                Name::new("Sell button"),
-                            ))
-                            .with_children(|btn| {
-                                btn.spawn(TextBundle::from_section(
-                                    localization.get(LineId::StoreModeSell),
-                                    get_text_style_default(&font_assets),
-                                ));
-                            });
-                    });
-
-                // Multiplier control
-                control_root
-                    .spawn((
-                        NodeBundle {
-                            style: Style {
-                                display: Display::Flex,
-                                flex_direction: FlexDirection::Row,
-                                ..default()
-                            },
+            // Multiplier
+            stats_root
+                .spawn((node.clone(), Name::new("Multiplier")))
+                .with_children(|multiplier_root| {
+                    // Multiplier icon
+                    multiplier_root.spawn((
+                        ImageBundle {
+                            style: icon_style,
+                            image: UiImage::new(gui_assets.multiplier.clone()),
                             ..default()
                         },
-                        Name::new("Multiplier control"),
-                    ))
-                    .with_children(|mp_root| {
-                        let button = ButtonBundle {
-                            style: Style {
-                                height: Val::Percent(100.0),
-                                display: Display::Flex,
-                                justify_content: JustifyContent::Center,
-                                align_items: AlignItems::Center,
-                                aspect_ratio: Some(1.0),
-                                margin: UiRect::right(Val::Percent(4.0)),
-                                ..default()
-                            },
-                            background_color: color::PERU.into(),
-                            ..default()
-                        };
+                        Name::new("Multiplier icon"),
+                    ));
 
-                        // 1x button
-                        mp_root
-                            .spawn((button.clone(), ShopMultiplier::X1, Name::new("1x button")))
-                            .with_children(|btn| {
-                                btn.spawn(TextBundle::from_section(
-                                    localization.get(LineId::StoreMultiplier1x),
-                                    get_text_style_default(&font_assets),
-                                ));
-                            });
+                    // Multiplier text
+                    multiplier_root.spawn((
+                        TextBundle::from_section(
+                            format!("{:.1}", savegame.multiplier),
+                            get_text_style_default(&font_assets),
+                        ),
+                        PlayerStatsTextComponent::Multiplier,
+                        Name::new("Multiplier text"),
+                    ));
+                });
+        })
+        .id();
 
-                        // 10x button
-                        mp_root
-                            .spawn((button.clone(), ShopMultiplier::X10, Name::new("10x button")))
-                            .with_children(|btn| {
-                                btn.spawn(TextBundle::from_section(
-                                    localization.get(LineId::StoreMultiplier10x),
-                                    get_text_style_default(&font_assets),
-                                ));
-                            });
-                    });
-            });
-
-            // Shop list
-            root.spawn((
-                NodeBundle {
-                    style: Style {
-                        width: Val::Percent(100.0),
-                        min_height: Val::Vh(0.0),
-                        padding: UiRect::all(Val::Percent(2.0)),
-                        display: Display::Flex,
-                        flex_direction: FlexDirection::Row,
-                        ..default()
-                    },
-                    background_color: STORE_LIST_BG_COLOR.into(),
+    // Shop title
+    let title = commands
+        .spawn((
+            ButtonBundle {
+                style: Style {
+                    width: Val::Percent(100.0),
+                    display: Display::Flex,
+                    justify_content: JustifyContent::Center,
+                    align_items: AlignItems::Center,
+                    border: UiRect::vertical(Val::Percent(0.5)),
+                    padding: UiRect::vertical(Val::Percent(1.0)),
                     ..default()
                 },
-                ScrollView::default(),
-                Name::new("Shop list"),
-            ))
-            .with_children(|list| {
-                // Pet list
-                list.spawn((
+                background_color: Srgba::new(80.0 / 255.0, 51.0 / 255.0, 51.0 / 255.0, 1.0).into(),
+                border_color: Srgba::new(54.0 / 255.0, 42.0 / 255.0, 42.0 / 255.0, 1.0).into(),
+                ..default()
+            },
+            ShopUIListToggleComponent,
+            Name::new("Shop title"),
+        ))
+        .with_children(|title_root| {
+            title_root.spawn((
+                TextBundle::from_section(
+                    localization.get(LineId::StoreTitle),
+                    get_text_style_header(&font_assets),
+                ),
+                Name::new("Title"),
+            ));
+        })
+        .id();
+
+    // Shop control
+    let control = commands
+        .spawn((
+            NodeBundle {
+                style: Style {
+                    width: Val::Percent(100.0),
+                    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+                    display: Display::Flex,
+                    #[cfg(any(target_os = "android", target_os = "ios"))]
+                    display: Display::None,
+                    flex_direction: FlexDirection::Row,
+                    padding: UiRect::all(Val::Percent(2.0)),
+                    overflow: Overflow::clip(),
+                    ..default()
+                },
+                background_color: STORE_CONTROL_BG_COLOR.into(),
+                ..default()
+            },
+            ShopUIControlComponent,
+            Name::new("Shop control"),
+        ))
+        .with_children(|control_root| {
+            // Mode control
+            control_root
+                .spawn((
                     NodeBundle {
                         style: Style {
-                            width: Val::Percent(100.0),
+                            min_width: Val::Percent(50.0),
                             display: Display::Flex,
                             flex_direction: FlexDirection::Column,
-                            flex_grow: 1.0,
+                            margin: UiRect::right(Val::Percent(2.0)),
                             ..default()
                         },
                         ..default()
                     },
-                    Name::new("Content"),
-                    ScrollableContent::default(),
+                    Name::new("Mode control"),
                 ))
-                .push_children(pet_ids.as_slice());
-            });
+                .with_children(|mode_root| {
+                    let button = ButtonBundle {
+                        style: Style {
+                            display: Display::Flex,
+                            justify_content: JustifyContent::Center,
+                            align_items: AlignItems::Center,
+                            flex_grow: 1.0,
+                            padding: UiRect::all(Val::Percent(2.0)),
+                            margin: UiRect::bottom(Val::Percent(4.0)),
+                            ..default()
+                        },
+                        background_color: color::PERU.into(),
+                        ..default()
+                    };
 
-            // Player stats
-            root.spawn((
+                    // Buy button
+                    mode_root
+                        .spawn((button.clone(), ShopMode::Buy, Name::new("Buy button")))
+                        .with_children(|btn| {
+                            btn.spawn(TextBundle::from_section(
+                                localization.get(LineId::StoreModeBuy),
+                                get_text_style_default(&font_assets),
+                            ));
+                        });
+
+                    // Sell button
+                    mode_root
+                        .spawn((
+                            {
+                                let mut b = button.clone();
+                                b.style.margin.bottom = Val::ZERO;
+                                b
+                            },
+                            ShopMode::Sell,
+                            Name::new("Sell button"),
+                        ))
+                        .with_children(|btn| {
+                            btn.spawn(TextBundle::from_section(
+                                localization.get(LineId::StoreModeSell),
+                                get_text_style_default(&font_assets),
+                            ));
+                        });
+                });
+
+            // Multiplier control
+            control_root
+                .spawn((
+                    NodeBundle {
+                        style: Style {
+                            display: Display::Flex,
+                            flex_direction: FlexDirection::Row,
+                            ..default()
+                        },
+                        ..default()
+                    },
+                    Name::new("Multiplier control"),
+                ))
+                .with_children(|mp_root| {
+                    let button = ButtonBundle {
+                        style: Style {
+                            height: Val::Percent(100.0),
+                            display: Display::Flex,
+                            justify_content: JustifyContent::Center,
+                            align_items: AlignItems::Center,
+                            aspect_ratio: Some(1.0),
+                            margin: UiRect::right(Val::Percent(4.0)),
+                            ..default()
+                        },
+                        background_color: color::PERU.into(),
+                        ..default()
+                    };
+
+                    // 1x button
+                    mp_root
+                        .spawn((button.clone(), ShopMultiplier::X1, Name::new("1x button")))
+                        .with_children(|btn| {
+                            btn.spawn(TextBundle::from_section(
+                                localization.get(LineId::StoreMultiplier1x),
+                                get_text_style_default(&font_assets),
+                            ));
+                        });
+
+                    // 10x button
+                    mp_root
+                        .spawn((button.clone(), ShopMultiplier::X10, Name::new("10x button")))
+                        .with_children(|btn| {
+                            btn.spawn(TextBundle::from_section(
+                                localization.get(LineId::StoreMultiplier10x),
+                                get_text_style_default(&font_assets),
+                            ));
+                        });
+                });
+        })
+        .id();
+
+    // Shop list
+    let list = commands
+        .spawn((
+            NodeBundle {
+                style: Style {
+                    width: Val::Percent(100.0),
+                    min_height: Val::Vh(0.0),
+                    padding: UiRect::all(Val::Percent(2.0)),
+                    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+                    display: Display::Flex,
+                    #[cfg(any(target_os = "android", target_os = "ios"))]
+                    display: Display::None,
+                    flex_direction: FlexDirection::Row,
+                    ..default()
+                },
+                background_color: STORE_LIST_BG_COLOR.into(),
+                ..default()
+            },
+            ScrollView::default(),
+            ShopUIListComponent,
+            Name::new("Shop list"),
+        ))
+        .with_children(|list| {
+            // Pet list
+            list.spawn((
                 NodeBundle {
                     style: Style {
                         width: Val::Percent(100.0),
                         display: Display::Flex,
-                        flex_direction: FlexDirection::Row,
-                        padding: UiRect::all(Val::Percent(2.0)),
+                        flex_direction: FlexDirection::Column,
+                        flex_grow: 1.0,
                         ..default()
                     },
                     ..default()
                 },
-                Name::new("Player stats"),
+                Name::new("Content"),
+                ScrollableContent::default(),
             ))
-            .with_children(|stats_root| {
-                let node = NodeBundle {
-                    style: Style {
-                        flex_grow: 1.0,
-                        display: Display::Flex,
-                        align_items: AlignItems::Center,
-                        flex_direction: FlexDirection::Row,
-                        ..default()
-                    },
-                    ..default()
-                };
+            .push_children(pet_ids.as_slice());
+        })
+        .id();
 
-                let icon_style = Style {
-                    width: Val::Percent(25.0),
-                    margin: UiRect::right(Val::Percent(5.0)),
-                    ..default()
-                };
+    // Root
+    let mut root = commands.spawn((
+        NodeBundle {
+            style: Style {
+                #[cfg(not(any(target_os = "android", target_os = "ios")))]
+                width: Val::Percent(25.0),
+                #[cfg(any(target_os = "android", target_os = "ios"))]
+                width: Val::Percent(100.0),
+                #[cfg(not(any(target_os = "android", target_os = "ios")))]
+                height: Val::Percent(100.0),
+                display: Display::Flex,
+                flex_direction: FlexDirection::Column,
+                ..default()
+            },
+            background_color: STORE_BG_COLOR.into(),
+            ..default()
+        },
+        GameObjectComponent,
+        Name::new("Shop UI"),
+    ));
 
-                // Money
-                stats_root
-                    .spawn((node.clone(), Name::new("Money")))
-                    .with_children(|money_root| {
-                        // Money icon
-                        money_root.spawn((
-                            ImageBundle {
-                                style: icon_style.clone(),
-                                image: UiImage::new(gui_assets.money.clone()),
-                                ..default()
-                            },
-                            Name::new("Money icon"),
-                        ));
-
-                        // Money text
-                        money_root.spawn((
-                            TextBundle::from_section(
-                                format!("{:.0}", savegame.money),
-                                get_text_style_default(&font_assets),
-                            ),
-                            PlayerStatsTextComponent::Money,
-                            Name::new("Money text"),
-                        ));
-                    });
-
-                // Multiplier
-                stats_root
-                    .spawn((node.clone(), Name::new("Multiplier")))
-                    .with_children(|multiplier_root| {
-                        // Multiplier icon
-                        multiplier_root.spawn((
-                            ImageBundle {
-                                style: icon_style,
-                                image: UiImage::new(gui_assets.multiplier.clone()),
-                                ..default()
-                            },
-                            Name::new("Multiplier icon"),
-                        ));
-
-                        // Multiplier text
-                        multiplier_root.spawn((
-                            TextBundle::from_section(
-                                format!("{:.1}", savegame.multiplier),
-                                get_text_style_default(&font_assets),
-                            ),
-                            PlayerStatsTextComponent::Multiplier,
-                            Name::new("Multiplier text"),
-                        ));
-                    });
-            });
-        });
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+    root.push_children(&[title, control, list, stats]);
+    #[cfg(any(target_os = "android", target_os = "ios"))]
+    root.push_children(&[stats, title, control, list]);
 }
 
 pub fn listen_shop_control_changes(
@@ -773,6 +811,26 @@ pub fn update_pet_amount(
 
             style.display = Display::Block;
             text.sections[0].value = amount.to_string();
+        }
+    }
+}
+
+#[cfg(any(target_os = "android", target_os = "ios"))]
+pub fn toggle_shop_list(
+    button_query: Query<&Interaction, (With<ShopUIListToggleComponent>, Changed<Interaction>)>,
+    mut query: Query<&mut Style, Or<(With<ShopUIControlComponent>, With<ShopUIListComponent>)>>,
+) {
+    for i in button_query.iter() {
+        if *i == Interaction::Pressed {
+            println!("press");
+            for mut style in query.iter_mut() {
+                style.display = if style.display == Display::None {
+                    Display::Flex
+                } else {
+                    Display::None
+                };
+                println!("changed");
+            }
         }
     }
 }

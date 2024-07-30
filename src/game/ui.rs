@@ -15,8 +15,14 @@ pub fn setup_ui(
             NodeBundle {
                 style: Style {
                     position_type: PositionType::Absolute,
+                    #[cfg(not(any(target_os = "android", target_os = "ios")))]
                     left: Val::Percent(25.0),
+                    #[cfg(not(any(target_os = "android", target_os = "ios")))]
                     top: Val::Percent(0.0),
+                    #[cfg(any(target_os = "android", target_os = "ios"))]
+                    left: Val::Percent(0.0),
+                    #[cfg(any(target_os = "android", target_os = "ios"))]
+                    top: Val::Percent(15.0),
                     display: Display::Flex,
                     flex_direction: FlexDirection::Row,
                     align_items: AlignItems::Center,
@@ -24,6 +30,7 @@ pub fn setup_ui(
                     column_gap: Val::Percent(5.0),
                     ..default()
                 },
+                z_index: ZIndex::Local(-2),
                 ..default()
             },
             Name::new("Control buttons"),
