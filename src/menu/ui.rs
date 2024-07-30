@@ -12,6 +12,7 @@ use bevy_tweening::{
 };
 
 use crate::{
+    boot::MusicSourceComponent,
     localization::{LineId, Localization, LocalizationManager},
     persistent::{Savegame, Settings},
     style::{get_text_style_default, STORE_ITEM_BG_COLOR, STORE_LIST_BG_COLOR},
@@ -548,6 +549,7 @@ pub(super) fn ui_interaction(
     mut savegame: ResMut<Persistent<Savegame>>,
     mut state: ResMut<NextState<AppState>>,
     mut window: Query<&mut Window, With<PrimaryWindow>>,
+    music_sources: Query<&AudioSink, With<MusicSourceComponent>>,
 ) {
     let mut window = window.single_mut();
     for (e, i, comp, mut image, mut style, mut transform, anim) in query.iter_mut() {
@@ -565,6 +567,14 @@ pub(super) fn ui_interaction(
                 } else {
                     gui_assets.music_off.clone()
                 });
+
+                for sink in music_sources.iter() {
+                    if settings.music {
+                        sink.play();
+                    } else {
+                        sink.pause();
+                    }
+                }
 
                 settings.persist().expect("Failed to save settings");
             }
