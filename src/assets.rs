@@ -74,3 +74,12 @@ pub struct DataAssets {
     #[asset(path = "i18n", collection(typed))]
     pub localizations: Vec<Handle<Localization>>,
 }
+
+#[derive(AssetCollection, Resource)]
+pub struct MusicAssets {
+    #[asset(path = "mus/game", collection(typed))]
+    pub game: Vec<Handle<AudioSource>>,
+
+    #[asset(path = "mus/menu/mus_menu_loop.ogg")]
+    pub menu: Handle<AudioSource>,
+}

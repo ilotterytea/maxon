@@ -55,7 +55,8 @@ fn main() {
             .load_collection::<TextureAtlasAssets>()
             .load_collection::<FontAssets>()
             .load_collection::<GUIAssets>()
-            .load_collection::<DataAssets>(),
+            .load_collection::<DataAssets>()
+            .load_collection::<MusicAssets>(),
     );
 
     // Startup systems
