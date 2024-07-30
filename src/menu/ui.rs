@@ -20,6 +20,8 @@ pub enum MenuControlComponent {
     Music,
     Fullscreen,
     Language,
+    GameContinue,
+    GameReset,
 }
 
 pub fn setup_ui(
@@ -308,6 +310,7 @@ pub fn setup_ui(
                                 ..default()
                             },
                             Name::new("Continue button"),
+                            MenuControlComponent::GameContinue,
                         ))
                         .with_children(|btn| {
                             btn.spawn((
@@ -336,6 +339,7 @@ pub fn setup_ui(
                                 ..default()
                             },
                             Name::new("Reset button"),
+                            MenuControlComponent::GameReset,
                         ))
                         .with_children(|btn| {
                             btn.spawn((
@@ -504,6 +508,7 @@ pub fn ui_interaction(
     localization_manager: Res<LocalizationManager>,
     mut app_exit_writer: EventWriter<AppExit>,
     mut settings: ResMut<Persistent<Settings>>,
+    mut savegame: ResMut<Persistent<Savegame>>,
     mut state: ResMut<NextState<AppState>>,
     mut window: Query<&mut Window, With<PrimaryWindow>>,
 ) {
@@ -598,6 +603,16 @@ pub fn ui_interaction(
                 settings.language = name2;
                 state.set(AppState::Boot);
                 settings.persist().expect("Failed to save settings");
+            }
+            (Interaction::Pressed, MenuControlComponent::GameContinue) => {
+                state.set(AppState::Game);
+            }
+            (Interaction::Pressed, MenuControlComponent::GameReset) => {
+                savegame
+                    .revert_to_default()
+                    .expect("Failed to revert the savegame to default");
+                savegame.reload().expect("Failed to reload the savegame");
+                state.set(AppState::Boot);
             }
             _ => {}
         }
