@@ -55,6 +55,7 @@ pub fn setup_persistent_resources(mut commands: Commands) {
             .format(StorageFormat::Bincode)
             .path(dir.join("savegame.maxon"))
             .default(Savegame::default())
+            .revertible(true)
             .build()
             .expect("Failed to initialize savegame"),
     );
@@ -66,6 +67,7 @@ pub fn setup_persistent_resources(mut commands: Commands) {
             .format(StorageFormat::JsonPretty)
             .path(dir.join("settings.set"))
             .default(Settings::default())
+            .revertible(true)
             .build()
             .expect("Failed to initialize settings"),
     );
