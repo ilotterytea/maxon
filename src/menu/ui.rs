@@ -1,9 +1,15 @@
+use std::{f32::consts::PI, time::Duration};
+
 use bevy::{
     color::palettes::css as color,
     prelude::*,
     window::{PrimaryWindow, WindowMode},
 };
 use bevy_persistent::Persistent;
+use bevy_tweening::{
+    lens::{TransformRotationLens, TransformScaleLens},
+    Animator, EaseFunction, RepeatCount, RepeatStrategy, Tracks, Tween,
+};
 
 use crate::{
     localization::{LineId, Localization, LocalizationManager},
@@ -72,6 +78,33 @@ pub(super) fn setup_ui(
                         ..default()
                     },
                     Name::new("Logo"),
+                    Animator::new({
+                        let rotation = Tween::new(
+                            EaseFunction::SineInOut,
+                            Duration::from_secs(10),
+                            TransformRotationLens {
+                                start: Quat::from_rotation_z(-5.0 * PI / 180.0),
+                                end: Quat::from_rotation_z(5.0 * PI / 180.0),
+                            },
+                        )
+                        .with_repeat_count(RepeatCount::Infinite)
+                        .with_repeat_strategy(RepeatStrategy::MirroredRepeat);
+
+                        let scale = Tween::new(
+                            EaseFunction::SineInOut,
+                            Duration::from_secs(10),
+                            TransformScaleLens {
+                                start: Vec3::new(0.9, 0.9, 0.0),
+                                end: Vec3::new(1.0, 1.0, 0.0),
+                            },
+                        )
+                        .with_repeat_count(RepeatCount::Infinite)
+                        .with_repeat_strategy(RepeatStrategy::MirroredRepeat);
+
+                        let tracks = Tracks::new([rotation, scale]);
+
+                        tracks
+                    }),
                 ));
             });
 

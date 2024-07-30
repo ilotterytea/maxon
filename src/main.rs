@@ -8,6 +8,7 @@ use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_mod_picking::DefaultPickingPlugins;
 use bevy_simple_scroll_view::ScrollViewPlugin;
 use bevy_sprite3d::Sprite3dPlugin;
+use bevy_tweening::TweeningPlugin;
 use boot::BootPlugin;
 use game::{shop::pets::Pets, GamePlugin};
 use localization::Localization;
@@ -77,6 +78,9 @@ fn main() {
 
     // Animation for sprite sheets
     app.add_plugins(TextureAtlasAnimationPlugin);
+
+    // Tweening
+    app.add_plugins(TweeningPlugin);
 
     #[cfg(feature = "debug")]
     {
