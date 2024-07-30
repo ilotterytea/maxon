@@ -8,7 +8,7 @@ use bevy::{
 use bevy_persistent::Persistent;
 use bevy_tweening::{
     lens::{TransformRotationLens, TransformScaleLens},
-    Animator, EaseFunction, RepeatCount, RepeatStrategy, Tracks, Tween,
+    Animator, EaseFunction, RepeatCount, RepeatStrategy, Sequence, Tracks, Tween,
 };
 
 use crate::{
@@ -529,10 +529,13 @@ pub(super) fn ui_interaction(
     mut commands: Commands,
     mut query: Query<
         (
+            Entity,
             &Interaction,
             &MenuControlComponent,
             &mut UiImage,
             &mut Style,
+            &mut Transform,
+            Option<&Animator<Transform>>,
         ),
         (With<MenuControlComponent>, Changed<Interaction>),
     >,
@@ -547,7 +550,7 @@ pub(super) fn ui_interaction(
     mut window: Query<&mut Window, With<PrimaryWindow>>,
 ) {
     let mut window = window.single_mut();
-    for (i, comp, mut image, mut style) in query.iter_mut() {
+    for (e, i, comp, mut image, mut style, mut transform, anim) in query.iter_mut() {
         if *i == Interaction::Pressed && comp == &MenuControlComponent::Exit {
             app_exit_writer.send(AppExit::Success);
         }
@@ -651,6 +654,41 @@ pub(super) fn ui_interaction(
             (Interaction::Pressed, MenuControlComponent::GameBack) => {
                 savegame.persist().expect("Failed to save the game");
                 state.set(AppState::Menu);
+            }
+            (Interaction::Hovered, _) => {
+                if anim.is_none() {
+                    commands.entity(e).insert(Animator::new({
+                        let scale = Tween::new(
+                            EaseFunction::SineIn,
+                            Duration::from_millis(500),
+                            TransformScaleLens {
+                                start: Vec3::new(0.9, 0.9, 0.0),
+                                end: Vec3::new(1.0, 1.0, 0.0),
+                            },
+                        );
+
+                        let thug_shaker = Tween::new(
+                            EaseFunction::SineInOut,
+                            Duration::from_millis(100),
+                            TransformRotationLens {
+                                start: Quat::from_rotation_z(-2.0 * PI / 180.0),
+                                end: Quat::from_rotation_z(2.0 * PI / 180.0),
+                            },
+                        )
+                        .with_repeat_count(RepeatCount::Infinite)
+                        .with_repeat_strategy(RepeatStrategy::MirroredRepeat);
+
+                        Tracks::new([scale, thug_shaker])
+                    }));
+                }
+            }
+            (Interaction::None, _) => {
+                if anim.is_some() {
+                    transform.scale = Vec3::new(1.0, 1.0, 0.0);
+                    transform.rotation = Quat::from_rotation_z(0.0);
+
+                    commands.entity(e).remove::<Animator<Transform>>();
+                }
             }
             _ => {}
         }
