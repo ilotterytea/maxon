@@ -30,6 +30,16 @@ pub struct Settings {
     pub music: bool,
     pub is_fullscreen: bool,
     pub language: String,
+    #[cfg(feature = "debug")]
+    pub debug: DebugSettings,
+}
+
+#[derive(Deserialize, Serialize)]
+#[cfg(feature = "debug")]
+pub struct DebugSettings {
+    pub info: bool,
+    pub fly: bool,
+    pub inspector: bool,
 }
 
 impl Default for Settings {
@@ -38,6 +48,13 @@ impl Default for Settings {
             music: true,
             is_fullscreen: false,
             language: "en_us".into(),
+
+            #[cfg(feature = "debug")]
+            debug: DebugSettings {
+                info: false,
+                fly: false,
+                inspector: false,
+            },
         }
     }
 }

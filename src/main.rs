@@ -17,6 +17,7 @@ mod animation;
 mod assets;
 mod boot;
 mod constants;
+mod debug;
 mod game;
 mod localization;
 mod menu;
@@ -81,8 +82,7 @@ fn main() {
     {
         app.add_plugins((
             // Diagnostics
-            bevy::diagnostic::FrameTimeDiagnosticsPlugin,
-            bevy::diagnostic::LogDiagnosticsPlugin::default(),
+            debug::DebugPlugin,
             // World inspector
             bevy_inspector_egui::quick::WorldInspectorPlugin::default(),
             // Flycam

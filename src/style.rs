@@ -34,3 +34,19 @@ pub fn get_text_style_pet_amount(font_assets: &Res<FontAssets>) -> TextStyle {
         color: Srgba::new(38.0 / 255.0, 28.0 / 255.0, 17.0 / 255.0, 1.0).into(),
     }
 }
+
+pub fn get_text_style_debug(font_assets: &Res<FontAssets>) -> TextStyle {
+    TextStyle {
+        font: font_assets.debug.clone(),
+        font_size: 16.0,
+        color: color::GRAY.into(),
+    }
+}
+
+pub fn get_text_style_debug_value(font_assets: &Res<FontAssets>) -> TextStyle {
+    TextStyle {
+        font: font_assets.debug.clone(),
+        font_size: 16.0,
+        color: color::LIME.into(),
+    }
+}
