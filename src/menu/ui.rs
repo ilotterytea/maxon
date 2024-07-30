@@ -523,6 +523,8 @@ pub fn ui_interaction(
                 } else {
                     gui_assets.music_off.clone()
                 });
+
+                settings.persist().expect("Failed to save settings");
             }
             (Interaction::Pressed, MenuControlComponent::Fullscreen) => {
                 settings.is_fullscreen = !settings.is_fullscreen;
@@ -537,6 +539,8 @@ pub fn ui_interaction(
                 } else {
                     window.mode = WindowMode::Windowed;
                 }
+
+                settings.persist().expect("Failed to save settings");
             }
             (Interaction::Pressed, MenuControlComponent::Language) => {
                 let localizations = &data_assets.localizations;
@@ -593,6 +597,7 @@ pub fn ui_interaction(
                 style.width = Val::Px(87.0);
                 settings.language = name2;
                 state.set(AppState::Boot);
+                settings.persist().expect("Failed to save settings");
             }
             _ => {}
         }
