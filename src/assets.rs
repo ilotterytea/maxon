@@ -22,6 +22,9 @@ pub struct TextureAtlasAssets {
 pub struct FontAssets {
     #[asset(path = "fonts/text.ttf")]
     pub text: Handle<Font>,
+
+    #[asset(path = "fonts/debug.ttf")]
+    pub debug: Handle<Font>,
 }
 
 #[derive(AssetCollection, Resource)]
