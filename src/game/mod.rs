@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use crate::AppState;
 
 mod components;
+mod gift;
 mod player;
 pub mod shop;
 mod systems;
@@ -21,6 +22,7 @@ impl Plugin for GamePlugin {
                     player::setup_play_timestamp,
                     ui::setup_ui,
                     systems::set_music_source,
+                    gift::setup_gift_box,
                 ),
             )
             .add_systems(
