@@ -4,7 +4,7 @@ use systems::PurchaseEvent;
 use crate::AppState;
 
 pub mod pets;
-mod systems;
+pub mod systems;
 mod ui;
 
 pub(super) struct ShopPlugin;

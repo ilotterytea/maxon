@@ -6,16 +6,16 @@ use crate::{persistent::Savegame, SFXAssets};
 use super::ui::PetDisabledComponent;
 
 #[derive(Resource)]
-pub struct MultiplierTickTimer(pub Timer);
+pub(super) struct MultiplierTickTimer(pub Timer);
 
-pub fn setup_multiplier_tick(mut commands: Commands) {
+pub(super) fn setup_multiplier_tick(mut commands: Commands) {
     commands.insert_resource(MultiplierTickTimer(Timer::from_seconds(
         0.1,
         TimerMode::Repeating,
     )));
 }
 
-pub fn tick_multiplier(
+pub(super) fn tick_multiplier(
     time: Res<Time>,
     mut timer: ResMut<MultiplierTickTimer>,
     mut savegame: ResMut<Persistent<Savegame>>,
@@ -34,7 +34,7 @@ pub fn tick_multiplier(
 #[derive(Event)]
 pub struct PurchaseEvent;
 
-pub fn play_sound_for_disabled_pets(
+pub(super) fn play_sound_for_disabled_pets(
     mut commands: Commands,
     query: Query<&Interaction, (With<PetDisabledComponent>, Changed<Interaction>)>,
     sfx_assets: Res<SFXAssets>,
