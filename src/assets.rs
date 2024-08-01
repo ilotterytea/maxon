@@ -7,6 +7,14 @@ use crate::{game::shop::pets::Pets, localization::Localization};
 pub struct ModelAssets {
     #[asset(path = "models/scenes/living_room.glb#Scene0")]
     pub living_room: Handle<Scene>,
+
+    #[asset(path = "models/props/chest.glb#Scene0")]
+    pub chest_prop: Handle<Scene>,
+
+    // this could be done with #Animation0 for chest i guess,
+    // but idc about that and i want to get things done faster
+    #[asset(path = "models/props/chest_opened.glb#Scene0")]
+    pub chest_opened_prop: Handle<Scene>,
 }
 
 #[derive(AssetCollection, Resource)]
