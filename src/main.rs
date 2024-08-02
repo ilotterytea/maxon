@@ -5,6 +5,7 @@ use bevy_asset_loader::loading_state::{
     config::ConfigureLoadingState, LoadingState, LoadingStateAppExt,
 };
 use bevy_common_assets::json::JsonAssetPlugin;
+use bevy_mod_billboard::plugin::BillboardPlugin;
 use bevy_mod_picking::DefaultPickingPlugins;
 use bevy_simple_scroll_view::ScrollViewPlugin;
 use bevy_sprite3d::Sprite3dPlugin;
@@ -71,7 +72,7 @@ fn main() {
     );
 
     // Billboard
-    app.add_plugins(Sprite3dPlugin);
+    app.add_plugins((Sprite3dPlugin, BillboardPlugin));
 
     // 3D picking
     app.add_plugins(DefaultPickingPlugins);
