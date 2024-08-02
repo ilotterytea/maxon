@@ -57,7 +57,8 @@ fn main() {
             .load_collection::<GUIAssets>()
             .load_collection::<DataAssets>()
             .load_collection::<MusicAssets>()
-            .load_collection::<SFXAssets>(),
+            .load_collection::<SFXAssets>()
+            .load_collection::<SpriteAssets>(),
     );
 
     // Startup systems

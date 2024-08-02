@@ -83,8 +83,18 @@ pub fn despawn_game_objects(
     }
 }
 
+#[derive(Component)]
+pub struct ImNotLookingAtCameraComponent;
+
 pub fn sprites_looking_at_camera(
-    mut query: Query<&mut Transform, (With<Sprite3dComponent>, Without<CameraComponent>)>,
+    mut query: Query<
+        &mut Transform,
+        (
+            With<Sprite3dComponent>,
+            Without<CameraComponent>,
+            Without<ImNotLookingAtCameraComponent>,
+        ),
+    >,
     camera_query: Query<
         &Transform,
         (

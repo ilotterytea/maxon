@@ -3,11 +3,18 @@ use std::f32::consts::PI;
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
 use bevy_persistent::Persistent;
+use bevy_sprite3d::{Sprite3d, Sprite3dParams};
 use rand::Rng;
 
-use crate::{persistent::Savegame, ModelAssets};
+use crate::{persistent::Savegame, ModelAssets, SpriteAssets};
 
-use super::shop::systems::PurchaseEvent;
+use super::{shop::systems::PurchaseEvent, systems::ImNotLookingAtCameraComponent};
+
+#[derive(Component)]
+pub struct GiftboxRays;
+
+#[derive(Component)]
+pub struct GiftboxRaysLight;
 
 #[derive(Component)]
 pub struct GiftboxComponent(pub GiftboxStatus);
@@ -47,6 +54,8 @@ pub fn update_gift_box(
     time: Res<Time>,
     mut gift_box_timer: ResMut<GiftboxTimer>,
     model_assets: Res<ModelAssets>,
+    sprite_assets: Res<SpriteAssets>,
+    mut sprite_3d_params: Sprite3dParams,
 ) {
     gift_box_timer.0.tick(time.delta());
 
@@ -67,13 +76,69 @@ pub fn update_gift_box(
         });
 
         comp.0 = GiftboxStatus::Opened;
+
+        commands.spawn((
+            Sprite3d {
+                image: sprite_assets.rays.clone(),
+                pixels_per_metre: 48.0,
+                alpha_mode: AlphaMode::Blend,
+                transform: Transform::from_xyz(6.5, 0.8, 1.0)
+                    .with_rotation(Quat::from_rotation_y(90.0 * PI / 180.0))
+                    .with_scale(Vec3::splat(0.3)),
+                ..default()
+            }
+            .bundle(&mut sprite_3d_params),
+            Name::new("Gift box rays"),
+            GiftboxRays,
+            ImNotLookingAtCameraComponent,
+        ));
+
+        commands.spawn((
+            PointLightBundle {
+                point_light: PointLight {
+                    color: bevy::color::palettes::css::ORANGE.into(),
+                    intensity: 200000.0,
+                    radius: 200.0,
+                    range: 100.0,
+                    shadows_enabled: false,
+                    ..default()
+                },
+                transform: Transform::from_xyz(5.6, 2.0, 0.8),
+                ..default()
+            },
+            Name::new("Gift box rays point light"),
+            GiftboxRaysLight,
+        ));
     }
 }
 
 pub fn click_on_gift_box(
     mut commands: Commands,
     mut savegame: ResMut<Persistent<Savegame>>,
-    mut gift_box_query: Query<(Entity, &Transform, &mut GiftboxComponent), With<GiftboxComponent>>,
+    mut gift_box_query: Query<
+        (Entity, &Transform, &mut GiftboxComponent),
+        (
+            With<GiftboxComponent>,
+            Without<GiftboxRays>,
+            Without<GiftboxRaysLight>,
+        ),
+    >,
+    gift_box_rays_query: Query<
+        Entity,
+        (
+            With<GiftboxRays>,
+            Without<GiftboxComponent>,
+            Without<GiftboxRaysLight>,
+        ),
+    >,
+    gift_box_rays_light_query: Query<
+        Entity,
+        (
+            With<GiftboxRaysLight>,
+            Without<GiftboxComponent>,
+            Without<GiftboxRays>,
+        ),
+    >,
     model_assets: Res<ModelAssets>,
     mut purchase_event_writer: EventWriter<PurchaseEvent>,
 ) {
@@ -81,6 +146,14 @@ pub fn click_on_gift_box(
         if c.0.eq(&GiftboxStatus::Locked) {
             continue;
         }
+
+        gift_box_rays_light_query.iter().for_each(|e| {
+            commands.entity(e).despawn_recursive();
+        });
+
+        gift_box_rays_query.iter().for_each(|e| {
+            commands.entity(e).despawn_recursive();
+        });
 
         commands.entity(e).remove::<SceneBundle>();
         commands.entity(e).insert(SceneBundle {
@@ -143,5 +216,18 @@ pub fn click_on_gift_box(
         }
 
         break;
+    }
+}
+
+pub fn spin_rays(
+    time: Res<Time>,
+    mut query: Query<(&mut Transform, &Visibility), With<GiftboxRays>>,
+) {
+    for (mut t, v) in query.iter_mut() {
+        if *v == Visibility::Hidden {
+            continue;
+        }
+
+        t.rotation = t.rotation * Quat::from_rotation_z(1.0 * time.delta_seconds());
     }
 }

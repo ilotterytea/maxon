@@ -75,6 +75,12 @@ pub struct GUIAssets {
 }
 
 #[derive(AssetCollection, Resource)]
+pub struct SpriteAssets {
+    #[asset(path = "sprites/env/rays.png")]
+    pub rays: Handle<Image>,
+}
+
+#[derive(AssetCollection, Resource)]
 pub struct DataAssets {
     #[asset(path = "data/common.pets.json")]
     pub pets: Handle<Pets>,

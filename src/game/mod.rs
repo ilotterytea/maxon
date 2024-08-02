@@ -31,6 +31,7 @@ impl Plugin for GamePlugin {
                     systems::sprites_looking_at_camera,
                     systems::update_music_source,
                     gift::update_gift_box,
+                    gift::spin_rays,
                 )
                     .run_if(in_state(AppState::Game)),
             )
