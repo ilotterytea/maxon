@@ -6,9 +6,12 @@ use bevy_persistent::Persistent;
 use bevy_sprite3d::{Sprite3d, Sprite3dParams};
 use rand::Rng;
 
-use crate::{persistent::Savegame, ModelAssets, SpriteAssets};
+use crate::{persistent::Savegame, ModelAssets, SFXAssets, SpriteAssets};
 
 use super::{shop::systems::PurchaseEvent, systems::ImNotLookingAtCameraComponent};
+
+#[derive(Component)]
+pub struct GiftboxOpenSound;
 
 #[derive(Component)]
 pub struct GiftboxRays;
@@ -43,7 +46,7 @@ pub fn setup_gift_box(mut commands: Commands, model_assets: Res<ModelAssets>) {
     ));
 
     commands.insert_resource(GiftboxTimer(Timer::from_seconds(
-        5.0 * 60.0,
+        10.0,
         TimerMode::Repeating,
     )));
 }
@@ -55,6 +58,7 @@ pub fn update_gift_box(
     mut gift_box_timer: ResMut<GiftboxTimer>,
     model_assets: Res<ModelAssets>,
     sprite_assets: Res<SpriteAssets>,
+    sfx_assets: Res<SFXAssets>,
     mut sprite_3d_params: Sprite3dParams,
 ) {
     gift_box_timer.0.tick(time.delta());
@@ -67,6 +71,17 @@ pub fn update_gift_box(
         if comp.0 == GiftboxStatus::Opened {
             continue;
         }
+        
+        commands.spawn((
+            AudioBundle {
+                source: sfx_assets.chest_opened.clone(),
+                settings: PlaybackSettings {
+                    mode: bevy::audio::PlaybackMode::Loop,
+                    ..default()
+                }
+            },
+            GiftboxOpenSound
+        ));
 
         commands.entity(e).remove::<SceneBundle>();
         commands.entity(e).insert(SceneBundle {
@@ -139,19 +154,35 @@ pub fn click_on_gift_box(
             Without<GiftboxRays>,
         ),
     >,
+    gift_box_sound_query: Query<Entity, With<GiftboxOpenSound>>,
     model_assets: Res<ModelAssets>,
+    sfx_assets: Res<SFXAssets>,
     mut purchase_event_writer: EventWriter<PurchaseEvent>,
 ) {
     for (e, t, mut c) in gift_box_query.iter_mut() {
         if c.0.eq(&GiftboxStatus::Locked) {
             continue;
         }
+        
+        commands.spawn(
+            AudioBundle {
+                source: sfx_assets.chest_click.clone(),
+                settings: PlaybackSettings {
+                    mode: bevy::audio::PlaybackMode::Despawn,
+                    ..default()
+                }
+            }
+        );
 
         gift_box_rays_light_query.iter().for_each(|e| {
             commands.entity(e).despawn_recursive();
         });
 
         gift_box_rays_query.iter().for_each(|e| {
+            commands.entity(e).despawn_recursive();
+        });
+        
+        gift_box_sound_query.iter().for_each(|e| {
             commands.entity(e).despawn_recursive();
         });
 

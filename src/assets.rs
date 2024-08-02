@@ -114,4 +114,10 @@ pub struct SFXAssets {
 
     #[asset(path = "sfx/ui/click.ogg")]
     pub click: Handle<AudioSource>,
+    
+    #[asset(path = "sfx/chest/chest_opened.ogg")]
+    pub chest_opened: Handle<AudioSource>,
+    
+    #[asset(path = "sfx/chest/chest_click.ogg")]
+    pub chest_click: Handle<AudioSource>,
 }
