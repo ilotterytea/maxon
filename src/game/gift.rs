@@ -8,7 +8,7 @@ use rand::Rng;
 
 use crate::{persistent::Savegame, ModelAssets, SFXAssets, SpriteAssets};
 
-use super::{shop::systems::PurchaseEvent, systems::ImNotLookingAtCameraComponent};
+use super::{components::GameObjectComponent, shop::systems::PurchaseEvent, systems::ImNotLookingAtCameraComponent};
 
 #[derive(Component)]
 pub struct GiftboxOpenSound;
@@ -43,10 +43,11 @@ pub fn setup_gift_box(mut commands: Commands, model_assets: Res<ModelAssets>) {
         Name::new("Gift box"),
         On::<Pointer<Click>>::run(click_on_gift_box),
         GiftboxComponent(GiftboxStatus::Locked),
+        GameObjectComponent
     ));
 
     commands.insert_resource(GiftboxTimer(Timer::from_seconds(
-        10.0,
+        5.0 * 60.0,
         TimerMode::Repeating,
     )));
 }
@@ -80,7 +81,8 @@ pub fn update_gift_box(
                     ..default()
                 }
             },
-            GiftboxOpenSound
+            GiftboxOpenSound,
+            GameObjectComponent
         ));
 
         commands.entity(e).remove::<SceneBundle>();
@@ -106,6 +108,7 @@ pub fn update_gift_box(
             Name::new("Gift box rays"),
             GiftboxRays,
             ImNotLookingAtCameraComponent,
+            GameObjectComponent
         ));
 
         commands.spawn((
@@ -123,6 +126,7 @@ pub fn update_gift_box(
             },
             Name::new("Gift box rays point light"),
             GiftboxRaysLight,
+            GameObjectComponent
         ));
     }
 }
@@ -164,15 +168,16 @@ pub fn click_on_gift_box(
             continue;
         }
         
-        commands.spawn(
+        commands.spawn((
             AudioBundle {
                 source: sfx_assets.chest_click.clone(),
                 settings: PlaybackSettings {
                     mode: bevy::audio::PlaybackMode::Despawn,
                     ..default()
                 }
-            }
-        );
+            },
+            GameObjectComponent
+        ));
 
         gift_box_rays_light_query.iter().for_each(|e| {
             commands.entity(e).despawn_recursive();
