@@ -4,6 +4,10 @@
 
 Maxon Petting Simulator source code release. The game is built on Rust and uses [the Bevy game engine](https://bevyengine.org). [Previously it used Java/LibGDX.](https://github.com/ilotterytea/maxon/tree/2c54c6e7590d86159e2e44368caa760945d041cd)
 
+## Prerequisites
+
++ `discord_game_id` file in the `/config` folder, which contains the Application ID that can be obtained from the application created in [Discord Developer Portal](https://discord.com/developers/applications).
+
 ## Building
 To compile this project you will need [Rust](https://www.rust-lang.org) and at least 10 GB of free space . Copy the repository, open it via terminal (or Command Prompt, PowerShell) and do what you need to do:
 
