@@ -9,10 +9,13 @@ use crate::{assets::TextureAtlasAssets, persistent::Savegame, SFXAssets};
 
 use super::components::GameObjectComponent;
 
+#[derive(Event)]
+pub struct PlayerPettedEvent;
+
 #[derive(Component)]
 pub struct PlayerComponent;
 
-pub fn setup_player(
+pub(super) fn setup_player(
     mut commands: Commands,
     texture_atlas_assets: Res<TextureAtlasAssets>,
     mut sprite_params: Sprite3dParams,
@@ -36,13 +39,14 @@ pub fn setup_player(
     ));
 }
 
-pub fn click_on_player(
+pub(super) fn click_on_player(
     mut commands: Commands,
     mut player_query: Query<&mut TextureAtlas, With<PlayerComponent>>,
     texture_atlas_assets: Res<TextureAtlasAssets>,
     texture_atlas_layouts: Res<Assets<TextureAtlasLayout>>,
     sfx_assets: Res<SFXAssets>,
     mut savegame: ResMut<Persistent<Savegame>>,
+    mut player_petted_event_writer: EventWriter<PlayerPettedEvent>,
 ) {
     if let Ok(mut player_atlas) = player_query.get_single_mut() {
         if let Some(layout) = texture_atlas_layouts.get(&texture_atlas_assets.player_layout) {
@@ -59,16 +63,18 @@ pub fn click_on_player(
             ..default()
         },
     });
+
+    player_petted_event_writer.send(PlayerPettedEvent);
 }
 
 #[derive(Resource)]
 pub struct PlayTimestamp(pub SystemTime);
 
-pub fn setup_play_timestamp(mut commands: Commands) {
+pub(super) fn setup_play_timestamp(mut commands: Commands) {
     commands.insert_resource(PlayTimestamp(SystemTime::now()));
 }
 
-pub fn set_played_time(
+pub(super) fn set_played_time(
     mut commands: Commands,
     mut savegame: ResMut<Persistent<Savegame>>,
     played_time: Res<PlayTimestamp>,
