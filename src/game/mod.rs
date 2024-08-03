@@ -4,6 +4,7 @@ use crate::AppState;
 
 mod components;
 mod gift;
+mod minigames;
 pub mod player;
 pub mod shop;
 mod systems;
@@ -14,6 +15,7 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_event::<player::PlayerPettedEvent>()
+            .add_plugins(minigames::MinigamesPlugin)
             .add_plugins(shop::ShopPlugin)
             .add_systems(
                 OnEnter(AppState::Game),
