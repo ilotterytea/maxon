@@ -1,14 +1,29 @@
 use std::f32::consts::PI;
 
 use bevy::prelude::*;
+use bevy_mod_billboard::{
+    BillboardMeshHandle, BillboardTextBundle, BillboardTextureBundle, BillboardTextureHandle,
+};
 use bevy_mod_picking::prelude::*;
 use bevy_persistent::Persistent;
 use bevy_sprite3d::{Sprite3d, Sprite3dParams};
 use rand::Rng;
 
-use crate::{persistent::Savegame, ModelAssets, SFXAssets, SpriteAssets};
+use crate::{
+    persistent::Savegame, style::get_text_style_default, FontAssets, GUIAssets, ModelAssets,
+    SFXAssets, SpriteAssets,
+};
 
-use super::{components::GameObjectComponent, shop::systems::PurchaseEvent, systems::ImNotLookingAtCameraComponent};
+use super::{
+    components::GameObjectComponent, shop::systems::PurchaseEvent,
+    systems::ImNotLookingAtCameraComponent,
+};
+
+#[derive(Component)]
+pub struct GiftboxNotificationText;
+
+#[derive(Component)]
+pub struct GiftboxNotificationIcon;
 
 #[derive(Component)]
 pub struct GiftboxOpenSound;
@@ -43,7 +58,7 @@ pub fn setup_gift_box(mut commands: Commands, model_assets: Res<ModelAssets>) {
         Name::new("Gift box"),
         On::<Pointer<Click>>::run(click_on_gift_box),
         GiftboxComponent(GiftboxStatus::Locked),
-        GameObjectComponent
+        GameObjectComponent,
     ));
 
     commands.insert_resource(GiftboxTimer(Timer::from_seconds(
@@ -72,17 +87,17 @@ pub fn update_gift_box(
         if comp.0 == GiftboxStatus::Opened {
             continue;
         }
-        
+
         commands.spawn((
             AudioBundle {
                 source: sfx_assets.chest_opened.clone(),
                 settings: PlaybackSettings {
                     mode: bevy::audio::PlaybackMode::Loop,
                     ..default()
-                }
+                },
             },
             GiftboxOpenSound,
-            GameObjectComponent
+            GameObjectComponent,
         ));
 
         commands.entity(e).remove::<SceneBundle>();
@@ -108,7 +123,7 @@ pub fn update_gift_box(
             Name::new("Gift box rays"),
             GiftboxRays,
             ImNotLookingAtCameraComponent,
-            GameObjectComponent
+            GameObjectComponent,
         ));
 
         commands.spawn((
@@ -126,7 +141,7 @@ pub fn update_gift_box(
             },
             Name::new("Gift box rays point light"),
             GiftboxRaysLight,
-            GameObjectComponent
+            GameObjectComponent,
         ));
     }
 }
@@ -161,22 +176,25 @@ pub fn click_on_gift_box(
     gift_box_sound_query: Query<Entity, With<GiftboxOpenSound>>,
     model_assets: Res<ModelAssets>,
     sfx_assets: Res<SFXAssets>,
+    font_assets: Res<FontAssets>,
+    gui_assets: Res<GUIAssets>,
+    mut mesh_assets: ResMut<Assets<Mesh>>,
     mut purchase_event_writer: EventWriter<PurchaseEvent>,
 ) {
     for (e, t, mut c) in gift_box_query.iter_mut() {
         if c.0.eq(&GiftboxStatus::Locked) {
             continue;
         }
-        
+
         commands.spawn((
             AudioBundle {
                 source: sfx_assets.chest_click.clone(),
                 settings: PlaybackSettings {
                     mode: bevy::audio::PlaybackMode::Despawn,
                     ..default()
-                }
+                },
             },
-            GameObjectComponent
+            GameObjectComponent,
         ));
 
         gift_box_rays_light_query.iter().for_each(|e| {
@@ -186,7 +204,7 @@ pub fn click_on_gift_box(
         gift_box_rays_query.iter().for_each(|e| {
             commands.entity(e).despawn_recursive();
         });
-        
+
         gift_box_sound_query.iter().for_each(|e| {
             commands.entity(e).despawn_recursive();
         });
@@ -216,6 +234,8 @@ pub fn click_on_gift_box(
             }
         }
 
+        let value: f64;
+
         match choice {
             // Free pet
             0 => {
@@ -238,18 +258,60 @@ pub fn click_on_gift_box(
 
                 // activate pet generation
                 purchase_event_writer.send(PurchaseEvent);
+
+                value = amount as f64;
             }
             // Free multiplier
             1 => {
                 let multiplier = savegame.multiplier * 0.1;
                 savegame.multiplier += multiplier;
+                value = multiplier;
             }
             // Free money
             _ => {
                 let money = savegame.money * 0.1;
                 savegame.money += money;
+                value = money;
             }
         }
+
+        commands.spawn((
+            BillboardTextBundle {
+                text: Text::from_section(
+                    format!("+{:.1}", value),
+                    get_text_style_default(&font_assets),
+                ),
+                transform: Transform::from_xyz(
+                    t.translation.x,
+                    t.translation.y + 3.5,
+                    t.translation.z,
+                )
+                .with_scale(Vec3::splat(0.02)),
+                ..default()
+            },
+            GiftboxNotificationText,
+        ));
+
+        commands.spawn((
+            BillboardTextureBundle {
+                texture: BillboardTextureHandle(match choice {
+                    0 => gui_assets.pets.clone(),
+                    1 => gui_assets.multiplier.clone(),
+                    _ => gui_assets.money.clone(),
+                }),
+                mesh: BillboardMeshHandle(
+                    mesh_assets.add(Rectangle::from_size(Vec2::new(10.0, 10.0))),
+                ),
+                transform: Transform::from_xyz(
+                    t.translation.x,
+                    t.translation.y + 3.0,
+                    t.translation.z,
+                )
+                .with_scale(Vec3::splat(0.05)),
+                ..default()
+            },
+            GiftboxNotificationIcon,
+        ));
 
         break;
     }
@@ -265,5 +327,40 @@ pub fn spin_rays(
         }
 
         t.rotation = t.rotation * Quat::from_rotation_z(1.0 * time.delta_seconds());
+    }
+}
+
+pub fn update_giftbox_notification_position(
+    mut commands: Commands,
+    mut text_query: Query<
+        (Entity, &mut Transform),
+        (
+            With<GiftboxNotificationText>,
+            Without<GiftboxNotificationIcon>,
+        ),
+    >,
+    mut icon_query: Query<
+        (Entity, &mut Transform),
+        (
+            With<GiftboxNotificationIcon>,
+            Without<GiftboxNotificationText>,
+        ),
+    >,
+    time: Res<Time>,
+) {
+    for (e, mut t) in text_query.iter_mut() {
+        if t.translation.y >= 4.0 {
+            commands.entity(e).despawn();
+        }
+
+        t.translation.y += 0.1 * time.delta_seconds();
+    }
+
+    for (e, mut t) in icon_query.iter_mut() {
+        if t.translation.y >= 3.5 {
+            commands.entity(e).despawn();
+        }
+
+        t.translation.y += 0.1 * time.delta_seconds();
     }
 }

@@ -32,6 +32,7 @@ impl Plugin for GamePlugin {
                     systems::update_music_source,
                     gift::update_gift_box,
                     gift::spin_rays,
+                    gift::update_giftbox_notification_position,
                 )
                     .run_if(in_state(AppState::Game)),
             )
