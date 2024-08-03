@@ -157,6 +157,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fc7eb209b1518d6bb87b283c20095f5228ecda460da70b44f0802523dea6da04"
 
 [[package]]
+name = "android-tzdata"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e999941b234f3131b00bc13c22d06e8c5ff726d1b6318ac7eb276997bbb4fef0"
+
+[[package]]
 name = "android_log-sys"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -424,7 +430,7 @@ dependencies = [
  "serde",
  "thiserror",
  "thread_local",
- "uuid",
+ "uuid 1.10.0",
 ]
 
 [[package]]
@@ -471,7 +477,7 @@ dependencies = [
  "ron",
  "serde",
  "thiserror",
- "uuid",
+ "uuid 1.10.0",
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "web-sys",
@@ -570,7 +576,7 @@ dependencies = [
  "bevy_reflect",
  "bevy_tasks",
  "bevy_utils",
- "uuid",
+ "uuid 1.10.0",
 ]
 
 [[package]]
@@ -1027,7 +1033,7 @@ dependencies = [
  "bevy_transform",
  "bevy_utils",
  "bevy_window",
- "uuid",
+ "uuid 1.10.0",
 ]
 
 [[package]]
@@ -1156,7 +1162,7 @@ dependencies = [
  "smallvec",
  "smol_str",
  "thiserror",
- "uuid",
+ "uuid 1.10.0",
 ]
 
 [[package]]
@@ -1169,7 +1175,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.71",
- "uuid",
+ "uuid 1.10.0",
 ]
 
 [[package]]
@@ -1249,7 +1255,7 @@ dependencies = [
  "bevy_utils",
  "serde",
  "thiserror",
- "uuid",
+ "uuid 1.10.0",
 ]
 
 [[package]]
@@ -1704,6 +1710,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
 
 [[package]]
+name = "chrono"
+version = "0.4.38"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a21f936df1771bf62b77f047b726c4625ff2e8aa607c01ec06e5a05bd8463401"
+dependencies = [
+ "android-tzdata",
+ "iana-time-zone",
+ "js-sys",
+ "num-traits",
+ "wasm-bindgen",
+ "windows-targets 0.52.6",
+]
+
+[[package]]
 name = "clang-sys"
 version = "1.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1997,6 +2017,18 @@ dependencies = [
  "option-ext",
  "redox_users",
  "windows-sys 0.48.0",
+]
+
+[[package]]
+name = "discord-rich-presence"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f632a41e3e97febf8edff46b1405f9875894c29e20a25c5abe566872226b3f84"
+dependencies = [
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "uuid 0.8.2",
 ]
 
 [[package]]
@@ -2332,7 +2364,7 @@ dependencies = [
  "fnv",
  "gilrs-core",
  "log",
- "uuid",
+ "uuid 1.10.0",
  "vec_map",
 ]
 
@@ -2350,7 +2382,7 @@ dependencies = [
  "libudev-sys",
  "log",
  "nix",
- "uuid",
+ "uuid 1.10.0",
  "vec_map",
  "wasm-bindgen",
  "web-sys",
@@ -2604,6 +2636,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e3d1354bf6b7235cb4a0576c2619fd4ed18183f689b12b006a0ee7329eeff9a5"
 dependencies = [
  "windows-sys 0.52.0",
+]
+
+[[package]]
+name = "iana-time-zone"
+version = "0.1.60"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e7ffbb5a1b541ea2561f8c41c087286cc091e21e556a4f09a8f6cbf17b69b141"
+dependencies = [
+ "android_system_properties",
+ "core-foundation-sys",
+ "iana-time-zone-haiku",
+ "js-sys",
+ "wasm-bindgen",
+ "windows-core 0.52.0",
+]
+
+[[package]]
+name = "iana-time-zone-haiku"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f31827a206f56af32e590ba56d5d2d085f558508192593743f16b2306495269f"
+dependencies = [
+ "cc",
 ]
 
 [[package]]
@@ -2939,7 +2994,9 @@ dependencies = [
  "bevy_simple_scroll_view",
  "bevy_sprite3d",
  "bevy_tweening",
+ "chrono",
  "dirs",
+ "discord-rich-presence",
  "rand",
  "serde",
  "serde_json",
@@ -4341,6 +4398,15 @@ dependencies = [
  "form_urlencoded",
  "idna",
  "percent-encoding",
+]
+
+[[package]]
+name = "uuid"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bc5cf98d8186244414c848017f0e2676b3fcb46807f6668a97dfe67359a3c4b7"
+dependencies = [
+ "getrandom",
 ]
 
 [[package]]

@@ -20,6 +20,7 @@ mod assets;
 mod boot;
 mod constants;
 mod debug;
+mod discord;
 mod game;
 mod localization;
 mod menu;
@@ -73,6 +74,14 @@ fn main() {
 
     // Billboard
     app.add_plugins((Sprite3dPlugin, BillboardPlugin));
+
+    // Discord presence
+    app.add_systems(Startup, discord::init_discord_ipc_client);
+    app.add_systems(Update, discord::update_discord_ipc_client);
+    app.add_systems(
+        Last,
+        discord::shutdown_discord_ipc_client.run_if(on_event::<AppExit>()),
+    );
 
     // 3D picking
     app.add_plugins(DefaultPickingPlugins);
