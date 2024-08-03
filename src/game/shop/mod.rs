@@ -25,7 +25,7 @@ impl Plugin for ShopPlugin {
                 ui::pet_node_interaction,
                 systems::play_sound_for_disabled_pets,
                 ui::update_pet_nodes,
-                ui::update_pet_amount,
+                ui::update_pet_amount.run_if(on_event::<PurchaseEvent>()),
                 #[cfg(any(target_os = "android", target_os = "ios"))]
                 ui::toggle_shop_list,
                 systems::tick_multiplier,

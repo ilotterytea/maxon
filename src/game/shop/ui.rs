@@ -641,13 +641,13 @@ pub fn toggle_pet_nodes(
 
         price = price.trunc();
 
-        if (shop_settings.mode == ShopMode::Buy && price > savegame.money.trunc())
-            || (shop_settings.mode == ShopMode::Sell && amount as i32 - multiplier < 0)
+        if ((shop_settings.mode == ShopMode::Buy && price > savegame.money.trunc())
+            || (shop_settings.mode == ShopMode::Sell && amount as i32 - multiplier < 0))
+            && d.is_none()
         {
             match (part, text) {
                 (PetComponent::Base, _) => {
                     *bg = STORE_ITEM_DISABLED_BG_COLOR.into();
-                    commands.entity(e).insert(PetDisabledComponent);
                 }
                 (PetComponent::Name, Some(mut text)) => {
                     text.sections[0].style.color = color::GRAY.into();
@@ -658,16 +658,18 @@ pub fn toggle_pet_nodes(
                 _ => {}
             }
 
+            commands.entity(e).insert(PetDisabledComponent);
+
             continue;
         }
 
-        if (shop_settings.mode == ShopMode::Buy && price <= savegame.money.trunc())
-            || (shop_settings.mode == ShopMode::Sell && amount as i32 - multiplier >= 0)
+        if ((shop_settings.mode == ShopMode::Buy && price <= savegame.money.trunc())
+            || (shop_settings.mode == ShopMode::Sell && amount as i32 - multiplier >= 0))
+            && d.is_some()
         {
             match (part, text) {
                 (PetComponent::Base, _) => {
                     *bg = STORE_ITEM_BG_COLOR.into();
-                    commands.entity(e).remove::<PetDisabledComponent>();
                 }
                 (PetComponent::Name, Some(mut text)) => {
                     text.sections[0].style.color = color::WHITE.into();
@@ -678,6 +680,8 @@ pub fn toggle_pet_nodes(
                 _ => {}
             }
 
+            commands.entity(e).remove::<PetDisabledComponent>();
+
             continue;
         }
     }
@@ -685,7 +689,7 @@ pub fn toggle_pet_nodes(
 
 pub fn pet_node_interaction(
     mut commands: Commands,
-    mut query: Query<
+    query: Query<
         (&Interaction, &PetIdComponent),
         (
             With<PetComponent>,
@@ -704,6 +708,10 @@ pub fn pet_node_interaction(
     let pets = pets_assets.get(data_assets.pets.id()).unwrap();
 
     for (i, id) in query.iter() {
+        if *i != Interaction::Pressed {
+            continue;
+        }
+
         let id = &id.0;
         let pet = pets.0.iter().find(|x| x.id.eq(id)).unwrap();
 
@@ -717,40 +725,35 @@ pub fn pet_node_interaction(
 
         price = price.trunc();
 
-        match *i {
-            Interaction::Pressed => {
-                let source: &Handle<AudioSource>;
+        let source: &Handle<AudioSource>;
 
-                if shop_settings.mode == ShopMode::Buy {
-                    savegame.money -= price;
-                    savegame.multiplier += pet.multiplier * multiplier as f64;
-                    savegame
-                        .pets
-                        .entry(id.clone())
-                        .and_modify(|x| *x += multiplier as u32)
-                        .or_insert(multiplier as u32);
-                    source = &sfx_assets.purchase;
-                } else {
-                    savegame.money += price;
-                    savegame.multiplier -= pet.multiplier * multiplier as f64;
-                    savegame
-                        .pets
-                        .entry(id.clone())
-                        .and_modify(|x| *x -= multiplier as u32);
-                    source = &sfx_assets.sell;
-                }
-
-                purchase_event_writer.send(PurchaseEvent);
-                commands.spawn(AudioBundle {
-                    source: source.clone(),
-                    settings: PlaybackSettings {
-                        mode: bevy::audio::PlaybackMode::Despawn,
-                        ..default()
-                    },
-                });
-            }
-            _ => {}
+        if shop_settings.mode == ShopMode::Buy {
+            savegame.money -= price;
+            savegame.multiplier += pet.multiplier * multiplier as f64;
+            savegame
+                .pets
+                .entry(id.clone())
+                .and_modify(|x| *x += multiplier as u32)
+                .or_insert(multiplier as u32);
+            source = &sfx_assets.purchase;
+        } else {
+            savegame.money += price;
+            savegame.multiplier -= pet.multiplier * multiplier as f64;
+            savegame
+                .pets
+                .entry(id.clone())
+                .and_modify(|x| *x -= multiplier as u32);
+            source = &sfx_assets.sell;
         }
+
+        purchase_event_writer.send(PurchaseEvent);
+        commands.spawn(AudioBundle {
+            source: source.clone(),
+            settings: PlaybackSettings {
+                mode: bevy::audio::PlaybackMode::Despawn,
+                ..default()
+            },
+        });
     }
 }
 
@@ -767,7 +770,7 @@ pub fn update_pet_nodes(
     let pets = pets_assets.get(data_assets.pets.id()).unwrap();
 
     for (mut text, id, comp) in query.iter_mut() {
-        if (comp != &PetComponent::Price) {
+        if comp != &PetComponent::Price {
             continue;
         }
 
@@ -788,17 +791,12 @@ pub fn update_pet_nodes(
 }
 
 pub fn update_pet_amount(
-    mut purchase_events: EventReader<PurchaseEvent>,
     savegame: Res<Persistent<Savegame>>,
     mut text_query: Query<
         (&mut Text, &mut Style, &PetIdComponent, &PetComponent),
         (With<PetComponent>, With<PetIdComponent>, With<Text>),
     >,
 ) {
-    if purchase_events.read().next().is_none() {
-        return;
-    }
-
     for (mut text, mut style, id, comp) in text_query.iter_mut() {
         if comp != &PetComponent::Amount {
             continue;
