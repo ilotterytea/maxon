@@ -14,17 +14,30 @@ pub struct DiscordIpcResource(pub DiscordIpcClient, pub chrono::DateTime<chrono:
 pub struct DiscordIpcTimer(pub Timer);
 
 pub fn init_discord_ipc_client(mut commands: Commands) {
-    let mut client = DiscordIpcClient::new(include_str!("../config/discord_game_id"))
-        .expect("Failed to create Discord IPC client");
-    client.connect().expect("Failed to connect Discord IPC");
+    let mut client = match DiscordIpcClient::new(include_str!("../config/discord_game_id")) {
+        Ok(c) => c,
+        Err(e) => {
+            warn!("Failed to create Discord IPC client: {}", e);
+            return;
+        }
+    };
 
-    client
+    if let Some(e) = client.connect().err() {
+        warn!("Failed to connect Discord IPC client: {}", e);
+        return;
+    }
+
+    if let Some(e) = client
         .set_activity(
             Activity::new()
                 .details("Petting Maxon")
                 .assets(Assets::new().large_image("maxon")),
         )
-        .expect("Failed to set activity");
+        .err()
+    {
+        warn!("Failed to set activity: {}", e);
+        return;
+    }
 
     commands.insert_resource(DiscordIpcResource(client, chrono::Utc::now()));
 
@@ -35,13 +48,20 @@ pub fn init_discord_ipc_client(mut commands: Commands) {
 }
 
 pub fn update_discord_ipc_client(
-    mut client: ResMut<DiscordIpcResource>,
-    mut timer: ResMut<DiscordIpcTimer>,
+    client: Option<ResMut<DiscordIpcResource>>,
+    timer: Option<ResMut<DiscordIpcTimer>>,
     app_state: Res<State<AppState>>,
     savegame: Res<Persistent<Savegame>>,
     time: Res<Time>,
     mut player_petted_event_reader: EventReader<PlayerPettedEvent>,
 ) {
+    if timer.is_none() || client.is_none() {
+        return;
+    }
+
+    let mut timer = timer.unwrap();
+    let mut client = client.unwrap();
+
     timer.0.tick(time.delta());
 
     if timer.0.just_finished() {
@@ -75,16 +95,21 @@ pub fn update_discord_ipc_client(
                 .timestamps(timestamps),
         };
 
-        client
-            .0
-            .set_activity(activity)
-            .expect("Failed to set activity");
+        if let Some(e) = client.0.set_activity(activity).err() {
+            warn!("Failed to set activity: {}", e);
+            return;
+        }
     }
 }
 
-pub fn shutdown_discord_ipc_client(mut client: ResMut<DiscordIpcResource>) {
-    client
-        .0
-        .close()
-        .expect("Failed to close the Discord IPC connection");
+pub fn shutdown_discord_ipc_client(client: Option<ResMut<DiscordIpcResource>>) {
+    if client.is_none() {
+        return;
+    }
+
+    let mut client = client.unwrap();
+
+    if let Some(e) = client.0.close().err() {
+        warn!("Failed to close Discord IPC client: {}", e);
+    }
 }
