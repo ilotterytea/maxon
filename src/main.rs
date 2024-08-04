@@ -117,4 +117,5 @@ pub enum AppState {
     Boot,
     Menu,
     Game,
+    MinigamesLobby,
 }
