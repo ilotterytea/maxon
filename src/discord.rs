@@ -87,13 +87,15 @@ pub fn update_discord_ipc_client(
                     Assets::new()
                         .large_image("maxon")
                         .large_text(&savegame_showcase),
-                )
-                .timestamps(timestamps),
+                ),
+            AppState::MinigamesLobby => Activity::new()
+                .details("Selects a mini-game...")
+                .assets(Assets::new().large_image("maxon")),
             _ => Activity::new()
                 .details("Sitting in Main Menu")
-                .assets(Assets::new().large_image("maxon"))
-                .timestamps(timestamps),
-        };
+                .assets(Assets::new().large_image("maxon")),
+        }
+        .timestamps(timestamps);
 
         if let Some(e) = client.0.set_activity(activity).err() {
             warn!("Failed to set activity: {}", e);
