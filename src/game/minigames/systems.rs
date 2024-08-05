@@ -5,6 +5,7 @@ use bevy_mod_picking::prelude::*;
 
 use crate::{
     game::components::GameObjectComponent, systems::CameraComponent, AppState, ModelAssets,
+    SpriteAssets,
 };
 
 #[derive(Component)]
@@ -48,7 +49,10 @@ pub fn despawn_minigame_lobby_objects(
 pub fn setup_minigames_scene(
     mut commands: Commands,
     model_assets: Res<ModelAssets>,
+    sprite_assets: Res<SpriteAssets>,
     mut camera_query: Query<&mut Transform, With<CameraComponent>>,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     let mut camera_transform = camera_query.single_mut();
     *camera_transform = Transform::from_xyz(2.4, 4.4, 4.7).with_rotation(Quat::from_rotation_y(PI));
@@ -94,6 +98,20 @@ pub fn setup_minigames_scene(
             ..default()
         },
         Name::new("Main point light"),
+        MinigameLobbyObjectComponent,
+    ));
+
+    commands.spawn((
+        PbrBundle {
+            mesh: meshes.add(Cuboid::new(2.15, 1.35, 0.01)),
+            material: materials.add(StandardMaterial {
+                base_color_texture: Some(sprite_assets.pc_background.clone()),
+                ..default()
+            }),
+            transform: Transform::from_xyz(2.3, 4.25, 6.66),
+            ..default()
+        },
+        Name::new("PC Background"),
         MinigameLobbyObjectComponent,
     ));
 }

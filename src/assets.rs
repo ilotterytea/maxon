@@ -78,6 +78,9 @@ pub struct GUIAssets {
 pub struct SpriteAssets {
     #[asset(path = "sprites/env/rays.png")]
     pub rays: Handle<Image>,
+
+    #[asset(path = "sprites/minigames/pc_background.png")]
+    pub pc_background: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]
@@ -114,10 +117,10 @@ pub struct SFXAssets {
 
     #[asset(path = "sfx/ui/click.ogg")]
     pub click: Handle<AudioSource>,
-    
+
     #[asset(path = "sfx/chest/chest_opened.ogg")]
     pub chest_opened: Handle<AudioSource>,
-    
+
     #[asset(path = "sfx/chest/chest_click.ogg")]
     pub chest_click: Handle<AudioSource>,
 }
