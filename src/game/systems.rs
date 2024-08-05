@@ -72,6 +72,23 @@ pub fn setup_scene(
         Name::new("Main point light"),
         GameObjectComponent,
     ));
+
+    commands.spawn((
+        PointLightBundle {
+            point_light: PointLight {
+                color: bevy::color::palettes::css::PLUM.into(),
+                intensity: 250000.0,
+                radius: 200.0,
+                range: 100.0,
+                shadows_enabled: true,
+                ..default()
+            },
+            transform: Transform::from_xyz(3.5, 4.0, 5.5),
+            ..default()
+        },
+        Name::new("PC point light"),
+        GameObjectComponent,
+    ));
 }
 
 pub fn despawn_game_objects(

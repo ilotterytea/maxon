@@ -55,7 +55,8 @@ pub fn setup_minigames_scene(
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     let mut camera_transform = camera_query.single_mut();
-    *camera_transform = Transform::from_xyz(2.4, 4.4, 4.7).with_rotation(Quat::from_rotation_y(PI));
+    *camera_transform =
+        Transform::from_xyz(2.28, 4.4, 4.7).with_rotation(Quat::from_rotation_y(PI));
 
     commands.spawn((
         SceneBundle {
@@ -63,41 +64,6 @@ pub fn setup_minigames_scene(
             ..default()
         },
         Name::new("Living room scene"),
-        MinigameLobbyObjectComponent,
-    ));
-
-    commands.spawn((
-        PointLightBundle {
-            point_light: PointLight {
-                color: bevy::color::palettes::css::HOT_PINK.into(),
-                intensity: 200000.0,
-                radius: 200.0,
-                range: 100.0,
-                shadows_enabled: true,
-                ..default()
-            },
-            transform: Transform::from_xyz(5.0, 6.4, 1.5),
-            ..default()
-        },
-        Name::new("Offline point light"),
-        MinigameLobbyObjectComponent,
-    ));
-
-    commands.spawn((
-        PointLightBundle {
-            point_light: PointLight {
-                color: bevy::color::palettes::css::WHEAT.into(),
-                intensity: 350000.0,
-                radius: 200.0,
-                range: 100.0,
-                shadows_enabled: true,
-                ..default()
-            },
-            transform: Transform::from_xyz(0.0, 4.0, 1.2)
-                .with_rotation(Quat::from_rotation_x(-90.0 * PI / 180.0)),
-            ..default()
-        },
-        Name::new("Main point light"),
         MinigameLobbyObjectComponent,
     ));
 
@@ -112,6 +78,23 @@ pub fn setup_minigames_scene(
             ..default()
         },
         Name::new("PC Background"),
+        MinigameLobbyObjectComponent,
+    ));
+
+    commands.spawn((
+        PointLightBundle {
+            point_light: PointLight {
+                color: bevy::color::palettes::css::LIGHT_CYAN.into(),
+                intensity: 250000.0,
+                radius: 200.0,
+                range: 100.0,
+                shadows_enabled: true,
+                ..default()
+            },
+            transform: Transform::from_xyz(2.3, 4.2, 4.0),
+            ..default()
+        },
+        Name::new("PC point light"),
         MinigameLobbyObjectComponent,
     ));
 }
