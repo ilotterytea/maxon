@@ -12,6 +12,10 @@ impl Plugin for MinigamesPlugin {
             .add_systems(
                 OnEnter(AppState::MinigamesLobby),
                 systems::setup_minigames_scene,
+            )
+            .add_systems(
+                OnExit(AppState::MinigamesLobby),
+                systems::despawn_minigame_lobby_objects,
             );
     }
 }

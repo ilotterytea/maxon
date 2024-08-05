@@ -36,6 +36,15 @@ pub fn click_on_minigames_trigger(mut next_state: ResMut<NextState<AppState>>) {
 #[derive(Component)]
 pub struct MinigameLobbyObjectComponent;
 
+pub fn despawn_minigame_lobby_objects(
+    mut commands: Commands,
+    query: Query<Entity, With<MinigameLobbyObjectComponent>>,
+) {
+    for e in query.iter() {
+        commands.entity(e).despawn_recursive();
+    }
+}
+
 pub fn setup_minigames_scene(
     mut commands: Commands,
     model_assets: Res<ModelAssets>,
