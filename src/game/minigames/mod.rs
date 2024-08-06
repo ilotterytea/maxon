@@ -3,21 +3,24 @@ use bevy::prelude::*;
 use crate::AppState;
 
 mod backend_systems;
-mod systems;
+mod lobby_systems;
 
 pub struct MinigamesPlugin;
 
 impl Plugin for MinigamesPlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<MinigameState>()
-            .add_systems(OnEnter(AppState::Game), systems::spawn_minigames_trigger)
+            .add_systems(
+                OnEnter(AppState::Game),
+                lobby_systems::spawn_minigames_trigger,
+            )
             .add_systems(
                 OnEnter(AppState::MinigamesLobby),
-                systems::setup_minigames_scene,
+                lobby_systems::setup_minigames_scene,
             )
             .add_systems(
                 OnExit(AppState::MinigamesLobby),
-                systems::despawn_minigame_lobby_objects,
+                lobby_systems::despawn_minigame_lobby_objects,
             )
             // Minigame backend setup
             .add_systems(
