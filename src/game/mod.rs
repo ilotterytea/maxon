@@ -4,7 +4,7 @@ use crate::AppState;
 
 mod components;
 mod gift;
-mod minigames;
+pub mod minigames;
 pub mod player;
 pub mod shop;
 mod systems;

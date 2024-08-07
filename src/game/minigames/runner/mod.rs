@@ -2,9 +2,9 @@ use bevy::prelude::*;
 
 use super::MinigameState;
 
-mod systems;
+pub mod systems;
 
-pub struct RunnerMinigamePlugin;
+pub(super) struct RunnerMinigamePlugin;
 
 impl Plugin for RunnerMinigamePlugin {
     fn build(&self, app: &mut App) {

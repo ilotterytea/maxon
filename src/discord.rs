@@ -5,7 +5,14 @@ use discord_rich_presence::{
     DiscordIpc, DiscordIpcClient,
 };
 
-use crate::{game::player::PlayerPettedEvent, persistent::Savegame, AppState};
+use crate::{
+    game::{
+        minigames::{runner::systems::ScoreResource, MinigameState},
+        player::PlayerPettedEvent,
+    },
+    persistent::Savegame,
+    AppState,
+};
 
 #[derive(Resource)]
 pub struct DiscordIpcResource(pub DiscordIpcClient, pub chrono::DateTime<chrono::Utc>);
@@ -50,7 +57,9 @@ pub fn init_discord_ipc_client(mut commands: Commands) {
 pub fn update_discord_ipc_client(
     client: Option<ResMut<DiscordIpcResource>>,
     timer: Option<ResMut<DiscordIpcTimer>>,
+    score: Option<Res<ScoreResource>>,
     app_state: Res<State<AppState>>,
+    minigame_state: Res<State<MinigameState>>,
     savegame: Res<Persistent<Savegame>>,
     time: Res<Time>,
     mut player_petted_event_reader: EventReader<PlayerPettedEvent>,
@@ -74,10 +83,19 @@ pub fn update_discord_ipc_client(
             savegame.pets.values().sum::<u32>()
         );
 
+        let score = format!(
+            "{} PTS",
+            if let Some(p) = score {
+                p.0.to_string()
+            } else {
+                "???".into()
+            }
+        );
+
         let timestamps = Timestamps::new().start(client.1.timestamp());
 
-        let activity = match app_state.get() {
-            AppState::Game => Activity::new()
+        let activity = match (app_state.get(), minigame_state.get()) {
+            (AppState::Game, _) => Activity::new()
                 .details(if was_player_petted {
                     "Petting Maxon"
                 } else {
@@ -88,9 +106,18 @@ pub fn update_discord_ipc_client(
                         .large_image("maxon")
                         .large_text(&savegame_showcase),
                 ),
-            AppState::MinigamesLobby => Activity::new()
+            (AppState::MinigamesLobby, _) => Activity::new()
                 .details("Selects a mini-game...")
                 .assets(Assets::new().large_image("maxon")),
+            (AppState::Minigame, MinigameState::Runner) => Activity::new()
+                .details("Running through the fields...")
+                .assets(
+                    Assets::new()
+                        .large_image("runner")
+                        .large_text(&score)
+                        .small_image("maxon")
+                        .small_text(&savegame_showcase),
+                ),
             _ => Activity::new()
                 .details("Sitting in Main Menu")
                 .assets(Assets::new().large_image("maxon")),

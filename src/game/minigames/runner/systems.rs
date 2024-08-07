@@ -17,39 +17,39 @@ use crate::{
 };
 
 #[derive(Component)]
-pub struct RunnerObjectComponent;
+pub(super) struct RunnerObjectComponent;
 
 #[derive(Component)]
-pub struct GroundComponent;
+pub(super) struct GroundComponent;
 
 #[derive(Component)]
-pub struct PlayerComponent {
+pub(super) struct PlayerComponent {
     pub velocity: f32,
     pub jumped: bool,
     pub died: bool,
 }
 
 #[derive(Component)]
-pub struct ObstacleComponent {
+pub(super) struct ObstacleComponent {
     pub max_atlas_index: usize,
 }
 
 #[derive(Component)]
-pub struct UIHopTextComponent;
+pub(super) struct UIHopTextComponent;
 
 #[derive(Component)]
-pub struct UIHopSecondTextComponent;
+pub(super) struct UIHopSecondTextComponent;
 
 #[derive(Component)]
-pub struct UIHopImageComponent;
+pub(super) struct UIHopImageComponent;
 
 #[derive(Component)]
-pub struct ScoreComponent;
+pub(super) struct ScoreComponent;
 
 #[derive(Resource)]
 pub struct ScoreResource(pub u32);
 
-pub fn setup_runner(
+pub(super) fn setup_runner(
     mut commands: Commands,
     sprite_assets: Res<SpriteAssets>,
     gui_assets: Res<GUIAssets>,
@@ -180,7 +180,10 @@ pub fn setup_runner(
     commands.insert_resource(ScoreResource(0));
 }
 
-pub fn despawn_runner(mut commands: Commands, query: Query<Entity, With<RunnerObjectComponent>>) {
+pub(super) fn despawn_runner(
+    mut commands: Commands,
+    query: Query<Entity, With<RunnerObjectComponent>>,
+) {
     for e in query.iter() {
         commands.entity(e).despawn_recursive();
     }
@@ -188,7 +191,7 @@ pub fn despawn_runner(mut commands: Commands, query: Query<Entity, With<RunnerOb
     commands.remove_resource::<ScoreResource>();
 }
 
-pub fn jump_player(
+pub(super) fn jump_player(
     mut commands: Commands,
     button_input: Res<ButtonInput<KeyCode>>,
     mut player_query: Query<(Entity, &mut PlayerComponent), With<PlayerComponent>>,
@@ -232,7 +235,7 @@ pub fn jump_player(
     }
 }
 
-pub fn gravity_system(
+pub(super) fn gravity_system(
     time: Res<Time>,
     mut player_query: Query<(&mut Transform, &mut PlayerComponent), With<PlayerComponent>>,
 ) {
@@ -252,7 +255,7 @@ pub fn gravity_system(
     }
 }
 
-pub fn spawn_obstacles(
+pub(super) fn spawn_obstacles(
     mut commands: Commands,
     sprite_assets: Res<SpriteAssets>,
     query: Query<&Transform, With<ObstacleComponent>>,
@@ -304,7 +307,7 @@ pub fn spawn_obstacles(
     ));
 }
 
-pub fn update_obstacles(
+pub(super) fn update_obstacles(
     mut commands: Commands,
     time: Res<Time>,
     mut query: Query<
@@ -331,7 +334,7 @@ pub fn update_obstacles(
 }
 
 #[allow(clippy::type_complexity)]
-pub fn check_obstacle_collision(
+pub(super) fn check_obstacle_collision(
     mut commands: Commands,
     mut player_query: Query<(Entity, &Transform, &mut PlayerComponent), With<PlayerComponent>>,
     obstacle_query: Query<(Entity, &Transform), With<ObstacleComponent>>,
@@ -439,7 +442,7 @@ pub fn check_obstacle_collision(
     }
 }
 
-pub fn update_score(
+pub(super) fn update_score(
     mut score: ResMut<ScoreResource>,
     player_query: Query<&PlayerComponent, With<PlayerComponent>>,
     mut text_query: Query<&mut Text, With<ScoreComponent>>,
@@ -469,7 +472,7 @@ pub fn update_score(
 }
 
 #[allow(clippy::too_many_arguments, clippy::type_complexity)]
-pub fn listen_keyboard_events(
+pub(super) fn listen_keyboard_events(
     mut commands: Commands,
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut player_query: Query<(Entity, &mut Transform, &mut PlayerComponent), With<PlayerComponent>>,

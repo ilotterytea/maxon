@@ -4,7 +4,7 @@ use crate::AppState;
 
 mod backend_systems;
 mod lobby_systems;
-mod runner;
+pub mod runner;
 
 pub struct MinigamesPlugin;
 
