@@ -118,4 +118,5 @@ pub enum AppState {
     Menu,
     Game,
     MinigamesLobby,
+    Minigame,
 }

@@ -53,3 +53,19 @@ pub fn get_text_style_debug_value(font_assets: &Res<FontAssets>) -> TextStyle {
         color: color::LIME.into(),
     }
 }
+
+pub fn get_text_style_minigame(font_assets: &Res<FontAssets>) -> TextStyle {
+    TextStyle {
+        font: font_assets.text.clone(),
+        font_size: 32.0,
+        color: color::WHITE.into(),
+    }
+}
+
+pub fn get_text_style_minigame_large_value(font_assets: &Res<FontAssets>) -> TextStyle {
+    TextStyle {
+        font: font_assets.text.clone(),
+        font_size: 128.0,
+        color: color::ORANGE.into(),
+    }
+}

@@ -8,6 +8,8 @@ use crate::{
     SpriteAssets,
 };
 
+use super::MinigameState;
+
 #[derive(Component)]
 pub struct MinigamesTriggerComponent;
 
@@ -97,4 +99,35 @@ pub fn setup_minigames_scene(
         Name::new("PC point light"),
         MinigameLobbyObjectComponent,
     ));
+
+    commands.spawn((
+        PbrBundle {
+            mesh: meshes.add(Cuboid::new(0.3, 0.3, 0.01)),
+            material: materials.add(StandardMaterial {
+                base_color_texture: Some(sprite_assets.runner_icon.clone()),
+                ..default()
+            }),
+            transform: Transform::from_xyz(3.1, 4.7, 6.65),
+            ..default()
+        },
+        On::<Pointer<Click>>::run(play_runner),
+        Name::new("Runner Icon"),
+        MinigameLobbyObjectComponent,
+    ));
+}
+
+fn play_runner(
+    next_state: ResMut<NextState<AppState>>,
+    next_mg_state: ResMut<NextState<MinigameState>>,
+) {
+    play_minigame(MinigameState::Runner, next_state, next_mg_state);
+}
+
+fn play_minigame(
+    game: MinigameState,
+    mut next_state: ResMut<NextState<AppState>>,
+    mut next_mg_state: ResMut<NextState<MinigameState>>,
+) {
+    next_state.set(AppState::Minigame);
+    next_mg_state.set(game);
 }

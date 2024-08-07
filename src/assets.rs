@@ -72,6 +72,15 @@ pub struct GUIAssets {
 
     #[asset(texture_atlas_layout(tile_size_x = 64, tile_size_y = 64, columns = 4, rows = 4))]
     pub pet_icon_layout: Handle<TextureAtlasLayout>,
+
+    #[asset(path = "sprites/gui/keyboard/key_f.png")]
+    pub key_f: Handle<Image>,
+
+    #[asset(path = "sprites/gui/keyboard/key_r.png")]
+    pub key_r: Handle<Image>,
+
+    #[asset(path = "sprites/gui/keyboard/key_space.png")]
+    pub key_space: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]
@@ -81,6 +90,24 @@ pub struct SpriteAssets {
 
     #[asset(path = "sprites/minigames/pc_background.png")]
     pub pc_background: Handle<Image>,
+
+    #[asset(path = "sprites/minigames/icons/runner.png")]
+    pub runner_icon: Handle<Image>,
+
+    #[asset(path = "sprites/minigames/runner/player.png")]
+    pub runner_player: Handle<Image>,
+
+    #[asset(texture_atlas_layout(tile_size_x = 16, tile_size_y = 36, columns = 12, rows = 1))]
+    pub runner_piston_layout: Handle<TextureAtlasLayout>,
+
+    #[asset(path = "sprites/minigames/runner/pistons.png")]
+    pub runner_piston_texture: Handle<Image>,
+
+    #[asset(path = "sprites/minigames/runner/background.png")]
+    pub runner_background: Handle<Image>,
+
+    #[asset(path = "sprites/minigames/runner/ground.png")]
+    pub runner_ground: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]

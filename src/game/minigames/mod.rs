@@ -4,6 +4,7 @@ use crate::AppState;
 
 mod backend_systems;
 mod lobby_systems;
+mod runner;
 
 pub struct MinigamesPlugin;
 
@@ -30,7 +31,9 @@ impl Plugin for MinigamesPlugin {
             .add_systems(
                 OnExit(MinigameState::None),
                 backend_systems::setup_minigame_backend,
-            );
+            )
+            // Minigames
+            .add_plugins(runner::RunnerMinigamePlugin);
     }
 }
 
@@ -38,4 +41,5 @@ impl Plugin for MinigamesPlugin {
 pub enum MinigameState {
     #[default]
     None,
+    Runner,
 }
