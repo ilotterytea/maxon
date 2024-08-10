@@ -81,6 +81,12 @@ pub struct GUIAssets {
 
     #[asset(path = "sprites/gui/keyboard/key_space.png")]
     pub key_space: Handle<Image>,
+
+    #[asset(path = "sprites/gui/keyboard/key_a.png")]
+    pub key_a: Handle<Image>,
+
+    #[asset(path = "sprites/gui/keyboard/key_d.png")]
+    pub key_d: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]
@@ -108,6 +114,33 @@ pub struct SpriteAssets {
 
     #[asset(path = "sprites/minigames/runner/ground.png")]
     pub runner_ground: Handle<Image>,
+
+    #[asset(path = "sprites/minigames/slots/background.png")]
+    pub slots_background: Handle<Image>,
+
+    #[asset(path = "sprites/minigames/slots/arbuz.png")]
+    pub slots_arbuz: Handle<Image>,
+
+    #[asset(path = "sprites/minigames/slots/icecream.png")]
+    pub slots_icecream: Handle<Image>,
+
+    #[asset(path = "sprites/minigames/slots/kochan.png")]
+    pub slots_kochan: Handle<Image>,
+
+    #[asset(path = "sprites/minigames/slots/buter.png")]
+    pub slots_buterbror: Handle<Image>,
+
+    #[asset(path = "sprites/minigames/slots/corn.png")]
+    pub slots_corn: Handle<Image>,
+
+    #[asset(path = "sprites/minigames/slots/kebab.png")]
+    pub slots_kebab: Handle<Image>,
+
+    #[asset(path = "sprites/minigames/slots/onions.png")]
+    pub slots_onions: Handle<Image>,
+
+    #[asset(path = "sprites/minigames/slots/treat.png")]
+    pub slots_treat: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]
@@ -150,4 +183,25 @@ pub struct SFXAssets {
 
     #[asset(path = "sfx/chest/chest_click.ogg")]
     pub chest_click: Handle<AudioSource>,
+
+    #[asset(path = "sfx/slots/slots_column_selected.ogg")]
+    pub slots_column_selected: Handle<AudioSource>,
+
+    #[asset(path = "sfx/slots/slots_loop.ogg")]
+    pub slots_loop: Handle<AudioSource>,
+
+    #[asset(path = "sfx/slots/slots_start.ogg")]
+    pub slots_start: Handle<AudioSource>,
+
+    #[asset(path = "sfx/slots/slots_fail.ogg")]
+    pub slots_fail: Handle<AudioSource>,
+
+    #[asset(path = "sfx/slots/slots_small_win.ogg")]
+    pub slots_small_win: Handle<AudioSource>,
+
+    #[asset(path = "sfx/slots/slots_medium_win.ogg")]
+    pub slots_medium_win: Handle<AudioSource>,
+
+    #[asset(path = "sfx/slots/slots_big_win.ogg")]
+    pub slots_big_win: Handle<AudioSource>,
 }

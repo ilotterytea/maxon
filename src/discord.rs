@@ -7,7 +7,7 @@ use discord_rich_presence::{
 
 use crate::{
     game::{
-        minigames::{runner::systems::ScoreResource, MinigameState},
+        minigames::{runner::systems::ScoreResource, slots::SlotsResource, MinigameState},
         player::PlayerPettedEvent,
     },
     persistent::Savegame,
@@ -58,6 +58,7 @@ pub fn update_discord_ipc_client(
     client: Option<ResMut<DiscordIpcResource>>,
     timer: Option<ResMut<DiscordIpcTimer>>,
     score: Option<Res<ScoreResource>>,
+    slots: Option<Res<SlotsResource>>,
     app_state: Res<State<AppState>>,
     minigame_state: Res<State<MinigameState>>,
     savegame: Res<Persistent<Savegame>>,
@@ -83,14 +84,35 @@ pub fn update_discord_ipc_client(
             savegame.pets.values().sum::<u32>()
         );
 
-        let score = format!(
-            "{} PTS",
-            if let Some(p) = score {
-                p.0.to_string()
-            } else {
-                "???".into()
+        let score = match minigame_state.get() {
+            MinigameState::Runner => {
+                format!(
+                    "{} PTS",
+                    if let Some(p) = score {
+                        p.0.to_string()
+                    } else {
+                        "???".into()
+                    }
+                )
             }
-        );
+            MinigameState::Slots => {
+                format!(
+                    "{}{}/{}",
+                    if let Some(r) = slots {
+                        format!(
+                            "{} ({}%) 💵 bet - ",
+                            r.stake.trunc(),
+                            r.stake_percent.trunc()
+                        )
+                    } else {
+                        "".into()
+                    },
+                    savegame.minigames.slots.total_spins,
+                    savegame.minigames.slots.wins
+                )
+            }
+            MinigameState::None => "".into(),
+        };
 
         let timestamps = Timestamps::new().start(client.1.timestamp());
 
@@ -118,6 +140,15 @@ pub fn update_discord_ipc_client(
                         .small_image("maxon")
                         .small_text(&savegame_showcase),
                 ),
+            (AppState::Minigame, MinigameState::Slots) => {
+                Activity::new().details("Spins the slots").assets(
+                    Assets::new()
+                        .large_image("slots")
+                        .large_text(&score)
+                        .small_image("maxon")
+                        .small_text(&savegame_showcase),
+                )
+            }
             _ => Activity::new()
                 .details("Sitting in Main Menu")
                 .assets(Assets::new().large_image("maxon")),

@@ -11,16 +11,36 @@ pub struct Savegame {
     pub name: String,
     pub pets: HashMap<String, u32>,
     pub played_time: u32,
+    pub minigames: Minigames,
+}
+
+#[derive(Default, Deserialize, Serialize)]
+pub struct Minigames {
+    pub slots: SlotsMinigame,
+}
+
+#[derive(Default, Deserialize, Serialize)]
+pub struct SlotsMinigame {
+    pub free_spins_acquired: bool,
+    pub total_spins: u128,
+    pub wins: u128,
 }
 
 impl Default for Savegame {
     fn default() -> Self {
         Self {
-            money: 0.0,
+            money: 1000.0,
             multiplier: 0.0,
             name: whoami::username(),
             pets: HashMap::new(),
             played_time: 0,
+            minigames: Minigames {
+                slots: SlotsMinigame {
+                    free_spins_acquired: false,
+                    total_spins: 0,
+                    wins: 0,
+                },
+            },
         }
     }
 }
