@@ -10,7 +10,16 @@ pub fn setup_minigame_backend(
 ) {
     if let Ok(e) = camera_query.get_single() {
         commands.entity(e).despawn_recursive();
-        commands.spawn((Camera2dBundle::default(), CameraComponent));
+        commands.spawn((
+            Camera2dBundle {
+                camera: Camera {
+                    clear_color: ClearColorConfig::Custom(Srgba::BLACK.into()),
+                    ..default()
+                },
+                ..default()
+            },
+            CameraComponent,
+        ));
     }
 }
 
