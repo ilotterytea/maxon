@@ -15,6 +15,15 @@ pub struct ModelAssets {
     // but idc about that and i want to get things done faster
     #[asset(path = "models/props/chest_opened.glb#Scene0")]
     pub chest_opened_prop: Handle<Scene>,
+
+    #[asset(path = "models/props/poker_table.glb#Scene0")]
+    pub poker_table_prop: Handle<Scene>,
+
+    #[asset(path = "models/props/slots_machine.glb#Scene0")]
+    pub slots_machine_prop: Handle<Scene>,
+
+    #[asset(path = "models/props/battlestation.glb#Scene0")]
+    pub battlestation_prop: Handle<Scene>,
 }
 
 #[derive(AssetCollection, Resource)]
