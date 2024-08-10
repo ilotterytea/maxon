@@ -22,8 +22,8 @@ pub fn despawn_minigame_backend(
         commands.entity(e).despawn_recursive();
         commands.spawn((
             Camera3dBundle {
-                transform: Transform::from_xyz(2.28, 4.4, 4.7)
-                    .with_rotation(Quat::from_rotation_y(PI)),
+                transform: Transform::from_xyz(3.0, 6.6, 0.8)
+                    .looking_at(Vec3::new(3.0, 4.0, 6.0), Vec3::Y),
                 ..default()
             },
             CameraComponent,

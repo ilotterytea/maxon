@@ -15,7 +15,6 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_event::<player::PlayerPettedEvent>()
-            .add_plugins(minigames::MinigamesPlugin)
             .add_plugins(shop::ShopPlugin)
             .add_systems(
                 OnEnter(AppState::Game),
@@ -43,5 +42,10 @@ impl Plugin for GamePlugin {
                 OnExit(AppState::Game),
                 (systems::despawn_game_objects, player::set_played_time),
             );
+
+        #[cfg(not(any(target_os = "android", target_os = "ios")))]
+        {
+            app.add_plugins(minigames::MinigamesPlugin);
+        }
     }
 }

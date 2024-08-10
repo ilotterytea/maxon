@@ -38,6 +38,43 @@ pub fn setup_scene(
         GameObjectComponent,
     ));
 
+    #[cfg(any(target_os = "android", target_os = "ios"))]
+    commands.spawn((
+        SceneBundle {
+            scene: model_assets.battlestation_prop.clone(),
+            transform: Transform::from_xyz(3.0, 0.0, 6.0),
+            ..default()
+        },
+        Name::new("Battlestation prop"),
+        GameObjectComponent,
+    ));
+
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+    commands.spawn((
+        SceneBundle {
+            scene: model_assets.poker_table_prop.clone(),
+            transform: Transform::from_xyz(3.0, 0.0, 6.0)
+                .with_rotation(Quat::from_rotation_y(90.0 * PI / 180.0))
+                .with_scale(Vec3::splat(3.5)),
+            ..default()
+        },
+        Name::new("Poker table prop"),
+        GameObjectComponent,
+    ));
+
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+    commands.spawn((
+        SceneBundle {
+            scene: model_assets.slots_machine_prop.clone(),
+            transform: Transform::from_xyz(4.5, 3.7, 6.0)
+                .with_rotation(Quat::from_rotation_y(30.0 * PI / 180.0))
+                .with_scale(Vec3::splat(1.5)),
+            ..default()
+        },
+        Name::new("Slots machine prop"),
+        GameObjectComponent,
+    ));
+
     commands.spawn((
         PointLightBundle {
             point_light: PointLight {
@@ -73,6 +110,7 @@ pub fn setup_scene(
         GameObjectComponent,
     ));
 
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
     commands.spawn((
         PointLightBundle {
             point_light: PointLight {
@@ -83,10 +121,10 @@ pub fn setup_scene(
                 shadows_enabled: true,
                 ..default()
             },
-            transform: Transform::from_xyz(3.5, 4.0, 5.5),
+            transform: Transform::from_xyz(1.4, 4.0, 3.4),
             ..default()
         },
-        Name::new("PC point light"),
+        Name::new("Minigames point light"),
         GameObjectComponent,
     ));
 }

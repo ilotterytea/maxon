@@ -51,14 +51,14 @@ pub fn despawn_minigame_lobby_objects(
 pub fn setup_minigames_scene(
     mut commands: Commands,
     model_assets: Res<ModelAssets>,
-    sprite_assets: Res<SpriteAssets>,
     mut camera_query: Query<&mut Transform, With<CameraComponent>>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     let mut camera_transform = camera_query.single_mut();
+
     *camera_transform =
-        Transform::from_xyz(2.28, 4.4, 4.7).with_rotation(Quat::from_rotation_y(PI));
+        Transform::from_xyz(3.0, 6.6, 0.8).looking_at(Vec3::new(3.0, 4.0, 6.0), Vec3::Y);
 
     commands.spawn((
         SceneBundle {
@@ -70,57 +70,65 @@ pub fn setup_minigames_scene(
     ));
 
     commands.spawn((
-        PbrBundle {
-            mesh: meshes.add(Cuboid::new(2.15, 1.35, 0.01)),
-            material: materials.add(StandardMaterial {
-                base_color_texture: Some(sprite_assets.pc_background.clone()),
-                ..default()
-            }),
-            transform: Transform::from_xyz(2.3, 4.25, 6.66),
+        SceneBundle {
+            scene: model_assets.poker_table_prop.clone(),
+            transform: Transform::from_xyz(3.0, 0.0, 6.0)
+                .with_rotation(Quat::from_rotation_y(90.0 * PI / 180.0))
+                .with_scale(Vec3::splat(3.5)),
             ..default()
         },
-        Name::new("PC Background"),
-        MinigameLobbyObjectComponent,
+        Name::new("Poker table prop"),
+        GameObjectComponent,
+    ));
+
+    commands.spawn((
+        SceneBundle {
+            scene: model_assets.slots_machine_prop.clone(),
+            transform: Transform::from_xyz(4.5, 3.0, 6.0)
+                .with_rotation(Quat::from_rotation_y(30.0 * PI / 180.0))
+                .with_scale(Vec3::splat(1.5)),
+            ..default()
+        },
+        Name::new("Slots machine prop"),
+        GameObjectComponent,
     ));
 
     commands.spawn((
         PointLightBundle {
             point_light: PointLight {
-                color: bevy::color::palettes::css::LIGHT_CYAN.into(),
+                color: bevy::color::palettes::css::SALMON.into(),
                 intensity: 250000.0,
                 radius: 200.0,
                 range: 100.0,
                 shadows_enabled: true,
                 ..default()
             },
-            transform: Transform::from_xyz(2.3, 4.2, 4.0),
+            transform: Transform::from_xyz(3.8, 5.5, 5.1),
             ..default()
         },
-        Name::new("PC point light"),
+        Name::new("Slots Point light"),
         MinigameLobbyObjectComponent,
     ));
 
     commands.spawn((
         PbrBundle {
-            mesh: meshes.add(Cuboid::new(0.3, 0.3, 0.01)),
-            material: materials.add(StandardMaterial {
-                base_color_texture: Some(sprite_assets.runner_icon.clone()),
-                ..default()
-            }),
-            transform: Transform::from_xyz(3.1, 4.7, 6.65),
+            mesh: meshes.add(Cuboid::new(1.8, 1.2, 1.8)),
+            material: materials.add(Color::srgba(0.0, 0.0, 0.0, 0.0)),
+            transform: Transform::from_xyz(4.5, 3.9, 5.9)
+                .with_rotation(Quat::from_rotation_y(30.0 * PI / 180.0)),
             ..default()
         },
-        On::<Pointer<Click>>::run(play_runner),
-        Name::new("Runner Icon"),
+        On::<Pointer<Click>>::run(play_slots),
+        Name::new("Slots Hitbox"),
         MinigameLobbyObjectComponent,
     ));
 }
 
-fn play_runner(
+fn play_slots(
     next_state: ResMut<NextState<AppState>>,
     next_mg_state: ResMut<NextState<MinigameState>>,
 ) {
-    play_minigame(MinigameState::Runner, next_state, next_mg_state);
+    play_minigame(MinigameState::Slots, next_state, next_mg_state);
 }
 
 fn play_minigame(
