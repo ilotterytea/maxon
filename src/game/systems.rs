@@ -150,14 +150,7 @@ pub fn sprites_looking_at_camera(
             Without<ImNotLookingAtCameraComponent>,
         ),
     >,
-    camera_query: Query<
-        &Transform,
-        (
-            With<CameraComponent>,
-            Changed<Transform>,
-            Without<Sprite3dComponent>,
-        ),
-    >,
+    camera_query: Query<&Transform, (With<CameraComponent>, Without<Sprite3dComponent>)>,
 ) {
     if let Ok(camera_transform) = camera_query.get_single() {
         for mut t in query.iter_mut() {
