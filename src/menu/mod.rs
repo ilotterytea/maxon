@@ -23,7 +23,11 @@ impl Plugin for MenuPlugin {
         )
         .add_systems(
             Update,
-            ui::ui_interaction.run_if(in_state(AppState::Menu).or_else(in_state(AppState::Game))),
+            ui::ui_interaction.run_if(
+                in_state(AppState::Menu)
+                    .or_else(in_state(AppState::Game))
+                    .or_else(in_state(AppState::MinigamesLobby)),
+            ),
         )
         .add_systems(OnExit(AppState::Menu), systems::despawn_menu_objects);
     }

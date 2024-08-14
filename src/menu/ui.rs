@@ -30,6 +30,7 @@ pub enum MenuControlComponent {
     GameContinue,
     GameReset,
     GameBack,
+    MinigameLobbyBack,
 }
 
 pub(super) fn setup_ui(
@@ -684,6 +685,10 @@ pub(super) fn ui_interaction(
             (Interaction::Pressed, MenuControlComponent::GameBack) => {
                 savegame.persist().expect("Failed to save the game");
                 state.set(AppState::Menu);
+            }
+            (Interaction::Pressed, MenuControlComponent::MinigameLobbyBack) => {
+                savegame.persist().expect("Failed to save the game");
+                state.set(AppState::Game);
             }
             (Interaction::Hovered, _) => {
                 if anim.is_none() {

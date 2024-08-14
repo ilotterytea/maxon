@@ -2,10 +2,11 @@ use std::f32::consts::PI;
 
 use bevy::prelude::*;
 use bevy_mod_picking::prelude::*;
+use bevy_persistent::Persistent;
 
 use crate::{
-    game::components::GameObjectComponent, systems::CameraComponent, AppState, ModelAssets,
-    SpriteAssets,
+    game::components::GameObjectComponent, menu::ui::MenuControlComponent, persistent::Settings,
+    systems::CameraComponent, AppState, GUIAssets, ModelAssets,
 };
 
 use super::MinigameState;
@@ -54,6 +55,8 @@ pub fn setup_minigames_scene(
     mut camera_query: Query<&mut Transform, With<CameraComponent>>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
+    gui_assets: Res<GUIAssets>,
+    settings: Res<Persistent<Settings>>,
 ) {
     let mut camera_transform = camera_query.single_mut();
 
@@ -122,6 +125,55 @@ pub fn setup_minigames_scene(
         Name::new("Slots Hitbox"),
         MinigameLobbyObjectComponent,
     ));
+
+    commands
+        .spawn((
+            NodeBundle {
+                style: Style {
+                    padding: UiRect::all(Val::Px(5.0)),
+                    column_gap: Val::Px(5.0),
+                    ..default()
+                },
+                ..default()
+            },
+            MinigameLobbyObjectComponent,
+            Name::new("UI"),
+        ))
+        .with_children(|root| {
+            // Exit button
+            root.spawn((
+                ButtonBundle {
+                    image: UiImage::new(gui_assets.exit.clone()),
+                    style: Style {
+                        width: Val::Px(57.0),
+                        height: Val::Px(64.0),
+                        ..default()
+                    },
+                    ..default()
+                },
+                Name::new("Exit button"),
+                MenuControlComponent::MinigameLobbyBack,
+            ));
+
+            // Music button
+            root.spawn((
+                ButtonBundle {
+                    image: UiImage::new(if settings.music {
+                        gui_assets.music_on.clone()
+                    } else {
+                        gui_assets.music_off.clone()
+                    }),
+                    style: Style {
+                        width: Val::Px(79.0),
+                        height: Val::Px(64.0),
+                        ..default()
+                    },
+                    ..default()
+                },
+                Name::new("Music button"),
+                MenuControlComponent::Music,
+            ));
+        });
 }
 
 fn play_slots(
