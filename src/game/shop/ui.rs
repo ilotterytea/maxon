@@ -92,7 +92,7 @@ pub fn setup_ui(
                         padding: UiRect::all(Val::Percent(1.5)),
                         ..default()
                     },
-                    background_color: color::PERU.into(),
+                    background_color: STORE_ITEM_BG_COLOR.into(),
                     ..default()
                 },
                 Name::new(pet.id.clone()),
@@ -179,7 +179,11 @@ pub fn setup_ui(
                             ));
 
                             price_node.spawn((
-                                TextBundle::from_section(pet.price.to_string(), text_style),
+                                TextBundle::from_section(pet.price.to_string(), {
+                                    let mut style = text_style.clone();
+                                    style.color = color::LIME.into();
+                                    style
+                                }),
                                 Name::new(format!("{} price text", pet.id)),
                                 PetIdComponent(pet.id.clone()),
                                 PetComponent::Price,
