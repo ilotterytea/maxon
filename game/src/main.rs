@@ -24,6 +24,7 @@ mod discord;
 mod game;
 mod localization;
 mod menu;
+mod online;
 mod persistent;
 mod style;
 mod systems;
@@ -103,6 +104,11 @@ fn main() {
 
     // Tweening
     app.add_plugins(TweeningPlugin);
+
+    // Online
+    app.add_plugins(online::OnlinePlugin);
+
+    app.add_plugins(bevy_tokio_tasks::TokioTasksPlugin::default());
 
     #[cfg(feature = "debug")]
     {

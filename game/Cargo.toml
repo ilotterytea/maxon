@@ -31,6 +31,9 @@ rand = "0.8.5"
 bevy_mod_billboard = "0.7.0"
 discord-rich-presence = "0.2.4"
 chrono = "0.4.38"
+bevy-tokio-tasks = "0.14.0"
+axum = "0.7.5"
+tokio = { version = "1.39.2", features = ["full"] }
 
 [features]
 debug = []
