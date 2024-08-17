@@ -109,6 +109,8 @@ fn main() {
 
     app.add_plugins(bevy_tokio_tasks::TokioTasksPlugin::default());
 
+    app.add_plugins(bevy_mod_reqwest::ReqwestPlugin::default());
+
     #[cfg(feature = "debug")]
     {
         app.add_plugins((

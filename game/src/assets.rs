@@ -96,6 +96,9 @@ pub struct GUIAssets {
 
     #[asset(path = "sprites/gui/keyboard/key_d.png")]
     pub key_d: Handle<Image>,
+
+    #[asset(path = "sprites/gui/twitch.png")]
+    pub link_twitch: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]
