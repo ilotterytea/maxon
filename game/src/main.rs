@@ -1,4 +1,3 @@
-use animation::TextureAtlasAnimationPlugin;
 use assets::*;
 use bevy::prelude::*;
 use bevy_asset_loader::loading_state::{
@@ -99,8 +98,8 @@ fn main() {
     // Scrolling content
     app.add_plugins(ScrollViewPlugin);
 
-    // Animation for sprite sheets
-    app.add_plugins(TextureAtlasAnimationPlugin);
+    // Animations
+    app.add_plugins(animation::MaxonAnimationsPlugin);
 
     // Tweening
     app.add_plugins(TweeningPlugin);

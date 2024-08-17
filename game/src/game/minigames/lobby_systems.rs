@@ -5,8 +5,9 @@ use bevy_mod_picking::prelude::*;
 use bevy_persistent::Persistent;
 
 use crate::{
-    game::components::GameObjectComponent, menu::ui::MenuControlComponent, persistent::Settings,
-    systems::CameraComponent, AppState, GUIAssets, ModelAssets,
+    animation::ThugshakerAnimation, game::components::GameObjectComponent,
+    menu::ui::MenuControlComponent, persistent::Settings, systems::CameraComponent, AppState,
+    GUIAssets, ModelAssets,
 };
 
 use super::MinigameState;
@@ -151,6 +152,7 @@ pub fn setup_minigames_scene(
                     },
                     ..default()
                 },
+                ThugshakerAnimation,
                 Name::new("Exit button"),
                 MenuControlComponent::MinigameLobbyBack,
             ));
@@ -170,6 +172,7 @@ pub fn setup_minigames_scene(
                     },
                     ..default()
                 },
+                ThugshakerAnimation,
                 Name::new("Music button"),
                 MenuControlComponent::Music,
             ));

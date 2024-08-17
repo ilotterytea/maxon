@@ -12,6 +12,7 @@ use bevy_tweening::{
 };
 
 use crate::{
+    animation::ThugshakerAnimation,
     boot::MusicSourceComponent,
     localization::{LineId, Localization, LocalizationManager},
     persistent::{Savegame, Settings},
@@ -354,6 +355,7 @@ pub(super) fn setup_ui(
                                 background_color: color::PERU.into(),
                                 ..default()
                             },
+                            ThugshakerAnimation,
                             Name::new("Continue button"),
                             MenuControlComponent::GameContinue,
                         ))
@@ -383,6 +385,7 @@ pub(super) fn setup_ui(
                                 background_color: color::DARK_RED.into(),
                                 ..default()
                             },
+                            ThugshakerAnimation,
                             Name::new("Reset button"),
                             MenuControlComponent::GameReset,
                         ))
@@ -440,6 +443,7 @@ pub(super) fn setup_ui(
                                 },
                                 ..default()
                             },
+                            ThugshakerAnimation,
                             MenuControlComponent::Exit,
                             Name::new("Exit button"),
                         ));
@@ -477,6 +481,7 @@ pub(super) fn setup_ui(
                                 },
                                 ..default()
                             },
+                            ThugshakerAnimation,
                             MenuControlComponent::Music,
                             Name::new("Music button"),
                         ));
@@ -496,6 +501,7 @@ pub(super) fn setup_ui(
                                 },
                                 ..default()
                             },
+                            ThugshakerAnimation,
                             MenuControlComponent::Fullscreen,
                             Name::new("Fullscreen button"),
                         ));
@@ -531,9 +537,13 @@ pub(super) fn setup_ui(
                                 },
                                 ..default()
                             },
+                            ThugshakerAnimation,
                             MenuControlComponent::Language,
                             Name::new("Language button"),
                         ));
+
+                        // Online button
+                        right.spawn(crate::online::ui::get_login_button());
                     });
             });
         });
@@ -548,8 +558,6 @@ pub(super) fn ui_interaction(
             &MenuControlComponent,
             &mut UiImage,
             &mut Style,
-            &mut Transform,
-            Option<&Animator<Transform>>,
         ),
         (With<MenuControlComponent>, Changed<Interaction>),
     >,
@@ -566,7 +574,7 @@ pub(super) fn ui_interaction(
     music_sources: Query<&AudioSink, With<MusicSourceComponent>>,
 ) {
     let mut window = window.single_mut();
-    for (e, i, comp, mut image, mut style, mut transform, anim) in query.iter_mut() {
+    for (e, i, comp, mut image, mut style) in query.iter_mut() {
         if *i == Interaction::Pressed {
             commands.spawn(AudioBundle {
                 source: sfx_assets.click.clone(),
@@ -689,41 +697,6 @@ pub(super) fn ui_interaction(
             (Interaction::Pressed, MenuControlComponent::MinigameLobbyBack) => {
                 savegame.persist().expect("Failed to save the game");
                 state.set(AppState::Game);
-            }
-            (Interaction::Hovered, _) => {
-                if anim.is_none() {
-                    commands.entity(e).insert(Animator::new({
-                        let scale = Tween::new(
-                            EaseFunction::SineIn,
-                            Duration::from_millis(500),
-                            TransformScaleLens {
-                                start: Vec3::new(0.9, 0.9, 0.0),
-                                end: Vec3::new(1.0, 1.0, 0.0),
-                            },
-                        );
-
-                        let thug_shaker = Tween::new(
-                            EaseFunction::SineInOut,
-                            Duration::from_millis(100),
-                            TransformRotationLens {
-                                start: Quat::from_rotation_z(-2.0 * PI / 180.0),
-                                end: Quat::from_rotation_z(2.0 * PI / 180.0),
-                            },
-                        )
-                        .with_repeat_count(RepeatCount::Infinite)
-                        .with_repeat_strategy(RepeatStrategy::MirroredRepeat);
-
-                        Tracks::new([scale, thug_shaker])
-                    }));
-                }
-            }
-            (Interaction::None, _) => {
-                if anim.is_some() {
-                    transform.scale = Vec3::new(1.0, 1.0, 0.0);
-                    transform.rotation = Quat::from_rotation_z(0.0);
-
-                    commands.entity(e).remove::<Animator<Transform>>();
-                }
             }
             _ => {}
         }

@@ -1,7 +1,9 @@
 use bevy::prelude::*;
 use bevy_persistent::Persistent;
 
-use crate::{menu::ui::MenuControlComponent, persistent::Settings, GUIAssets};
+use crate::{
+    animation::ThugshakerAnimation, menu::ui::MenuControlComponent, persistent::Settings, GUIAssets,
+};
 
 use super::components::GameObjectComponent;
 
@@ -48,6 +50,7 @@ pub fn setup_ui(
                     },
                     ..default()
                 },
+                ThugshakerAnimation,
                 Name::new("Exit button"),
                 MenuControlComponent::GameBack,
             ));
@@ -67,6 +70,7 @@ pub fn setup_ui(
                     },
                     ..default()
                 },
+                ThugshakerAnimation,
                 Name::new("Music button"),
                 MenuControlComponent::Music,
             ));
