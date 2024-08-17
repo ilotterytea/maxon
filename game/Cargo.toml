@@ -36,6 +36,7 @@ axum = "0.7.5"
 tokio = { version = "1.39.2", features = ["full"] }
 bevy_mod_reqwest = "0.16.0"
 open = "5.3.0"
+protocols = { path = "../protocols" }
 
 [features]
 debug = []
