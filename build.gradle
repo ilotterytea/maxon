@@ -40,7 +40,7 @@ allprojects {
         aiVersion = '1.8.2'
         gdxControllersVersion = '2.2.1'
         kotlinVersion = '1.7.21'
-        gltfVersion = '-SNAPSHOT'
+        gltfVersion = '2.2.1'
     }
 
     repositories {
