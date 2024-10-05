@@ -10,6 +10,7 @@ public class DesktopLauncher {
 		config.setForegroundFPS(60);
 		config.setTitle(MaxonConstants.GAME_NAME);
 		config.setWindowIcon("icon_chest.png");
+		config.setWindowSizeLimits(800, 600, 80000, 60000);
 
 		new Lwjgl3Application(MaxonGame.getInstance(), config);
 	}
