@@ -135,7 +135,7 @@ public class MenuScreen implements Screen {
         Table leftGameControlTable = new Table();
         leftGameControlTable.align(Align.left);
 
-        ImageButton quitButton = new ImageButton(widgetSkin, "quit");
+        ShakingImageButton quitButton = new ShakingImageButton(widgetSkin, "exit");
 
         quitButton.addListener(new ClickListener() {
             @Override
@@ -158,7 +158,7 @@ public class MenuScreen implements Screen {
 
         // - - -  D E V E L O P E R  S H O W C A S E  - - -
         final int[] developerIndex = {0};
-        Image developerImage = new Image(friendsSkin.getDrawable(MaxonConstants.GAME_DEVELOPERS[developerIndex[0]][0]));
+        ShakingImageButton developerImage = new ShakingImageButton(friendsSkin, MaxonConstants.GAME_DEVELOPERS[developerIndex[0]][0]);
         developerImage.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -210,7 +210,7 @@ public class MenuScreen implements Screen {
         // Localization
         String[] fh4Locale = game.locale.getFileHandle().nameWithoutExtension().split("_");
         String localeButtonStyleName = "locale_" + fh4Locale[0];
-        ImageButton localeButton = new ImageButton(widgetSkin, localeButtonStyleName);
+        ShakingImageButton localeButton = new ShakingImageButton(widgetSkin, localeButtonStyleName);
 
         localeButton.addListener(new ClickListener() {
             @Override
@@ -248,26 +248,26 @@ public class MenuScreen implements Screen {
             musicButtonStyleName = "music_off";
         }
 
-        ImageButton musicButton = new ImageButton(widgetSkin, musicButtonStyleName);
+        ShakingImageButton musicButton = new ShakingImageButton(widgetSkin, musicButtonStyleName);
         musicButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
 
-                Button.ButtonStyle style;
+                String style;
 
                 if (game.prefs.getBoolean("music")) {
-                    style = widgetSkin.get("music_off", ImageButton.ImageButtonStyle.class);
+                    style = "music_off";
                     menuMusic.pause();
                 } else {
-                    style = widgetSkin.get("music_on", ImageButton.ImageButtonStyle.class);
+                    style = "music_on";
                     menuMusic.play();
                 }
 
                 game.prefs.putBoolean("music", !game.prefs.getBoolean("music"));
                 game.prefs.flush();
 
-                musicButton.setStyle(style);
+                musicButton.setDrawable(widgetSkin, style);
                 clickSound.play();
             }
         });
@@ -286,26 +286,26 @@ public class MenuScreen implements Screen {
                 resolutionButtonStyleName = "fullscreen";
             }
 
-            ImageButton resolutionButton = new ImageButton(widgetSkin, resolutionButtonStyleName);
+            ShakingImageButton resolutionButton = new ShakingImageButton(widgetSkin, resolutionButtonStyleName);
             resolutionButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
 
-                    Button.ButtonStyle style;
+                    String style;
 
                     if (game.prefs.getBoolean("fullscreen")) {
-                        style = widgetSkin.get("fullscreen", ImageButton.ImageButtonStyle.class);
+                        style = "fullscreen";
                         Gdx.graphics.setWindowedMode(game.prefs.getInteger("width", 800), game.prefs.getInteger("height", 600));
                     } else {
-                        style = widgetSkin.get("windowed", ImageButton.ImageButtonStyle.class);
+                        style = "windowed";
                         Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
                     }
 
                     game.prefs.putBoolean("fullscreen", !game.prefs.getBoolean("fullscreen"));
                     game.prefs.flush();
 
-                    resolutionButton.setStyle(style);
+                    resolutionButton.setDrawable(widgetSkin, style);
                     clickSound.play();
                 }
             });

@@ -12,11 +12,12 @@ import com.badlogic.gdx.utils.Align
 import kz.ilotterytea.maxon.MaxonGame
 import kz.ilotterytea.maxon.player.Savegame
 import kz.ilotterytea.maxon.screens.MenuScreen
+import kz.ilotterytea.maxon.ui.ShakingImageButton
 
 class QuickActionsTable(skin: Skin) : Table() {
     init {
         val game = MaxonGame.getInstance()
-        val quitButton = ImageButton(skin, "quit")
+        val quitButton = ShakingImageButton(skin, "exit")
 
         val clickSound = game.assetManager.get("sfx/ui/click.ogg", Sound::class.java)
 
