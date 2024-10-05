@@ -32,6 +32,16 @@ public class Savegame implements Serializable {
     private long elapsedTime;
     private boolean isNewlyCreated;
 
+    private static Savegame savegame;
+
+    public static Savegame getInstance() {
+        if (savegame == null) {
+            savegame = load();
+        }
+
+        return savegame;
+    }
+
     private Savegame() {
         setDefaultValues();
     }

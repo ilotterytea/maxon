@@ -43,7 +43,7 @@ public class MenuScreen implements Screen {
     private final Stage stage;
     private final Music menuMusic;
 
-    private final Savegame savegame;
+    private final Savegame savegame = Savegame.getInstance();
 
     private SceneManager sceneManager;
     private PerspectiveCamera camera;
@@ -53,7 +53,6 @@ public class MenuScreen implements Screen {
 
     public MenuScreen() {
         this.game = MaxonGame.getInstance();
-        this.savegame = Savegame.load();
 
         // Stage and skin:
         this.stage = new Stage(new ScreenViewport());
