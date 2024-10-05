@@ -9,9 +9,9 @@ music_off
 bounds:2,134,87,64
 music_on
 bounds:2,68,79,64
-russia
+locale_ru
 bounds:91,134,64,64
-usa
+locale_en
 bounds:2,2,64,64
 windowed
 bounds:157,134,64,64

@@ -5,7 +5,7 @@
     windowed: { up: windowed },
     music_off: { up: music_off },
     music_on: { up: music_on },
-    locale_en: { up: usa },
-    locale_ru: { up: russia }
+    locale_en: { up: locale_en },
+    locale_ru: { up: locale_ru }
   }
 }
