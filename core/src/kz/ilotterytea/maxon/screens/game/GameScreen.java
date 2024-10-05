@@ -55,7 +55,7 @@ public class GameScreen implements Screen, InputProcessor {
     final long playTimestamp;
     boolean isShopping = false, isInventoryEnabled = false;
 
-    private Savegame savegame;
+    private Savegame savegame = Savegame.getInstance();
 
     Stage stage;
     private Skin skin, uiSkin;
@@ -90,8 +90,6 @@ public class GameScreen implements Screen, InputProcessor {
     private final ArrayList<Timer.Task> tasks = new ArrayList<>();
 
     public GameScreen() {
-        this.savegame = Savegame.load();
-
         this.game = MaxonGame.getInstance();
         this.playTimestamp = System.currentTimeMillis();
 
