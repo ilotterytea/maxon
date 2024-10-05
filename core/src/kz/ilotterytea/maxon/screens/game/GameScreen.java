@@ -33,6 +33,7 @@ import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.screens.MenuScreen;
 import kz.ilotterytea.maxon.screens.game.shop.ShopUI;
 import kz.ilotterytea.maxon.ui.*;
+import kz.ilotterytea.maxon.ui.game.QuickActionsTable;
 import kz.ilotterytea.maxon.utils.OsUtils;
 import kz.ilotterytea.maxon.utils.math.Math;
 import com.rafaskoberg.gdx.typinglabel.TypingLabel;
@@ -445,6 +446,8 @@ public class GameScreen implements Screen, InputProcessor {
 
         DebugWidget debugWidget = new DebugWidget(uiSkin);
         this.stage.addActor(debugWidget);
+
+        this.stage.addActor(new QuickActionsTable(this.game.assetManager.get("sprites/gui/widgets.skin", Skin.class)));
     }
 
     @Override
