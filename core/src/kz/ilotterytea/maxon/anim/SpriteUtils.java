@@ -3,10 +3,10 @@ package kz.ilotterytea.maxon.anim;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 public class SpriteUtils {
-    public static TextureRegion[] splitToTextureRegions(
+    public static ArrayList<TextureRegion> splitToTextureRegions(
             Texture texture,
             int tileWidth,
             int tileHeight,
@@ -14,14 +14,15 @@ public class SpriteUtils {
             int rows
     ) {
         TextureRegion[][] tmp = TextureRegion.split(texture, tileWidth, tileHeight);
-        TextureRegion[] frames = new TextureRegion[(texture.getWidth() / columns) + (texture.getHeight() / rows)];
+
+        ArrayList<TextureRegion> frames = new ArrayList<>();
 
         int index = 0;
 
         for (TextureRegion[] regArray : tmp) {
             for (TextureRegion reg : regArray) {
                 if (reg != null) {
-                    frames[index++] = reg;
+                    frames.add(reg);
                 }
             }
         }

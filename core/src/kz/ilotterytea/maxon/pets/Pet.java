@@ -11,6 +11,9 @@ import kz.ilotterytea.maxon.ui.AnimatedImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Pet {
     private final String id, name, description;
     private final double price, multiplier;
@@ -30,7 +33,7 @@ public class Pet {
 
     public static Pet create(String id, double price, double multiplier, int iconColumns, int iconRows) {
         MaxonGame game = MaxonGame.getInstance();
-        TextureRegion[] regions;
+        ArrayList<TextureRegion> regions;
 
         try {
             Texture texture = game.assetManager.get("sprites/pets/" + id + ".png", Texture.class);
@@ -44,7 +47,7 @@ public class Pet {
 
         } catch (GdxRuntimeException e) {
             logger.warn("Failed to load icon spritesheet for ID {}", id);
-            regions = new TextureRegion[]{new TextureRegion(MaxonConstants.MISSING_TEXTURE)};
+            regions = new ArrayList<>(List.of(new TextureRegion(MaxonConstants.MISSING_TEXTURE)));
         }
 
         AnimatedImage icon = new AnimatedImage(regions, 5);
@@ -59,7 +62,7 @@ public class Pet {
             description = "pet." + id + ".desc";
         }
 
-        Decal decal = Decal.newDecal(0.5f, 0.5f, regions[0], true);
+        Decal decal = Decal.newDecal(0.5f, 0.5f, regions.get(0), true);
 
         return new Pet(id, name, description, price, multiplier, icon, decal);
     }

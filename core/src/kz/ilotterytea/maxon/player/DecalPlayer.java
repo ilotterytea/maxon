@@ -11,20 +11,22 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import kz.ilotterytea.maxon.MaxonGame;
 
+import java.util.ArrayList;
+
 public class DecalPlayer {
-    private final TextureRegion[] regions;
+    private final ArrayList<TextureRegion> regions;
     private int regionIndex;
     private final Decal decal;
     private final BoundingBox box;
     private final Savegame savegame;
 
-    public DecalPlayer(Savegame savegame, TextureRegion[] regions) {
+    public DecalPlayer(Savegame savegame, ArrayList<TextureRegion> regions) {
         this.savegame = savegame;
 
         this.regions = regions;
         this.regionIndex = 0;
 
-        this.decal = Decal.newDecal(this.regions[this.regionIndex]);
+        this.decal = Decal.newDecal(this.regions.get(this.regionIndex));
         this.decal.setScale(0.025f);
         this.decal.setPosition(2.0f, 1.75f, 2.0f);
 
@@ -67,11 +69,11 @@ public class DecalPlayer {
     private void updateTextureRegion() {
         this.regionIndex++;
 
-        if (this.regions[this.regionIndex] == null) {
+        if (this.regions.get(this.regionIndex) == null) {
             this.regionIndex = 0;
         }
 
-        this.decal.setTextureRegion(this.regions[this.regionIndex]);
+        this.decal.setTextureRegion(this.regions.get(this.regionIndex));
     }
 
     public Decal getDecal() {
