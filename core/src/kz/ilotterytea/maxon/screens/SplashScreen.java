@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import kz.ilotterytea.maxon.anim.SpriteUtils;
 import kz.ilotterytea.maxon.assets.AssetUtils;
 import kz.ilotterytea.maxon.MaxonGame;
@@ -31,7 +31,7 @@ public class SplashScreen implements Screen {
     @Override public void show() {
         this.game = MaxonGame.getInstance();
 
-        this.stage = new Stage(new ScreenViewport());
+        this.stage = new Stage(new FitViewport(800, 600));
         Skin skin = new Skin(Gdx.files.internal("MainSpritesheet.skin"));
 
         Table logoTable = new Table();
