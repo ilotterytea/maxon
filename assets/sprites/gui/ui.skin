@@ -1,5 +1,5 @@
 {
-  Color: {
+  com.badlogic.gdx.graphics.Color: {
     white: { hex: "#ffffffff" },
     store_item: { hex: "#bbbbbbff" },
     store_item_hover: { hex: "#ffffffff" },
@@ -7,7 +7,7 @@
     store_item_price_available: { hex: "#00ff00ff" },
     store_item_price_disabled: { hex: "#ff0000ff" }
   },
-  TintedDrawable: {
+  com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
     button_pressed: { color: { hex: "#ad6235ff" }, name: pressed },
     button_idle: { color: { hex: "#cb7e39ff" }, name: idle },
     button_hover: { color: { hex: "#e58b41ff" }, name: idle },
@@ -27,27 +27,27 @@
   // TODO: Test this file path on Android platform
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
     default: {
-      file: ../../fnt/FontText.fnt,
+      file: fnt/FontText.fnt,
       scaledSize: 24
     },
     store_item_name: {
-      file: ../../fnt/FontText.fnt,
+      file: fnt/FontText.fnt,
       scaledSize: 19
     },
     store_item_price: {
-      file: ../../fnt/FontText.fnt,
+      file: fnt/FontText.fnt,
       scaledSize: 18
     },
     store_control: {
-      file: ../../fnt/FontText.fnt,
+      file: fnt/FontText.fnt,
       scaledSize: 18
     },
     tooltip: {
-      file: ../../fnt/FontText.fnt,
+      file: fnt/FontText.fnt,
       scaledSize: 19
     },
     slots: {
-      file: ../../fnt/FontText.fnt,
+      file: fnt/FontText.fnt,
       scaledSize: 16
     }
   },

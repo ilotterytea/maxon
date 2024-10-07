@@ -8,7 +8,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
+        classpath 'com.android.tools.build:gradle:8.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.21"
 
     }
@@ -68,6 +68,23 @@ project(":desktop") {
         api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core-gamejolt:1.1.0"
         api "de.tomgrill.gdxdialogs:gdx-dialogs-desktop:1.3.0"
 
+    }
+}
+
+project(":android") {
+    apply plugin: "android"
+    apply plugin: "kotlin-android"
+
+    configurations { natives }
+
+    dependencies {
+        implementation project(":core")
+        api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+        api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     }
 }
 
