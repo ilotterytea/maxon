@@ -2,68 +2,70 @@ package kz.ilotterytea.maxon.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import kz.ilotterytea.maxon.anim.SpriteUtils;
 import kz.ilotterytea.maxon.assets.AssetUtils;
 import kz.ilotterytea.maxon.MaxonGame;
+import kz.ilotterytea.maxon.ui.AnimatedImage;
 import kz.ilotterytea.maxon.utils.OsUtils;
 
 public class SplashScreen implements Screen {
-    final MaxonGame game;
+    private MaxonGame game = MaxonGame.getInstance();
 
-    final Stage stage;
-    final Skin skin;
+    private Stage stage;
 
-    TextureAtlas brandAtlas;
-    Image dev;
+    AnimatedImage image;
+
     ProgressBar bar;
 
     private boolean assetsLoaded = false;
 
-    public SplashScreen() {
+    @Override public void show() {
         this.game = MaxonGame.getInstance();
 
         this.stage = new Stage(new ScreenViewport());
-        this.skin = new Skin(Gdx.files.internal("MainSpritesheet.skin"));
+        Skin skin = new Skin(Gdx.files.internal("MainSpritesheet.skin"));
 
         Table logoTable = new Table();
         logoTable.setFillParent(true);
         logoTable.align(Align.center);
 
-        brandAtlas = new TextureAtlas(Gdx.files.internal("sprites/gui/ilotterytea.atlas"));
+        image = new AnimatedImage(
+                SpriteUtils.splitToTextureRegions(
+                        new Texture(Gdx.files.internal("sprites/gui/intro.png")),
+                        2480, 1680, 2, 0
+                ),
+                15
+        );
 
-        dev = new Image(brandAtlas.findRegion("devOld"));
+        float stageWidth;
 
         if (OsUtils.isMobile) {
-            float stageWidth = this.stage.getWidth() - 20f;
-            float difference = stageWidth / dev.getWidth();
-
-            dev.setSize(stageWidth, dev.getHeight() * difference);
+            stageWidth = this.stage.getWidth() - 20f;
         } else {
-            dev.setSize(dev.getWidth() * 5f, dev.getHeight() * 5f);
+            stageWidth = 700f;
         }
 
-        logoTable.add(dev).size(dev.getWidth(), dev.getHeight()).padBottom(60f).row();
+        float difference = stageWidth / image.getWidth();
+        image.setSize(stageWidth, image.getHeight() * difference);
+
+        logoTable.add(image).size(image.getWidth(), image.getHeight()).padBottom(60f).row();
 
         bar = new ProgressBar(0f, 100f, 1f, false, skin);
-        logoTable.add(bar).width(dev.getWidth());
+        logoTable.add(bar).width(image.getWidth());
 
         stage.addActor(logoTable);
 
         AssetUtils.setup(game.assetManager);
         AssetUtils.queue(game.assetManager);
-    }
-
-    @Override public void show() {
-        render(Gdx.graphics.getDeltaTime());
     }
 
     private void update() {
@@ -107,6 +109,6 @@ public class SplashScreen implements Screen {
     @Override public void resume() {}
     @Override public void hide() { dispose(); }
     @Override public void dispose() {
-        brandAtlas.dispose();
+        image.dispose();
     }
 }
