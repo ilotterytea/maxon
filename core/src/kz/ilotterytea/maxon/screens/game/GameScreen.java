@@ -31,6 +31,7 @@ import kz.ilotterytea.maxon.player.MaxonItem;
 import kz.ilotterytea.maxon.player.MaxonItemRegister;
 import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.screens.MenuScreen;
+import kz.ilotterytea.maxon.screens.SlotsMinigameScreen;
 import kz.ilotterytea.maxon.screens.game.shop.ShopUI;
 import kz.ilotterytea.maxon.ui.*;
 import kz.ilotterytea.maxon.ui.game.QuickActionsTable;
@@ -99,7 +100,7 @@ public class GameScreen implements Screen, InputProcessor {
         decalBatch = new DecalBatch(new CameraGroupStrategy(camera));
         decals = new ArrayList<>();
 
-        TextureRegion[] playerTextureRegions = SpriteUtils.splitToTextureRegions(game.assetManager.get("sprites/sheet/loadingCircle.png", Texture.class), 112, 112, 10, 5);
+        ArrayList<TextureRegion> playerTextureRegions = SpriteUtils.splitToTextureRegions(game.assetManager.get("sprites/sheet/loadingCircle.png", Texture.class), 112, 112, 10, 5);
         decalPlayer = new DecalPlayer(savegame, playerTextureRegions);
         decals.add(decalPlayer.getDecal());
 
@@ -320,6 +321,11 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+        if (Gdx.input.isKeyPressed(Input.Keys.K)) {
+            game.setScreen(new SlotsMinigameScreen());
+            dispose();
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             savegame.setElapsedTime((System.currentTimeMillis() - playTimestamp) + savegame.getElapsedTime());
             savegame.save();

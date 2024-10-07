@@ -45,6 +45,10 @@
     tooltip: {
       file: ../../fnt/FontText.fnt,
       scaledSize: 19
+    },
+    slots: {
+      file: ../../fnt/FontText.fnt,
+      scaledSize: 16
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
@@ -85,6 +89,10 @@
     store_item_price_disabled: {
       font: store_item_price,
       fontColor: store_item_price_disabled
+    },
+    slots: {
+      font: slots,
+      fontColor: white
     }
   },
   com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {

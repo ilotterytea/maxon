@@ -47,6 +47,12 @@
   "gifts.points": "[ORANGE]{WAVE=1.0;1.0;0.5}+%s Points{ENDWAVE}{CLEARCOLOR}",
   "gifts.new_pet": "{RAINBOW}{WAVE=1.0;1.0;0.5}New pet! (%s){ENDWAVE}{ENDRAINBOW}",
 
+  "minigame.slots.nothing": "YOU WON NOTHINGG",
+  "minigame.slots.prize": "YOU WON %s P$",
+  "minigame.slots.bet": "BET",
+  "minigame.slots.spin_button": "SPIN",
+  "minigame.slots.exit_button": " X ",
+
   "game.inventory.title": "Inventory",
 
   "pet.bror.name": "The Suspicious and Sleepy Bro",
