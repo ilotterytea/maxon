@@ -1,4 +1,9 @@
 {
+  "updater.title": "Ты играешь в устаревшую версию...",
+  "updater.message": "Вышло новое обновление! Хочешь посмотреть?",
+  "updater.no": "н-нет",
+  "updater.yes": "ДААА!!",
+
   "debug.version": "%s (LibGDX %s, Java %s)",
   "debug.c_fps": "%s FPS",
   "debug.c_mem": "Потребление ОЗУ: %s МБ (из %s МБ)",

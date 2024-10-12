@@ -1,127 +1,75 @@
 package kz.ilotterytea.maxon.utils;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
+import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import kz.ilotterytea.maxon.MaxonConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.Objects;
+import java.util.ArrayList;
 
+public class GameUpdater implements Net.HttpResponseListener {
+    private final Logger logger = LoggerFactory.getLogger(GameUpdater.class.getName());
+    public static boolean CLIENT_IS_ON_LATEST_VERSION;
 
-public class GameUpdater {
-    static class Release {
-        String url;
-        String html_url;
-        String assets_url;
-        String upload_url;
-        String tarball_url;
-        String zipball_url;
-        String discussion_url;
-        int id;
-        String node_id;
-        String tag_name;
-        String target_commitish;
-        String name;
-        String body;
-        boolean draft;
-        boolean prerelease;
-        String created_at;
-        String published_at;
-        Author author;
-        Assets[] assets;
+    public void checkLatestUpdate() {
+        Net.HttpRequest request =
+                new HttpRequestBuilder()
+                        .newRequest()
+                        .method(Net.HttpMethods.GET)
+                        .url(MaxonConstants.GAME_VERSIONS_FILE_URL)
+                        .timeout(5000)
+                        .build();
+
+        Gdx.net.sendHttpRequest(request, this);
     }
 
-    static class Author {
-        String login;
-        int id;
-        String node_id;
-        String avatar_url;
-        String gravatar_id;
-        String url;
-        String html_url;
-        String followers_url;
-        String following_url;
-        String gists_url;
-        String starred_url;
-        String subscriptions_url;
-        String organizations_url;
-        String repos_url;
-        String events_url;
-        String received_events_url;
-        String type;
-        boolean site_admin;
-    }
+    @Override
+    public void handleHttpResponse(Net.HttpResponse httpResponse) {
+        String response = httpResponse.getResultAsString();
 
-    static class Assets {
-        String url;
-        String browser_download_url;
-        int id;
-        String node_id;
-        String name;
-        String label;
-        String state;
-        String content_type;
-        int size;
-        int download_count;
-        String created_at;
-        String updated_at;
-        Uploader uploader;
-    }
+        if (response == null) {
+            logger.error("Got null in response");
+            CLIENT_IS_ON_LATEST_VERSION = true;
+            return;
+        }
 
-    static class Uploader {
-        String login;
-        int id;
-        String node_id;
-        String avatar_url;
-        String gravatar_id;
-        String url;
-        String html_url;
-        String followers_url;
-        String following_url;
-        String gists_url;
-        String starred_url;
-        String subscriptions_url;
-        String organizations_url;
-        String repos_url;
-        String events_url;
-        String received_events_url;
-        String type;
-        boolean site_admin;
-    }
+        Gson gson = new Gson();
+        ArrayList<GameVersion> versions = gson.fromJson(response, new TypeToken<ArrayList<GameVersion>>(){}.getType());
 
-    private static String readUrl(String urlString) throws Exception {
-        BufferedReader reader = null;
         try {
-            URL url = new URL(urlString);
-            reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuffer buffer = new StringBuffer();
-            int read;
-            char[] chars = new char[1024];
-            while ((read = reader.read(chars)) != -1)
-                buffer.append(chars, 0, read);
-
-            return buffer.toString();
-        } finally {
-            if (reader != null)
-                reader.close();
+            GameVersion latestVersion = versions.get(0);
+            CLIENT_IS_ON_LATEST_VERSION = latestVersion.getVersion().equals(MaxonConstants.GAME_VERSION);
+        } catch (Exception e) {
+            logger.error("Failed to find the latest version");
+            CLIENT_IS_ON_LATEST_VERSION = true;
         }
     }
 
-    public static boolean isLatestRelease(String githubTag) throws Exception {
-        return Objects.equals(githubTag, getLatestRelease().tag_name);
+    @Override
+    public void failed(Throwable t) {
+        logger.error(t.getMessage());
+        CLIENT_IS_ON_LATEST_VERSION = true;
     }
 
-    public static String getLatestVersion() throws Exception {
-        return getLatestRelease().tag_name;
+    @Override
+    public void cancelled() {
+        logger.info("Cancelled");
+        CLIENT_IS_ON_LATEST_VERSION = true;
     }
 
-    public static Release getLatestRelease() throws Exception {
-        String url_link = "https://api.github.com/repos/NotDankEnough/MaxonPettingSim/releases/latest";
+    private static class GameVersion {
+        private String version;
 
-        String json = readUrl(url_link);
+        public String getVersion() {
+            return version;
+        }
 
-        Gson gson = new Gson();
-
-        return gson.fromJson(json, Release.class);
+        public void setVersion(String version) {
+            this.version = version;
+        }
     }
 }

@@ -20,10 +20,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import de.tomgrill.gdxdialogs.core.dialogs.GDXButtonDialog;
 import kz.ilotterytea.maxon.MaxonConstants;
 import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.ui.*;
+import kz.ilotterytea.maxon.utils.GameUpdater;
 import kz.ilotterytea.maxon.utils.I18N;
 import kz.ilotterytea.maxon.utils.OsUtils;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
@@ -51,8 +53,30 @@ public class MenuScreen implements Screen {
     private final ArrayList<Timer.Task> tasks = new ArrayList<>();
     private Sound clickSound;
 
+    private static boolean suggestedUpdate = false;
+
     public MenuScreen() {
         this.game = MaxonGame.getInstance();
+
+        // Suggest an update
+        if (!GameUpdater.CLIENT_IS_ON_LATEST_VERSION && !suggestedUpdate) {
+            GDXButtonDialog bDialog = game.getDialogWindows().newDialog(GDXButtonDialog.class);
+
+            bDialog.setTitle(game.locale.TranslatableText("updater.title"));
+            bDialog.setMessage(game.locale.TranslatableText("updater.message"));
+
+            bDialog.setClickListener(button -> {
+                if (button == 1) {
+                    Gdx.net.openURI(MaxonConstants.GAME_APP_URL);
+                }
+            });
+
+            bDialog.addButton(game.locale.TranslatableText("updater.no"));
+            bDialog.addButton(game.locale.TranslatableText("updater.yes"));
+
+            bDialog.build().show();
+            suggestedUpdate = true;
+        }
 
         // Stage and skin:
         this.stage = new Stage(new ScreenViewport());
