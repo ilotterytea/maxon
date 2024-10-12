@@ -26,10 +26,9 @@ public class AssetUtils {
     public static void queue(AssetManager assetManager) {
         FileHandle assetsFile = Gdx.files.internal("assets.txt");
         String contents = assetsFile.readString();
-        List<String> filePaths = contents.lines().collect(Collectors.toList());
+        String[] filePaths = contents.split("\n");
 
         for (String filePath : filePaths) {
-            System.out.println(filePath);
             String[] splitFilePath = filePath.split("/");
             String[] splitFileName = splitFilePath[splitFilePath.length - 1].split("\\.");
             String extension = splitFileName[splitFileName.length - 1];
