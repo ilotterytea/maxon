@@ -14,8 +14,8 @@ public class MaxonConstants {
     public static final String GAME_NAME = "Maxon Petting Simulator";
     public static final String GAME_APP_ID = "maxon";
     public static final String GAME_APP_PACKAGE = "kz.ilotterytea." + GAME_APP_ID;
+    public static final String GAME_APP_URL;
     public static final String GAME_VERSION = "Alpha 1.2";
-    public static final String GAME_GHTAG = "alpha-1.2";
     public static final String GAME_MAIN_DEVELOPER = "ilotterytea";
 
     public static final String[][] GAME_DEVELOPERS = {
@@ -40,6 +40,8 @@ public class MaxonConstants {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
     public static final long startTime = System.currentTimeMillis();
 
+    public static final String GAME_VERSIONS_FILE_URL = "https://assets.ilotterytea.kz/maxon/versions.json";
+
     public static final Texture MISSING_TEXTURE;
 
     static {
@@ -62,5 +64,11 @@ public class MaxonConstants {
 
         MISSING_TEXTURE = new Texture(pixmap);
         pixmap.dispose();
+
+        if (OsUtils.isAndroid) {
+            GAME_APP_URL = "https://play.google.com/store/apps/details?id=kz.ilotterytea.maxon";
+        } else {
+            GAME_APP_URL = "https://ilotterytea.itch.io/maxon";
+        }
     }
 }

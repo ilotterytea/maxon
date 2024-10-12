@@ -6,8 +6,11 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import de.tomgrill.gdxdialogs.core.GDXDialogs;
+import de.tomgrill.gdxdialogs.core.GDXDialogsSystem;
 import kz.ilotterytea.maxon.pets.PetManager;
 import kz.ilotterytea.maxon.screens.SplashScreen;
+import kz.ilotterytea.maxon.utils.GameUpdater;
 import kz.ilotterytea.maxon.utils.I18N;
 
 public class MaxonGame extends Game {
@@ -18,6 +21,8 @@ public class MaxonGame extends Game {
 	public I18N locale;
 
 	private PetManager petManager;
+
+	private GDXDialogs dialogWindows;
 
 	private static MaxonGame instance;
 
@@ -32,8 +37,15 @@ public class MaxonGame extends Game {
 		return petManager;
 	}
 
+	public GDXDialogs getDialogWindows() {
+		return dialogWindows;
+	}
+
 	@Override
 	public void create () {
+		// Check the latest version
+		new GameUpdater().checkLatestUpdate();
+
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		prefs = Gdx.app.getPreferences(MaxonConstants.GAME_APP_PACKAGE);
@@ -48,6 +60,7 @@ public class MaxonGame extends Game {
 
 		assetManager = new AssetManager();
 		petManager = new PetManager(assetManager);
+		dialogWindows = GDXDialogsSystem.install();
 
 		this.setScreen(new SplashScreen());
 	}
