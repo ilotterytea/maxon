@@ -47,10 +47,7 @@
 
   "dialogs.not_enough_points": "Not enough points!",
 
-  "gifts.empty": "[RED]Empty!{CLEARCOLOR}",
-  "gifts.multiplier": "[YELLOW]{WAVE=1.0;1.0;0.5}+%s Multiplier{ENDWAVE}{CLEARCOLOR}",
-  "gifts.points": "[ORANGE]{WAVE=1.0;1.0;0.5}+%s Points{ENDWAVE}{CLEARCOLOR}",
-  "gifts.new_pet": "{RAINBOW}{WAVE=1.0;1.0;0.5}New pet! (%s){ENDWAVE}{ENDRAINBOW}",
+  "giftbox.open": "You got",
 
   "minigame.slots.nothing": "YOU WON NOTHINGG",
   "minigame.slots.prize": "YOU WON %s P$",
