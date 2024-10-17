@@ -89,6 +89,8 @@ public class GameScreen implements Screen, InputProcessor {
 
     private float elapsedTime = 0.0f;
 
+    private Giftbox giftbox;
+
     private final ArrayList<Timer.Task> tasks = new ArrayList<>();
 
     public GameScreen() {
@@ -116,6 +118,8 @@ public class GameScreen implements Screen, InputProcessor {
         items = new ArrayList<>();
 
         createStageUI();
+
+        giftbox = new Giftbox(stage, uiSkin, game.assetManager, sceneManager);
 
         Gdx.input.setInputProcessor(new InputMultiplexer(this, new CrossProcessor(), stage));
     }
@@ -186,6 +190,8 @@ public class GameScreen implements Screen, InputProcessor {
         // Render 3D
         sceneManager.update(Gdx.graphics.getDeltaTime());
         sceneManager.render();
+
+        this.giftbox.update(delta, this.camera);
 
         this.decalPlayer.render(this.camera);
 
@@ -316,6 +322,7 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public void dispose() {
+        giftbox.dispose();
         stage.clear();
     }
 

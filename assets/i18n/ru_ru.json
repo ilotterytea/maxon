@@ -55,10 +55,7 @@
 
   "dialogs.not_enough_points": "Недостаточно поинтов!",
 
-  "gifts.empty": "[RED]Пусто!{CLEARCOLOR}",
-  "gifts.multiplier": "[YELLOW]{WAVE=1.0;1.0;0.5}+%s к множителю жмяканий{ENDWAVE}{CLEARCOLOR}",
-  "gifts.points": "[YELLOW]{WAVE=1.0;1.0;0.5}+%s поинтов{ENDWAVE}{CLEARCOLOR}",
-  "gifts.new_pet": "{RAINBOW}{WAVE=1.0;1.0;0.5}Новый питомец! (%s){ENDWAVE}{ENDRAINBOW}",
+  "giftbox.open": "Ты получил",
 
   "pet.bror.name": "Cонный Брор",
   "pet.bror.desc": "Засыпающий Брор поможет тебе гладить Максона практически до потери сознания.",
