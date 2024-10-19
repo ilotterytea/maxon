@@ -68,12 +68,16 @@ public class DecalPlayer {
 
     private void updateTextureRegion() {
         this.regionIndex++;
+        TextureRegion region;
 
-        if (this.regions.get(this.regionIndex) == null) {
+        try {
+            region = this.regions.get(this.regionIndex);
+        } catch (Exception ignored) {
             this.regionIndex = 0;
+            region = this.regions.get(regionIndex);
         }
 
-        this.decal.setTextureRegion(this.regions.get(this.regionIndex));
+        this.decal.setTextureRegion(region);
     }
 
     public Decal getDecal() {
