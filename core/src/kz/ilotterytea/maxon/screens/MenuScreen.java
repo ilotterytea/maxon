@@ -79,6 +79,7 @@ public class MenuScreen implements Screen {
 
         // - - -  Brand - - -
         Table brandTable = new Table();
+        brandTable.align(Align.center);
 
         Image logo = new Image(brandAtlas.findRegion("brand"));
 
@@ -121,6 +122,36 @@ public class MenuScreen implements Screen {
 
             brandTable.add(logo);
         }
+
+        Image updateLogo;
+
+        if (OsUtils.isMobile) {
+            updateLogo = new Image(brandAtlas.findRegion("beta"));
+        } else {
+            updateLogo = new Image(brandAtlas.findRegion("update"));
+        }
+
+        updateLogo.setOrigin(
+                updateLogo.getWidth() / 2f,
+                updateLogo.getHeight() / 2f
+        );
+
+        updateLogo.setRotation(10f);
+
+        updateLogo.addAction(
+                Actions.repeat(
+                        RepeatAction.FOREVER,
+                        Actions.sequence(
+                                Actions.scaleTo(0.9f, 0.9f, 0.25f, Interpolation.circleIn),
+                                Actions.scaleTo(1f, 1f, 0.25f, Interpolation.circleOut)
+                        )
+                )
+        );
+
+        brandTable.add(updateLogo)
+                .size(updateLogo.getWidth() / 2f, updateLogo.getHeight() / 2f)
+                .padLeft(updateLogo.getWidth() / -2f)
+                .padBottom(-86f);
 
         // - - -  Menu control (quit, options, etc.) - - -
         Table controlTable = new Table(skin);
