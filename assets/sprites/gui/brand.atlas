@@ -1,20 +1,11 @@
-
 brand.png
-size: 1024, 512
-format: RGBA8888
-filter: Nearest, Nearest
-repeat: none
+size:1024,1024
+repeat:none
+beta
+bounds:565,350,380,174
 brand
-  rotate: false
-  xy: 2, 175
-  size: 565, 175
-  orig: 565, 175
-  offset: 0, 0
-  index: -1
-brandOnline
-  rotate: false
-  xy: 2, 0
-  size: 565, 175
-  orig: 565, 175
-  offset: 0, 0
-  index: -1
+bounds:0,174,565,175
+online
+bounds:0,349,565,175
+update
+bounds:0,0,512,174
