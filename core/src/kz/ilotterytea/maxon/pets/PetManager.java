@@ -41,22 +41,21 @@ public class PetManager {
             pets.add(pet);
         }
 
-        pets = pets.stream().sorted((pet, t1) -> {
-            if (pet.getPrice() > t1.getPrice()) {
-                return 1;
-            } else if (pet.getPrice() < t1.getPrice()) {
-                return -1;
-            }
-            return 0;
-        }).collect(Collectors.toList());
+        Collections.sort(pets, (pet1, pet2) -> Double.compare(pet1.getPrice(), pet2.getPrice()));
 
         this.pets.addAll(pets);
         logger.info("Loaded {} pets", pets.size());
     }
 
     public Optional<Pet> getPet(String id) {
-        return pets.stream().filter(x -> x.getId().equals(id)).findFirst();
+        for (Pet pet : pets) {
+            if (pet.getId().equals(id)) {
+                return Optional.of(pet);
+            }
+        }
+        return Optional.empty();
     }
+
 
     public ArrayList<Pet> getPets() {
         return pets;

@@ -28,6 +28,9 @@ public class SavegameWidget extends Table implements Disposable {
 
     private final Sound clickSound;
 
+    private final String styleName = OsUtils.isMobile ? "defaultMobile" : "default";
+    private final float iconSize = OsUtils.isMobile ? 64f : 32f;
+
     public SavegameWidget(final MaxonGame game, Skin skin, final Stage stage, Savegame savegame) {
         super();
         this.game = game;
@@ -58,7 +61,7 @@ public class SavegameWidget extends Table implements Disposable {
     private void createEmpty() {
         Table body = new Table();
 
-        Label label = new Label("New Game", skin);
+        Label label = new Label("New Game", skin, styleName);
         label.setAlignment(Align.center);
         body.add(label).grow().row();
 
@@ -79,13 +82,13 @@ public class SavegameWidget extends Table implements Disposable {
         // Header
         Table header = new Table();
 
-        Label name = new Label(savegame.getName(), skin);
+        Label name = new Label(savegame.getName(), skin, styleName);
         header.add(name).grow();
 
         long minutes = savegame.getElapsedTime() / 1000 / 60;
         long seconds = savegame.getElapsedTime() / 1000 % 60;
 
-        Label time = new Label(String.format("%s:%s", NumberFormatter.pad(minutes), NumberFormatter.pad(seconds)), skin);
+        Label time = new Label(String.format("%s:%s", NumberFormatter.pad(minutes), NumberFormatter.pad(seconds)), skin, styleName);
         time.setAlignment(Align.right);
         header.add(time).grow().row();
 
@@ -97,10 +100,10 @@ public class SavegameWidget extends Table implements Disposable {
 
         // Points
         Image pointsIcon = new Image(atlas.findRegion("points"));
-        data.add(pointsIcon).size(32f, 32f).padRight(8f);
+        data.add(pointsIcon).size(iconSize, iconSize).padRight(8f);
 
-        Label points = new Label(NumberFormatter.format((long) savegame.getMoney()), skin);
-        data.add(points).padRight(32f);
+        Label points = new Label(NumberFormatter.format((long) savegame.getMoney()), skin, styleName);
+        data.add(points).padRight(iconSize);
 
         // Unit
         int amount = 0;
@@ -110,22 +113,22 @@ public class SavegameWidget extends Table implements Disposable {
         }
 
         Image unitIcon = new Image(atlas.findRegion("pets"));
-        data.add(unitIcon).size(32f, 32f).padRight(8f);
+        data.add(unitIcon).size(iconSize, iconSize).padRight(8f);
 
-        Label unit = new Label(NumberFormatter.format(amount), skin);
-        data.add(unit).padRight(32f);
+        Label unit = new Label(NumberFormatter.format(amount), skin, styleName);
+        data.add(unit).padRight(iconSize);
 
         // Multiplier
         Image multiplierIcon = new Image(atlas.findRegion("multiplier"));
-        data.add(multiplierIcon).size(32f, 32f).padRight(8f);
+        data.add(multiplierIcon).size(iconSize, iconSize).padRight(8f);
 
-        Label multiplier = new Label(NumberFormatter.format((long) savegame.getMultiplier()), skin);
+        Label multiplier = new Label(NumberFormatter.format((long) savegame.getMultiplier()), skin, styleName);
         data.add(multiplier);
 
         this.dataTable.add(data).grow();
 
         // - - -  C O N T R O L  - - -
-        TextButton playButton = new TextButton(game.locale.TranslatableText("menu.continue"), skin);
+        TextButton playButton = new TextButton(game.locale.TranslatableText("menu.continue"), skin, styleName);
 
         playButton.addListener(new ClickListener() {
             @Override
@@ -136,7 +139,7 @@ public class SavegameWidget extends Table implements Disposable {
             }
         });
 
-        TextButton resetButton = new TextButton(game.locale.TranslatableText("menu.reset"), skin);
+        TextButton resetButton = new TextButton(game.locale.TranslatableText("menu.reset"), skin, styleName);
 
         resetButton.addListener(new ClickListener() {
             @Override
