@@ -6,8 +6,6 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import de.tomgrill.gdxdialogs.core.GDXDialogs;
-import de.tomgrill.gdxdialogs.core.GDXDialogsSystem;
 import kz.ilotterytea.maxon.pets.PetManager;
 import kz.ilotterytea.maxon.screens.SplashScreen;
 import kz.ilotterytea.maxon.utils.GameUpdater;
