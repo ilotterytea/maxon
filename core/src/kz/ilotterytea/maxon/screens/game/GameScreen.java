@@ -1,6 +1,7 @@
 package kz.ilotterytea.maxon.screens.game;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -45,6 +46,7 @@ import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.scene.SceneSkybox;
+import net.mgsx.gltf.scene3d.utils.EnvironmentUtil;
 import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 
 import java.util.ArrayList;
@@ -373,11 +375,13 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     private void create3D() {
-        SceneAsset sceneAsset = game.assetManager.get("models/scenes/living_room.glb", SceneAsset.class);
-        Scene scene = new Scene(sceneAsset.scene);
-
         sceneManager = new SceneManager();
-        sceneManager.addScene(scene);
+
+        if (!OsUtils.isMobile) {
+            SceneAsset sceneAsset = game.assetManager.get("models/scenes/living_room.glb", SceneAsset.class);
+            Scene scene = new Scene(sceneAsset.scene);
+            sceneManager.addScene(scene);
+        }
 
         camera = new PerspectiveCamera(60f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.near = 1f;
@@ -412,7 +416,6 @@ public class GameScreen implements Screen, InputProcessor {
 
         // setup quick IBL (image based lighting)
         IBLBuilder iblBuilder = IBLBuilder.createOutdoor(light);
-        Cubemap environmentCubemap = iblBuilder.buildEnvMap(1024);
         Cubemap diffuseCubemap = iblBuilder.buildIrradianceMap(256);
         Cubemap specularCubemap = iblBuilder.buildRadianceMap(10);
         iblBuilder.dispose();
@@ -424,8 +427,20 @@ public class GameScreen implements Screen, InputProcessor {
         sceneManager.environment.set(PBRCubemapAttribute.createSpecularEnv(specularCubemap));
         sceneManager.environment.set(PBRCubemapAttribute.createDiffuseEnv(diffuseCubemap));
 
-        SceneSkybox skybox = new SceneSkybox(environmentCubemap);
-        sceneManager.setSkyBox(skybox);
+        Cubemap environmentCubemap;
+
+        if (OsUtils.isMobile) {
+            environmentCubemap = EnvironmentUtil.createCubemap(
+                    new InternalFileHandleResolver(),
+                    "skyboxes/game/",
+                    ".png",
+                    EnvironmentUtil.FACE_NAMES_NEG_POS
+            );
+        } else {
+            environmentCubemap = iblBuilder.buildEnvMap(1024);
+        }
+
+        sceneManager.setSkyBox(new SceneSkybox(environmentCubemap));
     }
 
     private void createStageUI() {
