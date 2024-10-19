@@ -1,8 +1,5 @@
 {
-  "updater.title": "You're playing an outdated version...",
-  "updater.message": "There's a new update out! Want to see it?",
-  "updater.no": "n-no",
-  "updater.yes": "YES!!",
+  "updater.info": "A new update is available!",
 
   "debug.version": "%s (LibGDX %s, Java %s)",
   "debug.c_fps": "%s FPS",

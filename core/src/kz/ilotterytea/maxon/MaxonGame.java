@@ -22,8 +22,6 @@ public class MaxonGame extends Game {
 
 	private PetManager petManager;
 
-	private GDXDialogs dialogWindows;
-
 	private static MaxonGame instance;
 
 	public static MaxonGame getInstance() {
@@ -35,10 +33,6 @@ public class MaxonGame extends Game {
 
 	public PetManager getPetManager() {
 		return petManager;
-	}
-
-	public GDXDialogs getDialogWindows() {
-		return dialogWindows;
 	}
 
 	@Override
@@ -60,7 +54,6 @@ public class MaxonGame extends Game {
 
 		assetManager = new AssetManager();
 		petManager = new PetManager(assetManager);
-		dialogWindows = GDXDialogsSystem.install();
 
 		this.setScreen(new SplashScreen());
 	}

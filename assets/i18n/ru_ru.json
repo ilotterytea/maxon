@@ -1,8 +1,5 @@
 {
-  "updater.title": "Ты играешь в устаревшую версию...",
-  "updater.message": "Вышло новое обновление! Хочешь посмотреть?",
-  "updater.no": "н-нет",
-  "updater.yes": "ДААА!!",
+  "updater.info": "Доступно новое обновление!",
 
   "debug.version": "%s (LibGDX %s, Java %s)",
   "debug.c_fps": "%s FPS",
