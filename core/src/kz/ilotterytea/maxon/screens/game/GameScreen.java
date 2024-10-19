@@ -31,7 +31,6 @@ import kz.ilotterytea.maxon.player.MaxonItem;
 import kz.ilotterytea.maxon.player.MaxonItemRegister;
 import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.screens.MenuScreen;
-import kz.ilotterytea.maxon.screens.SlotsMinigameScreen;
 import kz.ilotterytea.maxon.screens.game.shop.ShopUI;
 import kz.ilotterytea.maxon.ui.*;
 import kz.ilotterytea.maxon.ui.game.QuickActionsTable;
@@ -328,11 +327,6 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (Gdx.input.isKeyPressed(Input.Keys.K)) {
-            game.setScreen(new SlotsMinigameScreen());
-            dispose();
-        }
-
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             savegame.setElapsedTime((System.currentTimeMillis() - playTimestamp) + savegame.getElapsedTime());
             savegame.save();
