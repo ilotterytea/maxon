@@ -35,6 +35,10 @@
       file: fnt/FontText.fnt,
       scaledSize: 24
     },
+    defaultMobile: {
+      file: fnt/FontText.fnt,
+      scaledSize: 48
+    },
     small: {
       file: fnt/FontText.fnt,
       scaledSize: 18
@@ -43,13 +47,25 @@
       file: fnt/FontText.fnt,
       scaledSize: 19
     },
+    store_item_name_mobile: {
+      file: fnt/FontText.fnt,
+      scaledSize: 36
+    },
     store_item_price: {
       file: fnt/FontText.fnt,
       scaledSize: 18
     },
+    store_item_price_mobile: {
+      file: fnt/FontText.fnt,
+      scaledSize: 30
+    },
     store_control: {
       file: fnt/FontText.fnt,
       scaledSize: 18
+    },
+    store_control_mobile: {
+      file: fnt/FontText.fnt,
+      scaledSize: 36
     },
     tooltip: {
       file: fnt/FontText.fnt,
@@ -69,9 +85,17 @@
       over: button_hover,
       disabled: button_disabled,
     },
+    defaultMobile: {
+      parent: default
+      font: defaultMobile
+    },
     store_control: {
       parent: default,
       font: store_control
+    },
+    store_control_mobile: {
+      parent: store_control,
+      font: store_control_mobile
     },
     link: {
       font: small,
@@ -86,9 +110,17 @@
       font: default,
       fontColor: white
     },
+    defaultMobile: {
+      parent: default
+      font: defaultMobile
+    },
     store_item: {
       font: store_item_name,
       fontColor: store_item
+    },
+    store_item_mobile: {
+      parent: store_item,
+      font: store_item_name_mobile,
     },
     store_item_hover: {
       font: store_item_name,
@@ -98,12 +130,24 @@
       font: store_item_name,
       fontColor: store_item_disabled
     },
+    store_item_disabled_mobile: {
+      parent: store_item_mobile,
+      fontColor: store_item_disabled
+    },
     store_item_price: {
       font: store_item_price,
       fontColor: store_item_price_available
     },
+    store_item_price_mobile: {
+      parent: store_item_price,
+      font: store_item_price_mobile
+    },
     store_item_price_disabled: {
       font: store_item_price,
+      fontColor: store_item_price_disabled
+    },
+    store_item_price_disabled_mobile: {
+      parent: store_item_price_mobile,
       fontColor: store_item_price_disabled
     },
     slots: {

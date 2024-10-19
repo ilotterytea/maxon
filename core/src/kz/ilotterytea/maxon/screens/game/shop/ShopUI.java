@@ -37,6 +37,9 @@ public class ShopUI {
 
     private final Sound clickSound, notEnoughMoneySound, purchaseSound, sellSound;
 
+    private final String styleName = OsUtils.isMobile ? "defaultMobile" : "default";
+    private final float iconSize = OsUtils.isMobile ? 64f : 32f;
+
     public ShopUI(final Savegame savegame, Stage stage, Skin skin, TextureAtlas atlas) {
         this.savegame = savegame;
         MaxonGame game = MaxonGame.getInstance();
@@ -78,7 +81,7 @@ public class ShopUI {
         pointsTable.align(Align.left);
 
         Image pointsImage = new Image(this.atlas.findRegion("points"));
-        this.pointsLabel = new Label(String.valueOf(savegame.getMoney()), this.skin);
+        this.pointsLabel = new Label(String.valueOf(savegame.getMoney()), this.skin, styleName);
         pointsLabel.setAlignment(Align.left);
 
         if (OsUtils.isMobile) {
@@ -96,7 +99,7 @@ public class ShopUI {
         multiplierTable.align(Align.left);
 
         Image multiplierImage = new Image(this.atlas.findRegion("multiplier"));
-        this.multiplierLabel = new Label(String.format("%s/s", savegame.getMultiplier()), this.skin);
+        this.multiplierLabel = new Label(String.format("%s/s", savegame.getMultiplier()), this.skin, styleName);
         multiplierLabel.setAlignment(Align.left);
 
         if (OsUtils.isMobile) {
@@ -116,7 +119,7 @@ public class ShopUI {
         Table titleTable = new Table(skin);
         titleTable.setBackground("store_control");
 
-        Label label = new Label("Store", skin);
+        Label label = new Label("Store", skin, styleName);
         label.setAlignment(Align.center);
         titleTable.add(label).pad(10f).grow();
 
@@ -149,14 +152,16 @@ public class ShopUI {
         controlTable.align(Align.center);
         controlTable.pad(10f);
 
+        String styleName = OsUtils.isMobile ? "store_control_mobile" : "store_control";
+
         // Mode changer
         Table modeTable = new Table();
 
-        TextButton buyButton = new TextButton("Buy", this.skin, "store_control");
+        TextButton buyButton = new TextButton("Buy", this.skin, styleName);
         buyButton.setDisabled(true);
         modeTable.add(buyButton).padBottom(5f).growX().row();
 
-        TextButton sellButton = new TextButton("Sell", this.skin, "store_control");
+        TextButton sellButton = new TextButton("Sell", this.skin, styleName);
         modeTable.add(sellButton).growX();
 
         sellButton.addListener(new ClickListener() {
@@ -193,11 +198,11 @@ public class ShopUI {
         Table multiplierTable = new Table();
         multiplierTable.align(Align.left);
 
-        TextButton x1Button = new TextButton("1x", this.skin, "store_control");
+        TextButton x1Button = new TextButton("1x", this.skin, styleName);
         x1Button.setDisabled(true);
         multiplierTable.add(x1Button).width(64f).height(64f).padRight(10f);
 
-        TextButton x10Button = new TextButton("10x", this.skin, "store_control");
+        TextButton x10Button = new TextButton("10x", this.skin, styleName);
         multiplierTable.add(x10Button).width(64f).height(64f);
 
         x1Button.addListener(new ClickListener() {

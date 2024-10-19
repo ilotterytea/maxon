@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import kz.ilotterytea.maxon.MaxonConstants;
+import kz.ilotterytea.maxon.utils.OsUtils;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 
 public class PetWidget extends Table {
@@ -33,13 +34,13 @@ public class PetWidget extends Table {
         this.pet = pet;
         this.skin = skin;
 
-        super.add(pet.getIcon()).size(64f).pad(6f);
+        super.add(pet.getIcon()).size(OsUtils.isMobile ? 128f : 64f).pad(6f);
 
-        this.idleStyle = skin.get("store_item", Label.LabelStyle.class);
+        this.idleStyle = skin.get(OsUtils.isMobile ? "store_item_mobile" : "store_item", Label.LabelStyle.class);
         this.hoverStyle = skin.get("store_item_hover", Label.LabelStyle.class);
-        this.disabledStyle = skin.get("store_item_disabled", Label.LabelStyle.class);
-        this.availablePriceStyle = skin.get("store_item_price", Label.LabelStyle.class);
-        this.disabledPriceStyle = skin.get("store_item_price_disabled", Label.LabelStyle.class);
+        this.disabledStyle = skin.get(OsUtils.isMobile ? "store_item_disabled_mobile" : "store_item_disabled", Label.LabelStyle.class);
+        this.availablePriceStyle = skin.get(OsUtils.isMobile ? "store_item_price_mobile" : "store_item_price", Label.LabelStyle.class);
+        this.disabledPriceStyle = skin.get(OsUtils.isMobile ? "store_item_price_disabled_mobile" : "store_item_price_disabled", Label.LabelStyle.class);
 
         this.price = pet.getPrice();
 
@@ -64,9 +65,11 @@ public class PetWidget extends Table {
 
         summary.add(nameLabel).align(Align.left).grow().row();
 
+        float iconSize = OsUtils.isMobile ? 64f : 16f;
+
         Table priceTable = new Table();
         priceTable.align(Align.left);
-        priceTable.add(priceIcon).size(16f, 16f).padRight(5f);
+        priceTable.add(priceIcon).size(iconSize, iconSize).padRight(5f);
         priceTable.add(priceLabel).grow();
         summary.add(priceTable).grow();
 
