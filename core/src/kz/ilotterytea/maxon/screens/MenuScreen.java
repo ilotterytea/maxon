@@ -14,13 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import de.tomgrill.gdxdialogs.core.dialogs.GDXButtonDialog;
 import kz.ilotterytea.maxon.MaxonConstants;
 import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.player.Savegame;
@@ -53,30 +51,8 @@ public class MenuScreen implements Screen {
     private final ArrayList<Timer.Task> tasks = new ArrayList<>();
     private Sound clickSound;
 
-    private static boolean suggestedUpdate = false;
-
     public MenuScreen() {
         this.game = MaxonGame.getInstance();
-
-        // Suggest an update
-        if (!GameUpdater.CLIENT_IS_ON_LATEST_VERSION && !suggestedUpdate) {
-            GDXButtonDialog bDialog = game.getDialogWindows().newDialog(GDXButtonDialog.class);
-
-            bDialog.setTitle(game.locale.TranslatableText("updater.title"));
-            bDialog.setMessage(game.locale.TranslatableText("updater.message"));
-
-            bDialog.setClickListener(button -> {
-                if (button == 1) {
-                    Gdx.net.openURI(MaxonConstants.GAME_APP_URL);
-                }
-            });
-
-            bDialog.addButton(game.locale.TranslatableText("updater.no"));
-            bDialog.addButton(game.locale.TranslatableText("updater.yes"));
-
-            bDialog.build().show();
-            suggestedUpdate = true;
-        }
 
         // Stage and skin:
         this.stage = new Stage(new ScreenViewport());
@@ -352,6 +328,23 @@ public class MenuScreen implements Screen {
             savegameTable.add(info).growX().minHeight(240f).pad(16f);
         } else {
             savegameTable.add(info).minSize(640f, 240f);
+        }
+
+        // Suggest an update
+        if (!GameUpdater.CLIENT_IS_ON_LATEST_VERSION && OsUtils.isPC) {
+            TextButton updateButton = new TextButton(game.locale.TranslatableText("updater.info"), uiSkin, "link");
+
+            updateButton.setPosition(8f, stage.getHeight() - 32f);
+
+            updateButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    Gdx.net.openURI(MaxonConstants.GAME_APP_URL);
+                }
+            });
+
+            menuTable.add(updateButton).pad(6f).left().row();
         }
 
         // Adding tables into the main UI table

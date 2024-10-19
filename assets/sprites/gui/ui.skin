@@ -5,7 +5,10 @@
     store_item_hover: { hex: "#ffffffff" },
     store_item_disabled: { hex: "#888888ff" },
     store_item_price_available: { hex: "#00ff00ff" },
-    store_item_price_disabled: { hex: "#ff0000ff" }
+    store_item_price_disabled: { hex: "#ff0000ff" },
+
+    orange: {hex: "#ffa300ff" },
+    yellow: {hex: "#ffec27ff" },
   },
   com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
     button_pressed: { color: { hex: "#ad6235ff" }, name: pressed },
@@ -31,6 +34,10 @@
     default: {
       file: fnt/FontText.fnt,
       scaledSize: 24
+    },
+    small: {
+      file: fnt/FontText.fnt,
+      scaledSize: 18
     },
     store_item_name: {
       file: fnt/FontText.fnt,
@@ -65,7 +72,14 @@
     store_control: {
       parent: default,
       font: store_control
-    }
+    },
+    link: {
+      font: small,
+      fontColor: yellow,
+      overFontColor: orange,
+      focusedFontColor: orange,
+      downFontColor: orange
+    },
   },
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
     default: {
