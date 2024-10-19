@@ -43,12 +43,31 @@ public class MaxonGame extends Game {
 		prefs = Gdx.app.getPreferences(MaxonConstants.GAME_APP_PACKAGE);
 		locale = new I18N(Gdx.files.internal("i18n/" + prefs.getString("lang", "en_us") + ".json"));
 
-		prefs.putInteger("width", Gdx.graphics.getWidth());
-		prefs.putInteger("height", Gdx.graphics.getHeight());
-		prefs.flush();
-
 		Gdx.graphics.setVSync(prefs.getBoolean("vsync", true));
-		if (prefs.getBoolean("fullscreen", false)) { Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode()); }
+
+		if (prefs.getBoolean("fullscreen", false)) {
+			Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+		} else if (
+				prefs.contains("width") ||
+				prefs.contains("height")
+		) {
+			int width = prefs.getInteger("width", 800);
+
+			if (width < 800) {
+				width = 800;
+				prefs.putInteger("width", width);
+			}
+
+			int height = prefs.getInteger("height", 600);
+
+			if (height < 600) {
+				height = 600;
+				prefs.putInteger("height", height);
+			}
+
+			prefs.flush();
+			Gdx.graphics.setWindowedMode(width, height);
+		}
 
 		assetManager = new AssetManager();
 		petManager = new PetManager(assetManager);
