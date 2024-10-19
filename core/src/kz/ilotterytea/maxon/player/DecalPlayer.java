@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import kz.ilotterytea.maxon.MaxonGame;
+import kz.ilotterytea.maxon.utils.OsUtils;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,12 @@ public class DecalPlayer {
 
         this.decal = Decal.newDecal(this.regions.get(this.regionIndex));
         this.decal.setScale(0.025f);
-        this.decal.setPosition(2.0f, 1.75f, 2.0f);
+
+        if (OsUtils.isMobile) {
+            this.decal.setPosition(-5f, 1.75f, 4f);
+        } else {
+            this.decal.setPosition(2f, 1.75f, 2f);
+        }
 
         float width = this.decal.getWidth() / (this.decal.getScaleX() * 1000f);
         float height = this.decal.getHeight() / (this.decal.getScaleY() * 1000f);

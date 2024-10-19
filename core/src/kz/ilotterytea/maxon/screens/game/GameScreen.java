@@ -391,7 +391,7 @@ public class GameScreen implements Screen, InputProcessor {
         float angle = 256f;
 
         if (OsUtils.isMobile) {
-            angle = 245f;
+            angle = 155f;
         }
 
         camera.rotate(angle, 0f, 1f, 0f);
