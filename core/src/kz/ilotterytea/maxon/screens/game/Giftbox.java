@@ -82,7 +82,7 @@ public class Giftbox implements Disposable {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Triple<Integer, Double, Optional<String>> gift = giveGift();
+                Triple<Integer, Double, String> gift = giveGift();
                 displayGift(gift.getFirst(), gift.getSecond(), gift.getThird());
                 updateBox(false);
             }
@@ -126,7 +126,7 @@ public class Giftbox implements Disposable {
 
     public void update(float delta, Camera camera) {
         if (OsUtils.isPC && checkCollision(camera)) {
-            Triple<Integer, Double, Optional<String>> gift = giveGift();
+            Triple<Integer, Double, String> gift = giveGift();
             displayGift(gift.getFirst(), gift.getSecond(), gift.getThird());
             updateBox(false);
         } else if (OsUtils.isMobile && isActive) {
@@ -222,12 +222,12 @@ public class Giftbox implements Disposable {
         Timer.schedule(task, delaySeconds);
     }
 
-    private Triple<Integer, Double, Optional<String>> giveGift() {
+    private Triple<Integer, Double, String> giveGift() {
         Savegame savegame = Savegame.getInstance();
 
         int choice = Math.getRandomNumber(1, 3);
         double value;
-        Optional<String> petName = Optional.empty();
+        String petName = null;
 
         switch (choice) {
             // Pet
@@ -240,9 +240,9 @@ public class Giftbox implements Disposable {
                     Map.Entry<String, Integer> pet = list.get(0);
 
                     PetManager petManager = MaxonGame.getInstance().getPetManager();
-                    Optional<Pet> petData = petManager.getPet(pet.getKey());
+                    Pet petData = petManager.getPet(pet.getKey());
 
-                    if (petData.isEmpty()) {
+                    if (petData == null) {
                         value = 0.0;
                         break;
                     }
@@ -250,8 +250,8 @@ public class Giftbox implements Disposable {
                     value = 1.0;
 
                     pets.put(pet.getKey(), pet.getValue() + (int) value);
-                    savegame.increaseMultiplier(petData.get().getMultiplier());
-                    petName = Optional.of(pet.getKey());
+                    savegame.increaseMultiplier(petData.getMultiplier());
+                    petName = pet.getKey();
                 } catch (Exception e) {
                     value = 0.0;
                 }
@@ -276,7 +276,7 @@ public class Giftbox implements Disposable {
         return new Triple<>(choice, value, petName);
     }
 
-    private void displayGift(int choice, double value, Optional<String> petName) {
+    private void displayGift(int choice, double value, String petName) {
         Table mainTable = new Table(skin);
         mainTable.setBackground("halftransparentblack");
         mainTable.setFillParent(true);
@@ -309,7 +309,7 @@ public class Giftbox implements Disposable {
 
         switch (choice) {
             case 1:
-                regionName = petName.orElse("pets");
+                regionName = petName != null ? petName : "pets";
                 break;
             case 2:
                 regionName = "multiplier";
@@ -322,11 +322,11 @@ public class Giftbox implements Disposable {
         // Adding the icon
         TextureRegion region;
 
-        if (petName.isPresent() && choice == 1) {
+        if (petName != null && choice == 1) {
             PetManager petManager = MaxonGame.getInstance().getPetManager();
-            Optional<Pet> petData = petManager.getPet(regionName);
+            Pet petData = petManager.getPet(regionName);
 
-            region = petData.get().getIcon().getFrame(0);
+            region = petData.getIcon().getFrame(0);
         } else {
             TextureAtlas atlas = assetManager.get("sprites/gui/player_icons.atlas", TextureAtlas.class);
             region = atlas.findRegion(regionName);

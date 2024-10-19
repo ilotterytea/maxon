@@ -49,7 +49,6 @@ import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Optional;
 
 public class GameScreen implements Screen, InputProcessor {
     final MaxonGame game;
@@ -139,15 +138,15 @@ public class GameScreen implements Screen, InputProcessor {
                 double multiplier = 0.0f;
 
                 for (String id : savegame.getPurchasedPets().keySet()) {
-                    Optional<Pet> pet = game.getPetManager().getPet(id);
+                    Pet pet = game.getPetManager().getPet(id);
 
-                    if (pet.isEmpty()) {
+                    if (pet == null) {
                         continue;
                     }
 
                     int amount = savegame.getPurchasedPets().get(id);
 
-                    double m = pet.get().getMultiplier() * amount;
+                    double m = pet.getMultiplier() * amount;
                     multiplier += m;
                 }
 
@@ -205,16 +204,16 @@ public class GameScreen implements Screen, InputProcessor {
         // Getting the pet decals
         for (String id : savegame.getPurchasedPets().keySet()) {
             PetManager petManager = game.getPetManager();
-            Optional<Pet> pet = petManager.getPet(id);
+            Pet pet = petManager.getPet(id);
 
-            if (pet.isEmpty()) {
+            if (pet == null) {
                 continue;
             }
 
             int amount = savegame.getPurchasedPets().get(id);
 
             for (int i = 0; i < amount; i++) {
-                Decal decal = pet.get().getDecal();
+                Decal decal = pet.getDecal();
                 petDecals.add(Decal.newDecal(decal.getWidth(), decal.getHeight(), decal.getTextureRegion()));
             }
         }

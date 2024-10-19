@@ -257,12 +257,17 @@ public class ShopUI {
                     }
 
                     if (mode == ShopMode.BUY) {
+                        Integer amount = savegame.getPurchasedPets().get(pet.getId());
+
+                        if (amount == null) {
+                            amount = 0;
+                        }
+
                         savegame.decreaseMoney(widget.getPrice());
                         savegame.increaseMultiplier(pet.getMultiplier() * multiplier.getMultiplier());
                         savegame.getPurchasedPets().put(
                                 pet.getId(),
-                                savegame.getPurchasedPets().getOrDefault(pet.getId(), 0)
-                                        + multiplier.getMultiplier()
+                                amount + multiplier.getMultiplier()
                         );
                         purchaseSound.play();
                     } else {
@@ -323,7 +328,10 @@ public class ShopUI {
                 continue;
             }
 
-            int amount = savegame.getPurchasedPets().getOrDefault(widget.getPet().getId(), 0);
+            Integer amount = savegame.getPurchasedPets().get(widget.getPet().getId());
+
+            if (amount == null) amount = 0;
+
             double price = widget.getPet().getPrice() * java.lang.Math.pow(1.15f, amount + multiplier.getMultiplier());
 
             if (mode == ShopMode.SELL) {

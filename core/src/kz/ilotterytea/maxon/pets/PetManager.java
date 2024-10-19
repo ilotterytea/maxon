@@ -47,13 +47,13 @@ public class PetManager {
         logger.info("Loaded {} pets", pets.size());
     }
 
-    public Optional<Pet> getPet(String id) {
+    public Pet getPet(String id) {
         for (Pet pet : pets) {
             if (pet.getId().equals(id)) {
-                return Optional.of(pet);
+                return pet;
             }
         }
-        return Optional.empty();
+        return null;
     }
 
 
