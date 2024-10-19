@@ -1,6 +1,7 @@
 package kz.ilotterytea.maxon.screens;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
@@ -30,9 +31,9 @@ import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
 import net.mgsx.gltf.scene3d.lights.PointLightEx;
-import net.mgsx.gltf.scene3d.scene.Scene;
-import net.mgsx.gltf.scene3d.scene.SceneAsset;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
+import net.mgsx.gltf.scene3d.scene.SceneSkybox;
+import net.mgsx.gltf.scene3d.utils.EnvironmentUtil;
 import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 
 import java.util.ArrayList;
@@ -404,11 +405,7 @@ public class MenuScreen implements Screen {
     }
 
     private void create3D() {
-        SceneAsset sceneAsset = game.assetManager.get("models/scenes/living_room.glb", SceneAsset.class);
-        Scene scene = new Scene(sceneAsset.scene);
-
         sceneManager = new SceneManager();
-        sceneManager.addScene(scene);
 
         camera = new PerspectiveCamera(60f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.near = 1f;
@@ -438,7 +435,6 @@ public class MenuScreen implements Screen {
 
         // setup quick IBL (image based lighting)
         IBLBuilder iblBuilder = IBLBuilder.createOutdoor(light);
-        Cubemap environmentCubemap = iblBuilder.buildEnvMap(1024);
         Cubemap diffuseCubemap = iblBuilder.buildIrradianceMap(256);
         Cubemap specularCubemap = iblBuilder.buildRadianceMap(10);
         iblBuilder.dispose();
@@ -449,5 +445,14 @@ public class MenuScreen implements Screen {
         sceneManager.environment.set(new PBRTextureAttribute(PBRTextureAttribute.BRDFLUTTexture, brdfLUT));
         sceneManager.environment.set(PBRCubemapAttribute.createSpecularEnv(specularCubemap));
         sceneManager.environment.set(PBRCubemapAttribute.createDiffuseEnv(diffuseCubemap));
+
+        Cubemap environmentCubemap = EnvironmentUtil.createCubemap(
+                new InternalFileHandleResolver(),
+                "skyboxes/menu/",
+                ".png",
+                EnvironmentUtil.FACE_NAMES_NEG_POS
+        );
+
+        sceneManager.setSkyBox(new SceneSkybox(environmentCubemap));
     }
 }
