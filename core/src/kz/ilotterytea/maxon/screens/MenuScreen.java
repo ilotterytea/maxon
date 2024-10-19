@@ -73,11 +73,6 @@ public class MenuScreen implements Screen {
 
         clickSound = game.assetManager.get("sfx/ui/click.ogg", Sound.class);
 
-        // Tint the background
-        Image tintImage = new Image(skin, "tint");
-        tintImage.setFillParent(true);
-        this.stage.addActor(tintImage);
-
         // - - - - - -  U I  - - - - - -
         Table menuTable = new Table();
         menuTable.setFillParent(true);
