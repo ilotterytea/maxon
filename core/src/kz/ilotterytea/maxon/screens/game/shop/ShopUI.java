@@ -310,6 +310,9 @@ public class ShopUI {
                     widget.setVisible(true);
                     widget.setLocked(false);
                     savegame.getUnlockedPets().add(widget.getPet().getId());
+
+                    Sound sound = MaxonGame.getInstance().assetManager.get("sfx/shop/unlocked.ogg");
+                    sound.play();
                 }
 
                 continue;
