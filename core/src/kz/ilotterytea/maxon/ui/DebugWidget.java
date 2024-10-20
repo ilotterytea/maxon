@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Align;
 import kz.ilotterytea.maxon.MaxonConstants;
 
 public class DebugWidget extends Table {
-    private final Label fpsLabel;
+    private final Label fpsLabel, versionLabel;
     private final Preferences preferences;
 
     private boolean isEnabled;
@@ -20,14 +20,17 @@ public class DebugWidget extends Table {
         super.pad(16f);
         super.setFillParent(true);
         super.align(Align.topRight);
+        super.setZIndex(10);
 
         this.preferences = Gdx.app.getPreferences(MaxonConstants.GAME_APP_PACKAGE);
         this.isEnabled = preferences.getBoolean("debug", false);
 
         this.fpsLabel = new Label(Gdx.graphics.getFramesPerSecond() + " fps", skin);
+        this.versionLabel = new Label(MaxonConstants.GAME_NAME + " " + MaxonConstants.GAME_VERSION, skin);
 
         if (isEnabled) {
-            super.add(fpsLabel);
+            super.add(versionLabel).right().row();
+            super.add(fpsLabel).right();
         }
     }
 
@@ -41,7 +44,8 @@ public class DebugWidget extends Table {
             this.preferences.flush();
 
             if (isEnabled) {
-                super.add(fpsLabel);
+                super.add(versionLabel).right().row();
+                super.add(fpsLabel).right();
             } else {
                 super.clear();
             }
