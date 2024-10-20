@@ -3,18 +3,18 @@ package kz.ilotterytea.maxon.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import kz.ilotterytea.maxon.anim.SpriteUtils;
 import kz.ilotterytea.maxon.assets.AssetUtils;
 import kz.ilotterytea.maxon.MaxonGame;
-import kz.ilotterytea.maxon.ui.AnimatedImage;
 import kz.ilotterytea.maxon.utils.OsUtils;
 
 public class SplashScreen implements Screen {
@@ -22,9 +22,9 @@ public class SplashScreen implements Screen {
 
     private Stage stage;
 
-    AnimatedImage image;
+    private TextureAtlas textureAtlas;
 
-    ProgressBar bar;
+    private ProgressBar bar;
 
     private boolean assetsLoaded = false;
 
@@ -38,13 +38,8 @@ public class SplashScreen implements Screen {
         logoTable.setFillParent(true);
         logoTable.align(Align.center);
 
-        image = new AnimatedImage(
-                SpriteUtils.splitToTextureRegions(
-                        new Texture(Gdx.files.internal("sprites/gui/intro.png")),
-                        2480, 1680, 2, 0
-                ),
-                15
-        );
+        textureAtlas = new TextureAtlas(Gdx.files.internal("sprites/gui/ilotterytea.atlas"));
+        Image image = new Image(textureAtlas.findRegion("devOld"));
 
         float stageWidth;
 
@@ -109,6 +104,6 @@ public class SplashScreen implements Screen {
     @Override public void resume() {}
     @Override public void hide() { dispose(); }
     @Override public void dispose() {
-        image.dispose();
+        textureAtlas.dispose();
     }
 }
