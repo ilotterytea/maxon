@@ -158,6 +158,10 @@
       font: store_item_name,
       fontColor: store_item_hover
     },
+    store_item_hover_mobile: {
+      parent: store_item_hover,
+      font: store_item_name_mobile
+    },
     store_item_disabled: {
       font: store_item_name,
       fontColor: store_item_disabled
