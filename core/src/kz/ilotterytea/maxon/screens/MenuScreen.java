@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -185,57 +184,6 @@ public class MenuScreen implements Screen {
             rightGameControlTable.align(Align.right);
         }
 
-        // - - -  D E V E L O P E R  S H O W C A S E  - - -
-        final int[] developerIndex = {0};
-        ShakingImageButton developerImage = new ShakingImageButton(friendsSkin, MaxonConstants.GAME_DEVELOPERS[developerIndex[0]][0]);
-        developerImage.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                Gdx.net.openURI(MaxonConstants.GAME_DEVELOPERS[developerIndex[0]][1]);
-                clickSound.play();
-            }
-        });
-        developerImage.setSize(64, 64);
-
-        tasks.add(Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                developerIndex[0]++;
-
-                if (developerIndex[0] >= MaxonConstants.GAME_DEVELOPERS.length) {
-                    developerIndex[0] = 0;
-                }
-
-                String[] dev = MaxonConstants.GAME_DEVELOPERS[developerIndex[0]];
-
-                developerImage.clearActions();
-                developerImage.addAction(
-                        Actions.sequence(
-                                Actions.alpha(0.0f, 1f),
-                                new Action() {
-                                    @Override
-                                    public boolean act(float delta) {
-                                        developerImage.setDrawable(friendsSkin, dev[0]);
-                                        return true;
-                                    }
-                                },
-                                Actions.alpha(1.0f, 1f)
-                        )
-                );
-
-                developerImage.clearListeners();
-                developerImage.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        super.clicked(event, x, y);
-                        Gdx.net.openURI(dev[1]);
-                        clickSound.play();
-                    }
-                });
-            }
-        }, 5, 5));
-
         // Localization
         String[] fh4Locale = game.getLocale().getHandle().nameWithoutExtension().split("_");
         String localeButtonStyleName = "locale_" + fh4Locale[0];
@@ -302,7 +250,6 @@ public class MenuScreen implements Screen {
         });
 
         if (!OsUtils.isMobile) {
-            rightGameControlTable.add(developerImage).padRight(16f);
             rightGameControlTable.add(localeButton).padRight(16f);
             rightGameControlTable.add(musicButton).padRight(16f);
 
@@ -342,7 +289,6 @@ public class MenuScreen implements Screen {
 
             controlTable.add(leftGameControlTable).grow();
         } else {
-            rightGameControlTable.add(developerImage).expand();
             rightGameControlTable.add(localeButton).expand();
             rightGameControlTable.add(musicButton).expand();
         }
