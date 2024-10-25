@@ -314,6 +314,8 @@ class SlotsMinigameScreen : Screen {
 
         playRewardSound(same, first)
 
+        savegame.slotsTotalSpins++
+
         if (!same) {
             loseStreak++
             savegame.money -= stake
@@ -322,6 +324,7 @@ class SlotsMinigameScreen : Screen {
 
         prize = stake * first.multiplier
         savegame.money += prize
+        savegame.slotsWins++
     }
 
     private fun updateLabels() {

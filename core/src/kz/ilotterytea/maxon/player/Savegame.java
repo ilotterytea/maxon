@@ -29,7 +29,7 @@ public class Savegame implements Serializable {
     private final HashMap<String, Integer> purchasedPets = new HashMap<>();
     private final ArrayList<String> unlockedPets = new ArrayList<>();
     private String name;
-    private long elapsedTime;
+    private long elapsedTime, slotsWins, slotsTotalSpins;
     private boolean isNewlyCreated;
 
     private static Savegame savegame;
@@ -99,6 +99,8 @@ public class Savegame implements Serializable {
         unlockedPets.clear();
         name = System.getProperty("user.name", "Maxon");
         elapsedTime = 0;
+        slotsWins = 0;
+        slotsTotalSpins = 0;
         isNewlyCreated = true;
     }
 
@@ -138,6 +140,16 @@ public class Savegame implements Serializable {
         return purchasedPets;
     }
 
+    public Integer getAllPetAmount() {
+        Integer sum = 0;
+
+        for (Integer v : getPurchasedPets().values()) {
+            sum += v;
+        }
+
+        return sum;
+    }
+
     public ArrayList<String> getUnlockedPets() {
         return unlockedPets;
     }
@@ -156,6 +168,22 @@ public class Savegame implements Serializable {
 
     public void setElapsedTime(long elapsedTime) {
         this.elapsedTime = elapsedTime;
+    }
+
+    public long getSlotsTotalSpins() {
+        return slotsTotalSpins;
+    }
+
+    public void setSlotsTotalSpins(long slotsTotalSpins) {
+        this.slotsTotalSpins = slotsTotalSpins;
+    }
+
+    public long getSlotsWins() {
+        return slotsWins;
+    }
+
+    public void setSlotsWins(long slotsWins) {
+        this.slotsWins = slotsWins;
     }
 
     public boolean isNewlyCreated() {
