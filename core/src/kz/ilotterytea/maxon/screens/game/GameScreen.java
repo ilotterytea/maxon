@@ -193,7 +193,9 @@ public class GameScreen implements Screen, InputProcessor {
 
         this.giftbox.update(delta, this.camera);
 
-        this.decalPlayer.render(this.camera);
+        if (!shopUI.isShopListOpened()) {
+            this.decalPlayer.render(this.camera);
+        }
 
         for (Decal decal : this.decals) {
             decal.lookAt(this.camera.position, this.camera.up);
