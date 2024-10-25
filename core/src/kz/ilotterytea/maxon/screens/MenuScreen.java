@@ -461,6 +461,14 @@ public class MenuScreen implements Screen {
 
         // setup quick IBL (image based lighting)
         IBLBuilder iblBuilder = IBLBuilder.createOutdoor(light);
+
+        Cubemap environmentCubemap = EnvironmentUtil.createCubemap(
+                new InternalFileHandleResolver(),
+                "skyboxes/menu/",
+                ".png",
+                EnvironmentUtil.FACE_NAMES_NEG_POS
+        );
+
         Cubemap diffuseCubemap = iblBuilder.buildIrradianceMap(256);
         Cubemap specularCubemap = iblBuilder.buildRadianceMap(10);
         iblBuilder.dispose();
@@ -471,13 +479,6 @@ public class MenuScreen implements Screen {
         sceneManager.environment.set(new PBRTextureAttribute(PBRTextureAttribute.BRDFLUTTexture, brdfLUT));
         sceneManager.environment.set(PBRCubemapAttribute.createSpecularEnv(specularCubemap));
         sceneManager.environment.set(PBRCubemapAttribute.createDiffuseEnv(diffuseCubemap));
-
-        Cubemap environmentCubemap = EnvironmentUtil.createCubemap(
-                new InternalFileHandleResolver(),
-                "skyboxes/menu/",
-                ".png",
-                EnvironmentUtil.FACE_NAMES_NEG_POS
-        );
 
         sceneManager.setSkyBox(new SceneSkybox(environmentCubemap));
     }

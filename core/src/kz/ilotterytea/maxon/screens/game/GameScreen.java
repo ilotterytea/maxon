@@ -416,16 +416,6 @@ public class GameScreen implements Screen, InputProcessor {
 
         // setup quick IBL (image based lighting)
         IBLBuilder iblBuilder = IBLBuilder.createOutdoor(light);
-        Cubemap diffuseCubemap = iblBuilder.buildIrradianceMap(256);
-        Cubemap specularCubemap = iblBuilder.buildRadianceMap(10);
-        iblBuilder.dispose();
-
-        Texture brdfLUT = new Texture(Gdx.files.classpath("net/mgsx/gltf/shaders/brdfLUT.png"));
-
-        sceneManager.setAmbientLight(1f);
-        sceneManager.environment.set(new PBRTextureAttribute(PBRTextureAttribute.BRDFLUTTexture, brdfLUT));
-        sceneManager.environment.set(PBRCubemapAttribute.createSpecularEnv(specularCubemap));
-        sceneManager.environment.set(PBRCubemapAttribute.createDiffuseEnv(diffuseCubemap));
 
         Cubemap environmentCubemap;
 
@@ -437,8 +427,19 @@ public class GameScreen implements Screen, InputProcessor {
                     EnvironmentUtil.FACE_NAMES_NEG_POS
             );
         } else {
-            environmentCubemap = iblBuilder.buildEnvMap(1024);
+            environmentCubemap = iblBuilder.buildEnvMap(1000);
         }
+
+        Cubemap diffuseCubemap = iblBuilder.buildIrradianceMap(256);
+        Cubemap specularCubemap = iblBuilder.buildRadianceMap(10);
+        iblBuilder.dispose();
+
+        Texture brdfLUT = new Texture(Gdx.files.classpath("net/mgsx/gltf/shaders/brdfLUT.png"));
+
+        sceneManager.setAmbientLight(1f);
+        sceneManager.environment.set(new PBRTextureAttribute(PBRTextureAttribute.BRDFLUTTexture, brdfLUT));
+        sceneManager.environment.set(PBRCubemapAttribute.createSpecularEnv(specularCubemap));
+        sceneManager.environment.set(PBRCubemapAttribute.createDiffuseEnv(diffuseCubemap));
 
         sceneManager.setSkyBox(new SceneSkybox(environmentCubemap));
     }
