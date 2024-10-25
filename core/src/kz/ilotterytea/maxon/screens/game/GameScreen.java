@@ -272,6 +272,7 @@ public class GameScreen implements Screen, InputProcessor {
         giftbox.dispose();
         stage.clear();
         decalPlayer.dispose();
+        sceneManager.dispose();
     }
 
     @Override

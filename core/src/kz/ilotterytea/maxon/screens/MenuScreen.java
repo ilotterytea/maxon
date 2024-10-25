@@ -430,6 +430,7 @@ public class MenuScreen implements Screen {
     }
     @Override public void dispose() {
         stage.dispose();
+        sceneManager.dispose();
     }
 
     private void create3D() {
