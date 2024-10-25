@@ -61,7 +61,6 @@ public class MenuScreen implements Screen {
         this.stage.addAction(Actions.sequence(Actions.alpha(0.0f), Actions.alpha(1.0f, 1f)));
 
         Skin uiSkin = game.assetManager.get("sprites/gui/ui.skin", Skin.class);
-        Skin skin = game.assetManager.get("MainSpritesheet.skin", Skin.class);
         Skin widgetSkin = game.assetManager.get("sprites/gui/widgets.skin", Skin.class);
         TextureAtlas brandAtlas = game.assetManager.get("sprites/gui/brand.atlas", TextureAtlas.class);
         TextureAtlas widgetAtlas = game.assetManager.get("sprites/gui/widgets.atlas", TextureAtlas.class);
@@ -155,7 +154,7 @@ public class MenuScreen implements Screen {
                 .padBottom(-86f);
 
         // - - -  Menu control (quit, options, etc.) - - -
-        Table controlTable = new Table(skin);
+        Table controlTable = new Table();
         controlTable.align(Align.top | Align.center);
         controlTable.pad(6f);
 
