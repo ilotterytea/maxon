@@ -1,18 +1,20 @@
 package kz.ilotterytea.maxon.screens;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import kz.ilotterytea.maxon.MaxonConstants;
 import kz.ilotterytea.maxon.assets.AssetUtils;
 import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.utils.OsUtils;
@@ -22,7 +24,9 @@ public class SplashScreen implements Screen {
 
     private Stage stage;
 
-    private TextureAtlas textureAtlas;
+    private TextureAtlas brandAtlas;
+    private Skin contributorsSkin;
+    private Sound clickSound;
 
     private ProgressBar bar;
 
@@ -30,6 +34,7 @@ public class SplashScreen implements Screen {
 
     @Override public void show() {
         this.game = MaxonGame.getInstance();
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("sfx/ui/click.ogg"));
 
         this.stage = new Stage(new FitViewport(800, 600));
         Skin skin = new Skin(Gdx.files.internal("MainSpritesheet.skin"));
@@ -38,8 +43,8 @@ public class SplashScreen implements Screen {
         logoTable.setFillParent(true);
         logoTable.align(Align.center);
 
-        textureAtlas = new TextureAtlas(Gdx.files.internal("sprites/gui/ilotterytea.atlas"));
-        Image image = new Image(textureAtlas.findRegion("devOld"));
+        brandAtlas = new TextureAtlas(Gdx.files.internal("sprites/gui/ilotterytea.atlas"));
+        Image image = new Image(brandAtlas.findRegion("devOld"));
 
         float stageWidth;
 
@@ -52,12 +57,53 @@ public class SplashScreen implements Screen {
         float difference = stageWidth / image.getWidth();
         image.setSize(stageWidth, image.getHeight() * difference);
 
-        logoTable.add(image).size(image.getWidth(), image.getHeight()).padBottom(60f).row();
+        logoTable.add(image).size(image.getWidth(), image.getHeight()).padBottom(30f).row();
 
+        // Showing contributors
+        Table contributorsTable = new Table();
+        contributorsSkin = new Skin(Gdx.files.internal("sprites/gui/friends.skin"));
+
+        for (int i = 0; i < MaxonConstants.GAME_DEVELOPERS.length; i++) {
+            String name = MaxonConstants.GAME_DEVELOPERS[i][0];
+            String url = MaxonConstants.GAME_DEVELOPERS[i][1];
+
+            ImageButton imageButton = new ImageButton(contributorsSkin, name);
+
+            imageButton.addAction(
+                    Actions.sequence(
+                            Actions.delay(0.5f * i),
+                            Actions.repeat(
+                                    RepeatAction.FOREVER,
+                                    Actions.sequence(
+                                            Actions.moveBy(0f, 20f, 2f, Interpolation.smoother),
+                                            Actions.moveBy(0f, -20f, 2f, Interpolation.smoother)
+                                    )
+                            )
+                    )
+            );
+
+            imageButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    Gdx.net.openURI(url);
+                    clickSound.play();
+                }
+            });
+
+            Cell<ImageButton> cell = contributorsTable.add(imageButton).size(OsUtils.isMobile ? 64f : 32f);
+            if (i + 1 < MaxonConstants.GAME_DEVELOPERS.length) cell.padRight(OsUtils.isMobile? 32f : 8f);
+        }
+
+        logoTable.add(contributorsTable).width(image.getWidth()).padBottom(30f).row();
+
+        // Progress bar
         bar = new ProgressBar(0f, 100f, 1f, false, skin);
         logoTable.add(bar).width(image.getWidth());
 
         stage.addActor(logoTable);
+
+        Gdx.input.setInputProcessor(stage);
 
         AssetUtils.setup(game.assetManager);
         AssetUtils.queue(game.assetManager);
@@ -104,6 +150,8 @@ public class SplashScreen implements Screen {
     @Override public void resume() {}
     @Override public void hide() { dispose(); }
     @Override public void dispose() {
-        textureAtlas.dispose();
+        brandAtlas.dispose();
+        contributorsSkin.dispose();
+        clickSound.dispose();
     }
 }
