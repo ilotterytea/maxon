@@ -9,17 +9,22 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Timer;
 import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.utils.OsUtils;
 
 import java.util.ArrayList;
 
-public class DecalPlayer {
+public class DecalPlayer implements Disposable {
     private final ArrayList<TextureRegion> regions;
     private int regionIndex;
     private final Decal decal;
     private final BoundingBox box;
     private final Savegame savegame;
+
+    private int clickStreak;
+    private final Timer.Task delayTask;
 
     public DecalPlayer(Savegame savegame, ArrayList<TextureRegion> regions) {
         this.savegame = savegame;
@@ -44,6 +49,17 @@ public class DecalPlayer {
         Vector3 maxBox = new Vector3(position.x + width / 3, position.y + height / 3, position.z + width / 3);
 
         this.box = new BoundingBox(minBox, maxBox);
+
+        clickStreak = 1;
+        this.delayTask = new Timer.Task() {
+            @Override
+            public void run() {
+                if (clickStreak == 1) return;
+
+                clickStreak -= 1;
+            }
+        };
+        Timer.schedule(delayTask, 0.5f, 0.5f);
     }
 
     public void render(Camera camera) {
@@ -69,6 +85,8 @@ public class DecalPlayer {
 
             Sound sound = MaxonGame.getInstance().assetManager.get("sfx/player/purr.ogg", Sound.class);
             sound.play();
+
+            clickStreak++;
         }
     }
 
@@ -88,5 +106,14 @@ public class DecalPlayer {
 
     public Decal getDecal() {
         return this.decal;
+    }
+
+    public int getClickStreak() {
+        return clickStreak;
+    }
+
+    @Override
+    public void dispose() {
+        delayTask.cancel();
     }
 }
