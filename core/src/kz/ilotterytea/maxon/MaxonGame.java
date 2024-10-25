@@ -6,18 +6,18 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import kz.ilotterytea.maxon.localization.LocalizationManager;
 import kz.ilotterytea.maxon.pets.PetManager;
 import kz.ilotterytea.maxon.screens.SplashScreen;
 import kz.ilotterytea.maxon.utils.GameUpdater;
-import kz.ilotterytea.maxon.utils.I18N;
 
 public class MaxonGame extends Game {
 	public SpriteBatch batch;
 	public ShapeRenderer shapeRenderer;
 	public AssetManager assetManager;
 	public Preferences prefs;
-	public I18N locale;
 
+	private LocalizationManager locale;
 	private PetManager petManager;
 
 	private static MaxonGame instance;
@@ -33,6 +33,14 @@ public class MaxonGame extends Game {
 		return petManager;
 	}
 
+	public LocalizationManager getLocale() {
+		return locale;
+	}
+
+	public void setLocale(LocalizationManager locale) {
+		this.locale = locale;
+	}
+
 	@Override
 	public void create () {
 		// Check the latest version
@@ -41,7 +49,7 @@ public class MaxonGame extends Game {
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		prefs = Gdx.app.getPreferences(MaxonConstants.GAME_APP_PACKAGE);
-		locale = new I18N(Gdx.files.internal("i18n/" + prefs.getString("lang", "en_us") + ".json"));
+		locale = new LocalizationManager(Gdx.files.internal("i18n/" + prefs.getString("lang", "en_us") + ".json"));
 
 		Gdx.graphics.setVSync(prefs.getBoolean("vsync", true));
 

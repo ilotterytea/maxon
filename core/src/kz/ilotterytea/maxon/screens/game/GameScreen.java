@@ -251,61 +251,6 @@ public class GameScreen implements Screen, InputProcessor {
         this.shopUI.update();
     }
 
-    private void showInventory() {
-        // - - - - - -  I N V E N T O R Y  T A B L E  - - - - - - :
-        final Table inventoryTable = new Table(skin);
-        inventoryTable.setBackground("bg");
-        inventoryTable.setSize(stage.getWidth() - 20f, stage.getHeight() - (boardTable.getHeight() + quickTable.getHeight() + 20f));
-        inventoryTable.setPosition(10f, quickTable.getHeight() + 10f);
-        inventoryTable.align(Align.top | Align.center);
-
-        stage.addActor(inventoryTable);
-
-        // Header table:
-        Table headInventoryTable = new Table();
-        inventoryTable.add(headInventoryTable).width(inventoryTable.getWidth()).row();
-
-        // - - -  S H O P  T I T L E  - - -:
-        Label inventoryTitle = new Label(game.locale.TranslatableText("game.inventory.title"), skin);
-        headInventoryTable.add(inventoryTitle).expandX();
-
-        // - - -  C L O S E  B U T T O N  - - - :
-        TextButton closeButton = new TextButton("X", skin);
-
-        closeButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                inventoryTable.remove();
-                isInventoryEnabled = !isInventoryEnabled;
-            }
-        });
-
-        headInventoryTable.add(closeButton).row();
-
-        // - - -  I N V E N T O R Y  C O N T E N T  - - - :
-        Table contentTable = new Table();
-        contentTable.align(Align.left);
-
-        // Adding items to inventory:
-        for (int i = 0; i < invItems.keySet().size(); i++) {
-            MaxonItem item = MaxonItemRegister.get(i);
-
-            if (item != null) {
-                InventoryAnimatedItem invItem = new InventoryAnimatedItem(item, skin, invItems.get(i));
-                Cell<InventoryAnimatedItem> cell = contentTable.add(invItem).size(64, 64).pad(5f);
-
-                if (i != 0 && i % (inventoryTable.getWidth() / 69f) == 0) {
-                    cell.row();
-                }
-            }
-        };
-
-        // Scroll panel for content table:
-        ScrollPane contentPane = new ScrollPane(contentTable);
-        contentPane.setScrollingDisabled(true, false);
-        inventoryTable.add(contentPane);
-    }
-
     @Override public void pause() {}
 
     @Override public void resume() {}
@@ -339,39 +284,6 @@ public class GameScreen implements Screen, InputProcessor {
         //    displayPointIncrease();
         //}
         return false;
-    }
-
-    private void displayPointIncrease() {
-        cat.nextFrame();
-        maxon.setDrawable(cat.getDrawable());
-
-        savegame.increaseMoney(savegame.getMultiplier());
-
-        final TypingLabel label = new TypingLabel(game.locale.FormattedText("game.newPoint", MaxonConstants.DECIMAL_FORMAT.format(savegame.getMultiplier())), skin, "default");
-
-        label.setPosition(
-                maxon.getX(),
-                maxon.getY() + maxon.getHeight()
-        );
-
-        label.setWidth(maxon.getWidth());
-
-        label.setAlignment(Align.center);
-
-        label.addAction(Actions.parallel(
-                Actions.fadeOut(5f),
-                Actions.moveTo(
-                        label.getX(), label.getY() + Math.getRandomNumber(10, 156), 5f, Interpolation.exp5Out)
-        ));
-
-        tasks.add(Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                label.remove();
-            }
-        }, 10f));
-
-        stage.addActor(label);
     }
 
     private void create3D() {

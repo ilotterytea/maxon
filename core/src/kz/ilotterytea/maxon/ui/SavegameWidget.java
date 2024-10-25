@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import kz.ilotterytea.maxon.MaxonGame;
+import kz.ilotterytea.maxon.localization.LineId;
 import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.screens.game.GameScreen;
 import kz.ilotterytea.maxon.screens.WelcomeScreen;
@@ -128,7 +129,7 @@ public class SavegameWidget extends Table implements Disposable {
         this.dataTable.add(data).grow();
 
         // - - -  C O N T R O L  - - -
-        TextButton playButton = new TextButton(game.locale.TranslatableText("menu.continue"), skin, styleName);
+        TextButton playButton = new TextButton(game.getLocale().getLine(LineId.MenuContinue), skin, styleName);
 
         playButton.addListener(new ClickListener() {
             @Override
@@ -139,7 +140,7 @@ public class SavegameWidget extends Table implements Disposable {
             }
         });
 
-        TextButton resetButton = new TextButton(game.locale.TranslatableText("menu.reset"), skin, styleName);
+        TextButton resetButton = new TextButton(game.getLocale().getLine(LineId.MenuReset), skin, styleName);
 
         resetButton.addListener(new ClickListener() {
             @Override
