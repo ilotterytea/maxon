@@ -371,4 +371,8 @@ public class ShopUI {
         this.mainTable.clear();
         this.mainTable.add(this.table).growY().width(Math.percentFromValue(30f, Gdx.graphics.getWidth()));
     }
+
+    public boolean isShopListOpened() {
+        return isShopListOpened;
+    }
 }
