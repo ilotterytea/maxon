@@ -27,7 +27,15 @@
     store_list: { color: { hex: "#30221eff" }, name: tile },
     store_item: { color: { hex: "#402d28ff" }, name: tile },
     store_item_hover: { color: { hex: "#4b352fff" }, name: tile },
-    store_item_disabled: { color: { hex: "#30221eff" }, name: tile }
+    store_item_disabled: { color: { hex: "#30221eff" }, name: tile },
+    buy_button_pressed: { color: { hex: "#006e04ff" }, name: pressed },
+    buy_button_idle: { color: { hex: "#37cb39ff" }, name: idle },
+    buy_button_hover: { color: { hex: "#84e581ff" }, name: idle },
+    buy_button_disabled: { color: { hex: "#132813ff" }, name: pressed },
+    sell_button_pressed: { color: { hex: "#6e0008ff" }, name: pressed },
+    sell_button_idle: { color: { hex: "#cb3238ff" }, name: idle },
+    sell_button_hover: { color: { hex: "#e53e41ff" }, name: idle },
+    sell_button_disabled: { color: { hex: "#280405ff" }, name: pressed },
   },
   // TODO: Test this file path on Android platform
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
@@ -95,6 +103,30 @@
     },
     store_control_mobile: {
       parent: store_control,
+      font: store_control_mobile
+    },
+    store_buy: {
+      font: store_control,
+      fontColor: { hex: "#3d763aff" },
+      up: buy_button_idle,
+      down: buy_button_pressed,
+      over: buy_button_hover,
+      disabled: buy_button_disabled,
+    },
+    store_buy_mobile: {
+      parent: store_buy,
+      font: store_control_mobile
+    },
+    store_sell: {
+      font: store_control,
+      fontColor: { hex: "#761a1dff" },
+      up: sell_button_idle,
+      down: sell_button_pressed,
+      over: sell_button_hover,
+      disabled: sell_button_disabled,
+    },
+    store_sell_mobile: {
+      parent: store_sell,
       font: store_control_mobile
     },
     link: {

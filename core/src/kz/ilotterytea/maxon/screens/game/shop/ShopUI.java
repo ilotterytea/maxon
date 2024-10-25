@@ -158,11 +158,11 @@ public class ShopUI {
         // Mode changer
         Table modeTable = new Table();
 
-        TextButton buyButton = new TextButton(MaxonGame.getInstance().getLocale().getLine(LineId.StoreBuy), this.skin, styleName);
+        TextButton buyButton = new TextButton(MaxonGame.getInstance().getLocale().getLine(LineId.StoreBuy), this.skin, OsUtils.isMobile ? "store_buy_mobile" : "store_buy");
         buyButton.setDisabled(true);
         modeTable.add(buyButton).padBottom(5f).growX().row();
 
-        TextButton sellButton = new TextButton(MaxonGame.getInstance().getLocale().getLine(LineId.StoreSell), this.skin, styleName);
+        TextButton sellButton = new TextButton(MaxonGame.getInstance().getLocale().getLine(LineId.StoreSell), this.skin, OsUtils.isMobile ? "store_sell_mobile" : "store_sell");
         modeTable.add(sellButton).growX();
 
         sellButton.addListener(new ClickListener() {
