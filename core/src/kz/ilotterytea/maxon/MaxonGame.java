@@ -20,6 +20,8 @@ public class MaxonGame extends Game {
 	private LocalizationManager locale;
 	private PetManager petManager;
 
+	private DiscordActivityClient discordActivityClient;
+
 	private static MaxonGame instance;
 
 	public static MaxonGame getInstance() {
@@ -31,6 +33,10 @@ public class MaxonGame extends Game {
 
 	public PetManager getPetManager() {
 		return petManager;
+	}
+
+	public DiscordActivityClient getDiscordActivityClient() {
+		return discordActivityClient;
 	}
 
 	public LocalizationManager getLocale() {
@@ -80,6 +86,8 @@ public class MaxonGame extends Game {
 		assetManager = new AssetManager();
 		petManager = new PetManager(assetManager);
 
+		discordActivityClient = new DiscordActivityClient();
+
 		this.setScreen(new SplashScreen());
 	}
 
@@ -95,6 +103,6 @@ public class MaxonGame extends Game {
 			assetManager.unload(name);
 		}
 		assetManager.dispose();
-		instance.dispose();
+		discordActivityClient.dispose();
 	}
 }

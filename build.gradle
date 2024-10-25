@@ -41,6 +41,7 @@ allprojects {
         gdxControllersVersion = '2.2.1'
         kotlinVersion = '1.7.21'
         gltfVersion = '2.2.1'
+        discordSdkVersion = '5cdac341e3'
     }
 
     repositories {
@@ -105,6 +106,7 @@ project(":core") {
         implementation 'ch.qos.logback:logback-classic:1.2.10'
         implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+        implementation "com.github.JnCrMx:discord-game-sdk4j:$discordSdkVersion"
     }
 
     compileJava.dependsOn writeAllAssetsToFile

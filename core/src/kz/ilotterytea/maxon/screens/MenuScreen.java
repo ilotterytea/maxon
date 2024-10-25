@@ -55,6 +55,7 @@ public class MenuScreen implements Screen {
 
     public MenuScreen() {
         this.game = MaxonGame.getInstance();
+        game.getDiscordActivityClient().runThread();
 
         // Stage and skin:
         this.stage = new Stage(new ScreenViewport());
