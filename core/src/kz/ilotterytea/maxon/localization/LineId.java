@@ -7,6 +7,7 @@ import java.util.Locale;
 public enum LineId {
     UpdaterInfo,
 
+    MenuNewgame,
     MenuContinue,
     MenuReset,
 

@@ -60,7 +60,7 @@ public class SavegameWidget extends Table implements Disposable {
     private void createEmpty() {
         Table body = new Table();
 
-        Label label = new Label("New Game", skin, styleName);
+        Label label = new Label(game.getLocale().getLine(LineId.MenuNewgame), skin, styleName);
         label.setAlignment(Align.center);
         body.add(label).grow().row();
 
