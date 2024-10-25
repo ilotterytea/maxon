@@ -97,7 +97,7 @@ public class Savegame implements Serializable {
         multiplier = 0.0f;
         purchasedPets.clear();
         unlockedPets.clear();
-        name = System.getProperty("user.name", "Maxon");
+        name = OsUtils.isPC ? System.getProperty("user.name", "Maxon") : "Maxon";
         elapsedTime = 0;
         slotsWins = 0;
         slotsTotalSpins = 0;
