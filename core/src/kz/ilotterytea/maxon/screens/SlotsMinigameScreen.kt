@@ -134,7 +134,7 @@ class SlotsMinigameScreen : Screen {
         moneyIcon.setPosition(stage.width / 2f + 60f, stage.height / 2f - 180f)
         stage.addActor(moneyIcon)
 
-        moneyLabel = Label(NumberFormatter.format(savegame.money.toLong()), skin, "slots")
+        moneyLabel = Label(NumberFormatter.format(savegame.money), skin, "slots")
         moneyLabel?.setAlignment(Align.right)
         moneyLabel?.setPosition(stage.width / 2f, stage.height / 2f - 180f)
         stage.addActor(moneyLabel)
@@ -331,7 +331,7 @@ class SlotsMinigameScreen : Screen {
         val prizeText = if (prize == 0.0) {
             game.locale.getLine(LineId.MinigameSlotsNothing)
         } else {
-            game.locale.getFormattedLine(LineId.MinigameSlotsPrize, NumberFormatter.format(prize.toLong()))
+            game.locale.getFormattedLine(LineId.MinigameSlotsPrize, NumberFormatter.format(prize))
         }
 
         prizeLabel?.setText(prizeText)
@@ -342,13 +342,13 @@ class SlotsMinigameScreen : Screen {
             val stakeText = if (savegame.money.roundToInt() <= 0) {
                 "---"
             } else {
-                NumberFormatter.format(savegame.money.toLong())
+                NumberFormatter.format(savegame.money)
             }
 
             stakeField?.text = stakeText
         }
 
-        moneyLabel?.setText(NumberFormatter.format(savegame.money.roundToLong()))
+        moneyLabel?.setText(NumberFormatter.format(savegame.money))
     }
 
     private fun disableSlotMachineIfNoStake() {
