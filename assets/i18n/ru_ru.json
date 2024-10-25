@@ -1,56 +1,14 @@
 {
   "updater.info": "Доступно новое обновление!",
 
-  "debug.version": "%s (LibGDX %s, Java %s)",
-  "debug.c_fps": "%s FPS",
-  "debug.c_mem": "Потребление ОЗУ: %s МБ (из %s МБ)",
-
-  "splash.disclaimer": "Эта игра содержит невероятную дозу щекастых \"шерстяных мешков\". Никому не рекомендуется не играть в эту игру. Любое сходство в реальной жизни с представленными изображениями котов - чистое совпадение! Все изображения котов были сгенерированы нейросетью \"NUT-S\".",
-
-  "menu.last_savegame.found": "Сохранение: %s - %s баллы жмякания (х%s/клик) - %s куплено предметов.",
-  "menu.last_savegame.empty": "Сохранение не найдено!",
-  "menu.pressStart": "НАЖМИТЕ ЛЮБУЮ КНОПКУ",
-  "menu.playGame": "НАЧАТЬ ИГРУ",
-  "menu.options": "НАСТРОЙКИ...",
-  "menu.quit": "ВЫЙТИ НА РАБОЧИЙ СТОЛ",
   "menu.continue": "ПРОДОЛЖИТЬ",
   "menu.reset": "СБРОСИТЬ",
-
-  "savegame.title": "Сохранение %s (%s)",
-  "savegame.new": "Новое сохранение...",
-  "savegame.points": "Баллов жмяканья",
-  "savegame.multiplier": "Множитель",
-  "savegame.multiplier.count": "+%s/жмяк",
-  "savegame.purchased": "Купленных предметов",
-  "savegame.your_name": "Ваше имя",
-
-  "options.title": "Настройки",
-  "options.music": "Музыка",
-  "options.sound": "Звук",
-  "options.vsync": "Верт. синхронизация",
-  "options.fullscreen": "Полноэкранный режим",
-  "options.language": "Язык: %s (%s)",
-  "options.debug": "Показать откладку",
-  "options.reset": "Сбросить сохранение",
-  "options.close": "Вернуться на главный экран",
-  "options.general": "Основное",
-  "options.video": "Видео",
-  "options.audio": "Аудио",
-
-  "game.petShop": "Магазин Щекастых",
-  "game.points": "%s",
-  "game.multiplier": "%s/жмяк",
-  "game.newPoint": "{SHAKE}{RAINBOW}+%s{ENDRAINBOW}{ENDSHAKE}",
 
   "minigame.slots.nothing": "ТЫ НИЧЕГО НЕ ВЫИГРАЛ",
   "minigame.slots.prize": "ТЫ ВЫИГРАЛ %s P$",
   "minigame.slots.bet": "СТАВКА",
   "minigame.slots.spin_button": "КРУТАНУТЬ",
   "minigame.slots.exit_button": " X ",
-
-  "game.inventory.title": "Инвентарь",
-
-  "dialogs.not_enough_points": "Недостаточно поинтов!",
 
   "giftbox.open": "Ты получил",
 
@@ -98,9 +56,4 @@
 
   "pet.succat.name": "Сосущий кот",
   "pet.succat.desc": "Талисман. Своими сосательными навыками увеличивает количество поглаживаний."
-
-
-
-
-
 }

@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import kz.ilotterytea.maxon.MaxonConstants;
 import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.anim.SpriteUtils;
+import kz.ilotterytea.maxon.localization.LineId;
 import kz.ilotterytea.maxon.ui.AnimatedImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,12 +53,12 @@ public class Pet {
 
         AnimatedImage icon = new AnimatedImage(regions, 5);
 
-        String name = game.locale.TranslatableText("pet." + id + ".name");
+        String name = game.getLocale().getLine(LineId.fromJson("pet." + id + ".name"));
         if (name == null) {
             name = "pet." + id + ".name";
         }
 
-        String description = game.locale.TranslatableText("pet." + id + ".desc");
+        String description = game.getLocale().getLine(LineId.fromJson("pet." + id + ".desc"));
         if (description == null) {
             description = "pet." + id + ".desc";
         }

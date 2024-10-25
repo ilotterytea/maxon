@@ -29,6 +29,7 @@ import com.badlogic.gdx.utils.Timer.Task
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import kz.ilotterytea.maxon.MaxonGame
+import kz.ilotterytea.maxon.localization.LineId
 import kz.ilotterytea.maxon.player.Savegame
 import kz.ilotterytea.maxon.screens.game.GameScreen
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter
@@ -97,7 +98,7 @@ class SlotsMinigameScreen : Screen {
         table.add(background)
 
         // Buttons
-        spinButton = TextButton(game.locale.TranslatableText("minigame.slots.spin_button"), skin)
+        spinButton = TextButton(game.locale.getLine(LineId.MinigameSlotsSpinbutton), skin)
         spinButton?.isDisabled = true
         spinButton?.width = 420f
         spinButton?.setPosition(62f, 60f)
@@ -110,7 +111,7 @@ class SlotsMinigameScreen : Screen {
         })
         stage.addActor(spinButton)
 
-        exitButton = TextButton(game.locale.TranslatableText("minigame.slots.exit_button"), skin)
+        exitButton = TextButton(game.locale.getLine(LineId.MinigameSlotsExitbutton), skin)
         exitButton?.setPosition(62f, stage.height / 2f - 150f)
         exitButton?.addListener(object : ClickListener() {
             override fun clicked(event: InputEvent?, x: Float, y: Float) {
@@ -138,7 +139,7 @@ class SlotsMinigameScreen : Screen {
         moneyLabel?.setPosition(stage.width / 2f, stage.height / 2f - 180f)
         stage.addActor(moneyLabel)
 
-        val stakeLabel = Label(game.locale.TranslatableText("minigame.slots.bet"), skin, "slots")
+        val stakeLabel = Label(game.locale.getLine(LineId.MinigameSlotsBet), skin, "slots")
         stakeLabel.setAlignment(Align.center)
         stakeLabel.setPosition(stage.width / 2f - 40f, stage.height / 2f - 100f)
         stage.addActor(stakeLabel)
@@ -325,9 +326,9 @@ class SlotsMinigameScreen : Screen {
 
     private fun updateLabels() {
         val prizeText = if (prize == 0.0) {
-            game.locale.TranslatableText("minigame.slots.nothing")
+            game.locale.getLine(LineId.MinigameSlotsNothing)
         } else {
-            game.locale.FormattedText("minigame.slots.prize", NumberFormatter.format(prize.toLong()))
+            game.locale.getFormattedLine(LineId.MinigameSlotsPrize, NumberFormatter.format(prize.toLong()))
         }
 
         prizeLabel?.setText(prizeText)

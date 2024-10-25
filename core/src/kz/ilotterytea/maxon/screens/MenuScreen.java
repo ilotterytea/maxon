@@ -22,10 +22,11 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import kz.ilotterytea.maxon.MaxonConstants;
 import kz.ilotterytea.maxon.MaxonGame;
+import kz.ilotterytea.maxon.localization.LineId;
+import kz.ilotterytea.maxon.localization.LocalizationManager;
 import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.ui.*;
 import kz.ilotterytea.maxon.utils.GameUpdater;
-import kz.ilotterytea.maxon.utils.I18N;
 import kz.ilotterytea.maxon.utils.OsUtils;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
@@ -235,7 +236,7 @@ public class MenuScreen implements Screen {
         }, 5, 5));
 
         // Localization
-        String[] fh4Locale = game.locale.getFileHandle().nameWithoutExtension().split("_");
+        String[] fh4Locale = game.getLocale().getHandle().nameWithoutExtension().split("_");
         String localeButtonStyleName = "locale_" + fh4Locale[0];
         ShakingImageButton localeButton = new ShakingImageButton(widgetSkin, localeButtonStyleName);
 
@@ -249,13 +250,13 @@ public class MenuScreen implements Screen {
                 fhArray.add(MaxonConstants.FILE_RU_RU);
                 fhArray.add(MaxonConstants.FILE_EN_US);
 
-                if (fhArray.indexOf(game.locale.getFileHandle()) + 1 < fhArray.size()) {
-                    index = fhArray.indexOf(game.locale.getFileHandle()) + 1;
+                if (fhArray.indexOf(game.getLocale().getHandle()) + 1 < fhArray.size()) {
+                    index = fhArray.indexOf(game.getLocale().getHandle()) + 1;
                 }
 
                 FileHandle fhNext = fhArray.get(index);
 
-                game.locale = new I18N(fhNext);
+                game.setLocale(new LocalizationManager(fhNext));
                 game.prefs.putString("lang", fhNext.nameWithoutExtension());
                 game.prefs.flush();
 
@@ -359,7 +360,7 @@ public class MenuScreen implements Screen {
 
         // Suggest an update
         if (!GameUpdater.CLIENT_IS_ON_LATEST_VERSION && OsUtils.isPC) {
-            TextButton updateButton = new TextButton(game.locale.TranslatableText("updater.info"), uiSkin, "link");
+            TextButton updateButton = new TextButton(game.getLocale().getLine(LineId.UpdaterInfo), uiSkin, "link");
 
             updateButton.setPosition(8f, stage.getHeight() - 32f);
 

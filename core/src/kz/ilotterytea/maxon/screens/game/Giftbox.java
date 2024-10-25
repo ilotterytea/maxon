@@ -24,6 +24,7 @@ import kz.ilotterytea.javaextra.tuples.Triple;
 import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.javaextra.comparators.MapValueKeyComparator;
 import kz.ilotterytea.maxon.anim.SpriteUtils;
+import kz.ilotterytea.maxon.localization.LineId;
 import kz.ilotterytea.maxon.pets.Pet;
 import kz.ilotterytea.maxon.pets.PetManager;
 import kz.ilotterytea.maxon.player.Savegame;
@@ -302,7 +303,7 @@ public class Giftbox implements Disposable {
         mainTable.add(table);
 
         // Adding the title
-        Label title = new Label(MaxonGame.getInstance().locale.TranslatableText("giftbox.open"), skin);
+        Label title = new Label(MaxonGame.getInstance().getLocale().getLine(LineId.GiftboxOpen), skin);
         table.add(title).row();
 
         String regionName;
