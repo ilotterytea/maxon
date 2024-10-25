@@ -189,4 +189,8 @@ public class Savegame implements Serializable {
     public boolean isNewlyCreated() {
         return isNewlyCreated;
     }
+
+    public void setNewlyCreated(boolean newlyCreated) {
+        isNewlyCreated = newlyCreated;
+    }
 }
