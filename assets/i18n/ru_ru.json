@@ -4,13 +4,20 @@
   "menu.continue": "ПРОДОЛЖИТЬ",
   "menu.reset": "СБРОСИТЬ",
 
+  "giftbox.open": "Ты получил",
+
   "minigame.slots.nothing": "ТЫ НИЧЕГО НЕ ВЫИГРАЛ",
   "minigame.slots.prize": "ТЫ ВЫИГРАЛ %s P$",
   "minigame.slots.bet": "СТАВКА",
   "minigame.slots.spin_button": "КРУТАНУТЬ",
   "minigame.slots.exit_button": " X ",
 
-  "giftbox.open": "Ты получил",
+  "store.title": "Магазин",
+  "store.buy": "Купить",
+  "store.sell": "Продать",
+  "store.x1": "1x",
+  "store.x10": "10x",
+  "store.pet_locked": "Гладь Махона больше, чтобы открыть...",
 
   "pet.bror.name": "Cонный Брор",
   "pet.bror.desc": "Засыпающий Брор поможет тебе гладить Максона практически до потери сознания.",

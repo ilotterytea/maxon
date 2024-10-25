@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import kz.ilotterytea.maxon.MaxonGame;
+import kz.ilotterytea.maxon.localization.LineId;
 import kz.ilotterytea.maxon.pets.Pet;
 import kz.ilotterytea.maxon.pets.PetWidget;
 import kz.ilotterytea.maxon.player.Savegame;
@@ -119,7 +120,7 @@ public class ShopUI {
         Table titleTable = new Table(skin);
         titleTable.setBackground("store_control");
 
-        Label label = new Label("Store", skin, styleName);
+        Label label = new Label(MaxonGame.getInstance().getLocale().getLine(LineId.StoreTitle), skin, styleName);
         label.setAlignment(Align.center);
         titleTable.add(label).pad(10f).grow();
 
@@ -157,11 +158,11 @@ public class ShopUI {
         // Mode changer
         Table modeTable = new Table();
 
-        TextButton buyButton = new TextButton("Buy", this.skin, styleName);
+        TextButton buyButton = new TextButton(MaxonGame.getInstance().getLocale().getLine(LineId.StoreBuy), this.skin, styleName);
         buyButton.setDisabled(true);
         modeTable.add(buyButton).padBottom(5f).growX().row();
 
-        TextButton sellButton = new TextButton("Sell", this.skin, styleName);
+        TextButton sellButton = new TextButton(MaxonGame.getInstance().getLocale().getLine(LineId.StoreSell), this.skin, styleName);
         modeTable.add(sellButton).growX();
 
         sellButton.addListener(new ClickListener() {
@@ -198,11 +199,11 @@ public class ShopUI {
         Table multiplierTable = new Table();
         multiplierTable.align(Align.left);
 
-        TextButton x1Button = new TextButton("1x", this.skin, styleName);
+        TextButton x1Button = new TextButton(MaxonGame.getInstance().getLocale().getLine(LineId.StoreX1), this.skin, styleName);
         x1Button.setDisabled(true);
         multiplierTable.add(x1Button).width(64f).height(64f).padRight(10f);
 
-        TextButton x10Button = new TextButton("10x", this.skin, styleName);
+        TextButton x10Button = new TextButton(MaxonGame.getInstance().getLocale().getLine(LineId.StoreX10), this.skin, styleName);
         multiplierTable.add(x10Button).width(64f).height(64f);
 
         x1Button.addListener(new ClickListener() {

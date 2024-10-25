@@ -12,6 +12,13 @@
   "minigame.slots.spin_button": "SPIN",
   "minigame.slots.exit_button": " X ",
 
+  "store.title": "Store",
+  "store.buy": "Buy",
+  "store.sell": "Sell",
+  "store.x1": "1x",
+  "store.x10": "10x",
+  "store.pet_locked": "Pet Maxon more to unlock it...",
+
   "pet.bror.name": "The Suspicious and Sleepy Bro",
   "pet.bror.desc": "A falling asleep Bror will help you to pet Maxon almost to besvimers",
 
