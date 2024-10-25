@@ -332,7 +332,7 @@ public class ShopUI {
 
             if (amount == null) amount = 0;
 
-            double price = widget.getPet().getPrice() * java.lang.Math.pow(1.15f, amount + multiplier.getMultiplier());
+            double price = widget.getPet().getPrice() * java.lang.Math.pow(1.15f, amount) * multiplier.getMultiplier();
 
             if (mode == ShopMode.SELL) {
                 price /= 4;
