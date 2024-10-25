@@ -9,7 +9,7 @@ import kz.ilotterytea.maxon.utils.math.Math
 class Playlist(vararg musics: Music) {
     private val playlist: Array<out Music> = musics
     var playingNow: Music = playlist[0]
-    private var index = 0;
+    private var index = 0
 
     var shuffleMode = false
 

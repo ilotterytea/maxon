@@ -68,8 +68,5 @@ public class GameUpdater implements Net.HttpResponseListener {
             return version;
         }
 
-        public void setVersion(String version) {
-            this.version = version;
-        }
     }
 }

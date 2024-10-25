@@ -1,3 +1,7 @@
+@file:Suppress("unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused"
+)
+
 package kz.ilotterytea.maxon.screens
 
 import com.badlogic.gdx.Gdx
@@ -40,6 +44,9 @@ private enum class Slot(val multiplier: Int) {
 
 private class SlotImage(slot: Slot, assetManager: AssetManager) : Image(assetManager.get("sprites/minigames/slots/${slot.name.lowercase()}.png", Texture::class.java))
 
+@Suppress("unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused", "unused", "unused", "unused", "unused", "unused"
+)
 class SlotsMinigameScreen : Screen {
     private val savegame = Savegame.getInstance()
 
@@ -60,7 +67,6 @@ class SlotsMinigameScreen : Screen {
     private var loseStreak = 0
     private var maxLoseStreak = Random.nextInt(20, 50)
 
-    private var finished = false
     private var disabled = false
     private var lockedColumns = -1
     private val columnSlots = arrayListOf<Slot>()
@@ -250,7 +256,6 @@ class SlotsMinigameScreen : Screen {
     private fun finish() {
         if (audioLoop.isPlaying) audioLoop.stop()
 
-        finished = true
         stakeField?.isDisabled = false
         exitButton?.isDisabled = false
         spinButton?.isDisabled = false
@@ -277,7 +282,6 @@ class SlotsMinigameScreen : Screen {
         stakeField?.isDisabled = true
 
         loseSlot = Slot.values()[Random.nextInt(0,3)]
-        finished = false
         lockedColumns = -1
         loseStreak = 0
         prize = 0.0

@@ -41,9 +41,7 @@ public class Pet {
             regions = SpriteUtils.splitToTextureRegions(
                     texture,
                     texture.getWidth() / iconColumns,
-                    texture.getHeight() / iconRows,
-                    iconColumns,
-                    iconRows
+                    texture.getHeight() / iconRows
             );
 
         } catch (GdxRuntimeException e) {

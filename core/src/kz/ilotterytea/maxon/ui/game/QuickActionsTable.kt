@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Align
 import kz.ilotterytea.maxon.MaxonGame
-import kz.ilotterytea.maxon.player.Savegame
 import kz.ilotterytea.maxon.screens.MenuScreen
 import kz.ilotterytea.maxon.screens.SlotsMinigameScreen
 import kz.ilotterytea.maxon.ui.ShakingImageButton

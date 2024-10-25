@@ -63,8 +63,4 @@ public class LocalizationManager {
     public FileHandle getHandle() {
         return handle;
     }
-
-    public Map<LineId, String> getLines() {
-        return lines;
-    }
 }

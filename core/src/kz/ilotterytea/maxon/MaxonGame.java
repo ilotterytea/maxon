@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import kz.ilotterytea.maxon.localization.LocalizationManager;
 import kz.ilotterytea.maxon.pets.PetManager;
 import kz.ilotterytea.maxon.screens.SplashScreen;
@@ -13,7 +12,6 @@ import kz.ilotterytea.maxon.utils.GameUpdater;
 
 public class MaxonGame extends Game {
 	public SpriteBatch batch;
-	public ShapeRenderer shapeRenderer;
 	public AssetManager assetManager;
 	public Preferences prefs;
 
@@ -53,7 +51,6 @@ public class MaxonGame extends Game {
 		new GameUpdater().checkLatestUpdate();
 
 		batch = new SpriteBatch();
-		shapeRenderer = new ShapeRenderer();
 		prefs = Gdx.app.getPreferences(MaxonConstants.GAME_APP_PACKAGE);
 		locale = new LocalizationManager(Gdx.files.internal("i18n/" + prefs.getString("lang", "en_us") + ".json"));
 
@@ -89,11 +86,6 @@ public class MaxonGame extends Game {
 		discordActivityClient = new DiscordActivityClient();
 
 		this.setScreen(new SplashScreen());
-	}
-
-	@Override
-	public void render () {
-		super.render();
 	}
 
 	@Override

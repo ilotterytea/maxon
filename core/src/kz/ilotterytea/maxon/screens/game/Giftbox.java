@@ -73,7 +73,7 @@ public class Giftbox implements Disposable {
         this.boxImage = new AnimatedImage(
                 SpriteUtils.splitToTextureRegions(
                         assetManager.get("sprites/giftbox/gift.png"),
-                        256, 256, 2, 1
+                        256, 256
                 ),
                 10
         );

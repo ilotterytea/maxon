@@ -69,14 +69,14 @@ public class MovingChessBackground {
         totalDWidth = totalDWidth / drawables.size();
         totalDHeight = totalDHeight / drawables.size();
 
-        log.info(String.format("Total size of %s drawables: %sx%s", drawables.size(), totalDWidth, totalDHeight));
+        log.info("Total size of {} drawables: {}x{}", drawables.size(), totalDWidth, totalDHeight);
 
         int DIndex = 0;
 
         log.info("Starting to generating tiles...");
 
         for (int h = 0; h < height / totalDHeight + 3; h++) {
-            tiles.add(h, new ArrayList<Image>());
+            tiles.add(h, new ArrayList<>());
 
             for (int w = -1; w < width / totalDWidth; w++) {
                 if (DIndex + 1 > drawables.size()) DIndex = 0;

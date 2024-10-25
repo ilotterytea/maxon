@@ -18,7 +18,7 @@ public class PetWidget extends Table {
     private double price;
     private final Skin skin;
     private final Label priceLabel, nameLabel;
-    private TextTooltip priceTooltip, nameTooltip;
+    private TextTooltip priceTooltip;
     private final Pet pet;
 
     private boolean isDisabled = false, isLocked = false;
@@ -55,7 +55,7 @@ public class PetWidget extends Table {
         this.nameLabel = new Label(pet.getName(), skin, storeItemStyle);
         nameLabel.setAlignment(Align.left);
 
-        this.nameTooltip = new TextTooltip(pet.getDescription(), skin);
+        TextTooltip nameTooltip = new TextTooltip(pet.getDescription(), skin);
         nameTooltip.setInstant(true);
         nameLabel.addListener(nameTooltip);
 

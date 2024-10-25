@@ -124,10 +124,6 @@ public class Savegame implements Serializable {
         return multiplier;
     }
 
-    public void setMultiplier(double multiplier) {
-        this.multiplier = multiplier;
-    }
-
     public void increaseMultiplier(double multiplier) {
         this.multiplier += multiplier;
     }
@@ -156,10 +152,6 @@ public class Savegame implements Serializable {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public long getElapsedTime() {
