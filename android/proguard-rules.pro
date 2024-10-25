@@ -41,3 +41,19 @@
    boolean reportFixture(long);
    float   reportRayFixture(long, float, float, float, float, float);
 }
+
+-dontwarn java.lang.ProcessHandle
+-dontwarn java.lang.management.ManagementFactory
+-dontwarn java.net.UnixDomainSocketAddress
+-dontwarn javax.management.InstanceNotFoundException
+-dontwarn javax.management.MBeanRegistrationException
+-dontwarn javax.management.MBeanServer
+-dontwarn javax.management.MalformedObjectNameException
+-dontwarn javax.management.ObjectInstance
+-dontwarn javax.management.ObjectName
+-dontwarn javax.naming.Context
+-dontwarn javax.naming.InitialContext
+-dontwarn javax.naming.NamingException
+-dontwarn javax.servlet.ServletContainerInitializer
+-dontwarn org.codehaus.janino.ClassBodyEvaluator
+-dontwarn sun.reflect.Reflection
