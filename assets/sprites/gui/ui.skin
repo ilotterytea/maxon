@@ -36,6 +36,10 @@
     sell_button_idle: { color: { hex: "#cb3238ff" }, name: idle },
     sell_button_hover: { color: { hex: "#e53e41ff" }, name: idle },
     sell_button_disabled: { color: { hex: "#280405ff" }, name: pressed },
+
+    // Progress bar
+    bar_fg: { color: { hex: "#00ff00ff" }, name: tile },
+    bar_bg: { color: { hex: "#222222ff" }, name: tile },
   },
   // TODO: Test this file path on Android platform
   com.badlogic.gdx.graphics.g2d.BitmapFont: {
@@ -205,5 +209,11 @@
       },
       background: button_disabled
     }
-  }
+  },
+  com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
+    default-horizontal: {
+      background: bar_bg,
+      knobBefore: bar_fg
+    }
+  },
 }

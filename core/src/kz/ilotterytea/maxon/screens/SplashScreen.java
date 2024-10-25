@@ -37,7 +37,7 @@ public class SplashScreen implements Screen {
         clickSound = Gdx.audio.newSound(Gdx.files.internal("sfx/ui/click.ogg"));
 
         this.stage = new Stage(new FitViewport(800, 600));
-        Skin skin = new Skin(Gdx.files.internal("MainSpritesheet.skin"));
+        Skin skin = new Skin(Gdx.files.internal("sprites/gui/ui.skin"));
 
         Table logoTable = new Table();
         logoTable.setFillParent(true);

@@ -59,10 +59,10 @@ public class GameScreen implements Screen, InputProcessor {
 
     private Savegame savegame = Savegame.getInstance();
 
-    Stage stage;
-    private Skin skin, uiSkin;
+    private final Savegame savegame = Savegame.getInstance();
 
-    TextureAtlas mainAtlas, playerIconAtlas;
+    private Stage stage;
+    private Skin uiSkin;
 
     Label pointsLabel, multiplierLabel;
     AnimatedImage cat;
@@ -363,13 +363,11 @@ public class GameScreen implements Screen, InputProcessor {
 
     private void createStageUI() {
         this.stage = new Stage(new ScreenViewport());
-        this.skin = this.game.assetManager.get("MainSpritesheet.skin", Skin.class);
-        this.mainAtlas = this.game.assetManager.get("MainSpritesheet.atlas", TextureAtlas.class);
-        this.playerIconAtlas = this.game.assetManager.get("sprites/gui/player_icons.atlas", TextureAtlas.class);
+        TextureAtlas playerIconAtlas = this.game.assetManager.get("sprites/gui/player_icons.atlas", TextureAtlas.class);
 
         this.uiSkin = this.game.assetManager.get("sprites/gui/ui.skin", Skin.class);
 
-        this.shopUI = new ShopUI(savegame, this.stage, this.uiSkin, this.playerIconAtlas);
+        this.shopUI = new ShopUI(savegame, this.stage, this.uiSkin, playerIconAtlas);
 
         if (OsUtils.isMobile) {
             shopUI.createSavegameUI();
