@@ -220,7 +220,7 @@ public class GameScreen implements Screen, InputProcessor {
             }
         }
 
-        elapsedTime += delta;
+        elapsedTime += delta * decalPlayer.getClickStreak() / 10f;
 
         // Rendering the pet decals
         for (int i = 0; i < petDecals.size(); i++) {
@@ -269,6 +269,7 @@ public class GameScreen implements Screen, InputProcessor {
     public void dispose() {
         giftbox.dispose();
         stage.clear();
+        decalPlayer.dispose();
     }
 
     @Override
