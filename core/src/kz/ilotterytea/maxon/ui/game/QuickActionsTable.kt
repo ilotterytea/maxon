@@ -24,7 +24,6 @@ class QuickActionsTable(skin: Skin) : Table() {
             override fun clicked(event: InputEvent, x: Float, y: Float) {
                 super.clicked(event, x, y)
                 clickSound.play()
-                Savegame.getInstance().save()
                 game.screen = SlotsMinigameScreen()
             }
         })
@@ -35,7 +34,6 @@ class QuickActionsTable(skin: Skin) : Table() {
             override fun clicked(event: InputEvent, x: Float, y: Float) {
                 super.clicked(event, x, y)
                 clickSound.play()
-                Savegame.getInstance().save()
                 game.screen = MenuScreen()
             }
         })

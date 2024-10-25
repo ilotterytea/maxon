@@ -69,7 +69,7 @@ public class Savegame implements Serializable {
     }
 
     public void save() {
-        if (!directory.exists()) {
+        if (OsUtils.isPC && !directory.exists()) {
             directory.mkdirs();
         }
 

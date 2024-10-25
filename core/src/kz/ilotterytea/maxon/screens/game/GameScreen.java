@@ -265,6 +265,10 @@ public class GameScreen implements Screen, InputProcessor {
         tasks.clear();
 
         playlist.getPlayingNow().stop();
+
+        savegame.setElapsedTime((System.currentTimeMillis() - playTimestamp) + savegame.getElapsedTime());
+        savegame.save();
+
         dispose();
     }
 
@@ -279,11 +283,7 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            savegame.setElapsedTime((System.currentTimeMillis() - playTimestamp) + savegame.getElapsedTime());
-            savegame.save();
-
             game.setScreen(new MenuScreen());
-            dispose();
         }
         //if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
         //    displayPointIncrease();
