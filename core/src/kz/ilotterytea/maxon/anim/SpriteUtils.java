@@ -9,15 +9,11 @@ public class SpriteUtils {
     public static ArrayList<TextureRegion> splitToTextureRegions(
             Texture texture,
             int tileWidth,
-            int tileHeight,
-            int columns,
-            int rows
+            int tileHeight
     ) {
         TextureRegion[][] tmp = TextureRegion.split(texture, tileWidth, tileHeight);
 
         ArrayList<TextureRegion> frames = new ArrayList<>();
-
-        int index = 0;
 
         for (TextureRegion[] regArray : tmp) {
             for (TextureRegion reg : regArray) {

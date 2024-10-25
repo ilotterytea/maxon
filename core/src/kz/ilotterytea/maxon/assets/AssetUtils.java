@@ -14,9 +14,6 @@ import kz.ilotterytea.maxon.assets.loaders.TextLoader;
 import net.mgsx.gltf.loaders.glb.GLBAssetLoader;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class AssetUtils {
     public static void setup(AssetManager assetManager) {
         assetManager.setLoader(SceneAsset.class, ".glb", new GLBAssetLoader());

@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
@@ -39,10 +38,10 @@ import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 import java.util.ArrayList;
 
 public class MenuScreen implements Screen {
-    private final MaxonGame game;
+    private MaxonGame game;
 
-    private final Stage stage;
-    private final Music menuMusic;
+    private Stage stage;
+    private Music menuMusic;
 
     private final Savegame savegame = Savegame.getInstance();
 
@@ -52,7 +51,7 @@ public class MenuScreen implements Screen {
     private final ArrayList<Timer.Task> tasks = new ArrayList<>();
     private Sound clickSound;
 
-    public MenuScreen() {
+    @Override public void show() {
         this.game = MaxonGame.getInstance();
         game.getDiscordActivityClient().runThread();
 
@@ -63,9 +62,6 @@ public class MenuScreen implements Screen {
         Skin uiSkin = game.assetManager.get("sprites/gui/ui.skin", Skin.class);
         Skin widgetSkin = game.assetManager.get("sprites/gui/widgets.skin", Skin.class);
         TextureAtlas brandAtlas = game.assetManager.get("sprites/gui/brand.atlas", TextureAtlas.class);
-        TextureAtlas widgetAtlas = game.assetManager.get("sprites/gui/widgets.atlas", TextureAtlas.class);
-
-        Skin friendsSkin = game.assetManager.get("sprites/gui/friends.skin", Skin.class);
 
         // Main Menu music:
         this.menuMusic = game.assetManager.get("mus/menu/mus_menu_loop.mp3", Music.class);
@@ -333,13 +329,8 @@ public class MenuScreen implements Screen {
 
         create3D();
         Gdx.input.setInputProcessor(stage);
-    }
 
-    @Override public void show() {
         if (game.prefs.getBoolean("music", true)) menuMusic.play();
-
-        // Start to render:
-        render(Gdx.graphics.getDeltaTime());
     }
 
     @Override

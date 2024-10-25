@@ -39,7 +39,6 @@ public class ShopUI {
     private final Sound clickSound, notEnoughMoneySound, purchaseSound, sellSound;
 
     private final String styleName = OsUtils.isMobile ? "defaultMobile" : "default";
-    private final float iconSize = OsUtils.isMobile ? 64f : 32f;
 
     public ShopUI(final Savegame savegame, Stage stage, Skin skin, TextureAtlas atlas) {
         this.savegame = savegame;

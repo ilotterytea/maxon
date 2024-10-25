@@ -18,17 +18,10 @@ public class ScreenshotFactory {
      * Default without any compression. Y is flipped.
      */
     public static void takeScreenshot(){
-        _takeScreenshot(Deflater.NO_COMPRESSION, true);
+        _takeScreenshot();
     }
 
-    /**
-     * Take a screenshot. It will be saved in the user data directory, it is different for each platform (Windows: %appdata%/.maxoning/screenshots/, Linux: ~/.local/share/maxoning/screenshots).
-     */
-    public static void takeScreenshot(int compression, boolean flipY){
-        _takeScreenshot(compression, flipY);
-    }
-
-    private static void _takeScreenshot(int compression, boolean flipY) {
+    private static void _takeScreenshot() {
         File file = new File(MaxonConstants.GAME_SCREENSHOT_FOLDER);
 
         if (!file.exists()) {
@@ -45,7 +38,7 @@ public class ScreenshotFactory {
             pixels.put(i, (byte) 255);
         }
 
-        PixmapIO.writePNG(new FileHandle(file.getPath() + String.format("/screenshot-%s.png", dtf.format(now))), pixmap, compression, flipY);
+        PixmapIO.writePNG(new FileHandle(file.getPath() + String.format("/screenshot-%s.png", dtf.format(now))), pixmap, Deflater.NO_COMPRESSION, true);
         pixmap.dispose();
     }
 }

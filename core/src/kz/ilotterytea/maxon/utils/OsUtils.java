@@ -1,7 +1,7 @@
 package kz.ilotterytea.maxon.utils;
 
 public class OsUtils {
-    private static String OS = System.getProperty("os.name").toLowerCase();
+    private static final String OS = System.getProperty("os.name").toLowerCase();
 
     static public boolean isAndroid = System.getProperty("java.runtime.name").contains("Android");
     static public boolean isMac = !isAndroid && OS.contains("mac");
@@ -9,19 +9,13 @@ public class OsUtils {
     static public boolean isLinux = !isAndroid && OS.contains("linux");
     static public boolean isIos = !isAndroid && (!(isWindows || isLinux || isMac)) || OS.startsWith("ios");
 
-    static public boolean isARM = System.getProperty("os.arch").startsWith("arm") || System.getProperty("os.arch").startsWith("aarch64");
-    static public boolean is64Bit = System.getProperty("os.arch").contains("64") || System.getProperty("os.arch").startsWith("armv8");
-
-    public static boolean isGwt = false;
-
     public static boolean isMobile = isIos || isAndroid;
 
-    public static boolean isPC = isWindows || isMac || isIos;
+    public static final boolean isPC = isWindows || isMac || isIos;
 
     static {
         try {
             Class.forName("com.google.gwt.core.client.GWT");
-            isGwt = true;
         }
         catch(Exception ignored) { /* IGNORED */ }
 
@@ -32,56 +26,13 @@ public class OsUtils {
             isWindows = false;
             isLinux = false;
             isMac = false;
-            is64Bit = false;
             isMobile = true;
         }
     }
 
-    public static String getUserConfigDirectory()
-    {
-        return getUserConfigDirectory(null);
-    }
-
-    public static String getUserConfigDirectory(String applicationName)
-    {
-        String CONFIG_HOME = null;
-
-        if((CONFIG_HOME = System.getenv("XDG_CONFIG_HOME"))==null)
-        {
-            if(isLinux || isAndroid)
-            {
-                CONFIG_HOME = System.getProperty("user.home")+"/.config";
-            }
-            else if(isMac)
-            {
-                CONFIG_HOME = System.getProperty("user.home")+"/Library/Preferences";
-            }
-            else if(isIos)
-            {
-                CONFIG_HOME = System.getProperty("user.home")+"/Documents";
-            }
-            else if(isWindows)
-            {
-                if((CONFIG_HOME = System.getenv("APPDATA"))==null)
-                {
-                    CONFIG_HOME = System.getProperty("user.home")+"/Documents/My Games";
-                }
-            }
-        }
-
-        if(applicationName==null || CONFIG_HOME==null) return CONFIG_HOME;
-
-        return CONFIG_HOME+"/"+applicationName;
-    }
-
-    public static String getUserDataDirectory()
-    {
-        return getUserDataDirectory(null);
-    }
-
     public static String getUserDataDirectory(String applicationName)
     {
-        String DATA_HOME = null;
+        String DATA_HOME;
 
         if((DATA_HOME = System.getenv("XDG_DATA_HOME"))==null)
         {

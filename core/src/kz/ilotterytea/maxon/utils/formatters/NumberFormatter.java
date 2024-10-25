@@ -41,7 +41,6 @@ public class NumberFormatter {
         String suffix = e.getValue();
 
         double truncated = value / (divideBy / 10.0); //the number part of the output times 10
-        boolean hasDecimal = truncated < 100 && (truncated / 10d) != (truncated / 10);
         return formatWithSuffix(truncated / 10d, suffix);
     }
 

@@ -9,18 +9,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import kz.ilotterytea.maxon.MaxonConstants;
 import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.anim.SpriteUtils;
 import kz.ilotterytea.maxon.audio.Playlist;
@@ -28,16 +22,12 @@ import kz.ilotterytea.maxon.inputprocessors.CrossProcessor;
 import kz.ilotterytea.maxon.pets.Pet;
 import kz.ilotterytea.maxon.pets.PetManager;
 import kz.ilotterytea.maxon.player.DecalPlayer;
-import kz.ilotterytea.maxon.player.MaxonItem;
-import kz.ilotterytea.maxon.player.MaxonItemRegister;
 import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.screens.MenuScreen;
 import kz.ilotterytea.maxon.screens.game.shop.ShopUI;
 import kz.ilotterytea.maxon.ui.*;
 import kz.ilotterytea.maxon.ui.game.QuickActionsTable;
 import kz.ilotterytea.maxon.utils.OsUtils;
-import kz.ilotterytea.maxon.utils.math.Math;
-import com.rafaskoberg.gdx.typinglabel.TypingLabel;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
@@ -50,33 +40,17 @@ import net.mgsx.gltf.scene3d.utils.EnvironmentUtil;
 import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class GameScreen implements Screen, InputProcessor {
-    final MaxonGame game;
-    final long playTimestamp;
-    boolean isShopping = false, isInventoryEnabled = false;
-
-    private Savegame savegame = Savegame.getInstance();
+    private MaxonGame game;
+    private long playTimestamp;
 
     private final Savegame savegame = Savegame.getInstance();
 
     private Stage stage;
     private Skin uiSkin;
 
-    Label pointsLabel, multiplierLabel;
-    AnimatedImage cat;
-    AnimatedImageButton maxon;
-
-    Table boardTable, quickTable;
-
-    Dialog notEnoughPointsDialog;
-
-    ArrayList<MaxonItem> items;
-    Map<Integer, Integer> invItems;
-
-    MovingChessBackground bg;
-    Playlist playlist;
+    private Playlist playlist;
 
     private ShopUI shopUI;
 
@@ -93,7 +67,8 @@ public class GameScreen implements Screen, InputProcessor {
 
     private final ArrayList<Timer.Task> tasks = new ArrayList<>();
 
-    public GameScreen() {
+    @Override
+    public void show() {
         this.game = MaxonGame.getInstance();
         this.playTimestamp = System.currentTimeMillis();
         if (savegame.isNewlyCreated()) savegame.setNewlyCreated(false);
@@ -103,7 +78,7 @@ public class GameScreen implements Screen, InputProcessor {
         decalBatch = new DecalBatch(new CameraGroupStrategy(camera));
         decals = new ArrayList<>();
 
-        ArrayList<TextureRegion> playerTextureRegions = SpriteUtils.splitToTextureRegions(game.assetManager.get("sprites/sheet/loadingCircle.png", Texture.class), 112, 112, 10, 5);
+        ArrayList<TextureRegion> playerTextureRegions = SpriteUtils.splitToTextureRegions(game.assetManager.get("sprites/sheet/loadingCircle.png", Texture.class), 112, 112);
         decalPlayer = new DecalPlayer(savegame, playerTextureRegions);
         decals.add(decalPlayer.getDecal());
 
@@ -116,17 +91,12 @@ public class GameScreen implements Screen, InputProcessor {
         playlist.setShuffleMode(true);
         if (game.prefs.getBoolean("music", true)) playlist.next();
 
-        items = new ArrayList<>();
-
         createStageUI();
 
         giftbox = new Giftbox(stage, uiSkin, game.assetManager, sceneManager);
 
         Gdx.input.setInputProcessor(new InputMultiplexer(this, new CrossProcessor(), stage));
-    }
 
-    @Override
-    public void show() {
         tasks.add(Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
@@ -170,23 +140,6 @@ public class GameScreen implements Screen, InputProcessor {
         if (game.prefs.getBoolean("music", true) && !playlist.getPlayingNow().isPlaying()) {
             playlist.next();
         }
-
-        // i've temporarily commented it all out while i set up 3d
-        //game.batch.begin();
-
-        //bg.draw(game.batch);
-
-        //game.batch.end();
-
-        // Update the points label:
-        //pointsLabel.setText(game.locale.FormattedText("game.points",
-        //        MaxonConstants.DECIMAL_FORMAT.format(player.points)
-        //));
-
-        // Update the multiplier label:
-        //multiplierLabel.setText(game.locale.FormattedText("game.multiplier",
-        //        MaxonConstants.DECIMAL_FORMAT.format(player.multiplier)
-        //));
 
         // Render 3D
         sceneManager.update(Gdx.graphics.getDeltaTime());
@@ -284,10 +237,8 @@ public class GameScreen implements Screen, InputProcessor {
     public boolean keyDown(int keycode) {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new MenuScreen());
+            return true;
         }
-        //if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
-        //    displayPointIncrease();
-        //}
         return false;
     }
 

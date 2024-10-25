@@ -6,7 +6,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class LeafParticle extends Sprite {
-    private float angle, x, y, vertAngle, rotation, time;
+    private final float angle;
+    private float x;
+    private float y;
+    private final float vertAngle;
+    private final float rotation;
 
     public LeafParticle(TextureRegion region, float x, float y, float angle, float vertAngle, float rotation) {
         super(region);
@@ -19,7 +23,7 @@ public class LeafParticle extends Sprite {
 
     @Override
     public void draw(Batch batch) {
-        this.time = Gdx.graphics.getDeltaTime();
+        float time = Gdx.graphics.getDeltaTime();
         this.x -= (float) Math.sin(time) * this.angle;
         this.y -= (float) Math.sin(time) * this.vertAngle;
 

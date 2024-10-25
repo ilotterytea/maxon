@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 import kz.ilotterytea.maxon.utils.OsUtils;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 
 public class MaxonConstants {
     public static final String GAME_NAME = "Maxon Petting Simulator";
@@ -36,9 +35,6 @@ public class MaxonConstants {
 
     public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("###,###.#");
     public static final DecimalFormat DECIMAL_FORMAT2 = new DecimalFormat("###,###");
-    @SuppressWarnings("SimpleDateFormat")
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
-    public static final long startTime = System.currentTimeMillis();
 
     public static final String GAME_VERSIONS_FILE_URL = "https://assets.ilotterytea.kz/maxon/versions.json";
 
