@@ -42,6 +42,8 @@ public class MaxonConstants {
 
     public static final String GAME_VERSIONS_FILE_URL = "https://assets.ilotterytea.kz/maxon/versions.json";
 
+    public static final long DISCORD_APPLICATION_ID = 1051092609659052062L;
+
     public static final Texture MISSING_TEXTURE;
 
     static {
