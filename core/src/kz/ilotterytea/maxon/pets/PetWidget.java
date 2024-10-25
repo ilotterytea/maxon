@@ -38,10 +38,13 @@ public class PetWidget extends Table {
 
         super.add(pet.getIcon()).size(OsUtils.isMobile ? 128f : 64f).pad(6f);
 
-        this.idleStyle = skin.get(OsUtils.isMobile ? "store_item_mobile" : "store_item", Label.LabelStyle.class);
-        this.hoverStyle = skin.get("store_item_hover", Label.LabelStyle.class);
+        String storeItemStyle = OsUtils.isMobile ? "store_item_mobile" : "store_item";
+        String storePriceStyle = OsUtils.isMobile ? "store_item_price_mobile" : "store_item_price";
+
+        this.idleStyle = skin.get(storeItemStyle, Label.LabelStyle.class);
+        this.hoverStyle = skin.get(OsUtils.isMobile ? "store_item_hover_mobile" : "store_item_hover", Label.LabelStyle.class);
         this.disabledStyle = skin.get(OsUtils.isMobile ? "store_item_disabled_mobile" : "store_item_disabled", Label.LabelStyle.class);
-        this.availablePriceStyle = skin.get(OsUtils.isMobile ? "store_item_price_mobile" : "store_item_price", Label.LabelStyle.class);
+        this.availablePriceStyle = skin.get(storePriceStyle, Label.LabelStyle.class);
         this.disabledPriceStyle = skin.get(OsUtils.isMobile ? "store_item_price_disabled_mobile" : "store_item_price_disabled", Label.LabelStyle.class);
 
         this.price = pet.getPrice();
@@ -49,7 +52,7 @@ public class PetWidget extends Table {
         Table summary = new Table(skin);
         summary.align(Align.left);
 
-        this.nameLabel = new Label(pet.getName(), skin, "store_item");
+        this.nameLabel = new Label(pet.getName(), skin, storeItemStyle);
         nameLabel.setAlignment(Align.left);
 
         this.nameTooltip = new TextTooltip(pet.getDescription(), skin);
@@ -58,7 +61,7 @@ public class PetWidget extends Table {
 
         Image priceIcon = new Image(atlas.findRegion("points"));
 
-        this.priceLabel = new Label(NumberFormatter.format((long) price), skin, "store_item_price");
+        this.priceLabel = new Label(NumberFormatter.format((long) price), skin, storePriceStyle);
         priceLabel.setAlignment(Align.left);
 
         priceTooltip = new TextTooltip(MaxonConstants.DECIMAL_FORMAT.format(pet.getPrice()), skin);
