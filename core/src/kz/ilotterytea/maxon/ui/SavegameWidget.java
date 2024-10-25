@@ -101,7 +101,7 @@ public class SavegameWidget extends Table implements Disposable {
         Image pointsIcon = new Image(atlas.findRegion("points"));
         data.add(pointsIcon).size(iconSize, iconSize).padRight(8f);
 
-        Label points = new Label(NumberFormatter.format((long) savegame.getMoney()), skin, styleName);
+        Label points = new Label(NumberFormatter.format(savegame.getMoney(), false), skin, styleName);
         data.add(points).padRight(iconSize);
 
         // Unit
@@ -121,7 +121,7 @@ public class SavegameWidget extends Table implements Disposable {
         Image multiplierIcon = new Image(atlas.findRegion("multiplier"));
         data.add(multiplierIcon).size(iconSize, iconSize).padRight(8f);
 
-        Label multiplier = new Label(NumberFormatter.format((long) savegame.getMultiplier()), skin, styleName);
+        Label multiplier = new Label(NumberFormatter.format(savegame.getMultiplier()), skin, styleName);
         data.add(multiplier);
 
         this.dataTable.add(data).grow();

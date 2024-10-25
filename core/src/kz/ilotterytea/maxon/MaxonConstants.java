@@ -34,7 +34,7 @@ public class MaxonConstants {
     public static final FileHandle FILE_EN_US = Gdx.files.internal("i18n/en_us.json");
     public static final FileHandle FILE_RU_RU = Gdx.files.internal("i18n/ru_ru.json");
 
-    public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("###,###.##");
+    public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("###,###.#");
     public static final DecimalFormat DECIMAL_FORMAT2 = new DecimalFormat("###,###");
     @SuppressWarnings("SimpleDateFormat")
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");

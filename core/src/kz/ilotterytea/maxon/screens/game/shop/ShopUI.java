@@ -358,8 +358,8 @@ public class ShopUI {
     }
 
     public void render() {
-        this.pointsLabel.setText(NumberFormatter.format((long) savegame.getMoney()));
-        this.multiplierLabel.setText(String.format("%s/s", NumberFormatter.format((long) savegame.getMultiplier())));
+        this.pointsLabel.setText(NumberFormatter.format(savegame.getMoney(), false));
+        this.multiplierLabel.setText(String.format("%s/s", NumberFormatter.format(savegame.getMultiplier())));
         updatePurchaseItems();
     }
 
