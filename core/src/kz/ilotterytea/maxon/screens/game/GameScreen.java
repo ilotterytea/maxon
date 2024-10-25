@@ -96,6 +96,7 @@ public class GameScreen implements Screen, InputProcessor {
     public GameScreen() {
         this.game = MaxonGame.getInstance();
         this.playTimestamp = System.currentTimeMillis();
+        if (savegame.isNewlyCreated()) savegame.setNewlyCreated(false);
 
         create3D();
 
