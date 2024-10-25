@@ -18,6 +18,13 @@ public enum LineId {
     MinigameSlotsNothing,
     MinigameSlotsPrize,
 
+    StoreTitle,
+    StoreBuy,
+    StoreSell,
+    StoreX1,
+    StoreX10,
+    StorePetlocked,
+
     PetBrorName,
     PetBrorDesc,
     PetSandwichName,

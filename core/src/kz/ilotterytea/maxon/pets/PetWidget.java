@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import kz.ilotterytea.maxon.MaxonConstants;
+import kz.ilotterytea.maxon.MaxonGame;
+import kz.ilotterytea.maxon.localization.LineId;
 import kz.ilotterytea.maxon.utils.OsUtils;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 
@@ -136,7 +138,7 @@ public class PetWidget extends Table {
         if (isLocked) {
             color = Color.BLACK;
             name = "???";
-            nameTooltipText = "Pet Maxon more to unlock it...";
+            nameTooltipText = MaxonGame.getInstance().getLocale().getLine(LineId.StorePetlocked);
 
             this.priceLabel.setText("???");
             this.priceLabel.clearListeners();
