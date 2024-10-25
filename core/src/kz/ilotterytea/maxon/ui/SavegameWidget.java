@@ -1,6 +1,5 @@
 package kz.ilotterytea.maxon.ui;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -15,7 +14,6 @@ import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.localization.LineId;
 import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.screens.game.GameScreen;
-import kz.ilotterytea.maxon.screens.WelcomeScreen;
 import kz.ilotterytea.maxon.utils.OsUtils;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 
@@ -178,15 +176,7 @@ public class SavegameWidget extends Table implements Disposable {
                         new Action() {
                             @Override
                             public boolean act(float delta) {
-                                Screen screen;
-
-                                if (savegame.isNewlyCreated()) {
-                                    screen = new WelcomeScreen();
-                                } else {
-                                    screen = new GameScreen();
-                                }
-
-                                game.setScreen(screen);
+                                game.setScreen(new GameScreen());
                                 return true;
                             }
                         }
