@@ -2,7 +2,7 @@
 # ![Maxon Petting Simulator Open Source](logo.png)
 The cutest 3D clicker game you've ever seen, written in Java and LibGDX.
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ilotterytea/maxon/release.yml?style=plastic)
+[![Build for desktop](https://github.com/ilotterytea/maxon/actions/workflows/release.yml/badge.svg)](https://github.com/ilotterytea/maxon/actions/workflows/release.yml)
 
 ## Building
 
