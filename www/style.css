@@ -1,0 +1,283 @@
+@font-face {
+    font-family: "Pixelated Times New Roman";
+    src: url('https://files.catbox.moe/zv9zfs.ttf') format("truetype");
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: 'Pixelated Times New Roman', serif;
+    background-color: #171601;
+}
+
+h1,
+h2 {
+    font-size: 48px;
+}
+
+a {
+    color: #8e7a6b;
+    font-size: 20px;
+    padding: 0 6px;
+}
+
+a:hover {
+    color: #171601;
+    background-color: #8e7a6b;
+    text-decoration: line-through;
+}
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/** Wrapper */
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.background {
+    position: absolute;
+    background: no-repeat center url('img/bg.png');
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    filter: brightness(0.25);
+}
+
+.background-gradient {
+    background: linear-gradient(0deg, #171601, #00000000, #00000000);
+    z-index: 0;
+    filter: brightness(1);
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.brand {
+    width: 100%;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.brand img#logo {
+    -webkit-animation: brandLogo linear 30s forwards infinite;
+    -moz-animation: brandLogo linear 30s forwards infinite;
+    animation: brandLogo linear 30s forwards infinite;
+
+    margin-bottom: 32px;
+    width: 100%;
+}
+
+.links {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 64px;
+}
+
+.link {
+    font-size: 64px;
+    text-decoration: none;
+
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: white;
+
+    border-radius: 6px;
+    border: 2px solid white;
+
+    backdrop-filter: blur(1px);
+    text-align: center;
+}
+
+.link h1 {
+    font-size: 64px;
+}
+
+.link p {
+    font-size: 32px;
+}
+
+.link:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(2px);
+    color: white;
+    text-decoration: none;
+}
+
+.links .link {
+    margin-right: 20px;
+}
+
+.links .link:last-child {
+    margin-right: 0;
+}
+
+@keyframes brandLogo {
+    0% {
+        transform: rotateZ(0deg) scale(1)
+    }
+
+    25% {
+        transform: rotateZ(5deg) scale(0.9)
+    }
+
+    50% {
+        transform: rotateZ(0deg) scale(1)
+    }
+
+    75% {
+        transform: rotateZ(-5deg) scale(0.9)
+    }
+
+    100% {
+        transform: rotateZ(0deg) scale(1)
+    }
+}
+
+/** Update logo */
+#update {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 128px;
+
+    -webkit-animation: updateLogo ease-in-out 0.5s forwards infinite;
+    -moz-animation: updateLogo ease-in-out 0.5s forwards infinite;
+    animation: updateLogo ease-in-out 0.5s forwards infinite;
+}
+
+@keyframes updateLogo {
+    0% {
+        transform: rotateZ(-10deg) scale(1);
+    }
+
+    50% {
+        transform: rotateZ(-10deg) scale(0.9);
+    }
+
+    100% {
+        transform: rotateZ(-10deg) scale(1);
+    }
+}
+
+/** Maxon */
+.maxon {
+    background: url('img/maxon.png');
+    background-size: cover;
+
+    position: absolute;
+    bottom: 0;
+    right: 10;
+
+    width: 32px;
+    height: 32px;
+
+    -webkit-animation: maxonJump linear 1s forwards infinite;
+    -moz-animation: maxonJump linear 1s forwards infinite;
+    animation: maxonJump linear 1s forwards infinite;
+}
+
+@keyframes maxonJump {
+    0% {
+        transform: translateY(0px) scaleZ(1)
+    }
+
+    25% {
+        transform: translateY(5px) scaleY(0.8)
+    }
+
+    50% {
+        transform: translateY(-20px) scaleY(1.2) scaleX(0.8)
+    }
+
+    75% {
+        transform: translateY(5px) scaleY(0.8) scaleX(1)
+    }
+
+    100% {
+        transform: translateY(0px) scale(1)
+    }
+}
+
+/** Under main */
+.undermain {
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: rgb(236, 226, 212);
+
+    margin-top: 64px;
+
+    gap: 64px;
+}
+
+.screenshots {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.screenshots a {
+    padding: 0;
+}
+
+.screenshots a:hover {
+    background-color: transparent;
+}
+
+.screenshots img {
+    width: 256px;
+}
+
+/** Footer */
+.footer {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    margin-bottom: 32px;
+}
+
+/** Media screen */
+@media only screen and (min-width: 700px) {
+    .wrapper {
+        width: 50%;
+    }
+
+    .screenshots {
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 20px;
+    }
+}
