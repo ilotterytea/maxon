@@ -6,7 +6,7 @@ The cutest 3D clicker game you've ever seen, written in Java and LibGDX.
 
 ## Building
 
-To compile this project you will need [JDK 11](https://adoptium.net/). Copy the repository and open it via the terminal and do what you need:
+To compile this project you will need [JDK 17](https://adoptium.net/). Copy the repository and open it via the terminal and do what you need:
 
 ### Desktop (Windows/macOS/Linux)
 
