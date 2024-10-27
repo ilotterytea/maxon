@@ -19,7 +19,7 @@ android {
     }
     defaultConfig {
         applicationId "kz.ilotterytea.maxon"
-        minSdkVersion 19
+        minSdkVersion 22
         targetSdkVersion 35
         versionCode 4
         versionName "1.1"
