@@ -64,7 +64,8 @@ public class Savegame implements Serializable {
 
             return savegame;
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load savegame", e);
+            logger.error("Failed to load a save: {}", e.toString());
+            return new Savegame();
         }
     }
 
