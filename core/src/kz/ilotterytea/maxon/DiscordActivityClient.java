@@ -21,7 +21,7 @@ public class DiscordActivityClient implements Disposable {
     private final Logger logger = LoggerFactory.getLogger(DiscordActivityClient.class.getName());
 
     private Core core;
-    private final Instant startTime = Instant.now();
+    private Instant startTime;
     private Timer.Task task;
 
     public DiscordActivityClient() {
@@ -29,6 +29,8 @@ public class DiscordActivityClient implements Disposable {
             logger.info("Discord Game SDK is only supported for PC devices");
             return;
         }
+
+        startTime = Instant.now();
 
         init();
 
