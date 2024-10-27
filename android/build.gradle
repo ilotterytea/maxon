@@ -16,6 +16,7 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/robovm/ios/robovm.xml'
+        exclude 'META-INF/INDEX.LIST'
     }
     defaultConfig {
         applicationId "kz.ilotterytea.maxon"
@@ -26,7 +27,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
