@@ -22,8 +22,8 @@ android {
         applicationId "kz.ilotterytea.maxon"
         minSdkVersion 22
         targetSdkVersion 35
-        versionCode 4
-        versionName "1.1"
+        versionCode 10
+        versionName "1.0.0"
     }
     buildTypes {
         release {
