@@ -1,2 +1,2 @@
-include 'desktop', 'android', 'core', 'server', 'shared', 'multiplayer'
+include 'desktop', 'android', 'core', 'server', 'shared', 'multiplayer', 'teavm'
 

@@ -197,7 +197,9 @@ public class MenuScreen implements Screen {
             }
         });
 
-        leftGameControlTable.add(quitButton).size(iconSize).padRight(12f);
+        if (!OsUtils.isWeb) {
+            leftGameControlTable.add(quitButton).size(iconSize).padRight(12f);
+        }
 
         // Right part of menu control
         Table rightGameControlTable = new Table();
@@ -338,7 +340,9 @@ public class MenuScreen implements Screen {
         });
 
         if (!OsUtils.isMobile) {
-            rightGameControlTable.add(loginButton).padRight(16f);
+            if (!OsUtils.isWeb) {
+                rightGameControlTable.add(loginButton).padRight(16f);
+            }
             rightGameControlTable.add(localeButton).size(iconSize).padRight(16f);
             rightGameControlTable.add(musicButton).size(iconSize).padRight(16f);
             rightGameControlTable.add(resolutionButton).size(iconSize);

@@ -168,24 +168,28 @@ public class SavegameWidget extends Table implements Disposable {
     }
 
     private void moveToNextScreen() {
-        Image bg = new Image(skin, "white_tile");
-        bg.setFillParent(true);
+        if (OsUtils.isWeb) {
+            game.setScreen(new GameScreen());
+        } else {
+            Image bg = new Image(skin, "white_tile");
+            bg.setFillParent(true);
 
-        bg.addAction(
-                Actions.sequence(
-                        Actions.alpha(0.0f),
-                        Actions.alpha(1.0f, 1.5f),
-                        Actions.delay(0.5f),
-                        new Action() {
-                            @Override
-                            public boolean act(float delta) {
-                                game.setScreen(new GameScreen());
-                                return true;
+            bg.addAction(
+                    Actions.sequence(
+                            Actions.alpha(0.0f),
+                            Actions.alpha(1.0f, 1.5f),
+                            Actions.delay(0.5f),
+                            new Action() {
+                                @Override
+                                public boolean act(float delta) {
+                                    game.setScreen(new GameScreen());
+                                    return true;
+                                }
                             }
-                        }
-                )
-        );
-        stage.addActor(bg);
+                    )
+            );
+            stage.addActor(bg);
+        }
     }
 
     @Override

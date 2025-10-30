@@ -42,6 +42,8 @@ public class Savegame {
     public static Savegame load() {
         if (Gdx.app.getType() == Application.ApplicationType.Android) {
             file = Gdx.files.absolute(Gdx.files.getExternalStoragePath() + "/savegame.maxon");
+        } else if (Gdx.app.getType() == Application.ApplicationType.WebGL) {
+            file = Gdx.files.local("savegame");
         } else {
             directory = Gdx.files.absolute(MaxonConstants.GAME_SAVEGAME_FOLDER);
             file = Gdx.files.absolute(directory.path() + "/savegame.maxon");

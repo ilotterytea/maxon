@@ -69,6 +69,7 @@ com_crashlytics_export_strings.xml
 /ios/build/
 /shared/build/
 /multiplayer/build
+/teavm/build/
 
 /nbbuild/
 /android/nbbuild/
@@ -86,6 +87,7 @@ com_crashlytics_export_strings.xml
 /ios/dist/
 /shared/dist/
 /multiplayer/dist/
+/teavm/dist/
 
 /nbdist/
 /android/nbdist/

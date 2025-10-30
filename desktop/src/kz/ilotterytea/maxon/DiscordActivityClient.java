@@ -24,16 +24,16 @@ public class DiscordActivityClient implements DiscordActivityInterface {
     private Timer.Task task;
 
     public DiscordActivityClient() {
-        if (!OsUtils.isPC) {
-            logger.info("Discord Game SDK is only supported for PC devices");
-            return;
-        }
-
         startTime = Instant.now();
     }
 
     @Override
     public void init() {
+        if (!OsUtils.isPC) {
+            logger.info("Discord Game SDK is only supported for PC devices");
+            return;
+        }
+
         task = new Timer.Task() {
             @Override
             public void run() {

@@ -1,17 +1,23 @@
-
 # ![Maxon Petting Simulator Open Source](logo.png)
+
 The cutest 3D clicker game you've ever seen, written in Java and LibGDX.
 
 [![Build for desktop](https://github.com/ilotterytea/maxon/actions/workflows/release.yml/badge.svg)](https://github.com/ilotterytea/maxon/actions/workflows/release.yml)
 
 ## Building
 
-To compile this project you will need [JDK 17](https://adoptium.net/). Copy the repository and open it via the terminal and do what you need:
+To compile this project you will need [JDK 17](https://adoptium.net/). Copy the repository and open it via the terminal
+and do what you need:
 
 ### Desktop (Windows/macOS/Linux)
 
-*Running*: `./gradlew desktop:run`<br>
-*Building*: `./gradlew desktop:dist`
+- Running: `./gradlew desktop:run`
+- Building: `./gradlew desktop:dist`
+
+### Web (TeaVM)
+
+- Running: `./gradlew teavm:run`
+- Building: `./gradlew teavm:build`
 
 ## Downloads
 
@@ -20,5 +26,7 @@ To compile this project you will need [JDK 17](https://adoptium.net/). Copy the 
 
 ## License
 
-This project is under the Mozilla Public License 2.0! [Read on LICENSE](https://github.com/NotDankEnough/MaxonPettingSim/blob/master/LICENSE).<br>
-Project Assets under the [Creative Commons Attribution v4.0 International](https://creativecommons.org/licenses/by/4.0/)!
+This project is under the Mozilla Public License
+2.0! [Read on LICENSE](https://github.com/NotDankEnough/MaxonPettingSim/blob/master/LICENSE).<br>
+Project Assets under
+the [Creative Commons Attribution v4.0 International](https://creativecommons.org/licenses/by/4.0/)!
