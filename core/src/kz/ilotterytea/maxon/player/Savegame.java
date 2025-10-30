@@ -1,27 +1,24 @@
 package kz.ilotterytea.maxon.player;
 
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Logger;
-import com.google.gson.Gson;
+import com.badlogic.gdx.utils.SerializationException;
 import kz.ilotterytea.maxon.MaxonConstants;
 import kz.ilotterytea.maxon.utils.OsUtils;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Savegame implements Serializable {
-    private static final File directory = new File(MaxonConstants.GAME_SAVEGAME_FOLDER);
-    private static final File file = new File(
-            String.format(
-                    "%s/savegame.maxon",
-                    (OsUtils.isAndroid || OsUtils.isIos)
-                            ? Gdx.files.getExternalStoragePath()
-                            : directory.getAbsolutePath()
-            )
-    );
-    private static final Gson gson = new Gson();
+    private static final FileHandle directory = Gdx.files.absolute(MaxonConstants.GAME_SAVEGAME_FOLDER);
+    private static FileHandle file;
+
     private static final Logger logger = new Logger(Savegame.class.getName());
 
     private double money, multiplier;
@@ -46,26 +43,35 @@ public class Savegame implements Serializable {
     }
 
     public static Savegame load() {
+        if (Gdx.app.getType() == Application.ApplicationType.Android) {
+            file = Gdx.files.absolute(Gdx.files.getExternalStoragePath() + "/savegame.maxon");
+        } else {
+            file = Gdx.files.absolute(directory.path() + "/savegame.maxon");
+        }
+
         if (!file.exists()) {
             return new Savegame();
         }
 
+        Savegame savegame = null;
+
         try {
-            FileInputStream fis = new FileInputStream(file);
-            ObjectInputStream ois = new ObjectInputStream(fis);
+            savegame = new Json().fromJson(Savegame.class, file);
+        } catch (SerializationException e) {
+            logger.error("Failed to parse the savegame", e);
+            file.delete();
+        }
 
-            Savegame savegame = gson.fromJson(ois.readUTF(), Savegame.class);
-            ois.close();
-
-            savegame.isNewlyCreated = false;
-
-            logger.info("Loaded the savegame");
-
-            return savegame;
-        } catch (IOException e) {
-            logger.error("Failed to load a save", e);
+        if (savegame == null) {
+            logger.error("Failed to load a save");
             return new Savegame();
         }
+
+        savegame.isNewlyCreated = false;
+
+        logger.info("Loaded the savegame");
+
+        return savegame;
     }
 
     public void save() {
@@ -74,14 +80,9 @@ public class Savegame implements Serializable {
         }
 
         try {
-            FileOutputStream fos = new FileOutputStream(file);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-
-            oos.writeUTF(gson.toJson(this));
-            oos.close();
-
+            file.writeString(new Json().toJson(this), false);
             logger.info("Saved the game");
-        } catch (IOException e) {
+        } catch (GdxRuntimeException e) {
             logger.error("Failed to save the game", e);
         }
     }

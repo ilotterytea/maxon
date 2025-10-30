@@ -3,9 +3,8 @@ package kz.ilotterytea.maxon.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.HttpRequestBuilder;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Logger;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import kz.ilotterytea.maxon.MaxonConstants;
 
 import java.util.ArrayList;
@@ -36,12 +35,10 @@ public class GameUpdater implements Net.HttpResponseListener {
             return;
         }
 
-        Gson gson = new Gson();
-        ArrayList<GameVersion> versions = gson.fromJson(response, new TypeToken<ArrayList<GameVersion>>() {
-        }.getType());
+        ArrayList versions = new Json().fromJson(ArrayList.class, response);
 
         try {
-            GameVersion latestVersion = versions.get(0);
+            GameVersion latestVersion = (GameVersion) versions.get(0);
             CLIENT_IS_ON_LATEST_VERSION = latestVersion.getVersion().equals(MaxonConstants.GAME_VERSION);
         } catch (Exception e) {
             logger.error("Failed to find the latest version");
