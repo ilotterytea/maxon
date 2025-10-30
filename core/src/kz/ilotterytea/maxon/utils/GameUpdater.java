@@ -3,16 +3,15 @@ package kz.ilotterytea.maxon.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.HttpRequestBuilder;
+import com.badlogic.gdx.utils.Logger;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import kz.ilotterytea.maxon.MaxonConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
 public class GameUpdater implements Net.HttpResponseListener {
-    private final Logger logger = LoggerFactory.getLogger(GameUpdater.class.getName());
+    private final Logger logger = new Logger(GameUpdater.class.getName());
     public static boolean CLIENT_IS_ON_LATEST_VERSION;
 
     public void checkLatestUpdate() {
@@ -38,7 +37,8 @@ public class GameUpdater implements Net.HttpResponseListener {
         }
 
         Gson gson = new Gson();
-        ArrayList<GameVersion> versions = gson.fromJson(response, new TypeToken<ArrayList<GameVersion>>(){}.getType());
+        ArrayList<GameVersion> versions = gson.fromJson(response, new TypeToken<ArrayList<GameVersion>>() {
+        }.getType());
 
         try {
             GameVersion latestVersion = versions.get(0);

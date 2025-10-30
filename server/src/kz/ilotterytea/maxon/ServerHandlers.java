@@ -3,8 +3,6 @@ package kz.ilotterytea.maxon;
 import kz.ilotterytea.maxon.shared.Acknowledge;
 import kz.ilotterytea.maxon.shared.Identity;
 import kz.ilotterytea.maxon.shared.exceptions.PlayerKickException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ServerHandlers {
     private static final Logger log = LoggerFactory.getLogger(ServerHandlers.class);

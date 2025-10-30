@@ -42,13 +42,10 @@ import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.scene.SceneSkybox;
 import net.mgsx.gltf.scene3d.utils.EnvironmentUtil;
 import net.mgsx.gltf.scene3d.utils.IBLBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
 public class MenuScreen implements Screen {
-    private static final Logger log = LoggerFactory.getLogger(MenuScreen.class);
     private MaxonGame game;
 
     private Stage stage;

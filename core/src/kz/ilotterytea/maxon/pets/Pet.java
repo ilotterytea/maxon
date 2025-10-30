@@ -1,5 +1,6 @@
 package kz.ilotterytea.maxon.pets;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
@@ -9,8 +10,6 @@ import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.anim.SpriteUtils;
 import kz.ilotterytea.maxon.localization.LineId;
 import kz.ilotterytea.maxon.ui.AnimatedImage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,6 @@ public class Pet {
     private final double price, multiplier;
     private final AnimatedImage icon;
     private final Decal decal;
-    private static final Logger logger = LoggerFactory.getLogger(Pet.class);
 
     private Pet(String id, String name, String description, double price, double multiplier, AnimatedImage icon, Decal decal) {
         this.id = id;
@@ -45,7 +43,7 @@ public class Pet {
             );
 
         } catch (GdxRuntimeException e) {
-            logger.warn("Failed to load icon spritesheet for ID {}", id);
+            Gdx.app.log(Pet.class.getName(), "Failed to load icon spritesheet for ID " + id);
             regions = new ArrayList<>(List.of(new TextureRegion(MaxonConstants.MISSING_TEXTURE)));
         }
 

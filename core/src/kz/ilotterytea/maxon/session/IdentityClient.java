@@ -5,15 +5,10 @@ import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.net.HttpStatus;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.JsonWriter;
-import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.*;
 import kz.ilotterytea.maxon.MaxonConstants;
 import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.utils.RandomUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class IdentityClient {
     private final Logger log;
@@ -26,7 +21,7 @@ public class IdentityClient {
 
     public IdentityClient(Preferences sessionPreferences) {
         startValidationThread();
-        this.log = LoggerFactory.getLogger(IdentityClient.class);
+        this.log = new Logger(IdentityClient.class.getName());
 
         this.clientToken = RandomUtils.generateRandomString();
         this.sessionPreferences = sessionPreferences;
@@ -76,7 +71,7 @@ public class IdentityClient {
                     if (httpResponse.getStatus().getStatusCode() != HttpStatus.SC_OK) {
                         String type = json.get("error").getString("type");
                         String error = json.get("error").getString("message");
-                        log.error("Failed to authorise: {} ({})", error, type);
+                        log.error(String.format("Failed to authorise: %s (%s)", error, type));
 
                         sessionPreferences.remove("username");
                         sessionPreferences.remove("password");
@@ -90,7 +85,7 @@ public class IdentityClient {
                     IdentityClient.this.accessToken = json.get("data").getString("accessToken");
                     IdentityClient.this.userId = String.valueOf(json.get("data").get("user").getInt("id"));
                     IdentityClient.this.isAuthorised = true;
-                    log.info("Successfully authorised! Welcome back, {}!", IdentityClient.this.username);
+                    log.info(String.format("Successfully authorised! Welcome back, %s!", IdentityClient.this.username));
 
                     MaxonGame.getInstance().getSessionClient().connect();
                 } catch (Exception e) {
@@ -140,7 +135,7 @@ public class IdentityClient {
                     if (httpResponse.getStatus().getStatusCode() != HttpStatus.SC_OK) {
                         String type = json.get("error").getString("type");
                         String error = json.get("error").getString("message");
-                        log.error("Failed to validate: {} ({})", error, type);
+                        log.error(String.format("Failed to validate: %s (%s)", error, type));
                         accessToken = null;
                         userId = null;
                         isAuthorised = false;
@@ -203,11 +198,11 @@ public class IdentityClient {
                     if (httpResponse.getStatus().getStatusCode() != HttpStatus.SC_OK) {
                         String type = json.get("error").getString("type");
                         String error = json.get("error").getString("message");
-                        log.error("Failed to invalidate: {} ({})", error, type);
+                        log.error(String.format("Failed to invalidate: %s (%s)", error, type));
                         return;
                     }
 
-                    log.info("Invalidated! Bye, {}", username);
+                    log.info(String.format("Invalidated! Bye, %s", username));
 
                     accessToken = null;
                     userId = null;
@@ -263,11 +258,11 @@ public class IdentityClient {
                     if (httpResponse.getStatus().getStatusCode() != HttpStatus.SC_OK) {
                         String type = json.get("error").getString("type");
                         String error = json.get("error").getString("message");
-                        log.error("Failed to refresh: {} ({})", error, type);
+                        log.error(String.format("Failed to refresh: %s (%s)", error, type));
                         accessToken = null;
                         userId = null;
                         isAuthorised = false;
-                        log.warn(error);
+                        log.error(error);
                         MaxonGame.getInstance().getSessionClient().close(5002, "Failed to refresh token");
                         return;
                     }

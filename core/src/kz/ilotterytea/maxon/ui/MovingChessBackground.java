@@ -3,14 +3,13 @@ package kz.ilotterytea.maxon.ui;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.badlogic.gdx.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MovingChessBackground {
-    private final Logger log = LoggerFactory.getLogger(MovingChessBackground.class.getSimpleName());
+    private final Logger log = new Logger(MovingChessBackground.class.getName());
 
     private final float velocityX;
     private final float velocityY;
@@ -21,11 +20,12 @@ public class MovingChessBackground {
 
     /**
      * Background that looking like chess and moves.
-     * @param velocityX X Velocity
-     * @param velocityY Y Velocity
-     * @param screenWidth Width of the screen
+     *
+     * @param velocityX    X Velocity
+     * @param velocityY    Y Velocity
+     * @param screenWidth  Width of the screen
      * @param screenHeight Height of the screen
-     * @param drawables Drawables to draw
+     * @param drawables    Drawables to draw
      */
     public MovingChessBackground(
             float velocityX,
@@ -47,7 +47,8 @@ public class MovingChessBackground {
 
     /**
      * Clean up the background tiles and create new ones.
-     * @param width Width of the screen.
+     *
+     * @param width  Width of the screen.
      * @param height Height of the screen.
      */
     public void update(float width, float height) {
@@ -68,7 +69,7 @@ public class MovingChessBackground {
         totalDWidth = totalDWidth / drawables.size();
         totalDHeight = totalDHeight / drawables.size();
 
-        log.info("Total size of {} drawables: {}x{}", drawables.size(), totalDWidth, totalDHeight);
+        log.info(String.format("Total size of %d drawables: %fx%f", drawables.size(), totalDWidth, totalDHeight));
 
         int DIndex = 0;
 
@@ -93,6 +94,7 @@ public class MovingChessBackground {
 
     /**
      * Draw the background tiles.
+     *
      * @param batch Sprite batch.
      */
     public void draw(

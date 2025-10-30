@@ -1,5 +1,6 @@
 package kz.ilotterytea.maxon.session;
 
+import com.badlogic.gdx.utils.Logger;
 import kz.ilotterytea.maxon.MaxonConstants;
 import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.screens.MenuScreen;
@@ -8,8 +9,6 @@ import kz.ilotterytea.maxon.shared.Identity;
 import kz.ilotterytea.maxon.shared.exceptions.PlayerKickException;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,7 +23,7 @@ public class SessionClient extends WebSocketClient {
 
     public SessionClient() {
         super(URI.create(MaxonConstants.SESSION_WSS_URL));
-        this.log = LoggerFactory.getLogger(SessionClient.class);
+        this.log = new Logger(SessionClient.class.getName());
         this.game = MaxonGame.getInstance();
     }
 
@@ -57,7 +56,7 @@ public class SessionClient extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        log.info("Connection closed! Reason: {} {}", code, reason);
+        log.info(String.format("Connection closed! Reason: %d %s", code, reason));
         game.getIdentityClient().invalidateToken();
         if (!game.getScreen().getClass().equals(MenuScreen.class)) {
             game.setScreen(new MenuScreen());

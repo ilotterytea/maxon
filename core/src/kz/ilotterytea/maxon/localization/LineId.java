@@ -1,6 +1,6 @@
 package kz.ilotterytea.maxon.localization;
 
-import org.slf4j.LoggerFactory;
+import com.badlogic.gdx.Gdx;
 
 import java.util.Locale;
 
@@ -98,7 +98,7 @@ public enum LineId {
         try {
             return LineId.valueOf(value);
         } catch (Exception e) {
-            LoggerFactory.getLogger(LineId.class.getName()).error("The key '{}' not registered in LineId enum", value);
+            Gdx.app.error(LineId.class.getName(), String.format("The key '%s' not registered in LineId enum", value));
             return null;
         }
     }

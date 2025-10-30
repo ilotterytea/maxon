@@ -2,6 +2,7 @@ package kz.ilotterytea.maxon;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.Timer;
 import de.jcm.discordgamesdk.Core;
 import de.jcm.discordgamesdk.CreateParams;
@@ -12,13 +13,11 @@ import kz.ilotterytea.maxon.screens.SlotsMinigameScreen;
 import kz.ilotterytea.maxon.screens.game.GameScreen;
 import kz.ilotterytea.maxon.utils.OsUtils;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 
 public class DiscordActivityClient implements Disposable {
-    private final Logger logger = LoggerFactory.getLogger(DiscordActivityClient.class.getName());
+    private final Logger logger = new Logger(DiscordActivityClient.class.getName());
 
     private Core core;
     private Instant startTime;
@@ -56,7 +55,7 @@ public class DiscordActivityClient implements Disposable {
             core.setLogHook(LogLevel.ERROR, (level, message) -> System.out.printf("[DISCORD %s] %s\n", level, message));
             logger.info("Initialized the Discord RPC");
         } catch (Exception e) {
-            logger.error("Failed to initialize the Discord RPC: {}", e.toString());
+            logger.error(String.format("Failed to initialize the Discord RPC: %s", e.toString()));
         }
     }
 
@@ -104,7 +103,7 @@ public class DiscordActivityClient implements Disposable {
 
             core.activityManager().updateActivity(activity);
         } catch (Exception e) {
-            logger.error("Failed to set the activity: {}", e.toString());
+            logger.error(String.format("Failed to set the activity: %s", e.toString()));
         }
     }
 

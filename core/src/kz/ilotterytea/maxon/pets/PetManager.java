@@ -3,16 +3,17 @@ package kz.ilotterytea.maxon.pets;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.Logger;
 import kz.ilotterytea.maxon.assets.loaders.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class PetManager {
     private final ArrayList<Pet> pets;
     private final AssetManager assetManager;
-    private final Logger logger = LoggerFactory.getLogger(PetManager.class);
+    private final Logger logger = new Logger(PetManager.class.getName());
 
     public PetManager(final AssetManager assetManager) {
         this.pets = new ArrayList<>();
@@ -43,7 +44,7 @@ public class PetManager {
         Collections.sort(pets, (pet1, pet2) -> Double.compare(pet1.getPrice(), pet2.getPrice()));
 
         this.pets.addAll(pets);
-        logger.info("Loaded {} pets", pets.size());
+        logger.info(String.format("Loaded %d pets", pets.size()));
     }
 
     public Pet getPet(String id) {

@@ -2,11 +2,10 @@ package kz.ilotterytea.maxon.player;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Logger;
 import com.google.gson.Gson;
 import kz.ilotterytea.maxon.MaxonConstants;
 import kz.ilotterytea.maxon.utils.OsUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class Savegame implements Serializable {
             )
     );
     private static final Gson gson = new Gson();
-    private static final Logger logger = LoggerFactory.getLogger(Savegame.class);
+    private static final Logger logger = new Logger(Savegame.class.getName());
 
     private double money, multiplier;
     private final HashMap<String, Integer> purchasedPets = new HashMap<>();
@@ -64,7 +63,7 @@ public class Savegame implements Serializable {
 
             return savegame;
         } catch (IOException e) {
-            logger.error("Failed to load a save: {}", e.toString());
+            logger.error("Failed to load a save", e);
             return new Savegame();
         }
     }
@@ -83,7 +82,7 @@ public class Savegame implements Serializable {
 
             logger.info("Saved the game");
         } catch (IOException e) {
-            logger.error("Failed to save the game: {}", e.toString());
+            logger.error("Failed to save the game", e);
         }
     }
 
