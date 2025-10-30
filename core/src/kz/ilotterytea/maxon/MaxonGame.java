@@ -10,6 +10,7 @@ import kz.ilotterytea.maxon.pets.PetManager;
 import kz.ilotterytea.maxon.screens.SplashScreen;
 import kz.ilotterytea.maxon.session.IdentityClient;
 import kz.ilotterytea.maxon.session.SessionClient;
+import kz.ilotterytea.maxon.utils.DiscordActivityInterface;
 import kz.ilotterytea.maxon.utils.GameUpdater;
 
 public class MaxonGame extends Game {
@@ -19,8 +20,7 @@ public class MaxonGame extends Game {
 
     private LocalizationManager locale;
     private PetManager petManager;
-
-    private DiscordActivityClient discordActivityClient;
+    private DiscordActivityInterface discordActivityInterface;
 
     private IdentityClient identityClient;
     private SessionClient sessionClient;
@@ -38,8 +38,12 @@ public class MaxonGame extends Game {
         return petManager;
     }
 
-    public DiscordActivityClient getDiscordActivityClient() {
-        return discordActivityClient;
+    public DiscordActivityInterface getDiscordActivity() {
+        return discordActivityInterface;
+    }
+
+    public void setDiscordActivity(DiscordActivityInterface discordActivityInterface) {
+        this.discordActivityInterface = discordActivityInterface;
     }
 
     public IdentityClient getIdentityClient() {
@@ -99,7 +103,9 @@ public class MaxonGame extends Game {
         assetManager = new AssetManager();
         petManager = new PetManager(assetManager);
 
-        discordActivityClient = new DiscordActivityClient();
+        if (discordActivityInterface != null) {
+            discordActivityInterface.init();
+        }
 
         this.setScreen(new SplashScreen());
     }
@@ -111,6 +117,8 @@ public class MaxonGame extends Game {
             assetManager.unload(name);
         }
         assetManager.dispose();
-        discordActivityClient.dispose();
+        if (discordActivityInterface != null) {
+            discordActivityInterface.dispose();
+        }
     }
 }

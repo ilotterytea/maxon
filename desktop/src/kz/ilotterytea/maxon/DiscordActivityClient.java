@@ -1,7 +1,6 @@
 package kz.ilotterytea.maxon;
 
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.Timer;
 import de.jcm.discordgamesdk.Core;
@@ -11,12 +10,13 @@ import de.jcm.discordgamesdk.activity.Activity;
 import kz.ilotterytea.maxon.player.Savegame;
 import kz.ilotterytea.maxon.screens.SlotsMinigameScreen;
 import kz.ilotterytea.maxon.screens.game.GameScreen;
+import kz.ilotterytea.maxon.utils.DiscordActivityInterface;
 import kz.ilotterytea.maxon.utils.OsUtils;
 import kz.ilotterytea.maxon.utils.formatters.NumberFormatter;
 
 import java.time.Instant;
 
-public class DiscordActivityClient implements Disposable {
+public class DiscordActivityClient implements DiscordActivityInterface {
     private final Logger logger = new Logger(DiscordActivityClient.class.getName());
 
     private Core core;
@@ -30,9 +30,10 @@ public class DiscordActivityClient implements Disposable {
         }
 
         startTime = Instant.now();
+    }
 
-        init();
-
+    @Override
+    public void init() {
         task = new Timer.Task() {
             @Override
             public void run() {
@@ -44,9 +45,7 @@ public class DiscordActivityClient implements Disposable {
                 core.runCallbacks();
             }
         };
-    }
 
-    private void init() {
         try (CreateParams params = new CreateParams()) {
             params.setClientID(MaxonConstants.DISCORD_APPLICATION_ID);
             params.setFlags(CreateParams.Flags.DEFAULT);
@@ -59,7 +58,8 @@ public class DiscordActivityClient implements Disposable {
         }
     }
 
-    private void updateActivity() {
+    @Override
+    public void updateActivity() {
         if (core == null || !core.isDiscordRunning()) return;
 
         try (Activity activity = new Activity()) {
@@ -107,6 +107,7 @@ public class DiscordActivityClient implements Disposable {
         }
     }
 
+    @Override
     public void runThread() {
         if (task != null && !task.isScheduled()) Timer.schedule(task, 0.25f, 0.25f);
     }
