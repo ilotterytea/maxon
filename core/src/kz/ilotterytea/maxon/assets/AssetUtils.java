@@ -21,7 +21,7 @@ public class AssetUtils {
     }
 
     public static void queue(AssetManager assetManager) {
-        FileHandle assetsFile = Gdx.files.internal("assets.txt");
+        FileHandle assetsFile = Gdx.files.internal("assetlist.txt");
         String contents = assetsFile.readString();
         String[] filePaths = contents.split("\n");
 

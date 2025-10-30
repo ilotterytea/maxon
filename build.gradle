@@ -14,7 +14,7 @@ buildscript {
 tasks.register('writeAllAssetsToFile') {
     doLast {
         def assetsFolder = new File("${project.rootDir}/assets/")
-        def assetsFile = new File(assetsFolder, "assets.txt")
+        def assetsFile = new File(assetsFolder, "assetlist.txt")
         assetsFile.delete()
 
         fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.each {
