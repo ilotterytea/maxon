@@ -1,7 +1,7 @@
 sourceCompatibility = 17
 sourceSets.main.java.srcDirs = ["src/"]
 
-project.ext.mainClassName = "kz.ilotterytea.maxon.ServerLauncher"
+project.ext.mainClassName = "kz.ilotterytea.maxon.multiplayer.ServerLauncher"
 
 import org.gradle.internal.os.OperatingSystem
 
@@ -45,4 +45,4 @@ tasks.register('dist', Jar) {
 
 dist.dependsOn classes
 
-eclipse.project.name = appName + "-server"
+eclipse.project.name = appName + "-multiplayer"

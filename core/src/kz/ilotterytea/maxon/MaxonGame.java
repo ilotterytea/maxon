@@ -9,7 +9,7 @@ import kz.ilotterytea.maxon.localization.LocalizationManager;
 import kz.ilotterytea.maxon.pets.PetManager;
 import kz.ilotterytea.maxon.screens.SplashScreen;
 import kz.ilotterytea.maxon.session.IdentityClient;
-import kz.ilotterytea.maxon.session.SessionClient;
+import kz.ilotterytea.maxon.session.SessionClientImpl;
 import kz.ilotterytea.maxon.utils.DiscordActivityInterface;
 import kz.ilotterytea.maxon.utils.GameUpdater;
 
@@ -23,7 +23,7 @@ public class MaxonGame extends Game {
     private DiscordActivityInterface discordActivityInterface;
 
     private IdentityClient identityClient;
-    private SessionClient sessionClient;
+    private SessionClientImpl sessionClient;
 
     private static MaxonGame instance;
 
@@ -50,8 +50,12 @@ public class MaxonGame extends Game {
         return identityClient;
     }
 
-    public SessionClient getSessionClient() {
+    public SessionClientImpl getSessionClient() {
         return sessionClient;
+    }
+
+    public void setSessionClient(SessionClientImpl sessionClient) {
+        this.sessionClient = sessionClient;
     }
 
     public LocalizationManager getLocale() {
@@ -68,7 +72,6 @@ public class MaxonGame extends Game {
         new GameUpdater().checkLatestUpdate();
 
         identityClient = new IdentityClient(Gdx.app.getPreferences("kz.ilotterytea.SigninIdentity"));
-        sessionClient = new SessionClient();
 
         batch = new SpriteBatch();
         prefs = Gdx.app.getPreferences(MaxonConstants.GAME_APP_PACKAGE);
@@ -119,6 +122,9 @@ public class MaxonGame extends Game {
         assetManager.dispose();
         if (discordActivityInterface != null) {
             discordActivityInterface.dispose();
+        }
+        if (sessionClient != null) {
+            sessionClient.dispose();
         }
     }
 }

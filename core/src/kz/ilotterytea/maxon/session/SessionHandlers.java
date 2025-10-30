@@ -4,7 +4,7 @@ import kz.ilotterytea.maxon.MaxonGame;
 import kz.ilotterytea.maxon.shared.Acknowledge;
 
 public class SessionHandlers {
-    private static final SessionClient client = MaxonGame.getInstance().getSessionClient();
+    private static final SessionClientImpl client = MaxonGame.getInstance().getSessionClient();
 
     public static void handleAcknowledge(Acknowledge acknowledge) {
     }

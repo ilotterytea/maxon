@@ -45,9 +45,11 @@ project(":desktop") {
 
     dependencies {
         implementation project(":core")
+        implementation project(":multiplayer")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         implementation "com.github.JnCrMx:discord-game-sdk4j:$discordSdkVersion"
+        implementation "com.github.MrStahlfelge.gdx-websockets:common:$wsVersion"
     }
 }
 
@@ -74,16 +76,13 @@ project(":shared") {
     dependencies {}
 }
 
-project(":server") {
+project(":multiplayer") {
     apply plugin: "java-library"
 
     dependencies {
+        implementation project(":core")
         implementation project(":shared")
-        implementation "com.google.code.gson:gson:$gsonVersion"
-        implementation "org.slf4j:slf4j-api:$slf4jVersion"
-        implementation "ch.qos.logback:logback-classic:$logbackVersion"
-        implementation "ch.qos.logback:logback-core:$logbackVersion"
-        implementation "org.java-websocket:Java-WebSocket:$websocketVersion"
+        implementation "com.github.MrStahlfelge.gdx-websockets:core:$wsVersion"
     }
 }
 
@@ -95,7 +94,6 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core:$gamesvcsVersion"
         api "com.github.mgsx-dev.gdx-gltf:gltf:$gltfVersion"
-        implementation "org.java-websocket:Java-WebSocket:$websocketVersion"
     }
 
     compileJava.dependsOn writeAllAssetsToFile

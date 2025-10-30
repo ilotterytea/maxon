@@ -60,7 +60,6 @@ com_crashlytics_export_strings.xml
 /html/nbproject/private/
 /ios/nbproject/private/
 /shared/nbproject/private/
-/server/nbproject/private/
 
 /build/
 /android/build/
@@ -69,7 +68,7 @@ com_crashlytics_export_strings.xml
 /html/build/
 /ios/build/
 /shared/build/
-/server/build/
+/multiplayer/build
 
 /nbbuild/
 /android/nbbuild/
@@ -78,7 +77,6 @@ com_crashlytics_export_strings.xml
 /html/nbbuild/
 /ios/nbbuild/
 /shared/nbbuild/
-/server/nbbuild/
 
 /dist/
 /android/dist/
@@ -87,7 +85,7 @@ com_crashlytics_export_strings.xml
 /html/dist/
 /ios/dist/
 /shared/dist/
-/server/dist/
+/multiplayer/dist/
 
 /nbdist/
 /android/nbdist/
@@ -96,7 +94,6 @@ com_crashlytics_export_strings.xml
 /html/nbdist/
 /ios/nbdist/
 /shared/nbdist/
-/server/nbdist/
 
 nbactions.xml
 nb-configuration.xml

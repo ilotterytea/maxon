@@ -2,6 +2,8 @@ package kz.ilotterytea.maxon;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.github.czyzby.websocket.CommonWebSockets;
+import kz.ilotterytea.maxon.multiplayer.SessionClient;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DesktopLauncher {
@@ -12,8 +14,11 @@ public class DesktopLauncher {
         config.setWindowIcon("icons/icon128.png", "icons/icon64.png", "icons/icon32.png", "icons/icon16.png");
         config.setWindowSizeLimits(800, 600, 80000, 60000);
 
+        CommonWebSockets.initiate();
+
         MaxonGame game = MaxonGame.getInstance();
         game.setDiscordActivity(new DiscordActivityClient());
+        game.setSessionClient(new SessionClient());
 
         new Lwjgl3Application(game, config);
     }
