@@ -7,7 +7,6 @@ import com.badlogic.gdx.utils.StringBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 public class LocalizationManager {
     private final Map<LineId, String> lines = new HashMap<>();
@@ -41,20 +40,18 @@ public class LocalizationManager {
 
         if (line == null) return null;
 
-        Scanner scanner = new Scanner(line);
+        String[] tokens = line.split("\\s+");
         StringBuilder result = new StringBuilder();
         int index = 0;
 
-        while (scanner.hasNext()) {
-            String next = scanner.next();
-
-            if (next.contains("%s")) {
-                next = next.replace("%s", params[index]);
+        for (String token : tokens) {
+            if (token.contains("%s")) {
+                token = token.replace("%s", params[index]);
 
                 if (index + 1 < params.length) index++;
             }
 
-            result.append(next).append(' ');
+            result.append(token).append(' ');
         }
 
         return result.substring(0, result.length - 1);
